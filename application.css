@@ -1,0 +1,179 @@
+@import url(https://fonts.googleapis.com/css?family=Varela+Round);
+
+html, body {
+	background-color: #eee;
+    font-family: sans-serif;
+    font-size: 11pt;
+}
+
+main {
+    margin: 30px auto;
+	min-width: 600px;
+}
+
+@media (min-width: 1200px) {
+	main {
+		width: 1170px;
+	}
+}
+@media (min-width: 992px) {
+	main {
+		width: 970px;
+	}
+}
+
+@media (min-width: 768px) {
+	main {
+		width: 750px;
+	}
+}
+
+h1, h2, .popup .popup-title {
+	font-family: 'Varela Round', sans-serif;
+}
+
+h1, h2 {
+	margin: 0px;
+}
+
+h1 {
+    font-size: 1.5em;
+}
+
+h2 {
+    font-size: 1.3em;
+}
+
+h2 a {
+	color: #198CFF;
+}
+
+.popup button.close, 
+.popup .popup-title,
+.box i, 
+.box label, 
+a {
+    color: #0051A3;
+}
+
+a {
+    text-decoration: none;
+}
+
+button {
+    height: 30px;
+    width: 30px;
+	background-color: #198CFF;
+    color: #eee;
+    font-size: 15px;
+    border: none;
+    border-bottom: solid 2px #0051A3;
+	border-radius: 4px;
+	cursor: pointer;
+}
+
+button:disabled {
+    cursor: not-allowed;
+	background-color: #cacaca;
+    color: #7e7e7e;
+    border-color: #7e7e7e;
+}
+
+.box:hover {
+  background: #198CFF;
+  border-color: #0051a3;
+  transition: all .2s ease;
+}
+
+button:not(:disabled):hover {
+  background: #0051A3;
+  transition: all .2s ease;
+}
+
+.links-container {
+	float:right;
+}
+
+.links-container a:hover {
+    border-bottom: solid 3px #898989;
+}
+
+.second-row > * {
+	display: inline-block;
+}
+
+.dropzone-container {
+	margin: 20px 0px;
+    text-align: center;
+}
+
+.dropzone-container > * {
+	margin: 0px 10px;
+	display: inline-block;
+    vertical-align: middle;
+}
+
+.dropzone-container .box {
+    width: 430px;
+    background: #f8f8f8;
+}
+
+.dropzone-container .dropzone-column {
+    height: 100%;
+	width: 30px;
+    vertical-align: top;
+}
+
+.dropzone-container .dropzone-column button {
+	margin-bottom: 6px;
+}
+
+.box {
+	border-color: #198CFF;
+}
+
+.box i, .box label {
+    font-weight: bold;
+}
+
+.playback {
+    text-align: center;
+}
+
+.playback .controls button:not(:last-child) {
+    border-right-color: #eee;
+}
+
+.playback .record {
+	display:none;
+}
+
+.popup button.close {
+    border: none;
+	outline: none;
+}
+
+.rise-loader ul li {
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.rise-loader ul li:nth-child(even) {
+    background: #eeeeee;
+}
+  
+.rise-loader ul li:hover {
+    background: #ccc;
+}
+
+.popup.converter .popup-container {
+	max-height : 365px;
+}
+
+.popup.rise .popup-container {
+	max-height : 350px;
+}
+
+.popup.settings .popup-container {
+	max-height: 180px;
+}
