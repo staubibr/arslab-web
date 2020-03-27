@@ -1,6 +1,6 @@
 'use strict';
 
-import Util from './util.js';
+import Core from './core.js';
 
 export default class Dom {
 	
@@ -28,7 +28,7 @@ export default class Dom {
 	static Create(tagName, options, pNode) {
 		var elem = document.createElement(tagName);
 		
-		Util.Mixin(elem, options);
+		Core.Mixin(elem, options);
 		
 		this.Place(elem, pNode);
 		

@@ -17,6 +17,8 @@ export default class Templated extends Evented {
 	
 		if (this.template) this.BuildSubWidgets();
 		
+		this.SetRoots();
+		
 		if (container) this.Place(container);
 	}
 	
@@ -34,6 +36,14 @@ export default class Templated extends Evented {
 		html = this.Replace(html, /nls\((.*?)\)/, function(m) { return Core.Nls(m); });
 		
 		this.template = Dom.Create("div", { innerHTML:html });
+	}
+	
+	SetRoots() {
+		this.roots = [];
+		
+		for (var i = 0; i < this.template.children.length; i++) {
+			this.roots.push(this.template.children[i]);
+		}
 	}
 	
 	SetNamedNodes() {		
@@ -67,11 +77,11 @@ export default class Templated extends Evented {
 	Place(container) {
 		this.container = container;
 		
-		if (!this.template) return;
-		
-		while (this.template.children.length > 0) {
-			Dom.Place(this.template.children[0], this.container);
-		}
+		this.roots.forEach(r => { Dom.Place(r, this.container); });
+	}
+	
+	SetCss(css) {
+		this.roots.forEach(r => { Dom.SetCss(r, css); });
 	}
 	
 	Template() {

@@ -1,24 +1,30 @@
 import Dom from '../tools/dom.js';
 import Core from '../tools/core.js';
-import Util from '../tools/util.js';
-import Templated from './templated.js';
+import Templated from '../components/templated.js';
 
 export default class Popup extends Templated { 
 	
-	set Content(content) {
-		this.content = content;
-		
-		Dom.Place(content, this.Node("body"));
+	set Title(value) {
+		this.Node("title").innerHTML = value;
 	}
 	
-	get Content() { return this.content; }
+	set Widget(widget) {
+		this.Empty();
+		
+		this.widget = widget;
+		
+		widget.Place(this.Node("body"));
+	}
+	
+	get Widget() { return this.widget; }
+	
+	get Root() { return this.Node("root"); }
 	
 	constructor(css, container) {	
 		super(container || document.body);
 				
 		this.onBody_KeyUp_Bound = this.onBody_KeyUp.bind(this);
 		
-		this.content = null;
 		this.h = null;
 		
 		this.Node("close").addEventListener("click", this.onBtnClose_Click.bind(this));
@@ -35,8 +41,12 @@ export default class Popup extends Templated {
 		this.Node("root").style.visibility = visibility;
 	}
 	
+	Empty() {
+		Dom.Empty(this.Node("body"));
+	}
+	
 	Show() {
-		Util.DisableFocusable(Dom.Siblings(this.Node("root")), true);
+		Core.DisableFocusable(Dom.Siblings(this.Node("root")), true);
 		
 		this.h = document.body.addEventListener("keyup", this.onBody_KeyUp_Bound);
 		
@@ -48,7 +58,7 @@ export default class Popup extends Templated {
 	}
 	
 	Hide() {
-		Util.DisableFocusable(Dom.Siblings(this.Node("root")), false);
+		Core.DisableFocusable(Dom.Siblings(this.Node("root")), false);
 		
 		document.body.removeEventListener("keyup", this.onBody_KeyUp_Bound);
 		
@@ -71,10 +81,10 @@ export default class Popup extends Templated {
 	
 	Template() {
 		return "<div handle='root' class='popup'>" +
-				  "<div class='popup-container'>" +
+				  "<div handle='container' class='popup-container'>" +
 					  "<div class='popup-header'>" +
-						  "<div class='popup-title' handle='title'></div>" +
-						  "<button class='close' handle='close'>×</button>" +
+						  "<h2 class='popup-title' handle='title'></h2>" +
+						  "<button class='close' handle='close' title='nls(Popup_Close)'>×</button>" +
 					  "</div>" +
 					
 					  "<div class='popup-body' handle='body'></div>" +

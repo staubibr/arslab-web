@@ -182,7 +182,7 @@ export default Core.Templatable("Basic.Components.Typeahead", class Typeahead ex
 	
 	Template() {        
 		return "<div handle='root' class='typeahead collapsed'>" +
-				 "<input handle='input' type='text' class='input'>" + 
+				 "<input handle='input' type='text' class='input' placeholder='nls(Typeahead_Title)' title='nls(Typeahead_Title)'>" + 
 			     "<ul handle='list' class='list'></ul>" +
 			   "</div>";
 	}

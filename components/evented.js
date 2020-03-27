@@ -1,6 +1,6 @@
 'use strict';
 
-import Util from '../tools/util.js';
+import Core from '../tools/core.js';
 
 export default class Evented { 
 
@@ -50,7 +50,7 @@ export default class Evented {
 		// Let base event properties be overwritten by whatever was provided.	
 		var event = { bubbles:true, cancelable:true };
 	
-		Util.Mixin(event, data);
+		Core.Mixin(event, data);
 		
 		// Use the type that was specifically provided, target is always this.
 		event.type = type;
