@@ -1,0 +1,110 @@
+input[type=range]:disabled::-webkit-slider-runnable-track {
+	cursor : not-allowed;
+}
+
+input[type=range]::-webkit-slider-runnable-track { 
+  cursor: pointer;
+}
+
+input[type=range]:disabled::-webkit-slider-thumb{
+    visibility:hidden;
+}
+
+.playback .controls button {
+	border-radius : 0px;
+}
+
+.playback .controls button:first-child {
+	border-radius : 4px 0px 0px 4px;
+}
+
+.playback .controls button:last-child {
+	border-radius : 0px 4px 4px 0px;
+}
+
+.playback button.settings,
+.playback button.record {
+	border-radius : 4px;
+}
+
+.playback .controls button:not(:last-child) {
+	border-right: solid thin silver;
+}
+
+.playback label {
+	font-weight : bold;
+    color: #0051A3;
+}
+
+.playback > * {
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.playback .slider {
+    margin: auto 10px;
+    width: 200px;
+}
+
+.playback > * {
+    margin: auto 5px;
+}
+
+.playback .record:not(:disabled) {
+	color : #dd4237;
+}
+
+.rise-loader .popup-body,
+.settings .popup-body,
+.converter .popup-body {
+    margin: 15px;
+}
+
+.rise-loader ul {
+    padding: 0;
+    margin: 0;
+    border: dotted thin;
+}
+  
+.rise-loader ul li {
+    padding: 6px;
+    list-style-type: none;
+    transition: all .2s ease;
+}
+
+.converter .box {
+	display: inline-block;
+    width: 100%;
+}
+
+.converter .save {
+	margin-top: 10px;
+    width: 100%;
+}
+
+.settings .settings-line {
+	margin-top : 5px;
+}
+
+.settings .settings-value {
+	margin-left : 5px;
+	cursor : pointer;
+}
+
+.settings input[type="number"] {
+	width : 60px;
+}
+
+.settings input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    vertical-align: middle;
+}
+
+.settings .settings-line > * {
+	display : inline-block;
+}
+
+.settings label[for] {
+	cursor:pointer;
+}

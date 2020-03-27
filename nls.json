@@ -1,0 +1,44 @@
+{
+	"Playback_FastBackward" : {
+		"en" : "Go to first frame"
+	},
+	"Playback_StepBack" : {
+		"en" : "Step back"
+	},
+	"Playback_Backwards" : {
+		"en" : "Play backwards"
+	},
+	"Playback_Play" : {
+		"en" : "Play forward"
+	},
+	"Playback_StepForward" : {
+		"en" : "Step forward"
+	},
+	"Playback_FastForward" : {
+		"en" : "Go to last frame"
+	},
+	"Playback_Seek" : {
+		"en" : "Slide to seek frame"
+	},
+	"Playback_Record" : {
+		"en" : "Record simulation to .webm"
+	},
+	"Playback_Settings" : {
+		"en" : "Modify simulation playback settings"
+	},
+	"Settings_Title" : {
+		"en" : "Settings"
+	},
+	"Settings_FPS" : {
+		"en" : "Frames per second:"
+	},
+	"Settings_Loop" : {
+		"en" : "Loop:"
+	},
+	"Settings_ShowGrid" : {
+		"en" : "Show grid:"
+	},
+	"Settings_Size" : {
+		"en" : "Row Height:"
+	}
+}
