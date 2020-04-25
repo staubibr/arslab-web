@@ -4,14 +4,13 @@ import Core from '../../basic-tools/tools/core.js';
 import Dom from '../../basic-tools/tools/dom.js';
 import Net from '../../basic-tools/tools/net.js';
 import Templated from '../../basic-tools/components/templated.js';
+import Zip from '../../web-devs-tools/tools/zip.js';
 
 export default Core.Templatable("Widget.RiseList", class RiseLoader extends Templated {
 
     constructor(id) {
         super(id);
 		
-		// TODO : Not sure this should go here
-		// zip.workerScriptsPath = "./references/zip/";
 		
 		var path = location.href.split("/");
 		
@@ -57,7 +56,7 @@ export default Core.Templatable("Widget.RiseList", class RiseLoader extends Temp
     }
 
 	AddModel(model) {
-		var li = Dom.Create("li", { className:'model' }, this.Node('list'));
+		var li = Dom.Create("li", { className:'model' }, this.Elem('list'));
 		
 		li.innerHTML = model.name;
 		
@@ -65,62 +64,43 @@ export default Core.Templatable("Widget.RiseList", class RiseLoader extends Temp
 	}
 	
     onLiModelClick_Handler(model, ev){
-		// Dom.AddCss(this.Node("list"), "disabled");
-		
 		this.Emit("ModelSelected", { model : model });
 				
         this.getRiseModel(model);
     }
 
     getRiseModel(model){
+		Dom.RemoveCss(this.Elem("wait"), "hidden");
+		
 		var p = Net.Request(model.url, null, 'blob');
 
 		var success = function(ev) {
 			var blob = new Blob([ev.result], { type : "application/zip" });
-			var r = new zip.BlobReader(blob);
-
-			zip.createReader(r, this.ReadZip.bind(this), this.onError_Handler);
+			
+			Zip.LoadZip(blob).then(this.onZip_Loaded.bind(this), this.onError_Handler.bind(this));
 		}.bind(this);
 
-		p.then(success, this.onError_Handler);
+		p.then(success, this.onError_Handler.bind(this));
     }
 
-	ReadEntry(entry) {
-		var d = Lang.Defer();
+	onZip_Loaded(ev) {
+		Dom.AddCss(this.Elem("wait"), "hidden");
 		
-		entry.getData(new zip.TextWriter(), function(text) {
-			var blob = new Blob([text], { type: "text/plain" });
-			var file = new File([blob], entry.filename);
-
-			d.Resolve(file);
-		});
-				
-		return d.promise;
+		this.Emit("FilesReady", { files : ev.result.files });
 	}
 
-	ReadZip(reader) {
-		reader.getEntries(function(entries) {
-			var defs = entries.map(e => { return this.ReadEntry(e); });
-						
-			Promise.all(defs).then(function(data) {
-				reader.close();
-				
-				var files = data.map(d => { return d.result; });
-							
-				// Dom.RemoveCss(this.Node("list"), "disabled");
-			
-				this.Emit("FilesReady", { files : files });
-			}.bind(this));
-		}.bind(this));
-	}
-
-	onError_Handler(error) {
-		// Dom.RemoveCss(this.Node("list"), "disabled");
-			
-		alert(error.toString());
+	onError_Handler(ev) {
+		Dom.AddCss(this.Elem("wait"), "hidden");
+		
+		this.Emit("error", { error:ev.error });
 	}
 
     Template(){
-        return "<ul handle='list'></ul>";
+        return "<div class='rise-loader'>" + 
+				  "<div handle='wait' class='wait hidden'>" + 
+					"<img src='./assets/loading.svg'>" +
+				  "</div>" + 
+				  "<ul handle='list'></ul>" + 
+			   "</div>";
     }
 });

@@ -1,145 +1,146 @@
 'use strict';
 
-// import Sim from '../utils/sim.js';
 import Core from '../../basic-tools/tools/core.js';
-import Net from '../../basic-tools/tools/net.js';
 import Templated from '../../basic-tools/components/templated.js';
 import BoxInput from '../../basic-tools/ui/box-input-files.js';
 
-export default Core.Templatable("Widget.Converter", class Control extends Templated { 
+import Zip from '../../web-devs-tools/tools/zip.js';
 
-	get Config() { return this.config; }
+import CdppDevs	from '../parsers/CdppDevs.js';
+import CdppCell	from '../parsers/CdppCell.js';
+import LopezCell from '../parsers/LopezCell.js';
+
+export default Core.Templatable("Widget.Converter", class Converter extends Templated { 
+	
+	get Disabled() {
+		return this.Elem("parse").disabled;
+	}
+	
+	get Simulator() {
+		var node = this.Node("simulators").Node("input:checked");
+		
+		return node ? node.Element.value : null;
+	}
+	
+	get Type() {
+		var node = this.Node("types").Node("input:checked");
+		
+		return node ? node.Element.value : null;
+	}
+	
+    static get PARSERS() {
+        return {
+			"CD++" : {
+				"DEVS" : CdppDevs,
+				"Cell-DEVS" : CdppCell
+			},
+			"Lopez" : {
+				"DEVS" : null,
+				"Cell-DEVS" : LopezCell
+			},
+			"Cadmium" : {
+				"DEVS" : null,
+				"Cell-DEVS" : null
+			}
+		};
+    }
 	
 	constructor(node) {		
 		super(node);
 		
 		this.files = null;
-		this.config = null;
-		this.parser = null;
 		
-		this.simulationJSON = {
-			svg : null,
-			log : null,
-			size : null,
-			modelName : null,
-			simulator : null,
-			style : null
-		}
+		var simulators = this.Node("simulators").Nodes("input");
+		var types = this.Node("types").Nodes("input");
 
-		this.Node("save").addEventListener("click", this.onLoadClick_Handler.bind(this));
-		this.Node("dropzone").On("Change", this.onDropzoneChange_Handler.bind(this));
-	}
-
-	DownloadJSON(simulation) {	
-		var myJSON = JSON.stringify(simulation.transition);
-		var array = typeof myJSON != 'object' ? JSON.parse(myJSON) : myJSON;
-		var CSVstring = '';
-   			
-		for (var i = 0; i < array.length-1; i++) {
-			var line = '';
-			
-			for (var index in array[i]) {
-				if (line != '') line += ','
-
-				line += array[i][index];
-			}
-
-			CSVstring += line + '\r\n';
-		}
-			
-		//for last line
-		var line = '';
-		
-		for (var index in array[i]) {
-			if (line != '') line += ','
-
-			line += array[i][index];
-		}
-
-		CSVstring += line;
-
-		this.simulationJSON.size = simulation.size;
-		this.simulationJSON.modelName = simulation.simulatorName;
-		this.simulationJSON.simulator = simulation.simulator;
-		this.simulationJSON.style = simulation.palette ;
-		
-		var p1 = Net.CreateGistSVG(String(simulation.svg));
-		var p2 = Net.CreateGistCSV(String(CSVstring));
-		
-		Promise.all([p1,p2]).then((data) => {
-			
-			this.setCSVURL (data[0], data[1]) ;
-		});	
-	}
-
-	setCSVURL(SVGurl, CSVurl) {
-		this.simulationJSON.svg = SVGurl;
-		this.simulationJSON.log = CSVurl;
-		this.Download();
-	}
-
-	Download() {
-		var styleJson = [];
-			
-		for( var i = 0 ; i < this.simulationJSON.style.length ; i++){
-   			var rangeValue = [this.simulationJSON.style[i][0],this.simulationJSON.style[i][1]];
-
-  			var colorValue = this.simulationJSON.style[i][2];
-  		
-			styleJson.push({range : rangeValue,color : colorValue});
-		}
-
-		var simJSON = JSON.stringify({ 
-			files : {
-				svg : this.simulationJSON.svg,
-				log : this.simulationJSON.log
-			},
-			simulator : this.simulationJSON.simulator, 
-			model : {
-				name : this.simulationJSON.modelName,
-				size : this.simulationJSON.size 
-			}
-			,
-			style : styleJson
+		simulators.forEach(input => {
+			input.On('change', this.onSimulatorOption_Change.bind(this));
+			input.On('change', this.onTypeOption_Change.bind(this));
 		});
-	
-		Net.Download(this.simulationJSON.modelName + ".json", simJSON);
-	}
-
-	onLoadClick_Handler(ev) {
-		this.parser.Parse(this.files).then((ev) => { this.DownloadJSON(ev.result); });
 		
-		this.Emit("Save");	
-	}
+		types.forEach(input => {
+			input.On('change', this.onTypeOption_Change.bind(this));
+		});
 
-	onDropzoneChange_Handler(ev) {
+		this.Node("parse").On("click", this.onParseButton_Click.bind(this));
+		this.Elem("dropzone").On("Change", this.onDropzone_Change.bind(this));
+	}
+	
+	onDropzone_Change(ev) {
 		this.files = ev.files;
+		
+		this.UpdateButton();
+	}
+	
+	onSimulatorOption_Change(ev) {
+		var parsers = Converter.PARSERS[ev.target.value];
+		
+		for (var id in parsers) {
+			var radio = this.Node("types").Node(`input[value=${id}]`).elem;
+			
+			radio.checked = false;
+			radio.disabled = !parsers[id]; 
+			radio.title = !parsers[id] ? Core.Nls("Converter_Parser_NA") : "";
+		}
+		
+		var first = this.Node("types").Elem(`input:not([disabled])`);
+		
+		if (first) first.checked = true;
+	}
+	
+	onTypeOption_Change(ev) { 
+		this.UpdateButton();
+		
+		if (this.Disabled) return;
+	}
 
-		var success = this.onParserDetected_Handler.bind(this);
-		var failure = this.onError_Handler.bind(this);
+	onParseButton_Click(ev) {
+		var parser = new Converter.PARSERS[this.Simulator][this.Type];
 		
-		Sim.DetectParser(ev.files).then(success, failure);	
+		var p = parser.Parse(this.files);
+		
+		p.then(this.onParser_Parsed.bind(this, parser), this.onConverter_Error.bind(this));
 	}
 	
-	onConfigParsed_Handler(ev) {
-		this.config = ev.result;
-	
-	}	
-	
-	onParserDetected_Handler(ev) {
-		this.parser = ev.result;
-	
-		this.onConfigParsed_Handler(ev);
+	onParser_Parsed(parser, ev) {
+		try {
+			Zip.SaveZipStream(ev.result.name + ".zip", ev.result.Files()).then((ev) => {
+				this.Emit("converted");
+			});
+		}
+		catch (error) {
+			this.onConverter_Error({ error:error });
+		}
 	}
 	
-	onError_Handler(ev) {
-		this.Node("dropzone").Reset();
+	onConverter_Error(ev) {		
+		this.Emit("error", { error:ev.error });
+	}
+
+	UpdateButton() {
+		var simulator = this.Node("simulators").Node("input:checked");
+		var type = this.Node("types").Node("input:checked");
 		
-		alert(ev.error.toString());
+		this.Elem("parse").disabled = !simulator || !type || this.files == null;
 	}
 
 	Template() {
-		return "<div handle='dropzone' widget='Widget.Box-Input-Files'></div>" +
-			   "<button handle='save' class='save' >Parse files</button>";
+		return "<div class='converter'>" +
+			      "<div class='options-container'>" +
+				     "<div handle='simulators' class='options-column'>" +
+				        "<label>Simulator</label>" +
+					    "<label class='option'><input type='radio' name='simulator' value='CD++' checked>CD++</label>" +
+					    "<label class='option'><input type='radio' name='simulator' value='Cadmium'>Cadmium</label>" +
+					    "<label class='option'><input type='radio' name='simulator' value='Lopez'>Lopez</label>" +
+				     "</div>" +
+				     "<div handle='types' class='options-column'>" +
+					    "<label>Type</label>" +
+					    "<label class='option'><input type='radio' name='type' value='DEVS' checked>DEVS</label>" +
+					    "<label class='option'><input type='radio' name='type' value='Cell-DEVS'>Cell-DEVS</label>" +
+				     "</div>" +
+			      "</div>" +
+			      "<div handle='dropzone' widget='Widget.Box-Input-Files'></div>" +
+			      "<button handle='parse' class='save' disabled>Parse files</button>" +
+			   "</div>";
 	}
 });

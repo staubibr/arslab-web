@@ -16,14 +16,14 @@ export default Core.Templatable("Widget.Playback", class Playback extends Templa
 		
 		this.Enable(false);
 		
-		this.Node("first").addEventListener("click", this.onFirstClick_Handler.bind(this));
-		this.Node("stepBack").addEventListener("click", this.onStepBackClick_Handler.bind(this));
-		this.Node("rewind").addEventListener("click", this.onRewindClick_Handler.bind(this));
-		this.Node("play").addEventListener("click", this.onPlayClick_Handler.bind(this));
-		this.Node("stepForward").addEventListener("click", this.onStepForwardClick_Handler.bind(this));
-		this.Node("last").addEventListener("click", this.onLastClick_Handler.bind(this));
-		this.Node("slider").addEventListener("input", this.onSliderChange_Handler.bind(this));
-		this.Node("record").addEventListener("click", this.onRecordClick_Handler.bind(this));
+		this.Node("first").On("click", this.onFirstClick_Handler.bind(this));
+		this.Node("stepBack").On("click", this.onStepBackClick_Handler.bind(this));
+		this.Node("rewind").On("click", this.onRewindClick_Handler.bind(this));
+		this.Node("play").On("click", this.onPlayClick_Handler.bind(this));
+		this.Node("stepForward").On("click", this.onStepForwardClick_Handler.bind(this));
+		this.Node("last").On("click", this.onLastClick_Handler.bind(this));
+		this.Node("slider").On("input", this.onSliderChange_Handler.bind(this));
+		this.Node("record").On("click", this.onRecordClick_Handler.bind(this));
 	}
 	
 	Initialize(simulation, settings) {
@@ -37,8 +37,8 @@ export default Core.Templatable("Widget.Playback", class Playback extends Templa
 		this.min = 0;
 		this.max = this.values.length - 1;
 		
-		this.Node("slider").setAttribute("min", this.min);
-		this.Node("slider").setAttribute("max", this.max);
+		this.Elem("slider").setAttribute("min", this.min);
+		this.Elem("slider").setAttribute("max", this.max);
 		
 		this.SetCurrent(this.min);
 		
@@ -46,21 +46,21 @@ export default Core.Templatable("Widget.Playback", class Playback extends Templa
 	}
 	
 	Enable (isEnabled) {
-		this.Node("first").disabled = !isEnabled;
-		this.Node("stepBack").disabled = !isEnabled;
-		this.Node("rewind").disabled = !isEnabled;
-		this.Node("play").disabled = !isEnabled;
-		this.Node("stepForward").disabled = !isEnabled;
-		this.Node("last").disabled = !isEnabled;
-		this.Node("slider").disabled = !isEnabled;
-		this.Node("record").disabled = !isEnabled;
+		this.Elem("first").disabled = !isEnabled;
+		this.Elem("stepBack").disabled = !isEnabled;
+		this.Elem("rewind").disabled = !isEnabled;
+		this.Elem("play").disabled = !isEnabled;
+		this.Elem("stepForward").disabled = !isEnabled;
+		this.Elem("last").disabled = !isEnabled;
+		this.Elem("slider").disabled = !isEnabled;
+		this.Elem("record").disabled = !isEnabled;
 	}
 	
 	SetCurrent(i) {
 		this.current = i;
 		
-		this.Node("label").innerHTML = this.values[this.current];
-		this.Node("slider").value = this.current;
+		this.Elem("label").innerHTML = this.values[this.current];
+		this.Elem("slider").value = this.current;
 	}
 	
 	Stop() {
@@ -70,8 +70,8 @@ export default Core.Templatable("Widget.Playback", class Playback extends Templa
 		
 		if (this.interval) clearInterval(this.interval);
 		
-		Dom.SetCss(this.Node("rewind"), "fas fa-backward");
-		Dom.SetCss(this.Node("play"), "fas fa-play");
+		Dom.SetCss(this.Elem("rewind"), "fas fa-backward");
+		Dom.SetCss(this.Elem("play"), "fas fa-play");
 		
 		return d;
 	}
@@ -123,7 +123,7 @@ export default Core.Templatable("Widget.Playback", class Playback extends Templa
 		
 		this.direction = "rewind";
 		
-		Dom.SetCss(this.Node("rewind"), "fas fa-pause");
+		Dom.SetCss(this.Elem("rewind"), "fas fa-pause");
 		
 		this.interval = setInterval(function(){ 
 			if (this.current > this.min) this.GoToPrevious();
@@ -139,7 +139,7 @@ export default Core.Templatable("Widget.Playback", class Playback extends Templa
 		
 		this.direction = "play";
 		
-		Dom.SetCss(this.Node("play"), "fas fa-pause");
+		Dom.SetCss(this.Elem("play"), "fas fa-pause");
 		
 		this.Play(this.settings.Loop, this.settings.Interval);
 	}
@@ -167,7 +167,7 @@ export default Core.Templatable("Widget.Playback", class Playback extends Templa
 		
 		var css = this.recording ? "fas fa-square record" : "fas fa-circle record";
 		
-		Dom.SetCss(this.Node("record"), css);
+		Dom.SetCss(this.Elem("record"), css);
 	}
 	
 	onSliderChange_Handler(ev) {

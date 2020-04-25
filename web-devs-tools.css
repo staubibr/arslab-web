@@ -54,9 +54,7 @@ input[type=range]:disabled::-webkit-slider-thumb{
 	color : #dd4237;
 }
 
-.rise-loader .popup-body,
-.settings .popup-body,
-.converter .popup-body {
+.popup-body {
     margin: 15px;
 }
 
@@ -71,6 +69,23 @@ input[type=range]:disabled::-webkit-slider-thumb{
     list-style-type: none;
     transition: all .2s ease;
 }
+  
+.rise-loader .wait {
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    z-index: 1000;
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.rise-loader .wait img{ 
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
 
 .converter .box {
 	display: inline-block;
@@ -80,6 +95,41 @@ input[type=range]:disabled::-webkit-slider-thumb{
 .converter .save {
 	margin-top: 10px;
     width: 100%;
+}
+
+.converter .options-container {
+    text-align: center;
+}
+
+.converter .options-container > * {
+	display: inline-block;
+    margin-bottom: 10px;
+    vertical-align: top;
+}
+
+.converter .options-container .option {
+	cursor: pointer;
+}
+
+.converter .options-column {	
+    width: 50%;
+}
+
+.converter .options-column > * {
+	display: block;
+	text-align: left;
+    padding: 1px;
+}
+
+.converter .options-column > *:first-child {
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #198CFF;
+    padding-bottom: 4px;
+}
+
+.converter .options-column > *:not(:first-child) {
+    padding-left: 10px;
 }
 
 .settings .settings-line {
