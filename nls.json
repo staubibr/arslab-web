@@ -28,5 +28,8 @@
 	},
 	"Popup_Settings_Title" : {
 		"en":"Playback settings"
+	},
+	"Converter_Parser_NA" : {
+		"en" : "This parser is not available."
 	}
 }

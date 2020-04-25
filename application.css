@@ -1,9 +1,12 @@
 @import url(https://fonts.googleapis.com/css?family=Varela+Round);
 
-html, body {
-	background-color: #eee;
+html, body, .popup {
     font-family: sans-serif;
     font-size: 11pt;
+}
+
+.popup {
+	background-color: #fff;
 }
 
 main {
@@ -80,7 +83,7 @@ button:disabled {
 }
 
 .box:hover {
-  background: #198CFF;
+  background: #9eceff9e;
   border-color: #0051a3;
   transition: all .2s ease;
 }
@@ -115,7 +118,6 @@ button:not(:disabled):hover {
 
 .dropzone-container .box {
     width: 430px;
-    background: #f8f8f8;
 }
 
 .dropzone-container .dropzone-column {
@@ -129,11 +131,16 @@ button:not(:disabled):hover {
 }
 
 .box {
+    background: #fff;
 	border-color: #198CFF;
+	text-align:center;
 }
 
 .box i, .box label {
     font-weight: bold;
+    word-wrap: break-word;
+    padding: 0px 20px;
+    box-sizing: border-box;
 }
 
 .playback {
@@ -166,14 +173,14 @@ button:not(:disabled):hover {
     background: #ccc;
 }
 
-.popup.converter .popup-container {
-	max-height : 365px;
+.popup.popup-converter {
+    max-height: 460px;
 }
 
-.popup.rise .popup-container {
+.popup.popup-rise {
 	max-height : 350px;
 }
 
-.popup.settings .popup-container {
+.popup.popup-settings {
 	max-height: 180px;
 }
