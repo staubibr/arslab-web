@@ -15,6 +15,18 @@ export default class Dom {
 	static Node(pNode, selector) {
 		return pNode.querySelectorAll(selector).item(0) || null;
 	}
+	
+	/**
+	* Retrieve elements using a selector
+	*
+	* Parameters :
+	*	pNode : Element, the parent node where to begin the search
+	*	selector : String, a selector statement
+	* Return : Element, the Element found, null otherwise
+	*/
+	static Nodes(pNode, selector) {
+		return pNode.querySelectorAll(selector) || null;
+	}
 
 	/**
 	* Create an Element

@@ -6,14 +6,14 @@ import Templated from '../../basic-tools/components/templated.js';
 
 export default Core.Templatable("Widget.Box-Button", class Dropzone extends Templated { 
 
-	set Label(value) { this.Node("label").innerHTML = value; }
+	set Label(value) { this.Elem("label").innerHTML = value; }
 
-	set Icon(value) { Dom.AddCss(this.Node("icon"), value); }
+	set Icon(value) { Dom.AddCss(this.Elem("icon"), value); }
 
 	constructor(container) {
 		super(container);
 		
-		this.Node("button").addEventListener("click", this.OnButton_Click.bind(this));
+		this.Elem("button").On("click", this.OnButton_Click.bind(this));
 	}
 	
 	Template() {

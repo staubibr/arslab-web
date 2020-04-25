@@ -3,6 +3,7 @@
 import Core from '../tools/core.js';
 import Dom from '../tools/dom.js';
 import Evented from './evented.js';
+import Node from './node.js';
 
 export default class Templated extends Evented { 
 
@@ -59,9 +60,8 @@ export default class Templated extends Evented {
 		}
 	}
 	
-	BuildSubWidgets() {
+	BuildSubWidgets() {		
 		var nodes = this.template.querySelectorAll("[widget]");
-		var targets = {};
 		
 		// Can't use Array ForEach here since nodes is a NodeList, not an array
 		for (var i = 0; i < nodes.length; i++) {
@@ -100,6 +100,10 @@ export default class Templated extends Evented {
 	}
 	
 	Node(id) {
+		return new Node(this.nodes[id]);
+	}
+	
+	Elem(id) {
 		return this.nodes[id];
 	}
 	

@@ -5,9 +5,9 @@ import Dom from '../tools/dom.js';
 export default Core.Templatable("Basic.Components.Typeahead", class Typeahead extends Templated {
 	
 	
-    set placeholder(value) { this.Node('input').setAttribute('placeholder', value); }
+    set placeholder(value) { this.Elem('input').setAttribute('placeholder', value); }
 	
-	set title(value) { this.Node('input').setAttribute('title', value); }
+	set title(value) { this.Elem('input').setAttribute('title', value); }
 	
 	set items(value) {		
 		this._items = value.map(i => {
@@ -36,13 +36,13 @@ export default Core.Templatable("Basic.Components.Typeahead", class Typeahead ex
 		this._curr = null;
 		this._temp = null;
 		
-		this.Node("input").addEventListener("input", function(ev) { this.OnInputInput_Handler(ev); }.bind(this));	
+		this.Node("input").On("input", function(ev) { this.OnInputInput_Handler(ev); }.bind(this));	
 
-		// this.Node("input").addEventListener("click", this.OnInputClick_Handler.bind(this));
-		this.Node("input").addEventListener("keydown", function(ev) { this.OnInputKeyDown_Handler(ev); }.bind(this));		
-		this.Node("input").addEventListener("blur", function(ev) { this.OnInputBlur_Handler(ev); }.bind(this));		
-		this.Node("input").addEventListener("focusin", function(ev) { this.OnInputClick_Handler(ev); }.bind(this));		
-		// this.Node("input").addEventListener("focusout", this.OnInputBlur_Handler.bind(this));
+		// this.Node("input").On("click", this.OnInputClick_Handler.bind(this));
+		this.Node("input").On("keydown", function(ev) { this.OnInputKeyDown_Handler(ev); }.bind(this));		
+		this.Node("input").On("blur", function(ev) { this.OnInputBlur_Handler(ev); }.bind(this));		
+		this.Node("input").On("focusin", function(ev) { this.OnInputClick_Handler(ev); }.bind(this));		
+		// this.Node("input").On("focusout", this.OnInputBlur_Handler.bind(this));
 		
 		if (!options) return;
 		
@@ -50,7 +50,7 @@ export default Core.Templatable("Basic.Components.Typeahead", class Typeahead ex
 	}
 	
 	Empty() {		
-		Dom.Empty(this.Node("list"));
+		Dom.Empty(this.Elem("list"));
 		
 		this._filt = [];
 	}
@@ -71,7 +71,7 @@ export default Core.Templatable("Basic.Components.Typeahead", class Typeahead ex
 			Dom.Place(curr.node, frag);
 		}
 				
-		Dom.Place(frag, this.Node("list"));
+		Dom.Place(frag, this.Elem("list"));
 		
 		function compare(label, mask) {
 			return label.toLowerCase().indexOf(mask.toLowerCase()) !== -1
@@ -79,7 +79,7 @@ export default Core.Templatable("Basic.Components.Typeahead", class Typeahead ex
 	}
 	
 	UpdateCss() {		
-		Dom.ToggleCss(this.Node("root"), "collapsed", this._filt.length == 0);
+		Dom.ToggleCss(this.Elem("root"), "collapsed", this._filt.length == 0);
 	}
 	
 	Reset() {
@@ -91,7 +91,7 @@ export default Core.Templatable("Basic.Components.Typeahead", class Typeahead ex
 		
 		var value = this.current ? this.current.data.label : "";
 		
-		this.Node("input").value = value;
+		this.Elem("input").value = value;
 	}
 	
 	OnInputInput_Handler(ev) {
@@ -127,7 +127,7 @@ export default Core.Templatable("Basic.Components.Typeahead", class Typeahead ex
 			
 			this._temp = (ev.keyCode == 40) ? this._temp.next : this._temp.prev;
 			
-			this.Node("input").value = this._temp.data.label;
+			this.Elem("input").value = this._temp.data.label;
 			
 			this.ScrollTo(this._temp);
 			
@@ -144,7 +144,7 @@ export default Core.Templatable("Basic.Components.Typeahead", class Typeahead ex
 
 			// nothing is selected (don't think this can happen		    	
 			else {				
-				this.OnInputClick_Handler({ target:this.Node("input") });
+				this.OnInputClick_Handler({ target:this.Elem("input") });
 			}
 		}
 
@@ -170,7 +170,7 @@ export default Core.Templatable("Basic.Components.Typeahead", class Typeahead ex
 	
 	ScrollTo(item) {				
 		// create rectangules to know the position of the elements
-		var ul = this.Node("list");
+		var ul = this.Elem("list");
 		var liBx = item.node.getBoundingClientRect();
 		var ulBx = ul.getBoundingClientRect();
 		

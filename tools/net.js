@@ -12,24 +12,26 @@ export default class Net {
 	* TODO : This should return a promise object but (ie11)
 	*
 	*/
-	static Request(url) {
+	static Request(url, headers, responseType) {
 		var d = Core.Defer();
+		
 		var xhttp = new XMLHttpRequest();
 		
 		xhttp.onreadystatechange = function() {
 			if (this.readyState != 4) return;
 		
-			// TODO : Switched to this.response, check if it breaks anything
 			if (this.status == 200) d.Resolve(this.response);
 			
-			else {
-				var error = new Error(this.status + " " + this.statusText);
-
-				d.Reject(error);
-			}
+			else d.Reject({ status:this.status, response:this.response });
 		};
 		
 		xhttp.open("GET", url, true);
+		
+		if (headers) {
+			for (var id in headers) xhttp.setRequestHeader(id, headers[id]);
+		}
+		
+		if (responseType) xhttp.responseType = responseType;   
 		
 		xhttp.send();
 		

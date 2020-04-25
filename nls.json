@@ -10,5 +10,9 @@
     "Dropzone_Upload_Label": {
         "en": "DRAG AND DROP<BR> FILES HERE",
         "fr": "GLISSER ET DÉPOSER<BR> LES FICHIERS ICI"
+    },
+    "Dropzone_Upload_Files": {
+        "en": "FILES LOADED:<br>{0}",
+        "fr": "FICHIERS CHARGÉS:<br>{0}"
     }
 }

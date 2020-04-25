@@ -5,7 +5,7 @@ import Templated from '../components/templated.js';
 export default class Popup extends Templated { 
 	
 	set Title(value) {
-		this.Node("title").innerHTML = value;
+		this.Elem("title").innerHTML = value;
 	}
 	
 	set Widget(widget) {
@@ -13,53 +13,48 @@ export default class Popup extends Templated {
 		
 		this.widget = widget;
 		
-		widget.Place(this.Node("body"));
+		widget.Place(this.Elem("body"));
 	}
 	
 	get Widget() { return this.widget; }
 	
-	get Root() { return this.Node("root"); }
-	
-	constructor(css, container) {	
+	constructor(container) {	
 		super(container || document.body);
 				
 		this.onBody_KeyUp_Bound = this.onBody_KeyUp.bind(this);
 		
 		this.h = null;
 		
-		this.Node("close").addEventListener("click", this.onBtnClose_Click.bind(this));
-		
-		if (css) Dom.AddCss(this.Node("root"), css);
-		
-		this.Node("root").addEventListener("click", this.onModal_Click.bind(this));
+		this.nodes.blocker = Dom.Create("div", { className:"popup-blocker" }, document.body);
 		
 		this.SetStyle(0, "hidden");
+		
+		this.Node("close").On("click", this.onBtnClose_Click.bind(this));
+		this.Node("blocker").On("click", this.onModal_Click.bind(this));
 	}
 	
 	SetStyle(opacity, visibility) {
-		this.Node("root").style.opacity = opacity;
-		this.Node("root").style.visibility = visibility;
+		this.Elem("blocker").style.opacity = opacity;
+		this.Elem("blocker").style.visibility = visibility;
+		this.Elem("popup").style.opacity = opacity;
+		this.Elem("popup").style.visibility = visibility;
 	}
 	
 	Empty() {
-		Dom.Empty(this.Node("body"));
+		Dom.Empty(this.Elem("body"));
 	}
 	
-	Show() {
-		Core.DisableFocusable(Dom.Siblings(this.Node("root")), true);
-		
+	Show() {		
 		this.h = document.body.addEventListener("keyup", this.onBody_KeyUp_Bound);
 		
 		this.SetStyle(1, "visible");
 		
 		this.Emit("Show", { popup:this });
 		
-		this.Node("close").focus();
+		this.Elem("close").focus();
 	}
 	
-	Hide() {
-		Core.DisableFocusable(Dom.Siblings(this.Node("root")), false);
-		
+	Hide() {		
 		document.body.removeEventListener("keyup", this.onBody_KeyUp_Bound);
 		
 		this.SetStyle(0, "hidden");
@@ -80,15 +75,13 @@ export default class Popup extends Templated {
 	}
 	
 	Template() {
-		return "<div handle='root' class='popup'>" +
-				  "<div handle='container' class='popup-container'>" +
-					  "<div class='popup-header'>" +
-						  "<h2 class='popup-title' handle='title'></h2>" +
-						  "<button class='close' handle='close' title='nls(Popup_Close)'>×</button>" +
-					  "</div>" +
-					
-					  "<div class='popup-body' handle='body'></div>" +
+		return "<div handle='popup' class='popup'>" +
+				  "<div class='popup-header'>" +
+					  "<h2 class='popup-title' handle='title'></h2>" +
+					  "<button class='close' handle='close' title='nls(Popup_Close)'>×</button>" +
 				  "</div>" +
-			  "</div>";
+					
+				  "<div class='popup-body' handle='body'></div>" +
+			   "</div>";
 	}
 }

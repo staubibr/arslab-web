@@ -200,4 +200,14 @@ export default class Core {
 			for (var i = 0; i < selection.length; i++) selection[i].disabled = disabled;
 		});
 	}	
+	
+	static RgbToHex(rgb) {
+		return "#" + ((1 << 24) + (rgb[0] << 16) + (rgb[1] << 8) + rgb[2]).toString(16).slice(1);
+	}
+	
+	static HexToRgb(hex) {
+		var m = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+		
+		return m ? [parseInt(m[1], 16), parseInt(m[2], 16), parseInt(m[3], 16)] : null;
+	}
 }
