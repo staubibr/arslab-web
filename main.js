@@ -21,9 +21,9 @@ function WaitForDocument() {
 function Start(responses) {	
 	Core.locale = document.documentElement.lang || "en";
 	
-	Core.nls = responses[0].result;
-	Core.nls = Core.Mixin(Core.nls, responses[1].result);
-	Core.nls = Core.Mixin(Core.nls, responses[2].result);
+	Core.nls = responses[0];
+	Core.nls = Core.Mixin(Core.nls, responses[1]);
+	Core.nls = Core.Mixin(Core.nls, responses[2]);
 
 	var app = new Application(document.body);
 }

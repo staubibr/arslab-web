@@ -20,6 +20,12 @@
 	"Dropzone_Rise" : {
 		"en":"Load from RISE"
 	},
+	"Dropzone_Load" : {
+		"en":"Load simulation"
+	},
+	"Dropzone_Viz" : {
+		"en":"Visualize simulation"
+	},
 	"Popup_Rise_Title" : {
 		"en":"Load from RISE"
 	},
@@ -31,5 +37,8 @@
 	},
 	"Converter_Parser_NA" : {
 		"en" : "This parser is not available."
+	},
+	"DEVS_Diagram_Tooltip" : {
+		"en" : "Model Id : {0} <br>Last output : {1}"		
 	}
 }

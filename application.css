@@ -105,28 +105,33 @@ button:not(:disabled):hover {
 	display: inline-block;
 }
 
-.dropzone-container {
+.body-container {
 	margin: 20px 0px;
     text-align: center;
 }
 
-.dropzone-container > * {
+.body-container > * {
 	margin: 0px 10px;
 	display: inline-block;
     vertical-align: middle;
 }
 
-.dropzone-container .box {
-    width: 430px;
+.body-container .save,
+.body-container .box {
+    width: 100%;
 }
 
-.dropzone-container .dropzone-column {
+.body-container .save {
+	margin-top : 10px;
+}
+
+.body-container .body-column {
     height: 100%;
 	width: 30px;
     vertical-align: top;
 }
 
-.dropzone-container .dropzone-column button {
+.body-container .body-column button {
 	margin-bottom: 6px;
 }
 
@@ -144,6 +149,7 @@ button:not(:disabled):hover {
 }
 
 .playback {
+	margin-top : 10px;
     text-align: center;
 }
 
@@ -182,5 +188,39 @@ button:not(:disabled):hover {
 }
 
 .popup.popup-settings {
-	max-height: 180px;
+	max-height: 200px;
+}
+
+main.dropzone-visible .viz-container,
+main:not(.diagram-visible) .diagram-widget-container,
+main:not(.dropzone-visible) .dropzone-container {
+	display:none;
+}
+
+
+
+.tooltip {
+	position: absolute;
+    padding: 5px;
+    border: solid thin silver;
+    border-radius: 4px;
+    pointer-events: none;
+    background: #fff;
+	opacity : 0;
+}
+
+.tooltip .tooltip-title {
+	font-weight : bold;
+}
+
+.tooltip .tooltip-line > * {
+	display:inline-block;
+	vertical-align : middle;
+	margin-left:3px;
+	margin-right:3px;
+}
+
+.tooltip .legend, .tooltip .legend rect {
+	width:12px;
+	height:2px;
 }
