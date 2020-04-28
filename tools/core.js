@@ -71,8 +71,8 @@ export default class Core {
 		var defer = {};
 		
 		defer.promise = new Promise((resolve, reject) => {
-			defer.Resolve = (result) => { resolve({ result:result }); };
-			defer.Reject = (error) => { reject({ error:error }); };
+			defer.Resolve = (result) => { resolve(result); };
+			defer.Reject = (error) => { reject(error); };
 		});
 		
 		return defer;

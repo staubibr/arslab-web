@@ -2,7 +2,8 @@
 
 import Core from '../tools/core.js';
 import Dom from '../tools/dom.js';
-import Templated from './templated.js';
+
+import Templated from '../components/templated.js';
 
 export default class Tooltip extends Templated  {
 		

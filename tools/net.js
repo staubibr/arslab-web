@@ -41,7 +41,7 @@ export default class Net {
 	static JSON(url) {
 		var d = Core.Defer();
 		
-		Net.Request(url).then(r => d.Resolve(JSON.parse(r.result)), d.Reject);
+		Net.Request(url).then(r => d.Resolve(JSON.parse(r)), d.Reject);
 				
 		return d.promise;
 	}

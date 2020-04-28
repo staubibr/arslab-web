@@ -42,14 +42,14 @@ export default Core.Templatable("Widget.Box-Input-Files", class Dropzone extends
 	}
 	
 	OnInput_Change(ev) {
-		this.Update(ev.target.files);
-		
-		var files = [];
-		
+		this.files = []
+				
 		for (var i = 0; i < ev.target.files.length; i++) {
-			files.push(ev.target.files[i]);
+			this.files.push(ev.target.files[i]);
 		}
 		
-		this.Emit("Change", { files:files });
+		this.Update(this.files);
+
+		this.Emit("change", { files:this.files });
 	}
 });
