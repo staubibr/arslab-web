@@ -2,21 +2,13 @@
 
 import Core from '../../basic-tools/tools/core.js';
 import Parser from "./parser.js";
-import ChunkReader from '../../basic-tools/components/chunkReader.js';
-import Transition from '../json/transition.js';
-import PaletteBucket from '../json/paletteBucket.js';
-import Frame from '../json/frame.js';
-import Simulation from '../json/simulation.js';
+import Transition from './json/transition.js';
+import PaletteBucket from './json/paletteBucket.js';
+import Simulation from './json/simulation.js';
 
 export default class CDpp extends Parser { 
 	
-	constructor(files) {
-		super(files);
-		
-		this.log = [];
-	}
-	
-	Parse(files, settings) {
+	Parse(files) {
 		var d = Core.Defer();
 		
 		var val = files.find(function(f) { return f.name.match(/\.val/i); });
@@ -24,27 +16,30 @@ export default class CDpp extends Parser {
 		var ma = files.find(function(f) { return f.name.match(/\.ma/i); });
 		var log = files.find(function(f) { return f.name.match(/\.log/i); });
 		
-		var name = ma.name.substr(0, ma.name.length - 3);
-		
-		var simulation = new Simulation(name, "CDpp", "Cell-DEVS");
-		
 		if (!ma || !log) {
 			d.Reject(new Error("A model (.ma) and a log (.log) file must be provided for the CD++ Cell-DEVS parser."));
 		
 			return d.promise;
 		}
 		
-		var p1 = this.ParseFile(val, this.ParseValFile.bind(this));
-		var p2 = this.ParseFile(pal, this.ParsePalFile.bind(this));
-		var p3 = this.ParseFile(ma, this.ParseMaFile.bind(this));
-		var p4 = this.ParseFileByChunk(log, this.ParseLogChunk.bind(this));
+		var name = ma.name.substr(0, ma.name.length - 3);
+		var simulation = new Simulation(name, "CDpp", "Cell-DEVS");
+		
+		var p1 = this.Read(val, this.ParseValFile.bind(this));
+		var p2 = this.Read(pal, this.ParsePalFile.bind(this));
+		var p3 = this.Read(ma, this.ParseMaFile.bind(this));
+		var p4 = this.ReadByChunk(log, this.ParseLogChunk.bind(this));
 			
 		var defs = [p1, p2, p3, p4];
 	
 		Promise.all(defs).then((data) => {
-			var val = data[0].result;
-			var ma = data[2].result;
+			var val = data[0];
+			var ma = data[2];
 			
+			if (!data[2]) return d.Reject(new Error("Unable to parse the model (.ma) file."));
+			
+			if (!data[3]) return d.Reject(new Error("Unable to parse the log (.log) file or it contained no X and Y messages."));
+						
 			// Other simulators probably don't have to merge, CDpp-Cell-DEVS is complicated (val, global value, initial value, row value, etc.)
 			var initial = this.MergeFrames(ma.initial.global, ma.initial.rows);
 			
@@ -56,13 +51,15 @@ export default class CDpp extends Parser {
 				});
 			}
 			
-			simulation.transitions = transitions.concat(this.log);
-			simulation.palette = data[1].result;
+			simulation.transitions = transitions.concat(data[3]);
+			simulation.palette = data[1];
 			simulation.size = ma.size;
 			
-			d.Resolve(simulation);
-		}, (errors) => {
 			debugger;
+			
+			d.Resolve(simulation);
+		}, (error) => {
+			d.Reject(error);
 		});
 		
 		return d.promise;
@@ -77,7 +74,7 @@ export default class CDpp extends Parser {
 			var cJ = line.indexOf(')'); // coordinate end
 			var vI = line.indexOf('='); // value start
 			
-			var id = line.substring(cI + 1, cJ).replace(",", "-");
+			var id = line.substring(cI + 1, cJ).replace(/,/g, "-");
 			var value = parseFloat(line.substr(vI + 1));
 			
 			return { id:id, value:value };
@@ -159,7 +156,6 @@ export default class CDpp extends Parser {
 	}
 	
 	RowsFrame(file) {
-		// var f = new Frame("00:00:00:000");
 		var raw = file.matchAll(/initialrowvalue\s*:\s*(.+)/g);
 		var f = [];
 		
@@ -228,49 +224,43 @@ export default class CDpp extends Parser {
 		}
 
 		// populate grid palette object
-		for (var i = paletteRanges.length; i-- > 0;){
-			// var color = Core.RgbToHex(paletteColors[i]);
-			
+		for (var i = paletteRanges.length; i-- > 0;){			
 			palette.push(new PaletteBucket(paletteRanges[i][0], paletteRanges[i][1], paletteColors[i]));
 		}
 		
 		return palette;
 	}
 		
-	ParseLogChunk(chunk, progress) {
+	ParseLogChunk(parsed, chunk, progress) {		
 		var lines = [];
 		var start = chunk.indexOf('Mensaje Y', 0);		
 		
-		while (start > -1 && start < chunk.length) {			
+		while (start > -1) {	
 			var end = chunk.indexOf('\n', start);
 			
 			if (end == -1) end = chunk.length + 1;
 			
 			var length = end - start;
-			
-			lines.push(chunk.substr(start, length));
-
-			var start = chunk.indexOf('Mensaje Y', start + length);
-		}
-		
-		lines.forEach(function(line) {
-			var split = line.split("/");
+			var split = chunk.substr(start, length).split("/");
 			
 			// Parse coordinates, state value & frame timestamp
+			var tmp = split[2].trim().split("(")
+			
+			// NOTE : Don't use regex, it's super slow.
 			var t = split[1].trim();							// time
-			var c = split[2].trim().match(/\(([^)]+)\)/)[1];	// id / coordinate
-			var m = split[2].trim().match(/^[^\(]+/)[0];		// model name
+			var m = tmp[0];										// model name
+			var c = tmp[1].slice(0, -1);						// id / coordinate
 			var p = split[3].trim();							// port
 			var v = parseFloat(split[4]);						// value
-			var d = split[4].match(/\(([^)]+)\)/)[1]			// destination
+			var d = split[4].trim().split("(")[1].slice(0,-1)	// destination
 			
-			c = c.replace(",", " ");
+			c = c.replace(/,/g, "-");
 			
-			this.log.push(new Transition("Y", t, m, c, p, v, d));
-		}.bind(this));
-		
-		this.Emit("Progress", { progress: progress });
-		
-		return this.log;
+			parsed.push(new Transition("Y", t, m, c, p, v, d));
+			
+			var start = chunk.indexOf('Mensaje Y', start + length);
+		};
+				
+		return parsed;
 	}
 }

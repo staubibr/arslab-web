@@ -2,146 +2,113 @@
 
 import Core from '../../basic-tools/tools/core.js';
 import Parser from "./parser.js";
-import ChunkReader from '../../basic-tools/components/chunkReader.js';
-import TransitionCSV from '../simulation/transitionCSV.js';
-import Simulation from '../simulation/simulation.js';
+import Transition from './json/transition.js';
+import Simulation from './json/simulation.js';
 
 export default class CDppDEVS extends Parser { 
 		
-	constructor(fileList) {
-		super(fileList);
-		
-		this.svg ;
-		this.transitionCSV = [];
-		this.models = [];
-		this.modelsArray =[];
-	}
-	
 	Parse(files) {
 		var d = Core.Defer();
-		var simulation = new Simulation();
 
-		var log = files.find(function(f) { return f.name.match(/.log/i); });
+		var ma = files.find(function(f) { return f.name.match(/.ma/i); });
 		var svg = files.find(function(f) { return f.name.match(/.svg/i); });
+		var log = files.find(function(f) { return f.name.match(/.log/i); });
 
-		var p1 = this.ParseFileByChunk(log, this.ParseLogChunk.bind(this));
+		if (!ma || !log) {
+			d.Reject(new Error("A model (.ma) and a log (.log) file must be provided for the CD++ DEVS parser."));
+		
+			return d.promise;
+		}
+				
+		var name = log.name.substr(0, log.name.length - 4);
+		var simulation = new Simulation(name, "CDpp", "DEVS");
+		
+		var p1 = this.Read(ma, this.ParseMaFile.bind(this));
+		var p2 = this.Read(svg, this.ParseSVGFile.bind(this));
+		var p3 = this.ReadByChunk(log, this.ParseLogChunk.bind(this));
 
-		var p2 = this.ParseFile(svg, this.ParseSVGFile.bind(this));
-
-		var defs = [p1, p2];
+		var defs = [p1, p2, p3];
 	
 		Promise.all(defs).then((data) => {
-			var info = {
-				simulator : "DEVS",
-				simulatorName : log.name.replace(/\.[^.]*$/, ''),
-			}
-
-			simulation.transition = this.transitionCSV;
-			simulation.svg=this.svg;
-			simulation.Initialize(info);
-			simulation.size = this.models.length;
+			
+			if (!data[0]) return d.Reject(new Error("Unable to parse the model (.ma) file."));
+			
+			if (!data[2]) return d.Reject(new Error("Unable to parse the log (.log) file or it contained no X and Y messages."));
+			
+			simulation.models = data[0].models;
+			simulation.transitions = data[2];
+			simulation.svg = data[1];
+			simulation.size = data[0].size;
+			simulation.palette = null;
 			
 			d.Resolve(simulation);
-		}, (errors) => {
-			debugger;
+		}, (error) => {
+			d.Reject(error);
 		});
 
 		return d.promise;
 	}
 
-	ParseSVGFile( file) {	
-		this.svg = file;
-	}
-
-	ParseLogChunk( chunk, progress) {		
-		var lines = [];
-		var start = chunk.indexOf('Mensaje Y', 0);
+	ParseMaFile(file) {
+		var matches = file.match(/\[(.*)\]/g);
+		var models = [];
 		
-		var linesX = [];
-		var startX = chunk.indexOf('Mensaje X', 0);
-
-		while (start > -1 && start < chunk.length) {			
+		// Remove top from count
+		for (var i = 1; i < matches.length; i++) {
+			var m = matches[i];
+			
+			models.push(m.substr(1, m.length - 2));
+		}
+	
+		return {
+			size : models.length,
+			models : models
+		}
+	}
+	
+	ParseSVGFile( file) {	
+		return file;
+	}
+	
+	ParseLogChunk(parsed, chunk, progress) {		
+		function IndexOf(chunk, text, start) {
+			var idx = chunk.indexOf(text, start);
+			
+			return idx > -1 ? idx : Infinity;
+		}
+		
+		var yStart = IndexOf(chunk, 'Mensaje Y', 0);
+		var xStart = IndexOf(chunk, 'Mensaje X', 0);
+		
+		while (xStart < Infinity || yStart < Infinity) {
+			var type = (xStart < yStart) ? 'X' : 'Y';
+			
+			var start = (type == 'X') ? xStart : yStart;
+			
 			var end = chunk.indexOf('\n', start);
 			
 			if (end == -1) end = chunk.length + 1;
 			
 			var length = end - start;
 			
-			lines.push(chunk.substr(start, length));
+			if (type == 'X') xStart = IndexOf(chunk, 'Mensaje X', start + length);
+			if (type == 'Y') yStart = IndexOf(chunk, 'Mensaje Y', start + length);
+			
+			var split = chunk.substr(start, length).split('/');
+			
+			var t = split[1].trim();
+			var i = split[2].trim().match(/\(([^)]+)\)/)[1];	// id / coordinate
+			var m = split[2].trim().match(/^[^\(]+/)[0];		// model name
+			var p = split[3].trim();							// port
+			var v = parseFloat(split[4]);						// value
+			var d = split[4].match(/\(([^)]+)\)/)[1]			// destination
 
-			var start = chunk.indexOf('Mensaje Y', start + length);
+			// NOTE: Here we replace model id by name because name is also unique (are we sure?) but more intuitive. 
+			// We do this to allow users to use names when drawing SVG diagrams. This way, names in SVG will match
+			// with names in transitions.
+			parsed.push(new Transition(type, t, m, m, p, v, d));
 		}
 		
-		while (startX > -1 && startX < chunk.length) {
-			var endX = chunk.indexOf('\n', startX);
-
-			if (endX == -1) endX = chunk.length + 1;
-
-			var lengthX = endX - startX;
-
-			linesX.push(chunk.substr(startX, lengthX));
-
-			var startX = chunk.indexOf('Mensaje X', startX + lengthX);
-		}
-
-		var safe = [];
-		
-		linesX.forEach(linesX, function(line) {
-			var split = line.split("/");
-
-			var frame = split[1].trim();
-
-			var model = split[2].substring(0,  split[2].indexOf('(')).trim();
-
-			var stateValue = parseFloat(split[4]);
-
-			var input = split[3].trim();
-
-			var a = new TransitionCSV(frame, model, stateValue,input,"", "","","");
-			
-			this.transitionCSV.push(a);
-		}.bind(this));
-
-
-		lines.forEach(lines, function(line) {
-			var split = line.split("/");
-
-			var frame = split[1].trim();
-
-			var model = split[2].substring(0,  split[2].indexOf('(')).trim();
-
-			var stateValue = parseFloat(split[4]);
-
-			var output = split[3].trim();
-
-			var a = new TransitionCSV(frame, model, stateValue,"", output,"","","");
-			
-			this.transitionCSV.push(a);
-			this.modelsArray.push(model);
-		}.bind(this));
-
-		var j = 0;
-		var k = 0;
-        var count = 0; 
-        var start = false; 
-          
-        for (j = 0; j < this.modelsArray.length; j++) { 
-            for (k = 0; k < this.models.length; k++) { 
-                if ( this.modelsArray[j] == this.models[k] ) { 
-                    start = true; 
-                } 
-            } 
-			
-            count++; 
-			
-            if (count == 1 && start == false) { 
-                this.models.push(this.modelsArray[j]); 
-            } 
-			
-            start = false; 
-            count = 0; 
-        } 
-
-		return this.transitionCSV;
+		return parsed;
 	}
 }

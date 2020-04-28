@@ -2,89 +2,75 @@
 
 import Core from '../../basic-tools/tools/core.js';
 import Parser from "./parser.js";
-import ChunkReader from '../../basic-tools/components/chunkReader.js';
-import TransitionCSV from '../simulation/transitionCSV.js';
-import Simulation from '../simulation/simulation.js';
+import Transition from './json/transition.js';
+import Simulation from './json/simulation.js';
 
 export default class LopezCell extends Parser { 
 	
-	constructor(files) {
-		super(files);
-	}
-
 	Parse(files) {
 		var d = Core.Defer();
 
-		var simulation = new Simulation();
-
 		var log = files.find(function(f) { return f.name.match(/.log/i); });
 
-		var p = this.ParseFileByChunk(log, this.ParseLogChunk.bind(this));
+		if (!log) {
+			d.Reject(new Error("A log (.log) file must be provided for the Lopez Cell-DEVS parser."));
+		
+			return d.promise;
+		}
+				
+		var name = log.name.substr(0, log.name.length - 4);
+		var simulation = new Simulation(name, "Lopez", "Cell-DEVS");
+
+		var p = this.ReadByChunk(log, this.ParseLogChunk.bind(this));
 			
 		var defs = [p];
 	
 		Promise.all(defs).then((data) => {
-			var info = {
-				simulator : "Lopez",
-				name : log.name.replace(/\.[^.]*$/, ''),
-				files : files,
-			}
-
-			simulation.transition = this.transitionCSV;
-			simulation.Initialize(info);
-
+			if (!data[0]) return d.Reject(new Error("Unable to parse the log (.log) file."));
+			
+			simulation.transitions = data[0];
+			simulation.size = data[0].size; // TODO Where from?
+			simulation.palette = null;
+			
+			debugger;
+			
 			d.Resolve(simulation);
+		}, (error) => {
+			d.Reject(error);
 		});
 		
 		return d.promise;
 	}
 		
-	ParseLogChunk(chunk, progress) {
-		var lines = [];
+	ParseLogChunk(parsed, chunk, progress) {		
 		var start = chunk.indexOf('0 / L / Y', 0);
 							
-		while (start > -1 && start < chunk.length) {			
+		while (start > -1) {			
 			var end = chunk.indexOf('\n', start);
 			
 			if (end == -1) end = chunk.length + 1;
 			
 			var length = end - start;
+			var split = chunk.substr(start, length).split("/");
 			
-			lines.push(chunk.substr(start, length));
-
+			// Parse coordinates, state value & frame timestamp
+			var tmp = split[4].trim().split("(")
+			
+			// NOTE : Don't use regex, it's super slow.
+			var t = split[3].trim();							// time
+			var m = tmp[0];										// model name
+			var c = tmp[1].slice(0, -1);						// id / coordinate
+			var p = split[5].trim();							// port
+			var v = parseFloat(split[6]);						// value
+			var d = split[6].trim().split("(")[1].slice(0,-1)	// destination
+			
+			c = c.replace(/,/g, "-");
+			
+			parsed.push(new Transition("Y", t, m, c, p, v, d));
+			
 			var start = chunk.indexOf('0 / L / Y', start + length);
-		}
+		};
 				
-		lines.forEach(function(line) {
-			var split = line.split("/");
-			
-			// Parse coordinates
-			var i = split[4].indexOf('(');
-			var j = split[4].indexOf(')');
-			var c = split[4].substring(i + 1, j).split(',');
-			
-			// TODO : Does this ever happen?
-			if (c.length < 2) return;
-			
-			// Parse coordinates, state value, timestamp used as id
-			var coord = this.GetCoord(c);
-			var v = parseFloat(split[6]);
-			var fId = split[3].trim();
-			
-			var a = new TransitionCSV(fId, "", v,"", "","","",v,coord);
-			
-			this.transitionCSV.push(a);	
-		}.bind(this));
-		
-		return this.transitionCSV;
-	}
-	
-	GetCoord(sCoord) {
-		// Parse coordinates
-		var x = parseInt(sCoord[1],10);
-		var y = parseInt(sCoord[0],10);
-		var z = parseInt(sCoord.length==3 ? sCoord[2] : 0, 10);
-		
-		return [x, y, z];
+		return parsed;
 	}
 }

@@ -35,7 +35,7 @@ export default class Zip {
 		
 		var created = (reader) => {	Zip.ReadZip(reader).then(finished, failure); }
 		
-		var finished = (ev) => {	d.Resolve({ files:ev.result }); }
+		var finished = (result) => { d.Resolve({ files:result }); }
 
 		var failure = (error) => { d.Reject(error); }
 		
@@ -64,10 +64,10 @@ export default class Zip {
 		reader.getEntries(function(entries) {
 			var defs = entries.map(e => { return Zip.ReadEntry(e); });
 			
-			Promise.all(defs).then(function(data) {
+			Promise.all(defs).then(function(files) {
 				reader.close();
 				
-				var files = data.map(d => { return d.result; });
+				// var files = data.map(d => { return d; });
 						
 				d.Resolve(files);	
 			});

@@ -70,7 +70,7 @@ input[type=range]:disabled::-webkit-slider-thumb{
     transition: all .2s ease;
 }
   
-.rise-loader .wait {
+.wait {
     position: absolute;
     top: 0px;
     bottom: 0px;
@@ -80,7 +80,7 @@ input[type=range]:disabled::-webkit-slider-thumb{
     background: rgba(255, 255, 255, 0.5);
 }
 
-.rise-loader .wait img{ 
+.wait img{ 
     position: absolute;
     top: 50%;
     left: 50%;
@@ -157,4 +157,29 @@ input[type=range]:disabled::-webkit-slider-thumb{
 
 .settings label[for] {
 	cursor:pointer;
+}
+
+.devs-diagram svg {
+    pointer-events: visible;
+	cursor: pointer;
+}
+
+.devs-diagram text.highlighted tspan {
+    fill: #259494  !important;
+    font-weight: bold !important;
+}
+
+.devs-diagram rect.highlighted {
+	stroke-width: 1px !important;
+    stroke: #259494  !important;
+}
+
+.devs-diagram path.highlighted {
+	stroke-width: 0.3px !important;
+    stroke: #259494  !important;
+}
+
+.devs-diagram rect.selected {
+	stroke-width: 1px !important;
+    stroke: red  !important;
 }

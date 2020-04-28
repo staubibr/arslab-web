@@ -9,8 +9,11 @@ export default class Settings extends Evented {
 	
 	get Interval() { return 1000 / this.json.fps; }
 	
-	get RowHeight() { return this.json.rowHeight; }
-	set RowHeight(value) { this.Set("rowHeight", value); }
+	get Height() { return this.json.height; }
+	set Height(value) { this.Set("height", value); }
+	
+	get Width() { return this.json.width; }
+	set Width(value) { this.Set("width", value); }
 	
 	get Loop() { return this.json.loop; }
 	set Loop(value) { this.Set("loop", value); }
@@ -26,7 +29,8 @@ export default class Settings extends Evented {
 		
 		this.json = {
 			fps : 10,
-			rowHeight : 400,
+			height : 400,
+			width : 600,
 			loop : false,
 			showGrid : false,
 			cache : 10
@@ -46,7 +50,8 @@ export default class Settings extends Evented {
 	Load(config) {
 		this.json = {
 			fps : config.fps,
-			rowHeight : config.rowHeight,
+			height : config.height,
+			width : config.width,
 			loop : config.loop,
 			showGrid : config.showGrid,
 			cache : config.cache

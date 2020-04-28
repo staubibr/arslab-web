@@ -38,7 +38,16 @@
 	"Settings_ShowGrid" : {
 		"en" : "Show grid:"
 	},
-	"Settings_Size" : {
-		"en" : "Row Height:"
+	"Settings_Height" : {
+		"en" : "Height:"
+	},
+	"Settings_Width" : {
+		"en" : "Width:"
+	},
+	"Converter_Parse" : {
+		"en" : "Parse files"
+	},
+	"DevsDiagram_Title" : {
+		"en" : "DEVS Diagram"
 	}
 }

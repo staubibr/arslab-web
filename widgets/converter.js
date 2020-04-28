@@ -1,6 +1,7 @@
 'use strict';
 
-import Core from '../../basic-tools/tools/core.js';
+import Core from 'http://localhost/Dev/ARSLab/basic-tools/tools/core.js';
+import Dom from '../../basic-tools/tools/dom.js';
 import Templated from '../../basic-tools/components/templated.js';
 import BoxInput from '../../basic-tools/ui/box-input-files.js';
 
@@ -63,7 +64,7 @@ export default Core.Templatable("Widget.Converter", class Converter extends Temp
 		});
 
 		this.Node("parse").On("click", this.onParseButton_Click.bind(this));
-		this.Elem("dropzone").On("Change", this.onDropzone_Change.bind(this));
+		this.Elem("dropzone").On("change", this.onDropzone_Change.bind(this));
 	}
 	
 	onDropzone_Change(ev) {
@@ -95,28 +96,32 @@ export default Core.Templatable("Widget.Converter", class Converter extends Temp
 	}
 
 	onParseButton_Click(ev) {
+		Dom.RemoveCss(this.Elem("wait"), "hidden");
+		
 		var parser = new Converter.PARSERS[this.Simulator][this.Type];
 		
 		var p = parser.Parse(this.files);
 		
-		p.then(this.onParser_Parsed.bind(this, parser), this.onConverter_Error.bind(this));
+		p.then(this.onParser_Parsed.bind(this, parser), (error) => {
+			Dom.AddCss(this.Elem("wait"), "hidden");
+		
+			this.Emit("error", { error:error })
+		});
 	}
 	
-	onParser_Parsed(parser, ev) {
+	onParser_Parsed(parser, result) {
+		Dom.AddCss(this.Elem("wait"), "hidden");
+		
 		try {
-			Zip.SaveZipStream(ev.result.name + ".zip", ev.result.Files()).then((ev) => {
+			Zip.SaveZipStream(result.name, result.Files()).then((ev) => {
 				this.Emit("converted");
 			});
 		}
 		catch (error) {
-			this.onConverter_Error({ error:error });
+			this.Emit("error", { error:error });
 		}
 	}
 	
-	onConverter_Error(ev) {		
-		this.Emit("error", { error:ev.error });
-	}
-
 	UpdateButton() {
 		var simulator = this.Node("simulators").Node("input:checked");
 		var type = this.Node("types").Node("input:checked");
@@ -126,6 +131,7 @@ export default Core.Templatable("Widget.Converter", class Converter extends Temp
 
 	Template() {
 		return "<div class='converter'>" +
+				  "<div handle='wait' class='wait hidden'><img src='./assets/loading.svg'></div>" + 
 			      "<div class='options-container'>" +
 				     "<div handle='simulators' class='options-column'>" +
 				        "<label>Simulator</label>" +
@@ -140,7 +146,7 @@ export default Core.Templatable("Widget.Converter", class Converter extends Temp
 				     "</div>" +
 			      "</div>" +
 			      "<div handle='dropzone' widget='Widget.Box-Input-Files'></div>" +
-			      "<button handle='parse' class='save' disabled>Parse files</button>" +
+			      "<button handle='parse' class='save' disabled>nls(Converter_Parse)</button>" +
 			   "</div>";
 	}
 });

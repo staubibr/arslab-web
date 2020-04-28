@@ -74,8 +74,8 @@ export default Core.Templatable("Widget.RiseList", class RiseLoader extends Temp
 		
 		var p = Net.Request(model.url, null, 'blob');
 
-		var success = function(ev) {
-			var blob = new Blob([ev.result], { type : "application/zip" });
+		var success = function(result) {
+			var blob = new Blob([result], { type : "application/zip" });
 			
 			Zip.LoadZip(blob).then(this.onZip_Loaded.bind(this), this.onError_Handler.bind(this));
 		}.bind(this);
@@ -83,23 +83,21 @@ export default Core.Templatable("Widget.RiseList", class RiseLoader extends Temp
 		p.then(success, this.onError_Handler.bind(this));
     }
 
-	onZip_Loaded(ev) {
+	onZip_Loaded(result) {
 		Dom.AddCss(this.Elem("wait"), "hidden");
 		
-		this.Emit("FilesReady", { files : ev.result.files });
+		this.Emit("FilesReady", { files : result.files });
 	}
 
-	onError_Handler(ev) {
+	onError_Handler(error) {
 		Dom.AddCss(this.Elem("wait"), "hidden");
 		
-		this.Emit("error", { error:ev.error });
+		this.Emit("error", { error:error });
 	}
 
     Template(){
         return "<div class='rise-loader'>" + 
-				  "<div handle='wait' class='wait hidden'>" + 
-					"<img src='./assets/loading.svg'>" +
-				  "</div>" + 
+				  "<div handle='wait' class='wait hidden'><img src='./assets/loading.svg'></div>" + 
 				  "<ul handle='list'></ul>" + 
 			   "</div>";
     }

@@ -2,12 +2,13 @@
 
 export default class Simulation { 
 
-	constructor(name, simulator, type, transitions, svg, size, palette) {
+	constructor(name, simulator, type, transitions, svg, models, size, palette) {
 		this.name = name || null;
 		this.simulator = simulator || null;
 		this.type = type || null;
 		this.transitions = transitions || [];	
 		this.svg = svg || null;
+		this.models = models || [];	
 		this.size = size || null;	
 		this.palette = palette || null;
 	}
@@ -17,6 +18,7 @@ export default class Simulation {
 			name : this.name,
 			simulator : this.simulator,
 			type : this.type,
+			models : this.models,
 			size : this.size,
 			palette : this.palette
 		}
@@ -27,7 +29,7 @@ export default class Simulation {
 	CSV() {
 		var transitions = this.transitions.map(t => t.ToCSV());
 		
-		return new File([transitions.join("\r\n")], "transitions.csv", { type:"text/plain",endings:'native' });
+		return new File([transitions.join("\r\n") + "\r\n"], "transitions.csv", { type:"text/plain",endings:'native' });
 	}
 	
 	SVG() {

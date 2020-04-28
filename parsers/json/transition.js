@@ -5,11 +5,11 @@ export default class Transition {
 	constructor(type, time, model, id, port, value, destination) {
 		this.type = type;
 		this.time = time;
-		this.model = model;
-		this.id = id;
-		this.port = port;
+		this.model = model && model.replace(",", "_");
+		this.id = id && id.replace(",", "_");
+		this.port = port && port.replace(",", "_");
 		this.value = value;
-		this.destination = destination;
+		this.destination = destination && destination.replace(",", "_");
 	}
 	
 	ToCSV() {

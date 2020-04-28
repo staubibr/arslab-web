@@ -16,7 +16,8 @@ export default Core.Templatable("Widget.Settings", class Settings extends Templa
 			
 		this.settings.On("Session", this.onSettingsSession_Handler.bind(this));
 			
-		this.Node("size").On("change", this.onSizeChange_Handler.bind(this));
+		this.Node("height").On("change", this.onHeightChange_Handler.bind(this));
+		this.Node("width").On("change", this.onWidthChange_Handler.bind(this));
 		this.Node("fps").On("change", this.onFPSChange_Handler.bind(this));
 		this.Node("loop").On("change", this.onLoopChange_Handler.bind(this));
 		this.Node("showGrid").On("change", this.onShowGridChange_Handler.bind(this));
@@ -26,7 +27,8 @@ export default Core.Templatable("Widget.Settings", class Settings extends Templa
 	
 	UpdateUI() {
 		this.Elem("fps").value = this.settings.FPS; 
-		this.Elem("size").value = this.settings.RowHeight; 
+		this.Elem("height").value = this.settings.Height; 
+		this.Elem("width").value = this.settings.Width; 
 		this.Elem("loop").checked = this.settings.Loop; 
 		this.Elem("showGrid").checked = this.settings.ShowGrid; 
 	}
@@ -34,8 +36,12 @@ export default Core.Templatable("Widget.Settings", class Settings extends Templa
 	Template() {
 		return "<div class='settings'>" +
 				  "<div class='settings-line'>" +
-				     "<label class='settings-label'>nls(Settings_Size)</label>" +
-				     "<input class='settings-value' handle='size' type='number'></input>" +
+				     "<label class='settings-label'>nls(Settings_Height)</label>" +
+				     "<input class='settings-value' handle='height' type='number'></input>" +
+			      "</div>" +
+				  "<div class='settings-line'>" +
+				     "<label class='settings-label'>nls(Settings_Width)</label>" +
+				     "<input class='settings-value' handle='width' type='number'></input>" +
 			      "</div>" +
 			      "<div class='settings-line'>" +
 				     "<label class='settings-label'>nls(Settings_FPS)</label>" +
@@ -52,8 +58,12 @@ export default Core.Templatable("Widget.Settings", class Settings extends Templa
 			   "</div>";
 	}
 	
-	onSizeChange_Handler(ev) {
-		this.settings.RowHeight = +ev.target.value;
+	onHeightChange_Handler(ev) {
+		this.settings.Height = +ev.target.value;
+	}
+	
+	onWidthChange_Handler(ev) {
+		this.settings.Width = +ev.target.value;
 	}
 	
 	onFPSChange_Handler(ev) {
