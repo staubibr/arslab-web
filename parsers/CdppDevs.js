@@ -51,10 +51,10 @@ export default class CDppDEVS extends Parser {
 
 	ParseMaFile(file) {
 		var matches = file.match(/\[(.*)\]/g);
-		var models = [];
+		var models = ["Root"];
 		
 		// Remove top from count
-		for (var i = 1; i < matches.length; i++) {
+		for (var i = 0; i < matches.length; i++) {
 			var m = matches[i];
 			
 			models.push(m.substr(1, m.length - 2));
@@ -96,12 +96,17 @@ export default class CDppDEVS extends Parser {
 			
 			var split = chunk.substr(start, length).split('/');
 			
-			var t = split[1].trim();
-			var i = split[2].trim().match(/\(([^)]+)\)/)[1];	// id / coordinate
-			var m = split[2].trim().match(/^[^\(]+/)[0];		// model name
+			// Parse coordinates, state value & frame timestamp
+			var tmp1 = split[2].trim().split("(");
+			var tmp2 = split[4].trim().split(" ");
+			
+			// NOTE : Don't use regex, it's super slow.
+			var t = split[1].trim();							// time
+			var m = tmp1[0];									// model name
+			var c = tmp1[1].slice(0, -1);						// id / coordinate
 			var p = split[3].trim();							// port
 			var v = parseFloat(split[4]);						// value
-			var d = split[4].match(/\(([^)]+)\)/)[1]			// destination
+			var d = tmp2[2].split("(")[0]						// destination
 
 			// NOTE: Here we replace model id by name because name is also unique (are we sure?) but more intuitive. 
 			// We do this to allow users to use names when drawing SVG diagrams. This way, names in SVG will match

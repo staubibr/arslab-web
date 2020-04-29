@@ -12,7 +12,9 @@ export default Core.Templatable("Auto.Diagram", class AutoDiagram extends Automa
 	constructor(diagram, simulation) {
 		super(diagram, simulation);
 		
-		this.Widget.SetSVG(this.Simulation.diagram);
+		this.Widget.SetDiagram(this.Simulation.diagram);
+		
+		this.Widget.Draw(this.Simulation.CurrentFrame().transitions);
 		
 		this.selected = [];
 
@@ -46,9 +48,11 @@ export default Core.Templatable("Auto.Diagram", class AutoDiagram extends Automa
 		this.Widget.Draw(f.transitions);
 	}
 	
-	onSimulationMove_Handler(ev) {				
+	onSimulationMove_Handler(ev) {
+		var f = this.simulation.CurrentFrame();
+		
 		// Shouldn't pass transition objects, diagram should be agnostic to transitions maybe?
-		this.Widget.Draw(ev.frame.transitions);
+		this.Widget.Draw(f.transitions);
 	}
 	
 	onSelected_Handler(ev) {

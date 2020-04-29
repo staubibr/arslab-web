@@ -30,6 +30,11 @@ export default class Transition {
 	set Diff(value) { this.diff = value; }
 	
 	Reverse() {
-		return new Transition(this.id, this.value - this.diff, this.diff);
+		return new Transition(this.type, this.model, this.id, this.port, this.value - this.diff, this.destination);
+		
+		// Not sure about this
+		t.diff = this.diff;
+		
+		return t;
 	}
 }

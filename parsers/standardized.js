@@ -46,8 +46,8 @@ export default class Standardized extends Parser {
 		var lines = chunk.split("\n");
 		
 		for (var i = 0; i < lines.length; i++) {
-			var s = lines[i].split(",");
-					
+			var s = lines[i].trim().split(",");
+			
 			parsed.push(new Transition(s[0], s[1], s[2], s[3], s[4], s[5], s[6], s[7]));
 		}
 		

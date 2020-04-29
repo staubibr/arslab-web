@@ -40,8 +40,6 @@ export default class Simulation extends Evented {
 	Initialize(nCache) {
 		this.BuildCache(nCache);
 		this.BuildDifferences();
-		
-		this.state = this.cache.First();
 	}
 	
 	BuildCache(nCache) {

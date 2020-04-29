@@ -44,10 +44,6 @@ export default class DiagramData {
 			this.ports[id] = { id:id, name:name, model:m, type:type, node:node };
 			
 			m.ports[name] = this.ports[id];
-			
-			// node.addEventListener("mousemove", this.onSvgMouseMove_Handler.bind(this));
-			// node.addEventListener("click", this.onSvgClick_Handler.bind(this));
-			// node.addEventListener("mouseout", this.onSvgMouseOut_Handler.bind(this));
 		});
 	}
 	
@@ -59,15 +55,15 @@ export default class DiagramData {
 			var type = node.getAttribute("type");
 			var portA = node.getAttribute("porta").toLowerCase();
 			var portB = node.getAttribute("portb").toLowerCase();
+
+			var markerEnd = node.style["marker-end"];
+			
+			var marker = markerEnd ? svg.querySelector(`${markerEnd.slice(5, -2)} > *`) : null;
 			
 			var pA = this.ports[portA] || null;
 			var pB = this.ports[portB] || null;
 			
-			this.links[id] = { type:type, portA:pA, portB:pB, node:node };
-						
-			// node.addEventListener("mousemove", this.onSvgMouseMove_Handler.bind(this));
-			// node.addEventListener("click", this.onSvgClick_Handler.bind(this));
-			// node.addEventListener("mouseout", this.onSvgMouseOut_Handler.bind(this));
+			this.links[id] = { type:type, portA:pA, portB:pB, node:node, marker:marker };
 		});
 	}
 	
@@ -76,23 +72,21 @@ export default class DiagramData {
 	}
 	
 	Port(model, port) {
-		var m = this.Model(model);
-		
-		if (!m) return null;
-		
-		return m.ports[port] || null;
+		return model.ports[port] || null;
 	}
 	
-	OutputLink(model, port) {
-		var m = this.Model(model);
+	Link(port, direction) {
+		var target = direction == "X" ? "portB" : "portA";
 		
-		if (!m) return null;
+		for (var id in this.links) {
+			var l = this.links[id][target];
+			
+			if (!l) continue;
+			
+			if (l.id === port.id) return this.links[id];
+		}
 		
-		var p = m.ports[port] || null;
-		
-		if (!p) return null;
-				
-		return this.LinkByPortA(p);
+		return null;
 	}
 	
 	ModelById(id) {
@@ -109,14 +103,6 @@ export default class DiagramData {
 	
 	LinkById(id) {
 		return this.links[id] || null;
-	}
-	
-	LinkByPortA(port) {
-		for (var id in this.links) {
-			if (this.links[id].portA.id === port.id) return this.links[id];
-		}
-		
-		return null;
 	}
 	
 	LinkByPortB(port) {

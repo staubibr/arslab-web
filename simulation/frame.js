@@ -49,7 +49,9 @@ export default class Frame {
 	Difference(state) {
 		for (var i = 0; i < this.Length; i++) {
 			var t = this.Transition(i);
-			 
+			
+			if (state.models[t.id] === undefined) continue;
+			
 			t.diff = t.value - state.GetValue(t.id);
 			
 			state.SetValue(t.id, t.value);

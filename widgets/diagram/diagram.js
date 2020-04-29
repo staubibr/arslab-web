@@ -11,7 +11,7 @@ export default Core.Templatable("Widgets.Diagram", class Diagram extends Templat
 		super(node);
 	}
 	
-	SetSVG(svg) {
+	SetDiagram(svg) {
 		this.Elem('diagram').innerHTML = svg;
 		
 		var models = this.Node('diagram').Elems("[type='atomic'],[type='coupled']");
@@ -23,6 +23,12 @@ export default Core.Templatable("Widgets.Diagram", class Diagram extends Templat
 		});
 		
 		this.data = new DiagramData(this.Elem('diagram').firstElementChild);
+	}
+	
+	SetCss() {
+		var models = this.Node('diagram').Elems("[type='atomic'],[type='coupled']");
+		
+		models.forEach(m => this.AddModelCss(m, "model"));
 	}
 	
 	onSvgMouseMove_Handler(ev) {
@@ -64,45 +70,79 @@ export default Core.Templatable("Widgets.Diagram", class Diagram extends Templat
 		this.Reset();
 		
 		transitions.forEach((t) => {
-			var m = this.data.Model(t.id);
+			if (t.type == "Y") this.DrawYTransition(t);
 			
-			if (!m) return;
-		
-			this.AddModelCss(m.node, "highlighted");
-			
-			var p = this.data.Port(t.id, t.port);
-			
-			if (!p) return;
-		
-			this.AddModelCss(p.node, "highlighted");
-			
-			var l = this.data.OutputLink(t.id, t.port);
-			
-			if (!l) return;
-		
-			this.AddModelCss(l.node, "highlighted");
+			else if (t.type == "X") this.DrawXTransition(t);
 		});
 	}
 
+	DrawXTransition(t) {
+		var m = this.data.Model(t.destination);
+		
+		if (!m) return;
+		
+		this.AddModelCss(m.node, ["highlighted", t.type]);
+		
+		var p =  this.data.Port(m, t.port);
+		
+		if (!p) return;
+		
+		this.AddModelCss(p.node, ["highlighted", t.type]);
+		
+		var l = this.data.Link(p, t.type);
+		
+		if (!l) return;
+
+		this.AddModelCss(l.node, ["highlighted", t.type]);	
+		
+		if (l.marker) this.AddModelCss(l.marker, ["highlighted", t.type]);	
+	}
+
+	DrawYTransition(t) {
+		var m = this.data.Model(t.id);
+		
+		if (!m) return;
+		
+		this.AddModelCss(m.node, ["highlighted", t.type]);
+		
+		var p =  this.data.Port(m, t.port);
+		
+		if (!p) return;
+		
+		this.AddModelCss(p.node, ["highlighted", t.type]);
+		
+		var l = this.data.Link(p, t.type);
+		
+		if (!l) return;
+
+		this.AddModelCss(l.node, ["highlighted", t.type]);
+		
+		if (l.marker) this.AddModelCss(l.marker, ["highlighted", t.type]);	
+	}
+
 	AddModelCss(model, css) {
-		model.classList.add(css);
+		css.forEach(c => model.classList.add(c));
 	}
 	
 	RemoveModelCss(model, css) {
-		model.classList.remove(css);
+		css.forEach(c => model.classList.remove(c));
 	}
 	
 	Reset() {
 		for (var name in this.data.models) {
-			this.RemoveModelCss(this.data.models[name].node, "highlighted");
+			this.RemoveModelCss(this.data.models[name].node, ["highlighted", "X", "Y"]);
 		}
 		
 		for (var id in this.data.ports) {
-			this.RemoveModelCss(this.data.ports[id].node, "highlighted");
+			this.RemoveModelCss(this.data.ports[id].node, ["highlighted", "X", "Y"]);
 		}
 		
 		for (var id in this.data.links) {
-			this.RemoveModelCss(this.data.links[id].node, "highlighted");
+			var l = this.data.links[id];
+			
+			this.RemoveModelCss(l.node, ["highlighted", "X", "Y"]);
+			
+			if (l.marker) this.RemoveModelCss(l.marker, ["highlighted", "X", "Y"]);	
 		}
 	}
 });

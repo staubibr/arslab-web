@@ -165,18 +165,45 @@ input[type=range]:disabled::-webkit-slider-thumb{
 }
 
 .devs-diagram text.highlighted tspan {
-    fill: #259494  !important;
     font-weight: bold !important;
 }
 
 .devs-diagram rect.highlighted {
 	stroke-width: 1px !important;
-    stroke: #259494  !important;
 }
 
 .devs-diagram path.highlighted {
-	stroke-width: 0.3px !important;
-    stroke: #259494  !important;
+	stroke-width: 0.5px !important;
+}
+
+.devs-diagram path.highlighted.X,
+.devs-diagram rect.highlighted.X {
+    stroke: #1e94c3  !important;
+}
+
+.devs-diagram text.highlighted.X tspan,
+.devs-diagram marker path.highlighted.X {
+    fill: #1e94c3  !important;
+}
+
+.devs-diagram rect.highlighted.Y,
+.devs-diagram path.highlighted.Y {
+    stroke: #d6b00a  !important;
+}
+
+.devs-diagram marker path.highlighted.Y,
+.devs-diagram text.highlighted.Y tspan {
+    fill: #d6b00a  !important;
+}
+
+.devs-diagram rect.highlighted.X.Y,
+.devs-diagram path.highlighted.X.Y {
+    stroke: #27ad2f	!important;
+}
+
+.devs-diagram marker path.highlighted.X.Y, 
+.devs-diagram text.highlighted.X.Y tspan {
+    fill: #27ad2f  !important;
 }
 
 .devs-diagram rect.selected {
