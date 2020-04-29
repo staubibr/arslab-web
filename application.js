@@ -86,12 +86,13 @@ export default class Main extends Templated {
 		
 		this.simulation = Simulation.FromJson(json);
 		
+		this.simulation.Initialize(this.settings.Cache);
+		
 		var widget = (this.simulation.type == "DEVS") ? "diagram" : "grid";
 		
 		this.SwitchWidget(widget);
 		
 		this.Elem("playback").Initialize(this.simulation, this.settings);
-		this.simulation.Initialize(this.settings.Cache);
 	}
 	
 	OnButtonRise_Click(ev) {
@@ -146,6 +147,8 @@ export default class Main extends Templated {
 		else {
 			this.current.auto = null;
 		}
+		
+		this.current.id = widget;
 	}
 	
 	ShowPopup(title, widget, css) {

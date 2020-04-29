@@ -1,1 +1,1 @@
-{"name":"abpLOG","simulator":"CDpp","type":"DEVS","models":["sender","receiver","Network","subnet1","subnet2"],"size":5,"palette":null}
+{"name":"abpLOG","simulator":"CDpp","type":"DEVS","models":["Root","top","sender","receiver","Network","subnet1","subnet2"],"size":7,"palette":null}
