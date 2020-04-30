@@ -22,6 +22,9 @@ import Simulation from '../web-devs-tools/simulation/simulation.js'
 import DiagramAuto from '../web-devs-tools/widgets/diagram/auto.js'
 import Diagram from '../web-devs-tools/widgets/diagram/diagram.js'
 
+import GridAuto from '../web-devs-tools/widgets/grid/auto.js'
+import Grid from '../web-devs-tools/widgets/grid/grid.js'
+
 export default class Main extends Templated { 
 
 	get Settings() { return this.Elem("settings").Settings; }
@@ -46,8 +49,7 @@ export default class Main extends Templated {
 		
 		this.settings = this.widgets.settings.Settings;
 		
-		this.Elem('body').style.height = this.settings.Height + 'px';
-		this.Elem('body').style.width = this.settings.Width + 'px';
+		// this.Elem('body').style.width = this.settings.Width + 'px';
 		
 		this.Elem('upload').Icon = 'fa-file-upload';
 		this.Elem('upload').Label = Core.Nls('Dropzone_Upload_Label');
@@ -67,6 +69,8 @@ export default class Main extends Templated {
 		
 		this.widgets.rise.On("FilesReady", this.OnRise_Loaded.bind(this));
 		this.widgets.rise.On("error", this.OnWidget_Error.bind(this));
+		
+		this.settings.On("Change", this.OnSettings_Change.bind(this));
 	}
 		
 	OnUpload_Change(ev) {
@@ -86,11 +90,17 @@ export default class Main extends Templated {
 		
 		this.simulation = Simulation.FromJson(json);
 		
-		this.simulation.Initialize(this.settings.Cache);
+		this.simulation.Initialize(this.settings.Get("playback", "cache"));
 		
 		var widget = (this.simulation.type == "DEVS") ? "diagram" : "grid";
 		
 		this.SwitchWidget(widget);
+		
+		this.settings.SetRatio(widget, this.simulation.Ratio);
+		
+		this.Resize(widget, this.simulation.Dimensions.z);
+		
+		this.current.auto.Redraw();
 		
 		this.Elem("playback").Initialize(this.simulation, this.settings);
 	}
@@ -114,6 +124,8 @@ export default class Main extends Templated {
 	}
 	
 	OnButtonSettings_Click(ev) {
+		this.widgets.settings.UpdateUI();
+		
 		this.ShowPopup(Core.Nls("Popup_Settings_Title"), this.widgets.settings, 'settings');
 	}
 	
@@ -131,6 +143,32 @@ export default class Main extends Templated {
 		alert (ev.error);
 	}
 	
+	OnSettings_Change(ev) {
+		if (["height", "width", "columns", "spacing"].indexOf(ev.property) == -1) return;
+		
+		this.Elem("grid").columns = this.settings.Get("grid", "columns");
+		this.Elem("grid").spacing = this.settings.Get("grid", "spacing");
+		
+		this.Resize(this.current.id, this.simulation.Dimensions.z);
+		
+		if (this.current.auto) this.current.auto.Redraw();
+	}
+	
+	Resize(widget, nGrids) {
+		if (widget == "diagram") {
+			var size = this.settings.DiagramSize();
+		}
+		else if (widget == "grid") {
+			var size = this.settings.GridSize(nGrids);
+		}
+		else {
+			throw new Error("Tried to retrieve size for invalid widget.");
+		}
+		
+		this.Elem("body").style.width = size.width + "px";
+		this.Elem("body").style.height = size.height + "px";
+	}
+	
 	SwitchWidget(widget) {
 		if (widget == this.current.id) return;
 		
@@ -138,11 +176,21 @@ export default class Main extends Templated {
 		
 		if (this.current.auto) this.current.auto.Destroy();
 		
-		if (widget == "diagram") {
+		if (widget == "diagram") {			
 			this.current.auto = new DiagramAuto(this.Elem("diagram"), this.simulation);
 		}
 		else if (widget === "grid") {
-			// this.current.auto = new GridAuto(this.Elem("grid"), this.simulation);
+			var z = [];
+			
+			for (var i = 0; i < this.simulation.Dimensions.z; i++) z.push(i);
+			
+			var options = { 
+				columns:this.settings.Get("grid", "columns"), 
+				spacing:this.settings.Get("grid", "spacing"), 
+				z:z 
+			}
+			
+			this.current.auto = new GridAuto(this.Elem("grid"), this.simulation, options);
 		}
 		else {
 			this.current.auto = null;
@@ -167,30 +215,30 @@ export default class Main extends Templated {
 	Template() {
 		return	"<main handle='main' class='dropzone-visible'>" +
 					"<div handle='header' widget='Widget.Header'></div>" +
-					
-					"<div class='body-container'>" + 
-					   "<div class='body-column'>" + 
-						  "<button handle='btnLoad' title='nls(Dropzone_Load)' class='fas fa-file-upload'></button>" +
-						  "<button handle='btnViz' title='nls(Dropzone_Viz)' class='fas fa-eye' disabled></button>" +
-					   "</div>" +
-					   "<div handle='body'>" +
-						   "<div handle='dropzone' class='dropzone-container'>" + 
-							   "<div handle='upload' widget='Widget.Box-Input-Files'></div>" +
-							   "<button handle='load' class='save' disabled>nls(Dropzone_Load)</button>" +
+				    "<div class='centered-row'>" + 
+						"<div class='button-column'>" + 
+						   "<button handle='btnLoad' title='nls(Dropzone_Load)' class='fas fa-file-upload'></button>" +
+						   "<button handle='btnViz' title='nls(Dropzone_Viz)' class='fas fa-eye' disabled></button>" +
+						"</div>" +
+						"<div class='body-container'>" + 
+						   "<div handle='body' class='body'>" +
+							   "<div handle='dropzone' class='dropzone-container'>" + 
+								   "<div handle='upload' widget='Widget.Box-Input-Files'></div>" +
+								   "<button handle='load' class='save' disabled>nls(Dropzone_Load)</button>" +
+							   "</div>" +
+							   "<div handle='viz' class='viz-container'>" +
+								   "<div handle='diagram' widget='Widgets.Diagram' class='diagram-widget-container'></div>" +
+								   "<div handle='grid' widget='Widgets.Grid' class='grid-widget-container'></div>" +
+							   "</div>" +
 						   "</div>" +
-						   "<div handle='viz' class='viz-container'>" +
-							   "<div handle='diagram' widget='Widgets.Diagram' class='diagram-widget-container'></div>" +
-							   "<div handle='playback' widget='Widget.Playback'></div>" +
-						   "</div>" +
-					   "</div>" +
-					   "<div class='body-column'>" + 
-						  "<button handle='btnConvert' title='nls(Dropzone_Convert)' class='fas fa-exchange-alt'></button>" +
-						  "<button handle='btnRise' title='nls(Dropzone_Rise)' class='fas fa-cloud-download-alt'></button>" +
-						  "<button handle='btnSettings' title='nls(Playback_Settings)' class='fas fa-tools'></button>" +
-					   "</div>" +
+						"</div>" +
+						"<div class='button-column'>" + 
+						   "<button handle='btnConvert' title='nls(Dropzone_Convert)' class='fas fa-exchange-alt'></button>" +
+						   "<button handle='btnRise' title='nls(Dropzone_Rise)' class='fas fa-cloud-download-alt'></button>" +
+						   "<button handle='btnSettings' title='nls(Playback_Settings)' class='fas fa-tools'></button>" +
+						"</div>" +
 					"</div>" +
-					
-					
+					"<div handle='playback' widget='Widget.Playback'></div>" +
 				"</main>";
 	}
 }
