@@ -5,6 +5,8 @@ import Parser from "./parser.js";
 import Transition from './json/transition.js';
 import Simulation from './json/simulation.js';
 
+import State from '../simulation/state.js';
+
 export default class LopezCell extends Parser { 
 	
 	Parse(files) {
@@ -32,8 +34,20 @@ export default class LopezCell extends Parser {
 			simulation.size = data[0].size; // TODO Where from?
 			simulation.palette = null;
 			
-			debugger;
+			var s = [0, 0, 0]
 			
+			// Get the largest size from the log file. This can still miss cells on the outer edges of the cell space if they have no transitions.
+			for (var i = 0; i < simulation.transitions.length; i++) {
+				var t = simulation.transitions[i];
+				var c = t.id.split("-").map(c => +c);			// coordinates as array from id
+				
+				if (c[0] > s[0]) s[0] = c[0];
+				if (c[1] > s[1]) s[1] = c[1];
+				if (c[2] > s[2]) s[2] = c[2];
+			}
+
+			simulation.size = [s[0] + 1, s[1] + 1, s[2] + 1];
+						
 			d.Resolve(simulation);
 		}, (error) => {
 			d.Reject(error);
@@ -62,7 +76,10 @@ export default class LopezCell extends Parser {
 			var c = tmp[1].slice(0, -1);						// id / coordinate
 			var p = split[5].trim();							// port
 			var v = parseFloat(split[6]);						// value
-			var d = split[6].trim().split("(")[1].slice(0,-1)	// destination
+			
+			var tmp = split.length == 8 ? split[7] : split[6]	// Weird case, there seems to be two formats, one of them as an extra / (see life 1 and life 2)
+			
+			var d = tmp.trim().split("(")[1].slice(0,-1)	// destination
 			
 			c = c.replace(/,/g, "-");
 			

@@ -13,72 +13,133 @@ export default Core.Templatable("Widget.Settings", class Settings extends Templa
 		super(id);
 		
 		this.settings = new oSettings();
-			
-		this.settings.On("Session", this.onSettingsSession_Handler.bind(this));
-			
-		this.Node("height").On("change", this.onHeightChange_Handler.bind(this));
-		this.Node("width").On("change", this.onWidthChange_Handler.bind(this));
-		this.Node("fps").On("change", this.onFPSChange_Handler.bind(this));
-		this.Node("loop").On("change", this.onLoopChange_Handler.bind(this));
-		this.Node("showGrid").On("change", this.onShowGridChange_Handler.bind(this));
 		
+		// Link UI to setting parameters
+		// Each item requires two delegates, setting is used to update the settings object from the ui, ui is used to
+		// update the ui from the settings object
+		this.ui = [
+			{ group:"diagram", property:"height", node:"diagramHeight", setting: el => +el.value, ui: (el,v) => { el.value = v; }},
+			{ group:"diagram", property:"width", node:"diagramWidth", setting: el => +el.value, ui: (el,v) => { el.value = v; } },
+			{ group:"diagram", property:"aspect", node:"diagramAspect", setting: el => el.checked, ui: (el,v) => { el.checked = v; } },
+			{ group:"grid", property:"columns", node:"gridColumns", setting: el => +el.value, ui: (el,v) => { el.value = v; } },
+			{ group:"grid", property:"height", node:"gridHeight", setting: el => +el.value, ui: (el,v) => { el.value = v; } },
+			{ group:"grid", property:"width", node:"gridWidth", setting: el => +el.value, ui: (el,v) => { el.value = v; } },
+			{ group:"grid", property:"spacing", node:"gridSpacing", setting: el => +el.value, ui: (el,v) => { el.value = v; } },
+			{ group:"grid", property:"showGrid", node:"gridShowGrid", setting: el => el.checked, ui: (el,v) => { el.checked = v; } },
+			{ group:"grid", property:"aspect", node:"gridAspect", setting: el => el.checked, ui: (el,v) => { el.checked = v; } },
+			{ group:"playback", property:"speed", node:"playbackSpeed", setting: el => +el.value, ui: (el,v) => { el.value = v; } },
+			{ group:"playback", property:"loop", node:"playbackLoop", setting: el => el.checked, ui: (el,v) => { el.checked = v; } }
+		]
+		
+		// Hook up change event for each ui element, when ui element changes, update corresponding setting
+		this.ui.forEach(u => {
+			this.Node(u.node).On("change", ev => {
+				this.settings.Set(u.group, u.property, u.setting(ev.target));
+			});
+		})
+		
+		// Special cases height and width because of aspect ratio
+		this.Node(this.ui[0].node).On("change", ev => this.UpdateElement(this.ui[1]));
+		this.Node(this.ui[1].node).On("change", ev => this.UpdateElement(this.ui[0]));
+		this.Node(this.ui[4].node).On("change", ev => this.UpdateElement(this.ui[5]));
+		this.Node(this.ui[5].node).On("change", ev => this.UpdateElement(this.ui[4]));
+		
+		// Initial UI values
 		this.UpdateUI();
+	}
+	
+	UpdateElement(u) {
+		var value = this.settings.Get(u.group, u.property);
+		
+		u.ui(this.Elem(u.node), value);
 	}
 	
 	UpdateUI() {
-		this.Elem("fps").value = this.settings.FPS; 
-		this.Elem("height").value = this.settings.Height; 
-		this.Elem("width").value = this.settings.Width; 
-		this.Elem("loop").checked = this.settings.Loop; 
-		this.Elem("showGrid").checked = this.settings.ShowGrid; 
+		this.ui.forEach(u => {
+			this.UpdateElement(u);
+		});
 	}
+	
+	//onSettingsChange_Handler(ev) {
+	//	ev.changes.forEach(c => {
+	//		var ui = this.ui.find(ui => ui.group == c.group && ui.property == c.property);
+	//		
+	//		ui.ui(this.Elem(ui.node), c.value);
+	//	});
+	//}
 	
 	Template() {
 		return "<div class='settings'>" +
-				  "<div class='settings-line'>" +
-				     "<label class='settings-label'>nls(Settings_Height)</label>" +
-				     "<input class='settings-value' handle='height' type='number'></input>" +
-			      "</div>" +
-				  "<div class='settings-line'>" +
-				     "<label class='settings-label'>nls(Settings_Width)</label>" +
-				     "<input class='settings-value' handle='width' type='number'></input>" +
-			      "</div>" +
-			      "<div class='settings-line'>" +
-				     "<label class='settings-label'>nls(Settings_FPS)</label>" +
-				     "<input class='settings-value' handle='fps' type='number'></input>" +
-			      "</div>" +
-			      "<div class='settings-line'>" +
-				     "<label for='s-loop' class='settings-label'>nls(Settings_Loop)</label>" +
-			         "<input id='s-loop' class='settings-value' handle='loop' type='checkbox'></input>" +
-			      "</div>"+
-			      "<div class='settings-line'>" +
-				     "<label for='s-showGrid' class='settings-label'>nls(Settings_ShowGrid)</label>" +
-				     "<input id='s-showGrid' class='settings-value' handle='showGrid' type='checkbox' disabled></input>" +
-			      "</div>" +
+					"<h3 class='settings-group-label'>nls(Settings_Diagram_Options)</h3>" +
+					"<div class='settings-group'>" + 
+						"<div class='settings-line'>" +
+							"<label class='settings-label'>nls(Settings_Diagram_Width)" +
+								"<input class='settings-value' handle='diagramWidth' type='number' min=300></input>" +
+							"</label>" +
+						"</div>" +
+						"<div class='settings-line'>" +
+							"<label class='settings-label'>nls(Settings_Diagram_Height)" +
+								"<input class='settings-value' handle='diagramHeight' type='number' min=300></input>" +
+							"</label>" + 
+						"</div>" +
+						"<div class='settings-line'>" +
+							"<label class='settings-label'>nls(Settings_Diagram_Aspect)" +
+								"<input class='settings-value' handle='diagramAspect' type='checkbox'></input>" +
+							"</label>" + 
+						"</div>" +
+					"</div>" +
+					"<h3 class='settings-group-label'>nls(Settings_Grid_Options)</h3>" +
+					"<div class='settings-group'>" + 
+						"<div class='settings-line'>" +
+							"<label class='settings-label'>nls(Settings_Grid_Width)" +
+								"<input class='settings-value' handle='gridWidth' type='number' min=100></input>" +
+							"</label>" + 
+						"</div>" +
+						"<div class='settings-line'>" +
+							"<label class='settings-label'>nls(Settings_Grid_Height)" +
+								"<input class='settings-value' handle='gridHeight' type='number' min=100></input>" +
+							"</label>" + 
+						"</div>" +
+						"<div class='settings-line'>" +
+							"<label class='settings-label'>nls(Settings_Grid_Aspect)" +
+								"<input class='settings-value' handle='gridAspect' type='checkbox'></input>" +
+							"</label>" + 
+						"</div>" +
+						"<div class='settings-line'>" +
+							"<label class='settings-label'>nls(Settings_Grid_Columns)" +
+								"<input class='settings-value' handle='gridColumns' type='number' min=1 max=4></input>" +
+							"</label>" + 
+						"</div>" +
+						"<div class='settings-line'>" +
+							"<label class='settings-label'>nls(Settings_Grid_Spacing)" +
+								"<input class='settings-value' handle='gridSpacing' type='number' min=100></input>" +
+							"</label>" + 
+						"</div>" +
+						"<div class='settings-line'>" +
+							"<label class='settings-label'>nls(Settings_Grid_ShowGrid)" +
+								"<input class='settings-value' handle='gridShowGrid' type='checkbox' disabled></input>" +
+							"</label>" + 
+						"</div>" +
+					
+					"</div>" +
+					"<h3 class='settings-group-label'>nls(Settings_Playback_Options)</h3>" +
+					"<div class='settings-group'>" + 
+						"<div class='settings-line'>" +
+							"<label class='settings-label'>nls(Settings_Playback_Speed)</label>" +
+								"<input class='settings-value' handle='playbackSpeed' type='number' min=1 max=50></input>" +
+							"</label>" + 
+						"</div>" +
+						"<div class='settings-line'>" +
+							"<label class='settings-label'>nls(Settings_Playback_Loop)" +
+								"<input class='settings-value' handle='playbackLoop' type='checkbox'></input>" +
+							"</label>" + 
+						"</div>"+
+						"<div class='settings-line'>" +
+							"<label class='settings-label'>nls(Settings_Playback_Cache)" +
+								"<input class='settings-value' handle='playbackCache' type='number' min=10 max=1000 disabled></input>" +
+							"</label>" + 
+						"</div>"+
+					"</div>" +
 			   "</div>";
-	}
-	
-	onHeightChange_Handler(ev) {
-		this.settings.Height = +ev.target.value;
-	}
-	
-	onWidthChange_Handler(ev) {
-		this.settings.Width = +ev.target.value;
-	}
-	
-	onFPSChange_Handler(ev) {
-		this.settings.FPS = +ev.target.value;
-	}
-	
-	onLoopChange_Handler(ev) {
-		this.settings.Loop = ev.target.checked;
-	}
-	
-	onShowGridChange_Handler(id, ev) {
-		this.settings.ShowGrid = ev.target.checked;
-	}
-	
-	onSettingsSession_Handler(ev) {
-		this.UpdateUI();
 	}
 });

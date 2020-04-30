@@ -29,25 +29,58 @@
 	"Settings_Title" : {
 		"en" : "Settings"
 	},
-	"Settings_FPS" : {
-		"en" : "Frames per second:"
-	},
-	"Settings_Loop" : {
-		"en" : "Loop:"
-	},
-	"Settings_ShowGrid" : {
-		"en" : "Show grid:"
-	},
-	"Settings_Height" : {
+	"Settings_Diagram_Options" : {
+		"en" : "DEVS diagram options"
+	},	
+	"Settings_Diagram_Height" : {
 		"en" : "Height:"
 	},
-	"Settings_Width" : {
+	"Settings_Diagram_Width" : {
 		"en" : "Width:"
+	},
+	"Settings_Diagram_Aspect" : {
+		"en" : "Lock aspect ratio:"
+	},
+	"Settings_Grid_Options" : {
+		"en" : "Grid widget options"
+	},	
+	"Settings_Grid_ShowGrid" : {
+		"en" : "Show grid:"
+	},
+	"Settings_Grid_Columns" : {
+		"en" : "Columns:"
+	},
+	"Settings_Grid_Width" : {
+		"en" : "Width:"
+	},
+	"Settings_Grid_Height" : {
+		"en" : "Height:"
+	},
+	"Settings_Grid_Aspect" : {
+		"en" : "Lock aspect ratio:"
+	},
+	"Settings_Grid_Spacing" : {
+		"en" : "Spacing:"
+	},
+	"Settings_Playback_Options" : {
+		"en" : "Playback options"
+	},	
+	"Settings_Playback_Speed" : {
+		"en" : "Playback speed:"
+	},
+	"Settings_Playback_Loop" : {
+		"en" : "Loop:"
+	},
+	"Settings_Playback_Cache" : {
+		"en" : "Cache step:"
 	},
 	"Converter_Parse" : {
 		"en" : "Parse files"
 	},
 	"DevsDiagram_Title" : {
 		"en" : "DEVS Diagram"
+	},
+	"Grid_Tooltip_Title" : {
+		"en" : "The state of model ({0}, {1}, {2}) is {3}."		
 	}
 }

@@ -4,59 +4,87 @@ import Evented from '../../basic-tools/components/evented.js';
 
 export default class Settings extends Evented { 
 
-	get FPS() { return this.json.fps; }
-	set FPS(value) { this.Set("fps", value); }
-	
-	get Interval() { return 1000 / this.json.fps; }
-	
-	get Height() { return this.json.height; }
-	set Height(value) { this.Set("height", value); }
-	
-	get Width() { return this.json.width; }
-	set Width(value) { this.Set("width", value); }
-	
-	get Loop() { return this.json.loop; }
-	set Loop(value) { this.Set("loop", value); }
-	
-	get ShowGrid() { return this.json.showGrid; }
-	set ShowGrid(value) { this.Set("showGrid", value); }
-	
-	get Cache() { return this.json.cache; }
-	set Cache(value) { this.Set("cache", value); }
-
 	constructor() {
 		super();
 		
+		this.ratio = {
+			diagram : 1,
+			grid : 1
+		};
+		
 		this.json = {
-			fps : 10,
-			height : 400,
-			width : 600,
-			loop : false,
-			showGrid : false,
-			cache : 10
+			diagram : {
+				width : 600,
+				height : 400,
+				aspect : true
+			},
+			grid : {
+				columns : 1,
+				width : 400,
+				height : 400,
+				spacing : 10,
+				showGrid : false,
+				aspect : true
+			},
+			playback : {
+				speed : 10,
+				loop : false,
+				cache : 10
+			}
 		}
 	}
 	
-	Set(property, value) {
-		this.json[property] = value;
+	SetRatio(widget, ratio) {
+		this.ratio[widget] = ratio;
 		
-		this.Emit("Change", { property:property, value:value });
+		if (this.Get(widget, "aspect")) {
+			var height = this.Get(widget, "width") / ratio;
+			
+			this.Silent(widget, "height", height);
+		}
+	}
+		
+	DiagramSize() {
+		var width = this.Get("diagram", "width");
+		var height = this.Get("diagram", "height");
+		
+		return { width : width, height : height }
 	}
 	
-	Save() {
-		return this.json;
+	GridSize(nGrids) {
+		var space = this.Get("grid", "spacing");
+		var cols = this.Get("grid", "columns");
+		var rows = Math.ceil(nGrids / cols);
+		var width = this.Get("grid", "width");
+		var height = this.Get("grid", "height");
+		
+		width = (cols * width + space * cols - space);
+		height = (rows * height + rows * space - space);
+		
+		return { width : width, height : height }
 	}
 	
-	Load(config) {
-		this.json = {
-			fps : config.fps,
-			height : config.height,
-			width : config.width,
-			loop : config.loop,
-			showGrid : config.showGrid,
-			cache : config.cache
+	Get(group, property) {
+		return this.json[group][property];
+	}
+	
+	Set(group, property, value) {
+		var change = this.Silent(group, property, value);
+		
+		if (property == 'height' && this.Get(group, "aspect")) {
+			this.Silent(group, 'width', value * this.ratio[group]);
 		}
 		
-		this.Emit("Session", { settings:this });
+		if (property == 'width' && this.Get(group, "aspect")) {
+			this.Silent(group, 'height', value / this.ratio[group]);
+		}
+		
+		this.Emit("Change", change);
+	}
+	
+	Silent(group, property, value) {
+		this.json[group][property] = value;
+		
+		return { group:group, property:property, value:value }
 	}
 }

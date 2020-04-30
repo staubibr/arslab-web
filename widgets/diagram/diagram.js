@@ -14,6 +14,8 @@ export default Core.Templatable("Widgets.Diagram", class Diagram extends Templat
 	SetDiagram(svg) {
 		this.Elem('diagram').innerHTML = svg;
 		
+		this.Node('diagram').Elem("svg").setAttribute("preserveAspectRatio", "none");
+		
 		var models = this.Node('diagram').Elems("[type='atomic'],[type='coupled']");
 
 		models.forEach((model) => {			
@@ -48,15 +50,11 @@ export default Core.Templatable("Widgets.Diagram", class Diagram extends Templat
 	}
 		
 	Template() {
-		return "<div class='devs-diagram'>" + 
-				  "<div handle='diagram-container' class='devs-diagram-container'>" +
-					"<div handle='diagram' ></div>" +
-				  "</div>" + 
-			   "</div>";
+		return "<div handle='diagram' class='diagram-container'></div>";
 	}
 
 	Resize() {
-		this.size = Dom.Geometry(this.Node("diagram-container"));
+		this.size = Dom.Geometry(this.Node("diagram"));
 		
 		var pH = 30;
 		var pV = 30;

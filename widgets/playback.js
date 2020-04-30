@@ -6,6 +6,10 @@ import Templated from '../../basic-tools/components/templated.js';
 
 export default Core.Templatable("Widget.Playback", class Playback extends Templated { 
 
+	get IsLooping() { return this.settings.Get("playback", "loop"); } 
+	
+	get Interval() { return 1000 / this.settings.Get("playback", "speed") }
+
 	constructor(id) {
 		super(id);
 		
@@ -115,7 +119,7 @@ export default Core.Templatable("Widget.Playback", class Playback extends Templa
 		
 		if (this.current > this.min) this.GoToPrevious();
 		
-		else if (this.settings.Loop) this.GoTo(this.max);
+		else if (this.IsLooping, this.GoTo(this.max));
 	}
 	
 	onRewindClick_Handler(ev) {
@@ -128,10 +132,10 @@ export default Core.Templatable("Widget.Playback", class Playback extends Templa
 		this.interval = setInterval(function(){ 
 			if (this.current > this.min) this.GoToPrevious();
 		
-			else if (this.settings.Loop) this.GoTo(this.max);
+			else if (this.IsLooping) this.GoTo(this.max);
 			
 			else this.Stop();
-		}.bind(this), this.settings.Interval);
+		}.bind(this), this.Interval);
 	}
 	
 	onPlayClick_Handler(ev) {
@@ -141,7 +145,7 @@ export default Core.Templatable("Widget.Playback", class Playback extends Templa
 		
 		Dom.SetCss(this.Elem("play"), "fas fa-pause");
 		
-		this.Play(this.settings.Loop, this.settings.Interval);
+		this.Play(this.IsLooping, this.Interval);
 	}
 	
 	onStepForwardClick_Handler(ev) {
@@ -149,7 +153,7 @@ export default Core.Templatable("Widget.Playback", class Playback extends Templa
 		
 		if (this.current < this.max) this.GoToNext();
 		
-		else if (this.settings.Loop) this.GoTo(this.min)
+		else if (this.IsLooping) this.GoTo(this.min)
 	}
 	
 	onLastClick_Handler(ev) {

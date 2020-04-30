@@ -55,7 +55,7 @@ input[type=range]:disabled::-webkit-slider-thumb{
 }
 
 .popup-body {
-    margin: 15px;
+    margin: 10px 15px;
 }
 
 .rise-loader ul {
@@ -132,6 +132,14 @@ input[type=range]:disabled::-webkit-slider-thumb{
     padding-left: 10px;
 }
 
+.settings .settings-group-label {
+    margin: 15px 0px 10px 0px;
+}
+
+.settings .settings-group {
+	margin-left: 15px;
+}
+
 .settings .settings-line {
 	margin-top : 5px;
 }
@@ -159,54 +167,76 @@ input[type=range]:disabled::-webkit-slider-thumb{
 	cursor:pointer;
 }
 
-.devs-diagram svg {
-    pointer-events: visible;
-	cursor: pointer;
+.diagram-container {
+	width: 100%;
+	height: 100%;
 }
 
-.devs-diagram text.highlighted tspan {
+.diagram-container svg {
+    pointer-events: visible;
+	cursor: pointer;
+    width: 100%;
+    height: 100%;
+}
+
+.diagram-container text.highlighted {
     font-weight: bold !important;
 }
 
-.devs-diagram rect.highlighted {
+.diagram-container rect.highlighted {
 	stroke-width: 1px !important;
 }
 
-.devs-diagram path.highlighted {
+.diagram-container path.highlighted {
 	stroke-width: 0.5px !important;
 }
 
-.devs-diagram path.highlighted.X,
-.devs-diagram rect.highlighted.X {
+.diagram-container path.highlighted.X,
+.diagram-container rect.highlighted.X {
     stroke: #1e94c3  !important;
 }
 
-.devs-diagram text.highlighted.X tspan,
-.devs-diagram marker path.highlighted.X {
+.diagram-container text.highlighted.X,
+.diagram-container marker path.highlighted.X {
     fill: #1e94c3  !important;
 }
 
-.devs-diagram rect.highlighted.Y,
-.devs-diagram path.highlighted.Y {
+.diagram-container rect.highlighted.Y,
+.diagram-container path.highlighted.Y {
     stroke: #d6b00a  !important;
 }
 
-.devs-diagram marker path.highlighted.Y,
-.devs-diagram text.highlighted.Y tspan {
+.diagram-container marker path.highlighted.Y,
+.diagram-container text.highlighted.Y {
     fill: #d6b00a  !important;
 }
 
-.devs-diagram rect.highlighted.X.Y,
-.devs-diagram path.highlighted.X.Y {
+.diagram-container rect.highlighted.X.Y,
+.diagram-container path.highlighted.X.Y {
     stroke: #27ad2f	!important;
 }
 
-.devs-diagram marker path.highlighted.X.Y, 
-.devs-diagram text.highlighted.X.Y tspan {
+.diagram-container marker path.highlighted.X.Y, 
+.diagram-container text.highlighted.X.Y {
     fill: #27ad2f  !important;
 }
 
-.devs-diagram rect.selected {
+.diagram-container rect.selected {
 	stroke-width: 1px !important;
     stroke: red  !important;
 }
+
+.grid, 
+.grid .grid-canvas-container {
+	width : 100%;
+	height : 100%;
+    box-sizing: border-box;
+}
+.grid .grid-canvas-container canvas {
+	cursor : pointer;
+}
+/*
+.grid .grid-canvas-container .grid-canvas {
+	border:solid thin silver;
+}
+*/

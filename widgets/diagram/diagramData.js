@@ -3,10 +3,6 @@
 export default class DiagramData { 
 
 	constructor(svg) {		
-		svg.setAttribute("width", "100%");
-		svg.setAttribute("height", "100%");
-		svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
-	
 		this.models = {};
 		this.ports = {};
 		this.links = {};

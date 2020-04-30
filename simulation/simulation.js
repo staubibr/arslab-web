@@ -6,6 +6,7 @@ import State from './state.js';
 import Cache from './cache.js';
 import Frame from './frame.js';
 import Transition from './transition.js';
+import TransitionCA from './transitionCA.js';
 
 export default class Simulation extends Evented { 
 	
@@ -17,7 +18,29 @@ export default class Simulation extends Evented {
 
 	get Selected() { return this.selected; }
 	
+	// TODO : Should be in a SimulationCA class
+	get Dimensions() { 
+		if (this.type == "DEVS") return this.size;
+			
+		else return { x:this.size[0], y:this.size[1], z:this.size[2] } 
+	}
+	
 	get SVG() { return this.svg; }
+	
+	// TODO : Should vary in a SimulationCA class
+	get Ratio() { 
+		if (this.type == "DEVS") {			
+			var vb = this.diagram.match(/viewBox="(.*?)"/);
+			
+			if (!vb) throw new Error("The viewBox attribute must be specified on the svg element.");
+
+			var split = vb[1].split(" ");
+			
+			return split[2] / split[3];
+		}
+		
+		else return this.Dimensions.x / this.Dimensions.y;
+	}
 
 	constructor(name, simulator, type, frames, diagram, models, size, palette) {
 		super();
@@ -183,14 +206,22 @@ export default class Simulation extends Evented {
 	}
 	
 	static FromJson(json) {
-		var simulation = new Simulation(json.name, json.simulator, json.type, null, json.svg, json.models, json.size, null);
+		var models = (json.type == "Cell-DEVS") ? State.ModelsFromSize(json.size) : json.models;
+		
+		var simulation = new Simulation(json.name, json.simulator, json.type, null, json.svg, models, json.size, null);
 		
 		// build frames from flat transitions list		
 		for (var i = 0; i < json.transitions.length; i++) {
 			var t = json.transitions[i];
 			var f = simulation.Index(t.time) || simulation.AddFrame(new Frame(t.time));
 			
-			f.AddTransition(new Transition(t.type, t.model, t.id, t.port, t.value, t.destination));
+			var add = null;
+			
+			if (simulation.type == "Cell-DEVS") add = new TransitionCA(t.type, t.model, t.id, t.port, t.value, t.destination);
+			
+			else add = new Transition(t.type, t.model, t.id, t.port, t.value, t.destination)
+			
+			f.AddTransition(add);
 		} 
 		
 		// Palette needs to be constructed.		

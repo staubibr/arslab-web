@@ -6,6 +6,8 @@ import Transition from './json/transition.js';
 import PaletteBucket from './json/paletteBucket.js';
 import Simulation from './json/simulation.js';
 
+import State from '../simulation/state.js';
+
 export default class CDpp extends Parser { 
 	
 	Parse(files) {
@@ -54,8 +56,6 @@ export default class CDpp extends Parser {
 			simulation.transitions = transitions.concat(data[3]);
 			simulation.palette = data[1];
 			simulation.size = ma.size;
-			
-			debugger;
 			
 			d.Resolve(simulation);
 		}, (error) => {
@@ -108,9 +108,10 @@ export default class CDpp extends Parser {
 		
 		var size = [+dim[1], +dim[0], +dim[2]];
 		
+		for (var x = 0; x < size[0]; i++) 
+		
 		return {
 			size : size,
-			model : file.match(/(?<=\[).+?(?=\])/g)[1].toLowerCase(),
 			initial : {
 				global : this.GlobalFrame(size, file),
 				rows : this.RowsFrame(file)

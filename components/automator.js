@@ -29,4 +29,8 @@ export default class Automator {
 		this.widget = null;
 		this.handles = null;
 	}
+	
+	Redraw() {
+		
+	}
 };
