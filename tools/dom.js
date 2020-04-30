@@ -294,4 +294,31 @@ export default class Dom {
 		
 		return elements;
 	}
+	
+	
+	/**
+	* Returns the geometry of a dom node (width, height)
+	*
+	* Parameters :
+	*	elem : Element, the Element to retrieve the geometry
+	* Return : Object, an object containing the width and height of the element
+	*/
+	static Geometry(elem) {
+		var style = window.getComputedStyle(elem);
+		
+		var h = +(style.getPropertyValue("height").slice(0, -2));
+		var w = +(style.getPropertyValue("width").slice(0, -2));
+		var pL = +(style.getPropertyValue("padding-left").slice(0, -2));
+		var pR = +(style.getPropertyValue("padding-right").slice(0, -2));
+		var pT = +(style.getPropertyValue("padding-top").slice(0, -2));
+		var pB = +(style.getPropertyValue("padding-bottom").slice(0, -2));
+		
+		var w = w - pL - pR;
+		var h = h - pT - pB;
+		
+		// Use smallest width as width and height for square grid that fits in container
+		// var s = w < h ? w : h;
+		
+		return { w : w , h : h }
+	}
 }

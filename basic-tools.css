@@ -92,7 +92,7 @@
 
 .popup .popup-body {
 	overflow-y: auto;
-    top: 40px;
+    top: 25px;
     bottom: 0px;
     position: absolute;
     left: 0px;
