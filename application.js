@@ -19,14 +19,14 @@ import Grid from '../web-devs-tools/widgets/grid/grid.js'
 
 export default class Main extends Templated { 
 
-	constructor(node, files) {		
+	constructor(node, files, options) {		
 		super(node);
 		
 		this.simulation = null;
 		
 		this.current = null;
-		
-		this.settings = new oSettings();
+				
+		this.settings = oSettings.FromJson(options);
 		
 		var parser = new Standardized();
 		
@@ -72,7 +72,7 @@ export default class Main extends Templated {
 		Dom.SetCss(this.Elem("main"), `${widget}-visible`);
 				
 		if (widget == "diagram") {			
-			this.current = new DiagramAuto(this.Elem("diagram"), this.simulation);
+			this.current = new DiagramAuto(this.Elem("diagram"), this.simulation, { clickEnabled:false });
 		}
 		else if (widget === "grid") {
 			var z = [];
@@ -80,6 +80,7 @@ export default class Main extends Templated {
 			for (var i = 0; i < this.simulation.Dimensions.z; i++) z.push(i);
 			
 			var options = { 
+				clickEnabled:false,
 				columns:this.settings.Get("grid", "columns"), 
 				spacing:this.settings.Get("grid", "spacing"), 
 				z:z 

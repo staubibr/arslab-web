@@ -16,8 +16,9 @@ var p4 = WaitForDocument();
 
 var p5 = Net.Request(`./log/${model}/simulation.json`, null, 'blob');
 var p6 = Net.Request(`./log/${model}/transitions.csv`, null, 'blob');
+var p7 = Net.JSON(`./log/${model}/options.json`);
 
-var defs = [p1, p2, p3, p4, p5, p6];
+var defs = [p1, p2, p3, p4, p5, p6, p7];
 
 if (type == "DEVS") defs.push(Net.Request(`./log/${model}/diagram.svg`, null, 'blob'));
 
@@ -38,14 +39,16 @@ function Start(responses) {
 	Core.nls = Core.Mixin(Core.nls, responses[1]);
 	Core.nls = Core.Mixin(Core.nls, responses[2]);
 
+	var options = responses[6];
+
 	var files = [];
 	
 	files.push(new File([responses[4]], 'simulation.json'));
 	files.push(new File([responses[5]], 'transitions.csv'));
 	
-	if (type == "DEVS") files.push(new File([responses[6]], 'diagram.svg'));
+	if (type == "DEVS") files.push(new File([responses[7]], 'diagram.svg'));
 
-	var app = new Application(document.body, files);
+	var app = new Application(document.body, files, options);
 }
 
 function Fail(response) {
