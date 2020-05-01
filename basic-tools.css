@@ -42,7 +42,33 @@
     bottom: 40px;
 }
 
+.tooltip {
+	position: absolute;
+    border: solid thin silver;
+    border-radius: 4px;
+    pointer-events: none;
+    background: #fff;
+	opacity : 0;
+}
 
+.tooltip > * {
+    margin: 5px;
+}
+
+.tooltip .tooltip-title {
+	font-weight : bold;
+}
+
+.tooltip .tooltip-label {
+	margin: 5px;
+}
+
+.tooltip .tooltip-line > * {
+	display:inline-block;
+	vertical-align : middle;
+	margin-left:3px;
+	margin-right:3px;
+}
 
 
 .popup-blocker {
