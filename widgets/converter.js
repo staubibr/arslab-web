@@ -1,6 +1,6 @@
 'use strict';
 
-import Core from 'http://localhost/Dev/ARSLab/basic-tools/tools/core.js';
+import Core from '../../../basic-tools/tools/core.js';
 import Dom from '../../basic-tools/tools/dom.js';
 import Templated from '../../basic-tools/components/templated.js';
 import BoxInput from '../../basic-tools/ui/box-input-files.js';
