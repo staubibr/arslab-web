@@ -32,6 +32,8 @@ export default class Standardized extends Parser {
 			
 			var json = data[0];
 			
+			if (json.models) json.models = json.models.map(m => m.toLowerCase());
+			
 			var simulation = new Simulation(json.name, json.simulator, json.type, data[2], data[1], json.models, json.size, json.palette);
 		
 			d.Resolve(simulation);
@@ -48,7 +50,11 @@ export default class Standardized extends Parser {
 		for (var i = 0; i < lines.length; i++) {
 			var s = lines[i].trim().split(",");
 			
-			parsed.push(new Transition(s[0], s[1], s[2], s[3], s[4], s[5], s[6], s[7]));
+			s[1] = s[1].toLowerCase();
+			s[3] = s[3].toLowerCase();
+			s[5] = s[5].toLowerCase();
+			
+			parsed.push(new Transition(s[0], s[1], s[2], s[3], s[4], s[5], s[6]));
 		}
 		
 		return parsed;

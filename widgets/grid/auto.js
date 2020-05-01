@@ -8,24 +8,33 @@ import Automator from '../../components/automator.js';
 
 export default Core.Templatable("Auto.Grid", class AutoGrid extends Automator { 
 
-	constructor(grid, simulation, config) {
+	constructor(grid, simulation, options) {
+		options = options || {};	// Default empty options if not provided
+
 		super(grid, simulation);
 		
-		var h1 = this.Widget.On("MouseMove", this.onMouseMove_Handler.bind(this));
-		var h2 = this.Widget.On("MouseOut", this.onMouseOut_Handler.bind(this));
-		var h3 = this.Widget.On("Click", this.onClick_Handler.bind(this));
-		var h4 = this.Simulation.On("Move", this.onSimulationMove_Handler.bind(this));
-		var h5 = this.Simulation.On("Jump", this.onSimulationJump_Handler.bind(this));
-		var h6 = this.Simulation.palette.On("Change", this.onSimulationPaletteChanged_Handler.bind(this));
-		
-		this.Handle([h1, h2, h3, h4, h5, h6]);
+		this.AttachHandlers(options);
 		
 		this.BuildTooltip();
 		
 		this.Widget.Dimensions = this.simulation.Dimensions;
-		this.Widget.Columns = config.columns;
-		this.Widget.Spacing	= config.spacing;
-		this.Widget.Z = config.z;
+		this.Widget.Columns = options.columns;
+		this.Widget.Spacing	= options.spacing;
+		this.Widget.Z = options.z;
+	}
+	
+	AttachHandlers(options) {
+		var h = [];
+
+		if (options.hoverEnabled != false) h.push(this.Widget.On("MouseMove", this.onMouseMove_Handler.bind(this)));
+		if (options.hoverEnabled != false) h.push(this.Widget.On("MouseOut", this.onMouseOut_Handler.bind(this)));
+		if (options.clickEnabled != false) h.push(this.Widget.On("Click", this.onClick_Handler.bind(this)));
+		
+		h.push(this.Simulation.On("Move", this.onSimulationMove_Handler.bind(this)));
+		h.push(this.Simulation.On("Jump", this.onSimulationJump_Handler.bind(this)));
+		h.push(this.Simulation.palette.On("Change", this.onSimulationPaletteChanged_Handler.bind(this)));
+		
+		this.Handle(h);
 	}
 		
 	BuildTooltip() {
@@ -61,9 +70,9 @@ export default Core.Templatable("Auto.Grid", class AutoGrid extends Automator {
 	}
 	
 	onMouseMove_Handler(ev) {
-		var id = ev.data.x + "-" + ev.data.y + "-" + this.z;
+		var id = ev.data.x + "-" + ev.data.y + "-" + ev.data.z;
 		var state = this.simulation.state.models[id];
-		var subs = [ev.data.x, ev.data.y, this.z, state];
+		var subs = [ev.data.x, ev.data.y, ev.data.z, state];
 		
 		this.tooltip.nodes.label.innerHTML = Core.Nls("Grid_Tooltip_Title", subs);
 	

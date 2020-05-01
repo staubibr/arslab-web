@@ -106,7 +106,7 @@ export default class CDpp extends Parser {
 		
 		if (dim.length == 2) dim.push(1);
 		
-		var size = [+dim[1], +dim[0], +dim[2]];
+		var size = [+dim[0], +dim[1], +dim[2]];
 		
 		for (var x = 0; x < size[0]; i++) 
 		

@@ -3,6 +3,7 @@
 export default class DiagramData { 
 
 	constructor(svg) {		
+		this.nodes = [];
 		this.models = {};
 		this.ports = {};
 		this.links = {};
@@ -16,11 +17,14 @@ export default class DiagramData {
 		var models = svg.querySelectorAll('[type="atomic"],[type="coupled"]');
 		
 		models.forEach((node) => {
-			var id = node.getAttribute("id");
+			this.nodes.push(node);
+			
 			var type = node.getAttribute("type");
 			var name = node.getAttribute("name").toLowerCase();
 			
-			this.models[name] = { id:id, name:name, type:type, node:node, ports:{} };
+			this.models[name] = { name:name, type:type, node:node };
+			
+			node.setAttribute("name", name);
 		});
 	}
 	
@@ -28,18 +32,15 @@ export default class DiagramData {
 		var ports = svg.querySelectorAll('[type="iPort"],[type="oPort"]');
 		
 		ports.forEach((node) => {
-			var id = node.getAttribute("id");
+			this.nodes.push(node);
+			
 			var type = node.getAttribute("type");
 			var name = node.getAttribute("name").toLowerCase();
 			var model = node.getAttribute("model").toLowerCase();
 			
-			var m = this.ModelById(model);
+			if (!this.ports[model]) this.ports[model] = {};
 			
-			if (!m) return;
-			
-			this.ports[id] = { id:id, name:name, model:m, type:type, node:node };
-			
-			m.ports[name] = this.ports[id];
+			this.ports[model][name] = { name:name, model:model, type:type, node:node };
 		});
 	}
 	
@@ -47,20 +48,46 @@ export default class DiagramData {
 		var links = svg.querySelectorAll('[type="link"]');
 		
 		links.forEach((node) => {
-			var id = node.getAttribute("id");
+			this.nodes.push(node);
+			
 			var type = node.getAttribute("type");
-			var portA = node.getAttribute("porta").toLowerCase();
-			var portB = node.getAttribute("portb").toLowerCase();
+			
+			// All these 4 attributes may not be specified or null
+			var modelA = this.GetAttribute(node, "modela");
+			var modelB = this.GetAttribute(node, "modelb");
+			var portA = this.GetAttribute(node, "porta");
+			var portB = this.GetAttribute(node, "portb");
 
+			// markerEnd may not be specified
 			var markerEnd = node.style["marker-end"];
 			
 			var marker = markerEnd ? svg.querySelector(`${markerEnd.slice(5, -2)} > *`) : null;
+
+			if (marker) this.nodes.push(marker);
+
+			// link object to be shared at both ends
+			var link = { type:type, portA:portA, portB:portB, modelA:modelA, modelB:modelB, node:node, marker:marker };
 			
-			var pA = this.ports[portA] || null;
-			var pB = this.ports[portB] || null;
+			if (modelA) {
+				if (!this.links[modelA]) this.links[modelA] = { in:{}, out:{} };
+				
+				this.links[modelA].out[portA] = link;
+			}
 			
-			this.links[id] = { type:type, portA:pA, portB:pB, node:node, marker:marker };
+			if (modelB) {
+				if (!this.links[modelB]) this.links[modelB] = { in:{}, out:{} };
+				
+				this.links[modelB].in[portB] = link;
+			}
 		});
+	}
+	
+	GetAttribute(node, attribute) {
+		var value = node.getAttribute(attribute);
+
+		if (value == null || value == "null") return null;
+
+		return value.toLowerCase();
 	}
 	
 	Model(model) {
@@ -68,44 +95,24 @@ export default class DiagramData {
 	}
 	
 	Port(model, port) {
-		return model.ports[port] || null;
-	}
-	
-	Link(port, direction) {
-		var target = direction == "X" ? "portB" : "portA";
+		var m = this.ports[model]
 		
-		for (var id in this.links) {
-			var l = this.links[id][target];
-			
-			if (!l) continue;
-			
-			if (l.id === port.id) return this.links[id];
-		}
+		if (!m) return null;
 		
-		return null;
+		return m[port] || null;
 	}
 	
-	ModelById(id) {
-		for (var name in this.models) {
-			if (this.models[name].id === id) return this.models[name];
-		}
+	Link(model, port, direction) {
+		var m = this.links[model]
 		
-		return null;
-	}
-	
-	PortById(id) {
-		return this.ports[id] || null;
-	}
-	
-	LinkById(id) {
-		return this.links[id] || null;
-	}
-	
-	LinkByPortB(port) {
-		for (var id in this.links) {
-			if (this.links[id].portB.id === port.id) return this.links[id];
-		}
+		if (!m) return null;
 		
-		return null;
+		var dir = direction == "X" ? "in" : "out";
+		
+		return m[dir][port] || null;
+	}
+	
+	Nodes() {
+		return this.nodes;
 	}
 };

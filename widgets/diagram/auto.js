@@ -9,7 +9,9 @@ import Automator from '../../components/automator.js';
 
 export default Core.Templatable("Auto.Diagram", class AutoDiagram extends Automator { 
 
-	constructor(diagram, simulation) {
+	constructor(diagram, simulation, options) {
+		options = options || {};	// Default empty options if not provided
+		
 		super(diagram, simulation);
 		
 		this.Widget.SetDiagram(this.Simulation.diagram);
@@ -18,27 +20,29 @@ export default Core.Templatable("Auto.Diagram", class AutoDiagram extends Automa
 		
 		this.selected = [];
 
-		var h1 = this.Widget.On("MouseMove", this.onMouseMove_Handler.bind(this));
-		var h2 = this.Widget.On("MouseOut", this.onMouseOut_Handler.bind(this));
-		var h3 = this.Widget.On("Click", this.onClick_Handler.bind(this));
-		var h4 = this.Simulation.On("Move", this.onSimulationMove_Handler.bind(this));
-		var h5 = this.Simulation.On("Jump", this.onSimulationJump_Handler.bind(this));
-		var h6 = this.Simulation.On("Selected", this.onSelected_Handler.bind(this));
-		
-		this.Handle([h1, h2, h3, h4, h5,h6]);
+		this.AttachHandlers(options);
 		
 		this.UpdateSelected();
-		this.BuildTooltip();
+
+		this.tooltip = new Tooltip();
+	}
+	
+	AttachHandlers(options) {
+		var h = [];
+
+		if (options.hoverEnabled != false) h.push(this.Widget.On("MouseMove", this.onMouseMove_Handler.bind(this)));
+		if (options.hoverEnabled != false) h.push(this.Widget.On("MouseOut", this.onMouseOut_Handler.bind(this)));
+		if (options.clickEnabled != false) h.push(this.Widget.On("Click", this.onClick_Handler.bind(this)));
+		
+		h.push(this.Simulation.On("Move", this.onSimulationMove_Handler.bind(this)));
+		h.push(this.Simulation.On("Jump", this.onSimulationJump_Handler.bind(this)));
+		h.push(this.Simulation.On("Selected", this.onSelected_Handler.bind(this)));
+		
+		this.Handle(h);
 	}
 	
 	UpdateSelected() {
 		this.selected = this.Simulation.Selected;
-	}
-		
-	BuildTooltip() {
-		this.tooltip = new Tooltip();
-		
-		this.tooltip.nodes.label = Dom.Create("div", { className:"tooltip-label" }, this.tooltip.Elem("content"));
 	}
 		
 	onSimulationJump_Handler(ev) {		
@@ -63,10 +67,27 @@ export default Core.Templatable("Auto.Diagram", class AutoDiagram extends Automa
 	}
 	
 	onMouseMove_Handler(ev) {
-		var subs = [ev.model, this.Simulation.state.models[ev.model]];
+		var f = this.Simulation.CurrentFrame();
 		
-		this.tooltip.nodes.label.innerHTML = Core.Nls("DEVS_Diagram_Tooltip", subs);
-	
+		Dom.Empty(this.tooltip.Elem("content"));
+		
+		var tX = f.transitions.filter(t => t.Type == "X" && t.Destination == ev.model);
+		var tY = f.transitions.filter(t => t.Type == "Y" && t.Model == ev.model);
+		
+		if (tX.length == 0 && tY.length == 0) return;
+			
+		tX.forEach(t => {
+			var html = Core.Nls("Diagram_Tooltip_X", [t.Destination, t.Value, t.Model, t.Port]);
+			
+			Dom.Create("div", { className:"tooltip-label", innerHTML:html }, this.tooltip.Elem("content"));
+		});
+		
+		tY.forEach(t => {
+			var html = Core.Nls("Diagram_Tooltip_Y", [t.Model, t.Value, t.Destination, t.Port]);
+			
+			Dom.Create("div", { className:"tooltip-label", innerHTML:html }, this.tooltip.Elem("content"));
+		});
+		
 		this.tooltip.Show(ev.x + 20, ev.y);
 	}
 	
@@ -77,12 +98,12 @@ export default Core.Templatable("Auto.Diagram", class AutoDiagram extends Automa
 		if (idx == -1) {
 			this.selected.push(ev.model);
 			
-			this.Widget.AddModelCss(ev.svg, "selected");
+			this.Widget.AddModelCss(ev.svg, ["selected"]);
 		}
 		else {
 			this.selected.splice(idx, 1);
 			
-			this.Widget.RemoveModelCss(ev.svg, "selected");
+			this.Widget.RemoveModelCss(ev.svg, ["selected"]);
 		}
 	}
 

@@ -4,7 +4,7 @@ import Core from '../../basic-tools/tools/core.js';
 import Dom from '../../basic-tools/tools/dom.js';
 import Net from '../../basic-tools/tools/net.js';
 import Templated from '../../basic-tools/components/templated.js';
-import Zip from '../../web-devs-tools/tools/zip.js';
+// import Zip from '../../web-devs-tools/tools/zip.js';
 
 export default Core.Templatable("Widget.RiseList", class RiseLoader extends Templated {
 
@@ -20,35 +20,69 @@ export default Core.Templatable("Widget.RiseList", class RiseLoader extends Temp
 		// TODO : This is temporary, just to showcase how we could read from RISE. We need
 		// to fix a bunch of issues with RISE before we can fully implement this.
 		this.models = [{
+				"name": "Alternate Bit Protocol Model",
+				"type" : "DEVS",
+				"url": path + "/log/ABP/"
+			}, {
 				"name": "Addiction Model",
-				"url": path + "/log/Addiction/Addiction.zip"
+				"type" : "Cell-DEVS",
+				"url": path + "/log/Addiction/"
 			}, {
 				"name": "CO2 Model",
-				"url": path + "/log/CO2/CO2.zip"
+				"type" : "Cell-DEVS",
+				"url": path + "/log/CO2/"
+			}, {
+				"name": "Farm Model",
+				"type" : "DEVS",
+				"url": path + "/log/Farm/"
 			}, {
 				"name": "Fire Model",
-				"url": path + "/log/Fire/Fire.zip"
+				"type" : "Cell-DEVS",
+				"url": path + "/log/Fire/"
 			}, {
 				"name": "Fire And Rain Model",
-				"url": path + "/log/Fire and Rain/Fire and Rain.zip"
+				"type" : "Cell-DEVS",
+				"url": path + "/log/Fire and Rain/"
 			}, {
-				"name": "Life Model",
-				"url": path + "/log/Life/2/2.zip"
+				"name": "Life Model #1",
+				"type" : "Cell-DEVS",
+				"url": path + "/log/Life/1/"
 			}, {
-				"name": "Logistic Urban Growth Model",
-				"url": path + "/log/Logistic Urban Growth/4/4.zip"
+				"name": "Life Model #2",
+				"type" : "Cell-DEVS",
+				"url": path + "/log/Life/2/"
+			}, {
+				"name": "Life Model #3",
+				"type" : "Cell-DEVS",
+				"url": path + "/log/Life/3/"
+			}, {
+				"name": "Logistic Urban Growth Model #1",
+				"type" : "Cell-DEVS",
+				"url": path + "/log/LUG/1/"
+			}, {
+				"name": "Logistic Urban Growth Model #2",
+				"type" : "Cell-DEVS",
+				"url": path + "/log/LUG/1/"
+			}, {
+				"name": "Logistic Urban Growth Model #3",
+				"type" : "Cell-DEVS",
+				"url": path + "/log/LUG/1/"
 			}, {
 				"name": "Swarm Model",
-				"url": path + "/log/Swarm/Swarm.zip"
+				"type" : "Cell-DEVS",
+				"url": path + "/log/Swarm/"
 			}, {
 				"name": "Tumor Model",
-				"url": path + "/log/Tumor/Tumor.zip"
+				"type" : "Cell-DEVS",
+				"url": path + "/log/Tumor/"
 			}, {
 				"name": "UAV Model",
-				"url": path + "/log/UAV/UAV.zip"
+				"type" : "Cell-DEVS",
+				"url": path + "/log/UAV/"
 			}, {
 				"name": "Worm Model",
-				"url": path + "/log/Worm/Worm.zip"
+				"type" : "Cell-DEVS",
+				"url": path + "/log/Worm/"
 			}
 		]
 		
@@ -71,23 +105,41 @@ export default Core.Templatable("Widget.RiseList", class RiseLoader extends Temp
 
     getRiseModel(model){
 		Dom.RemoveCss(this.Elem("wait"), "hidden");
-		
-		var p = Net.Request(model.url, null, 'blob');
 
-		var success = function(result) {
-			var blob = new Blob([result], { type : "application/zip" });
+		var p1 = Net.Request(`${model.url}simulation.json`, null, 'blob');
+		var p2 = Net.Request(`${model.url}transitions.csv`, null, 'blob');
+		var p3 = Net.JSON(`${model.url}options.json`);
+
+		var defs = [p1, p2, p3];
+
+		if (model.type == "DEVS") defs.push(Net.Request(`${model.url}diagram.svg`, null, 'blob'));
+
+		var success = function(responses) {	
+			Dom.AddCss(this.Elem("wait"), "hidden");	
 			
-			Zip.LoadZip(blob).then(this.onZip_Loaded.bind(this), this.onError_Handler.bind(this));
+			var options = responses[2];
+	
+			var files = [];
+			
+			files.push(new File([responses[0]], 'simulation.json'));
+			files.push(new File([responses[1]], 'transitions.csv'));
+			
+			if (model.type == "DEVS") files.push(new File([responses[3]], 'diagram.svg'));
+			
+			this.Emit("FilesReady", { files : files, options : options });
+		
+			// Zip.LoadZip(blob).then(this.onZip_Loaded.bind(this), this.onError_Handler.bind(this));
 		}.bind(this);
 
-		p.then(success, this.onError_Handler.bind(this));
+		Promise.all(defs).then(success, this.onError_Handler.bind(this));
     }
-
+	/*
 	onZip_Loaded(result) {
 		Dom.AddCss(this.Elem("wait"), "hidden");
 		
 		this.Emit("FilesReady", { files : result.files });
 	}
+	*/
 
 	onError_Handler(error) {
 		Dom.AddCss(this.Elem("wait"), "hidden");

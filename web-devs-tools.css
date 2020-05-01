@@ -184,11 +184,11 @@ input[type=range]:disabled::-webkit-slider-thumb{
 }
 
 .diagram-container rect.highlighted {
-	stroke-width: 1px !important;
+	/*stroke-width: 1px !important;*/
 }
 
 .diagram-container path.highlighted {
-	stroke-width: 0.5px !important;
+	/*stroke-width: 0.5px !important;*/
 }
 
 .diagram-container path.highlighted.X,
@@ -222,7 +222,7 @@ input[type=range]:disabled::-webkit-slider-thumb{
 }
 
 .diagram-container rect.selected {
-	stroke-width: 1px !important;
+	/*stroke-width: 1px !important;*/
     stroke: red  !important;
 }
 

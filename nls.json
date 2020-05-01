@@ -77,8 +77,11 @@
 	"Converter_Parse" : {
 		"en" : "Parse files"
 	},
-	"DevsDiagram_Title" : {
-		"en" : "DEVS Diagram"
+	"Diagram_Tooltip_X" : {
+		"en" : "<b>{0}</b> received an input (<b>{1}</b>) from <b>{2}</b> through port <b>{3}</b>"		
+	},
+	"Diagram_Tooltip_Y" : {
+		"en" : "<b>{0}</b> emitted an output (<b>{1}</b>) to <b>{2}</b> through port <b>{3}</b>"		
 	},
 	"Grid_Tooltip_Title" : {
 		"en" : "The state of model ({0}, {1}, {2}) is {3}."		

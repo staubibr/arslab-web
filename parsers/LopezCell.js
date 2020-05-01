@@ -71,11 +71,11 @@ export default class LopezCell extends Parser {
 			var tmp = split[4].trim().split("(")
 			
 			// NOTE : Don't use regex, it's super slow.
-			var t = split[3].trim();							// time
-			var m = tmp[0];										// model name
-			var c = tmp[1].slice(0, -1);						// id / coordinate
-			var p = split[5].trim();							// port
-			var v = parseFloat(split[6]);						// value
+			var t = split[3].trim();			// time
+			var m = tmp[0];						// model name
+			var c = tmp[1].slice(0, -1);		// id / coordinate
+			var p = split[5].trim();			// port
+			var v = parseFloat(split[6]);		// value
 			
 			var tmp = split.length == 8 ? split[7] : split[6]	// Weird case, there seems to be two formats, one of them as an extra / (see life 1 and life 2)
 			

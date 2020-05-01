@@ -30,12 +30,12 @@ export default Core.Templatable("Widgets.Diagram", class Diagram extends Templat
 	SetCss() {
 		var models = this.Node('diagram').Elems("[type='atomic'],[type='coupled']");
 		
-		models.forEach(m => this.AddModelCss(m, "model"));
+		models.forEach(m => this.AddModelCss(m, ["model"]));
 	}
 	
 	onSvgMouseMove_Handler(ev) {
-		var model = ev.target.getAttribute('name');
-		
+		var model = ev.target.getAttribute('name').toLowerCase();
+				
 		this.Emit("MouseMove", { x:ev.pageX, y:ev.pageY , model:model });
 	}
 		
@@ -74,48 +74,36 @@ export default Core.Templatable("Widgets.Diagram", class Diagram extends Templat
 		});
 	}
 
-	DrawXTransition(t) {
+	DrawXTransition(t) {		
 		var m = this.data.Model(t.destination);
 		
-		if (!m) return;
+		if (m) this.AddModelCss(m.node, ["highlighted", t.type]);
 		
-		this.AddModelCss(m.node, ["highlighted", t.type]);
+		var p = this.data.Port(t.destination, t.port);
 		
-		var p =  this.data.Port(m, t.port);
+		if (p) this.AddModelCss(p.node, ["highlighted", t.type]);
 		
-		if (!p) return;
+		var l = this.data.Link(t.destination, t.port, t.type);
 		
-		this.AddModelCss(p.node, ["highlighted", t.type]);
+		if (l) this.AddModelCss(l.node, ["highlighted", t.type]);	
 		
-		var l = this.data.Link(p, t.type);
-		
-		if (!l) return;
-
-		this.AddModelCss(l.node, ["highlighted", t.type]);	
-		
-		if (l.marker) this.AddModelCss(l.marker, ["highlighted", t.type]);	
+		if (l && l.marker) this.AddModelCss(l.marker, ["highlighted", t.type]);	
 	}
 
 	DrawYTransition(t) {
 		var m = this.data.Model(t.id);
 		
-		if (!m) return;
+		if (m) this.AddModelCss(m.node, ["highlighted", t.type]);
 		
-		this.AddModelCss(m.node, ["highlighted", t.type]);
+		var p = this.data.Port(t.id, t.port);
 		
-		var p =  this.data.Port(m, t.port);
+		if (p) this.AddModelCss(p.node, ["highlighted", t.type]);
 		
-		if (!p) return;
+		var l = this.data.Link(t.id, t.port, t.type);
 		
-		this.AddModelCss(p.node, ["highlighted", t.type]);
+		if (l) this.AddModelCss(l.node, ["highlighted", t.type]);
 		
-		var l = this.data.Link(p, t.type);
-		
-		if (!l) return;
-
-		this.AddModelCss(l.node, ["highlighted", t.type]);
-		
-		if (l.marker) this.AddModelCss(l.marker, ["highlighted", t.type]);	
+		if (l && l.marker) this.AddModelCss(l.marker, ["highlighted", t.type]);	
 	}
 
 	AddModelCss(model, css) {
@@ -127,20 +115,6 @@ export default Core.Templatable("Widgets.Diagram", class Diagram extends Templat
 	}
 	
 	Reset() {
-		for (var name in this.data.models) {
-			this.RemoveModelCss(this.data.models[name].node, ["highlighted", "X", "Y"]);
-		}
-		
-		for (var id in this.data.ports) {
-			this.RemoveModelCss(this.data.ports[id].node, ["highlighted", "X", "Y"]);
-		}
-		
-		for (var id in this.data.links) {
-			var l = this.data.links[id];
-			
-			this.RemoveModelCss(l.node, ["highlighted", "X", "Y"]);
-			
-			if (l.marker) this.RemoveModelCss(l.marker, ["highlighted", "X", "Y"]);	
-		}
+		this.data.Nodes().forEach(n => { this.RemoveModelCss(n, ["highlighted", "X", "Y"]); })
 	}
 });

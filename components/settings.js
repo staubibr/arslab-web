@@ -87,4 +87,12 @@ export default class Settings extends Evented {
 		
 		return { group:group, property:property, value:value }
 	}
+	
+	static FromJson(json) {
+		var settings = new Settings();
+		
+		settings.json = json;
+		
+		return settings;
+	}
 }
