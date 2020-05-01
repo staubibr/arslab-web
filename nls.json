@@ -38,9 +38,6 @@
 	"Converter_Parser_NA" : {
 		"en" : "This parser is not available."
 	},
-	"DEVS_Diagram_Tooltip" : {
-		"en" : "Model Id : {0} <br>Last output : {1}"		
-	},
 	"Grid_Tooltip_Title" : {
 		"en" : "The state of model ({0}, {1}, {2}) is {3}."		
 	}

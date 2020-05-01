@@ -136,7 +136,15 @@ export default class Main extends Templated {
 	OnRise_Loaded(ev) {
 		this.HidePopup();
 		
+		this.SwitchWidget("dropzone");
+		
+		this.settings.json = ev.options;
+		
+		this.Elem("upload").files = ev.files;
 		this.Elem("upload").Update(ev.files);
+		this.Elem("load").disabled = false;
+		
+		this.OnLoad_Click(null);
 	}
 	
 	OnWidget_Error(ev) {
@@ -177,7 +185,7 @@ export default class Main extends Templated {
 		if (this.current.auto) this.current.auto.Destroy();
 		
 		if (widget == "diagram") {			
-			this.current.auto = new DiagramAuto(this.Elem("diagram"), this.simulation);
+			this.current.auto = new DiagramAuto(this.Elem("diagram"), this.simulation, { clickEnabled:false });
 		}
 		else if (widget === "grid") {
 			var z = [];
@@ -185,6 +193,7 @@ export default class Main extends Templated {
 			for (var i = 0; i < this.simulation.Dimensions.z; i++) z.push(i);
 			
 			var options = { 
+				clickEnabled:false,
 				columns:this.settings.Get("grid", "columns"), 
 				spacing:this.settings.Get("grid", "spacing"), 
 				z:z 
@@ -193,6 +202,9 @@ export default class Main extends Templated {
 			this.current.auto = new GridAuto(this.Elem("grid"), this.simulation, options);
 		}
 		else {
+			this.Elem("body").style.width = null;
+			this.Elem("body").style.height = null;
+			
 			this.current.auto = null;
 		}
 		
