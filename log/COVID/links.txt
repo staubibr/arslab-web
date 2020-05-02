@@ -1,0 +1,41 @@
+
+Transmission 0.1 - Death Rate Variable
+
+http://localhost/Dev/ARSLab/web-devs-embed-viewer/index.html?model=COVID\new\tr_0.1_dr_0.001&type=Cell-DEVS
+http://localhost/Dev/ARSLab/web-devs-embed-viewer/index.html?model=COVID\new\tr_0.1_dr_0.01&type=Cell-DEVS
+http://localhost/Dev/ARSLab/web-devs-embed-viewer/index.html?model=COVID\new\tr_0.1_dr_0.1&type=Cell-DEVS
+http://localhost/Dev/ARSLab/web-devs-embed-viewer/index.html?model=COVID\new\tr_0.1_dr_0.005&type=Cell-DEVS
+http://localhost/Dev/ARSLab/web-devs-embed-viewer/index.html?model=COVID\new\tr_0.1_dr_0.05&type=Cell-DEVS
+http://localhost/Dev/ARSLab/web-devs-embed-viewer/index.html?model=COVID\new\tr_0.1_dr_0.15&type=Cell-DEVS
+http://localhost/Dev/ARSLab/web-devs-embed-viewer/index.html?model=COVID\new\tr_0.1_dr_0.025&type=Cell-DEVS
+
+Transmission 0.4 - Death Rate Variable
+
+http://localhost/Dev/ARSLab/web-devs-embed-viewer/index.html?model=COVID\new\tr_0.4_dr_0.001&type=Cell-DEVS
+http://localhost/Dev/ARSLab/web-devs-embed-viewer/index.html?model=COVID\new\tr_0.4_dr_0.01&type=Cell-DEVS
+http://localhost/Dev/ARSLab/web-devs-embed-viewer/index.html?model=COVID\new\tr_0.4_dr_0.1&type=Cell-DEVS
+http://localhost/Dev/ARSLab/web-devs-embed-viewer/index.html?model=COVID\new\tr_0.4_dr_0.005&type=Cell-DEVS
+http://localhost/Dev/ARSLab/web-devs-embed-viewer/index.html?model=COVID\new\tr_0.4_dr_0.05&type=Cell-DEVS
+http://localhost/Dev/ARSLab/web-devs-embed-viewer/index.html?model=COVID\new\tr_0.4_dr_0.15&type=Cell-DEVS
+http://localhost/Dev/ARSLab/web-devs-embed-viewer/index.html?model=COVID\new\tr_0.4_dr_0.025&type=Cell-DEVS
+
+Transmission 0.15 - Death Rate Variable
+
+http://localhost/Dev/ARSLab/web-devs-embed-viewer/index.html?model=COVID\new\tr_0.15_dr_0.001&type=Cell-DEVS
+http://localhost/Dev/ARSLab/web-devs-embed-viewer/index.html?model=COVID\new\tr_0.15_dr_0.01&type=Cell-DEVS
+http://localhost/Dev/ARSLab/web-devs-embed-viewer/index.html?model=COVID\new\tr_0.15_dr_0.1&type=Cell-DEVS
+http://localhost/Dev/ARSLab/web-devs-embed-viewer/index.html?model=COVID\new\tr_0.15_dr_0.005&type=Cell-DEVS
+http://localhost/Dev/ARSLab/web-devs-embed-viewer/index.html?model=COVID\new\tr_0.15_dr_0.05&type=Cell-DEVS
+http://localhost/Dev/ARSLab/web-devs-embed-viewer/index.html?model=COVID\new\tr_0.15_dr_0.15&type=Cell-DEVS
+http://localhost/Dev/ARSLab/web-devs-embed-viewer/index.html?model=COVID\new\tr_0.15_dr_0.025&type=Cell-DEVS
+
+Transmission Variable - Death Rate 0.01
+
+http://localhost/Dev/ARSLab/web-devs-embed-viewer/index.html?model=COVID\new\tr_0.05_dr_0.01&type=Cell-DEVS
+http://localhost/Dev/ARSLab/web-devs-embed-viewer/index.html?model=COVID\new\tr_0.075_dr_0.01&type=Cell-DEVS
+http://localhost/Dev/ARSLab/web-devs-embed-viewer/index.html?model=COVID\new\tr_0.09_dr_0.01&type=Cell-DEVS
+http://localhost/Dev/ARSLab/web-devs-embed-viewer/index.html?model=COVID\new\tr_0.1_dr_0.01&type=Cell-DEVS
+http://localhost/Dev/ARSLab/web-devs-embed-viewer/index.html?model=COVID\new\tr_0.15_dr_0.01&type=Cell-DEVS
+http://localhost/Dev/ARSLab/web-devs-embed-viewer/index.html?model=COVID\new\tr_0.2_dr_0.01&type=Cell-DEVS
+http://localhost/Dev/ARSLab/web-devs-embed-viewer/index.html?model=COVID\new\tr_0.4_dr_0.01&type=Cell-DEVS
+http://localhost/Dev/ARSLab/web-devs-embed-viewer/index.html?model=COVID\new\tr_0.6_dr_0.01&type=Cell-DEVS
