@@ -27,6 +27,7 @@ export default class Main extends Templated {
 		
 		this.settings.json.grid.width = 400;
 		this.settings.json.grid.height = 400;
+		this.settings.json.playback.speed = 25;
 		
 		this.LoadSeries(config.series);
 		this.LoadLogs(config.series[0].logs);
@@ -173,7 +174,7 @@ export default class Main extends Templated {
 	}
 	
 	OnSimulation_Move(ev) {		
-		this.chart.UpdateHighlight(this.simulation.CurrentFrame().time, true);
+		this.chart.UpdateHighlight(this.simulation.CurrentFrame().time, false);
 	}
 	
 	OnChart_MouseMove(ev) {	
