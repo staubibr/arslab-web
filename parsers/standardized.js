@@ -10,9 +10,9 @@ export default class Standardized extends Parser {
 	Parse(files) {
 		var d = Core.Defer();
 
-		var json = files.find(function(f) { return f.name.match(/.json/i); });
-		var csv = files.find(function(f) { return f.name.match(/.csv/i); });
-		var svg = files.find(function(f) { return f.name.match(/.svg/i); });
+		var json = files.find(function(f) { return f.name == 'simulation.json'; });
+		var csv = files.find(function(f) { return f.name == 'transitions.csv'; });
+		var svg = files.find(function(f) { return f.name == 'diagram.csv'; });
 
 		if (!json || !csv) {
 			d.Reject(new Error("A json (.json) and csv (.csv) file must be provided for the standardized DEVS parser."));
@@ -25,7 +25,7 @@ export default class Standardized extends Parser {
 		var p3 = this.ReadByChunk(csv, this.ParseCsvChunk.bind(this));	// Still read by chunk because who knows if FileReader has the same limits as the browser
 			
 		var defs = [p1, p2, p3];
-	
+		
 		Promise.all(defs).then((data) => {
 			if (!data[0]) return d.Reject(new Error("Unable to parse the json (.json) file."));
 			if (!data[2]) return d.Reject(new Error("Unable to parse the csv (.csv) file."));
