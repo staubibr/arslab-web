@@ -210,4 +210,14 @@ export default class Core {
 		
 		return m ? [parseInt(m[1], 16), parseInt(m[2], 16), parseInt(m[3], 16)] : null;
 	}
+	
+	static WaitForDocument() {
+		var d = Core.Defer();
+		
+		if (document.readyState === "complete") d.Resolve();
+		
+		else window.addEventListener('load', (ev) => d.Resolve());
+		
+		return d.promise;
+	}
 }

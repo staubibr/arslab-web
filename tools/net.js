@@ -46,6 +46,16 @@ export default class Net {
 		return d.promise;
 	}
 	
+	static File(url, name) {
+		var d = Core.Defer();
+		
+		Net.Request(url, null, 'blob').then(b => {			
+			d.Resolve(new File([b], name));
+		}, d.Reject);
+				
+		return d.promise;
+	}
+	
 	/**
 	* Get a parameter value from the document URL
 	*
