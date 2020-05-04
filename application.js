@@ -48,9 +48,7 @@ export default class Main extends Templated {
 		}
 		
 		this.settings = this.widgets.settings.Settings;
-		
-		// this.Elem('body').style.width = this.settings.Width + 'px';
-		
+				
 		this.Elem('upload').Icon = 'fa-file-upload';
 		this.Elem('upload').Label = Core.Nls('Dropzone_Upload_Label');
 		this.Elem('upload').Label = Core.Nls('Dropzone_Upload_Label');
@@ -82,10 +80,21 @@ export default class Main extends Templated {
 		
 		var p = parser.Parse(this.Elem('upload').files);
 		
+		parser.On("Progress", (ev) => {
+			// TODO : Should use variable css colors			
+			var c1 = "#198CFF";
+			var c2 = "#0051A3";
+			
+			var bg = `linear-gradient(to right, ${c1} 0%, ${c1} ${ev.progress}%, ${c2} ${ev.progress}%, ${c2} 100%)`;
+			
+			this.Elem("load").style.backgroundImage = bg;		
+		});
+		
 		p.then(this.OnParser_Parsed.bind(this), (error) => { this.OnWidget_Error({ error:error }); });
 	}
 	
 	OnParser_Parsed(json) {
+		this.Elem("load").style.backgroundImage = null;			
 		this.Elem("btnViz").disabled = false;
 		
 		this.simulation = Simulation.FromJson(json);
