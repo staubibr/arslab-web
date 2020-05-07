@@ -12,7 +12,7 @@ export default class Standardized extends Parser {
 
 		var json = files.find(function(f) { return f.name == 'simulation.json'; });
 		var csv = files.find(function(f) { return f.name == 'transitions.csv'; });
-		var svg = files.find(function(f) { return f.name == 'diagram.csv'; });
+		var svg = files.find(function(f) { return f.name == 'diagram.svg'; });
 
 		if (!json || !csv) {
 			d.Reject(new Error("A json (.json) and csv (.csv) file must be provided for the standardized DEVS parser."));
