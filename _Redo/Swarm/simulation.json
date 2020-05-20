@@ -1,0 +1,28 @@
+{
+    "name": "Swarm",
+    "simulator": "Lopez",
+    "type": "Cell-DEVS",
+    "size": [30, 30, 1],
+    "palette": [{
+            "begin": -0.5,
+            "end": 0.5,
+            "color": [0, 0, 0]
+        }, {
+            "begin": 5.5,
+            "end": 10.5,
+            "color": [36, 21, 223]
+        }, {
+            "begin": 10.5,
+            "end": 100,
+            "color": [108, 247, 49]
+        }, {
+            "begin": 0.5,
+            "end": 3.5,
+            "color": [209, 33, 37]
+        }, {
+            "begin": 3.5,
+            "end": 5.5,
+            "color": [155, 38, 234]
+        }
+    ]
+}

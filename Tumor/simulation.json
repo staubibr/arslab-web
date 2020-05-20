@@ -1,0 +1,1 @@
+{"name":"TIS","simulator":"CDpp","type":"Cell-DEVS","models":[{"name":"tis","ports":[{"name":"out","type":"output"}]}],"size":[21,21,1],"palette":[{"begin":0,"end":1,"color":[255,255,255]},{"begin":1,"end":2,"color":[0,0,255]},{"begin":2,"end":3,"color":[255,0,0]},{"begin":3,"end":4,"color":[255,255,0]},{"begin":4,"end":5,"color":[0,0,0]}],"template":null}

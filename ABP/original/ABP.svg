@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" width="196mm" height="82mm" viewBox="0 0 196 82" version="1.1">
+	<style>
+		.svg-arrow {
+			stroke:#000000;
+		}
+		
+		.svg-label {
+			font-style: italic;
+			font-size: 3.5px;
+			font-family: sans-serif;
+		}
+		
+		.svg-marker {
+			overflow:visible;
+		 }
+		
+		.svg-path {
+			fill:none;
+			stroke:#000000;
+			stroke-width:0.2px;
+			stroke-linecap:butt;
+			stroke-linejoin:miter;
+			stroke-opacity:1;
+		 }
+		 		 
+		 .svg-model {
+			fill:none;stroke:#000000;
+			stroke-width:0.24;
+			stroke-miterlimit:4;
+			stroke-opacity:1
+		  }
+		  
+		  .svg-model.svg-coupled {
+			stroke-dasharray: 2, 1;
+			stroke-dashoffset:0;
+		  }
+		  
+		  .svg-label.large {
+			font-style:normal;
+			font-size:4.9px;
+		  }
+	</style>
+	
+	<defs>
+		<marker viewBox="0 0 10 10" markerUnits="userSpaceOnUse" markerWidth="3" markerHeight="3" class="svg-marker" id="marker-1" refX="0" refY="0" orient="auto">
+			<path transform="matrix(-1.1,0,0,-1.1,-1.1,0)" d="M 8.72,4.03 -2.21,0.016 8.72,-4.00 c -1.745,2.37 -1.735,5.62 -6e-7,8.035 z" class="svg-arrow"/>
+		</marker>
+		<marker viewBox="0 0 10 10" markerUnits="userSpaceOnUse" markerWidth="3" markerHeight="3" class="svg-marker" id="marker-2" refX="0" refY="0" orient="auto">
+			<path transform="matrix(-1.1,0,0,-1.1,-1.1,0)" d="M 8.72,4.03 -2.21,0.016 8.72,-4.00 c -1.745,2.37 -1.735,5.62 -6e-7,8.035 z" class="svg-arrow"/>
+		</marker>
+		<marker viewBox="0 0 10 10" markerUnits="userSpaceOnUse" markerWidth="3" markerHeight="3" class="svg-marker" id="marker-3" refX="0" refY="0" orient="auto">
+			<path transform="matrix(-1.1,0,0,-1.1,-1.1,0)" d="M 8.72,4.03 -2.21,0.016 8.72,-4.00 c -1.745,2.37 -1.735,5.62 -6e-7,8.035 z" class="svg-arrow"/>
+		</marker>
+		<marker viewBox="0 0 10 10" markerUnits="userSpaceOnUse" markerWidth="3" markerHeight="3" class="svg-marker" id="marker-4" refX="0" refY="0" orient="auto">
+			<path transform="matrix(-1.1,0,0,-1.1,-1.1,0)" d="M 8.72,4.03 -2.21,0.016 8.72,-4.00 c -1.745,2.37 -1.735,5.62 -6e-7,8.035 z" class="svg-arrow"/>
+		</marker>
+		<marker viewBox="0 0 10 10" markerUnits="userSpaceOnUse" markerWidth="3" markerHeight="3" class="svg-marker" id="marker-5" refX="0" refY="0" orient="auto">
+			<path transform="matrix(-1.1,0,0,-1.1,-1.1,0)" d="M 8.72,4.03 -2.21,0.016 8.72,-4.00 c -1.745,2.37 -1.735,5.62 -6e-7,8.035 z" class="svg-arrow"/>
+		</marker>
+		<marker viewBox="0 0 10 10" markerUnits="userSpaceOnUse" markerWidth="3" markerHeight="3" class="svg-marker" id="marker-6" refX="0" refY="0" orient="auto">
+			<path transform="matrix(-1.1,0,0,-1.1,-1.1,0)" d="M 8.72,4.03 -2.21,0.016 8.72,-4.00 c -1.745,2.37 -1.735,5.62 -6e-7,8.035 z" class="svg-arrow"/>
+		</marker>
+		<marker viewBox="0 0 10 10" markerUnits="userSpaceOnUse" markerWidth="3" markerHeight="3" class="svg-marker" id="marker-7" refX="0" refY="0" orient="auto">
+			<path transform="matrix(-1.1,0,0,-1.1,-1.1,0)" d="M 8.72,4.03 -2.21,0.016 8.72,-4.00 c -1.745,2.37 -1.735,5.62 -6e-7,8.035 z" class="svg-arrow"/>
+		</marker>
+		<marker viewBox="0 0 10 10" markerUnits="userSpaceOnUse" markerWidth="3" markerHeight="3" class="svg-marker" id="marker-8" refX="0" refY="0" orient="auto">
+			<path transform="matrix(-1.1,0,0,-1.1,-1.1,0)" d="M 8.72,4.03 -2.21,0.016 8.72,-4.00 c -1.745,2.37 -1.735,5.62 -6e-7,8.035 z" class="svg-arrow"/>
+		</marker>
+		<marker viewBox="0 0 10 10" markerUnits="userSpaceOnUse" markerWidth="3" markerHeight="3" class="svg-marker" id="marker-9" refX="0" refY="0" orient="auto">
+			<path transform="matrix(-1.1,0,0,-1.1,-1.1,0)" d="M 8.72,4.03 -2.21,0.016 8.72,-4.00 c -1.745,2.37 -1.735,5.62 -6e-7,8.035 z" class="svg-arrow"/>
+		</marker>
+		<marker viewBox="0 0 10 10" markerUnits="userSpaceOnUse" markerWidth="3" markerHeight="3" class="svg-marker" id="marker-10" refX="0" refY="0" orient="auto">
+			<path transform="matrix(-1.1,0,0,-1.1,-1.1,0)" d="M 8.72,4.03 -2.21,0.016 8.72,-4.00 c -1.745,2.37 -1.735,5.62 -6e-7,8.035 z" class="svg-arrow"/>
+		</marker>
+		<marker viewBox="0 0 10 10" markerUnits="userSpaceOnUse" markerWidth="3" markerHeight="3" class="svg-marker" id="marker-11" refX="0" refY="0" orient="auto">
+			<path transform="matrix(-1.1,0,0,-1.1,-1.1,0)" d="M 8.72,4.03 -2.21,0.016 8.72,-4.00 c -1.745,2.37 -1.735,5.62 -6e-7,8.035 z" class="svg-arrow"/>
+		</marker>
+	</defs>
+
+	<g transform="translate(-7,-64.999998)">
+		<text y="69.568993" x="79.0177" class="svg-label large">Network</text>
+		<rect id="m-01" type="coupled" name="Network" y="71.120132" x="79.620369" height="69.759735" width="79.759285" class="svg-model svg-coupled" />
+		<text id="p-05" type="iPort" name="in1" model="Network" y="88.065826" x="80.404175" class="svg-label">in1</text>
+		<text id="p-06" type="oPort" name="out1" model="Network" y="88.057213" x="150.82365" class="svg-label">out1</text>
+		<text id="p-03" type="iPort" name="in2" model="Network" y="120.79014" x="153.01817" class="svg-label">in2</text>
+		<text id="p-04" type="oPort" name="out2" model="Network" y="120.73674" x="80.048416" class="svg-label">out2</text>
+
+		<text y="91.401741" x="109.66323" class="svg-label large">subnet1</text>
+		<rect id="m-02" type="atomic" name="subnet1" y="77.201508" x="97.138603" height="24.722824" width="44.722824" class="svg-model" />
+		<text id="p-01" type="iPort" name="in" model="subnet1" y="88.065826" x="93.003319" class="svg-label">in</text>
+		<text id="p-02" type="oPort" name="out" model="subnet1" y="87.960754" x="142.4899" class="svg-label">out</text>
+
+		<text y="124.27589" x="109.56071" class="svg-label large">subnet2</text>
+		<rect id="m-03" type="atomic" name="subnet2" y="110.07567" x="97.138603" height="24.722824" width="44.722824" class="svg-model" />
+		<text id="p-07" type="iPort" name="in" model="subnet2" y="120.79014" x="142.84567" class="svg-label">in</text>
+		<text id="p-08" type="oPort" name="out" model="subnet2" y="120.73674" x="90.083603" class="svg-label">out    </text>
+
+		<text y="107.77612" x="178.71284" class="svg-label large">Receiver</text>
+		<rect id="m-04" type="atomic" name="receiver" width="24.798115" height="79.798111" x="177.10072" y="66.100945" class="svg-model" />
+		<text id="p-09" type="iPort" name="in" model="receiver" class="svg-label" x="173.0536" y="88.019005">in</text>
+		<text id="p-10" type="oPort" name="out" model="receiver" class="svg-label" x="170.13388" y="120.73674">out</text>
+
+		<text class="svg-label large" x="40.543453" y="107.83882">Sender</text>
+		<rect id="m-05" type="atomic" name="sender" width="24.798115" height="79.798111" x="37.100956" y="66.100945" class="svg-model" />
+		<text id="p-12" type="oPort" name="dataOut" model="sender" class="svg-label" x="62.636574" y="88.164009">dataOut</text>
+		<text id="p-13" type="oPort" name="packetSent" model="sender" class="svg-label" x="15.948819" y="103.18488">packetSent</text>
+		<text id="p-14" type="oPort" name="ackReceived" model="sender" class="svg-label" x="15.948819" y="123.018488">ackReceived</text>
+		<text id="p-15" type="iPort" name="controlIn" model="sender" class="svg-label" x="19.491514" y="82.891655">controlIn</text>
+		<text id="p-16" type="iPort" name="ackIn" model="sender" class="svg-label" x="62.715813" y="120.73674">ackIn</text>
+		
+		<path id="l-01" type="link" modelA="Network" portA="in1" modelB="subnet1" portB="in" class="svg-path" style="marker-end:url(#marker-1)" d="m 79.500009,89.562919 h 17.5" />
+		<path id="l-02" type="link" modelA="subnet2" portA="out" modelB="Network" portB="out2" class="svg-path" style="marker-end:url(#marker-2)" d="m 97.326927,122.44053 h -17.5" />
+		<path id="l-03" type="link" modelA="sender" portA="dataOut" modelB="Network" portB="in1" class="svg-path" style="marker-end:url(#marker-3)" d="m 62.000009,89.562919 h 17.5" />
+		<path id="l-04" type="link" modelA="Network" portA="out2" modelB="sender" portB="ackIn" class="svg-path" style="marker-end:url(#marker-4)" d="m 79.826927,122.44053 h -17.5" />
+		<path id="l-05" type="link" modelA="subnet1"portA="out" modelB="Network" portB="out1" class="svg-path" style="marker-end:url(#marker-5)" d="m 142.00009,89.566363 h 17.5" />
+		<path id="l-06" type="link" modelA="Network" portA="out1" modelB="receiver" portB="in" class="svg-path" style="marker-end:url(#marker-6)" d="m 159.50009,89.566363 h 17.5" />
+		<path id="l-07" type="link" modelA="Network" portA="in2" modelB="subnet2" portB="in" class="svg-path" style="marker-end:url(#marker-7)" d="m 159.82701,122.44053 h -17.5" />
+		<path id="l-08" type="link" modelA="receiver" portA="out" modelB="Network" portB="in2" class="svg-path" style="marker-end:url(#marker-8)" d="m 177.32701,122.44053 h -17.5" />
+		<path id="l-09" type="link" modelA="sender" portA="packetSent" modelB="null" portB="null" class="svg-path" style="marker-end:url(#marker-9)" d="M 36.997733,104.72199 H 8.3299002" />
+		<path id="l-10" type="link" modelA="sender" portA="ackReceived" modelB="null" portB="null" class="svg-path" style="marker-end:url(#marker-10)" d="M 37,124.39327 H 8.3321621" />
+		<path id="l-11" type="link" modelA="null" portA="null" modelB="sender" portB="controlIn" class="svg-path" style="marker-end:url(#marker-11)" d="M 8,84.595706 H 36.667838" />
+	</g>
+</svg>

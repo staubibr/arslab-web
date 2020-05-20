@@ -1,0 +1,20 @@
+{
+    "diagram": {
+        "width": 900,
+        "height": 600,
+        "aspect": true
+    },
+    "grid": {
+        "columns": 1,
+        "width": 400,
+        "height": 400,
+        "spacing": 10,
+        "showGrid": false,
+        "aspect": true
+    },
+    "playback": {
+        "speed": 10,
+        "loop": true,
+        "cache": 10
+    }
+}
