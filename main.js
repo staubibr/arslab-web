@@ -1,5 +1,5 @@
-import Core from "../basic-tools/tools/core.js";
-import Net from "../basic-tools/tools/net.js";
+import Core from "../api-basic/tools/core.js";
+import Net from "../api-basic/tools/net.js";
 
 import Application from "./application.js";
 
@@ -9,18 +9,18 @@ var type = Net.GetUrlParameter("type");
 if (!model || !type) Fail();
 
 
-var p1 = Net.JSON(`../basic-tools/nls.json`);
-var p2 = Net.JSON(`../web-devs-tools/nls.json`);
+var p1 = Net.JSON(`../api-basic/nls.json`);
+var p2 = Net.JSON(`../api-web-devs/nls.json`);
 var p3 = Net.JSON(`./nls.json`);
 var p4 = WaitForDocument();
 
-var p5 = Net.Request(`./log/${model}/simulation.json`, null, 'blob');
-var p6 = Net.Request(`./log/${model}/transitions.csv`, null, 'blob');
-var p7 = Net.JSON(`./log/${model}/options.json`);
+var p5 = Net.Request(`../devs-logs/${model}/simulation.json`, null, 'blob');
+var p6 = Net.Request(`../devs-logs/${model}/transitions.csv`, null, 'blob');
+var p7 = Net.JSON(`../devs-logs/${model}/options.json`);
 
 var defs = [p1, p2, p3, p4, p5, p6, p7];
 
-if (type == "DEVS") defs.push(Net.Request(`./log/${model}/diagram.svg`, null, 'blob'));
+if (type == "DEVS") defs.push(Net.Request(`../devs-logs/${model}/diagram.svg`, null, 'blob'));
 
 Promise.all(defs).then(Start, Fail);
 

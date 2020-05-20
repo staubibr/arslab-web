@@ -1,21 +1,22 @@
 'use strict';
 
-import Core from '../basic-tools/tools/core.js';
-import Net from '../basic-tools/tools/net.js';
-import Dom from '../basic-tools/tools/dom.js';
-import Templated from '../basic-tools/components/templated.js';
+import Core from '../api-basic/tools/core.js';
+import Net from '../api-basic/tools/net.js';
+import Dom from '../api-basic/tools/dom.js';
+import Templated from '../api-basic/components/templated.js';
 
-import oSettings from '../web-devs-tools/components/settings.js';
+import oSettings from '../api-web-devs/components/settings.js';
 
-import Standardized from '../web-devs-tools/parsers/standardized.js'
+import Standardized from '../api-web-devs/parsers/standardized.js'
 
-import Simulation from '../web-devs-tools/simulation/simulation.js'
+import SimulationDEVS from '../api-web-devs/simulation/simulationDEVS.js'
+import SimulationCA from '../api-web-devs/simulation/simulationCA.js'
 
-import Playback from '../web-devs-tools/widgets/playback.js';
-import DiagramAuto from '../web-devs-tools/widgets/diagram/auto.js'
-import Diagram from '../web-devs-tools/widgets/diagram/diagram.js'
-import GridAuto from '../web-devs-tools/widgets/grid/auto.js'
-import Grid from '../web-devs-tools/widgets/grid/grid.js'
+import Playback from '../api-web-devs/widgets/playback.js';
+import DiagramAuto from '../api-web-devs/widgets/diagram/auto.js'
+import Diagram from '../api-web-devs/widgets/diagram/diagram.js'
+import GridAuto from '../api-web-devs/widgets/grid/auto.js'
+import Grid from '../api-web-devs/widgets/grid/grid.js'
 
 export default class Main extends Templated { 
 
@@ -35,8 +36,10 @@ export default class Main extends Templated {
 		p.then(this.OnParser_Parsed.bind(this), (error) => { this.OnWidget_Error({ error:error }); });
 	}
 	
-	OnParser_Parsed(json) {		
-		this.simulation = Simulation.FromJson(json);
+	OnParser_Parsed(json) {
+		var clss = (json.type == "DEVS") ? SimulationDEVS : SimulationCA;
+		
+		this.simulation = clss.FromJson(json);
 		
 		this.simulation.Initialize(this.settings.Get("playback", "cache"));
 		
@@ -44,9 +47,7 @@ export default class Main extends Templated {
 		
 		this.SwitchWidget(widget);
 		
-		this.settings.SetRatio(widget, this.simulation.Ratio);
-		
-		this.Resize(widget, this.simulation.Dimensions.z);
+		this.Resize(widget);
 		
 		this.current.Redraw();
 		
@@ -55,10 +56,10 @@ export default class Main extends Templated {
 	
 	Resize(widget, nGrids) {
 		if (widget == "diagram") {
-			var size = this.settings.DiagramSize();
+			var size = this.settings.DiagramSize(this.simulation);
 		}
 		else if (widget == "grid") {
-			var size = this.settings.GridSize(nGrids);
+			var size = this.settings.GridSize(this.simulation);
 		}
 		else {
 			throw new Error("Tried to retrieve size for invalid widget.");
@@ -79,10 +80,14 @@ export default class Main extends Templated {
 			
 			for (var i = 0; i < this.simulation.Dimensions.z; i++) z.push(i);
 			
+			// TODO : Always only one model in cell-devs?
+			var ports = this.simulation.models[0].ports.map(p => p.name);
+			
 			var options = { 
 				clickEnabled:false,
 				columns:this.settings.Get("grid", "columns"), 
 				spacing:this.settings.Get("grid", "spacing"), 
+				ports : ports,
 				z:z 
 			}
 			
