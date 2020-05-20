@@ -2,28 +2,29 @@
 
 import Header from './widgets/header.js';
 
-import Core from '../basic-tools/tools/core.js';
-import Net from '../basic-tools/tools/net.js';
-import Dom from '../basic-tools/tools/dom.js';
-import Templated from '../basic-tools/components/templated.js';
+import Core from '../api-basic/tools/core.js';
+import Net from '../api-basic/tools/net.js';
+import Dom from '../api-basic/tools/dom.js';
+import Templated from '../api-basic/components/templated.js';
 
-import BoxInput from '../basic-tools/ui/box-input-files.js';
-import Popup from '../basic-tools/ui/popup.js';
+import BoxInput from '../api-basic/ui/box-input-files.js';
+import Popup from '../api-basic/ui/popup.js';
 
-import Playback from '../web-devs-tools/widgets/playback.js';
-import Rise from '../web-devs-tools/widgets/rise-loader.js';
-import Converter from '../web-devs-tools/widgets/converter.js';
-import Settings from '../web-devs-tools/widgets/settings.js';
+import Playback from '../api-web-devs/widgets/playback.js';
+import Rise from '../api-web-devs/widgets/rise-loader.js';
+import Converter from '../api-web-devs/widgets/converter.js';
+import Settings from '../api-web-devs/widgets/settings.js';
 
-import Standardized from '../web-devs-tools/parsers/standardized.js'
+import Standardized from '../api-web-devs/parsers/standardized.js'
 
-import Simulation from '../web-devs-tools/simulation/simulation.js'
+import SimulationDEVS from '../api-web-devs/simulation/simulationDEVS.js'
+import SimulationCA from '../api-web-devs/simulation/simulationCA.js'
 
-import DiagramAuto from '../web-devs-tools/widgets/diagram/auto.js'
-import Diagram from '../web-devs-tools/widgets/diagram/diagram.js'
+import DiagramAuto from '../api-web-devs/widgets/diagram/auto.js'
+import Diagram from '../api-web-devs/widgets/diagram/diagram.js'
 
-import GridAuto from '../web-devs-tools/widgets/grid/auto.js'
-import Grid from '../web-devs-tools/widgets/grid/grid.js'
+import GridAuto from '../api-web-devs/widgets/grid/auto.js'
+import Grid from '../api-web-devs/widgets/grid/grid.js'
 
 export default class Main extends Templated { 
 
@@ -97,7 +98,9 @@ export default class Main extends Templated {
 		this.Elem("load").style.backgroundImage = null;			
 		this.Elem("btnViz").disabled = false;
 		
-		this.simulation = Simulation.FromJson(json);
+		var clss = (json.type == "DEVS") ? SimulationDEVS : SimulationCA;
+		
+		this.simulation = clss.FromJson(json);
 		
 		this.simulation.Initialize(this.settings.Get("playback", "cache"));
 		
@@ -105,9 +108,7 @@ export default class Main extends Templated {
 		
 		this.SwitchWidget(widget);
 		
-		this.settings.SetRatio(widget, this.simulation.Ratio);
-		
-		this.Resize(widget, this.simulation.Dimensions.z);
+		this.Resize(widget);
 		
 		this.current.auto.Redraw();
 		
@@ -161,22 +162,22 @@ export default class Main extends Templated {
 	}
 	
 	OnSettings_Change(ev) {
-		if (["height", "width", "columns", "spacing"].indexOf(ev.property) == -1) return;
+		if (["height", "width", "columns", "spacing", "aspect"].indexOf(ev.property) == -1) return;
 		
 		this.Elem("grid").columns = this.settings.Get("grid", "columns");
 		this.Elem("grid").spacing = this.settings.Get("grid", "spacing");
 		
-		this.Resize(this.current.id, this.simulation.Dimensions.z);
+		this.Resize(this.current.id);
 		
 		if (this.current.auto) this.current.auto.Redraw();
 	}
 	
 	Resize(widget, nGrids) {
 		if (widget == "diagram") {
-			var size = this.settings.DiagramSize();
+			var size = this.settings.DiagramSize(this.simulation);
 		}
 		else if (widget == "grid") {
-			var size = this.settings.GridSize(nGrids);
+			var size = this.settings.GridSize(this.simulation);
 		}
 		else {
 			throw new Error("Tried to retrieve size for invalid widget.");
@@ -201,11 +202,15 @@ export default class Main extends Templated {
 			
 			for (var i = 0; i < this.simulation.Dimensions.z; i++) z.push(i);
 			
+			// TODO : Always only one model in cell-devs?
+			var ports = this.simulation.models[0].ports.map(p => p.name);
+			
 			var options = { 
 				clickEnabled:false,
 				columns:this.settings.Get("grid", "columns"), 
 				spacing:this.settings.Get("grid", "spacing"), 
-				z:z 
+				z:z,
+				ports: ports
 			}
 			
 			this.current.auto = new GridAuto(this.Elem("grid"), this.simulation, options);
