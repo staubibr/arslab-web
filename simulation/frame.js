@@ -1,7 +1,5 @@
 'use strict';
 
-import Transition from './transition.js';
-
 export default class Frame { 
 
 	constructor(time) {
@@ -10,34 +8,24 @@ export default class Frame {
 		this.index = {};
 	}
 	
-	get Length() {
-		return this.transitions.length;
-	}
-	
-	AddTransition(transition) {
-		this.transitions.push(transition);
+	AddTransition(t) {
+		this.transitions.push(t);
 		
-		this.index[transition.id] = transition;
+		if (!this.index.hasOwnProperty(t.Port)) this.index[t.Port] = [];
 		
-		return transition;
+		this.index[t.Port].push(t);
+		
+		return t;
 	}
 	
-	TransitionById(id) {
-		return this.index[id] || null;
+	Transitions() {
+		return this.transitions;
 	}
 	
-	Transition(i) {
-		return this.transitions[i];
+	TransitionsByPort(port) {
+		return this.index[port] || [];
 	}
-	
-	First() {
-		return this.transitions[0];
-	}
-	
-	Last()  {
-		return this.transitions[this.transitions.length - 1];
-	}
-	
+		
 	Reverse () {
 		var reverse = new Frame(this.time)
 		
@@ -47,14 +35,16 @@ export default class Frame {
 	}
 	
 	Difference(state) {
-		for (var i = 0; i < this.Length; i++) {
-			var t = this.Transition(i);
+		for (var i = 0; i < this.transitions.length; i++) {
+			var t = this.transitions[i];
 			
-			if (state.models[t.id] === undefined) continue;
+			var v = state.GetValue(t.Id, t.Port);
 			
-			t.diff = t.value - state.GetValue(t.id);
+			if (v === undefined) continue;
 			
-			state.SetValue(t.id, t.value);
+			t.diff = t.value - v;
+			
+			state.SetValue(t.Id, t.Port, t.Value);
 		}
 	}
 }

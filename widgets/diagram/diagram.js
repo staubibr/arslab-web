@@ -1,8 +1,8 @@
 'use strict';
 
-import Core from '../../../basic-tools/tools/core.js';
-import Dom from '../../../basic-tools/tools/dom.js';
-import Templated from '../../../basic-tools/components/templated.js';
+import Core from '../../../api-basic/tools/core.js';
+import Dom from '../../../api-basic/tools/dom.js';
+import Templated from '../../../api-basic/components/templated.js';
 import DiagramData from './diagramData.js';
 
 export default Core.Templatable("Widgets.Diagram", class Diagram extends Templated { 
@@ -91,15 +91,15 @@ export default Core.Templatable("Widgets.Diagram", class Diagram extends Templat
 	}
 
 	DrawYTransition(t) {
-		var m = this.data.Model(t.id);
+		var m = this.data.Model(t.Id);
 		
 		if (m) this.AddModelCss(m.node, ["highlighted", t.type]);
 		
-		var p = this.data.Port(t.id, t.port);
+		var p = this.data.Port(t.Id, t.port);
 		
 		if (p) this.AddModelCss(p.node, ["highlighted", t.type]);
 		
-		var l = this.data.Link(t.id, t.port, t.type);
+		var l = this.data.Link(t.Id, t.port, t.type);
 		
 		if (l) this.AddModelCss(l.node, ["highlighted", t.type]);
 		

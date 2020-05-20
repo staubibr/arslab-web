@@ -1,8 +1,8 @@
 'use strict';
 
-import Core from '../../basic-tools/tools/core.js';
-import Dom from '../../basic-tools/tools/dom.js';
-import Templated from '../../basic-tools/components/templated.js';
+import Core from '../../api-basic/tools/core.js';
+import Dom from '../../api-basic/tools/dom.js';
+import Templated from '../../api-basic/components/templated.js';
 
 export default Core.Templatable("Widget.Playback", class Playback extends Templated { 
 

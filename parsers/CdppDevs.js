@@ -1,9 +1,9 @@
 'use strict';
 
-import Core from '../../basic-tools/tools/core.js';
+import Core from '../../api-basic/tools/core.js';
 import Parser from "./parser.js";
-import Transition from './json/transition.js';
-import Simulation from './json/simulation.js';
+
+import { Simulation, TransitionDEVS, PaletteBucket } from './json.js';
 
 export default class CDppDEVS extends Parser { 
 		
@@ -19,7 +19,7 @@ export default class CDppDEVS extends Parser {
 		
 			return d.promise;
 		}
-				
+		
 		var name = log.name.substr(0, log.name.length - 4);
 		var simulation = new Simulation(name, "CDpp", "DEVS");
 		
@@ -30,7 +30,6 @@ export default class CDppDEVS extends Parser {
 		var defs = [p1, p2, p3];
 	
 		Promise.all(defs).then((data) => {
-			
 			if (!data[0]) return d.Reject(new Error("Unable to parse the model (.ma) file."));
 			
 			if (!data[2]) return d.Reject(new Error("Unable to parse the log (.log) file or it contained no X and Y messages."));
@@ -49,20 +48,70 @@ export default class CDppDEVS extends Parser {
 		return d.promise;
 	}
 
-	ParseMaFile(file) {
-		var matches = file.match(/\[(.*)\]/g);
-		var models = ["root"];
+	ParseMaFile(file) {		
+		var blocks = file.trim().slice(1).split("\n[");
+		var links = [];
 		
-		// Remove top from count
-		for (var i = 0; i < matches.length; i++) {
-			var m = matches[i];
+		// This is messy but due to the structure of ma files
+		var models = blocks.map(b => {		
+			var model = { name:null, type:null, submodels:[], ports:[], links:[] }
+		
+			b.trim().split("\n").forEach((l, i) => {
+				l = l.trim().toLowerCase();
+				
+				if (i == 0) model.name = l.substr(0, l.length - 1);
+				
+				else if (l.startsWith("components")) {
+					model.submodels.push(l.split(/\s|@/)[2]);
+				}
+				
+				//else if (l.startsWith("out")) {
+				//	l.split(/\s/).slice(2).forEach(p => model.ports.push({ name:p, type:"output" }));
+				//}
+				
+				//else if (l.startsWith("in")) {
+				//	l.split(/\s/).slice(2).forEach(p => model.ports.push({ name:p, type:"input" }));
+				//}
+				
+				else if (l.startsWith("link")) {
+					var ports = l.split(/\s/).slice(2);
+					var output = ports[0].split(/@/);
+					var input = ports[1].split(/@/);
+					
+					links.push({
+						portA : output[0],
+						modelA : output[1] || model.name,
+						portB : input[0],
+						modelB : input[1] || model.name
+					})
+				}
+			});
 			
-			models.push(m.substr(1, m.length - 2));
-		}
-	
+			model.type = (model.submodels.length > 0) ? "coupled" : "atomic";
+			
+			return model;
+		});
+		
+		links.forEach(l => {
+			var mA = models.find(m => m.name == l.modelA);
+			var mB = models.find(m => m.name == l.modelB);
+			
+			if (!mA.ports.find(p => p.name == l.portA)) {
+				mA.ports.push({ name:l.portA, type:"output" });
+			}
+			
+			if (!mB.ports.find(p => p.name == l.portB)) {
+				mB.ports.push({ name:l.portB, type:"input" });
+			}
+			
+			mA.links.push(l);
+			mB.links.push(l);
+		})
+		
 		return {
 			size : models.length,
-			models : models
+			models : models,
+			links : links
 		}
 	}
 	
@@ -70,7 +119,7 @@ export default class CDppDEVS extends Parser {
 		return file;
 	}
 	
-	ParseLogChunk(parsed, chunk, progress) {		
+	ParseLogChunk(parsed, chunk) {		
 		function IndexOf(chunk, text, start) {
 			var idx = chunk.indexOf(text, start);
 			
@@ -102,7 +151,7 @@ export default class CDppDEVS extends Parser {
 			
 			// NOTE : Don't use regex, it's super slow.
 			var t = split[1].trim();			// time
-			var m = tmp1[0];;					// model name
+			var m = tmp1[0];					// model name
 			var c = tmp1[1].slice(0, -1);		// id / coordinate
 			var p = split[3].trim();			// port
 			var v = parseFloat(split[4]);		// value
@@ -111,7 +160,7 @@ export default class CDppDEVS extends Parser {
 			// NOTE: Here we replace model id by name because name is also unique (are we sure?) but more intuitive. 
 			// We do this to allow users to use names when drawing SVG diagrams. This way, names in SVG will match
 			// with names in transitions.
-			parsed.push(new Transition(type, t, m, m, p, v, d));
+			parsed.push(new TransitionDEVS(type, t, m, p, d, v));
 		}
 		
 		return parsed;

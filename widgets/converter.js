@@ -1,11 +1,11 @@
 'use strict';
 
-import Core from '../../basic-tools/tools/core.js';
-import Dom from '../../basic-tools/tools/dom.js';
-import Templated from '../../basic-tools/components/templated.js';
-import BoxInput from '../../basic-tools/ui/box-input-files.js';
+import Core from '../../api-basic/tools/core.js';
+import Dom from '../../api-basic/tools/dom.js';
+import Templated from '../../api-basic/components/templated.js';
+import BoxInput from '../../api-basic/ui/box-input-files.js';
 
-import Zip from '../../web-devs-tools/tools/zip.js';
+import Zip from '../../api-web-devs/tools/zip.js';
 
 import CdppDevs	from '../parsers/CdppDevs.js';
 import CdppCell	from '../parsers/CdppCell.js';
@@ -113,7 +113,7 @@ export default Core.Templatable("Widget.Converter", class Converter extends Temp
 		Dom.AddCss(this.Elem("wait"), "hidden");
 		
 		try {
-			Zip.SaveZipStream(result.name, result.Files()).then((ev) => {
+			Zip.SaveZipStream(result.name, result.ToStandardFiles()).then((ev) => {
 				this.Emit("converted");
 			});
 		}

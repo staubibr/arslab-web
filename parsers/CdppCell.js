@@ -1,10 +1,9 @@
 'use strict';
 
-import Core from '../../basic-tools/tools/core.js';
+import Core from '../../api-basic/tools/core.js';
 import Parser from "./parser.js";
-import Transition from './json/transition.js';
-import PaletteBucket from './json/paletteBucket.js';
-import Simulation from './json/simulation.js';
+
+import { Simulation, TransitionCA, PaletteBucket } from './json.js';
 
 import State from '../simulation/state.js';
 
@@ -41,21 +40,22 @@ export default class CDpp extends Parser {
 			if (!data[2]) return d.Reject(new Error("Unable to parse the model (.ma) file."));
 			
 			if (!data[3]) return d.Reject(new Error("Unable to parse the log (.log) file or it contained no X and Y messages."));
-						
+			
 			// Other simulators probably don't have to merge, CDpp-Cell-DEVS is complicated (val, global value, initial value, row value, etc.)
 			var initial = this.MergeFrames(ma.initial.global, ma.initial.rows);
 			
 			if (val) initial = this.MergeFrames(initial, val);
 			
-			if (initial.length > 0) {
-				var transitions = initial.map(t => {
-					return new Transition("Y", "00:00:00:000", ma.model, t.id, null, t.value, null);
-				});
-			}
+			initial.forEach(t => {
+				t.model = ma.models[0].name;		// TODO : Can there be more than one model?
+				t.destination = ma.models[0].name;
+			});
 			
-			simulation.transitions = transitions.concat(data[3]);
+			simulation.transitions = initial.concat(data[3]);
 			simulation.palette = data[1];
+			simulation.models = ma.models;
 			simulation.size = ma.size;
+			// simulation.template = this.Template();
 			
 			d.Resolve(simulation);
 		}, (error) => {
@@ -64,121 +64,133 @@ export default class CDpp extends Parser {
 		
 		return d.promise;
 	}
+	/*
+	Template() {
+		return {
+			"type" : 0,
+			"time" : 1,
+			"model" : 2,
+			"coord" : [3, 4, 5],
+			"port" : 6,
+			"value" : {
+				"out": 7,
+			},
+			"destination" : 8		
+		}
+	}
+	*/
+	
+	ParseMaFile(file) {
+		var ma = {
+			size : [0, 0, 1],
+			initial : {
+				global : [],
+				rows : []
+			}			
+		}
+		
+		var lines = file.trim().split(/\r\n|\n/);
+		
+		lines.forEach(l => {
+			var d = l.split(":").map(d => d.trim());
+			
+			if (d.length < 2) return;
+			
+			// assumes format is => components : model1, model2
+			if (d[0] == "components") ma.models = d[1].replace(/ /g, "").split(",").map(m => m.toLowerCase());	
+			
+			else if (d[0] == "dim") {
+				var s = d[1].slice(1,-1).split(",");
+			
+				ma.size = [+s[0], +s[1], +s[2] || 1];
+			}
+			
+			else if (d[0] == "height") ma.size[0] = +d[1];
+			
+			else if (d[0] == "width") ma.size[1] = +d[1];
+			
+			else if (d[0] == "initialvalue") ma.initial.global = this.GlobalFrame(ma.size, +d[1]);
+			
+			else if (d[0] == "initialrowvalue") ma.initial.rows = this.RowsFrame(ma.initial.rows, d[1]);
+		});
+		
+		ma.models = ma.models.map(m => {  
+			return { name:m, ports:[{ name:"out", type:"output" }] }
+		});
+		
+		return ma;
+	}
 	
 	ParseValFile(file) {
+		var data = [];
+
 		// Each line looks like this: (y,x,z)=value
-		return file.trim().split(/\n/).map(function(line) {
+		file.trim().split(/\n/).forEach(function(line) {
+			line = line.trim();
+			
 			if (line.length < 4) return; // probably empty line
 			
 			var cI = line.indexOf('('); // coordinate start
 			var cJ = line.indexOf(')'); // coordinate end
 			var vI = line.indexOf('='); // value start
 			
-			var id = line.substring(cI + 1, cJ).replace(/,/g, "-");
+			var c = line.substring(cI + 1, cJ).replace(/\s/g, "").split(",").map(d => +d);
+
 			var value = parseFloat(line.substr(vI + 1));
 			
-			return { id:id, value:value };
+			data.push(new TransitionCA("Y", "00:00:00:000", null, c, "out", null, value));
 		}.bind(this));
+		
+		return data;
 	}
 	
 	ParsePalFile(file) {	
 		var lines = file.trim().split(/\n/);
-				
+		
 		if (lines[0].indexOf('[') != -1) return this.ParsePalTypeA(lines);
 			
 		else return this.ParsePalTypeB(lines);
 	}	
-	
-	ParseMaFile(file) {
-		var ma = {}
 		
-		var dim = null;
-		var raw = file.match(/dim\s*:\s*\((.+)\)/);
+	ParseLogChunk(parsed, chunk) {		
+		var pattern = 'Mensaje Y /';
+		var start = chunk.indexOf(pattern, 0);		
 		
-		if (raw) dim = raw[1].split(",")
+		while (start > -1) {	
+			start = start + pattern.length;
 		
-		else {
-			var raw_h = file.match(/height\s*:\s*(.+)/);
-			var raw_w = file.match(/width\s*:\s*(.+)/);
+			var end = chunk.indexOf('\n', start);
 			
-			dim = [raw_h[1], raw_w[1]];
-		}
-		
-		if (dim.length == 2) dim.push(1);
-		
-		var size = [+dim[0], +dim[1], +dim[2]];
-		
-		for (var x = 0; x < size[0]; i++) 
-		
-		return {
-			size : size,
-			initial : {
-				global : this.GlobalFrame(size, file),
-				rows : this.RowsFrame(file)
-			}
-		}
-	}
-	
-	MergeFrames(f1, f2) {
-		var index = {};
-		
-		f1.forEach(t => index[t.id] = t);
-		
-		// f2 over f1, modifies f1, who cares.
-		f2.forEach(function(t2) {
-			// frame 1 has transition id from frame 2, replace
-			if (index[t2.id])  {
-				index[t2.id].value = t2.value;
-				index[t2.id].diff = t2.diff;
-			}
+			if (end == -1) end = chunk.length + 1;
 			
-			// frame 1 doesn't have transition id from frame 2, add it
-			else f1.push(t2);
-		});
-		
-		return f1;
-	}
-	
-	GlobalFrame(size, file) {
-		var f = [];
-		var raw = file.match(/initialvalue\s*:\s*(.+)/);
-		
-		if (!raw || raw[1] == "0") return f;
-		
-		for (var x = 0; x < size[0]; x++) {
-			for (var y = 0; y < size[1]; y++) {
-				for (var z = 0; z < size[2]; z++) {
-					f.push({ id:[x, y, z].join("-"), value:+raw[1] });
-				}
-			}
-		}
-		
-		return f;
-	}
-	
-	RowsFrame(file) {
-		var raw = file.matchAll(/initialrowvalue\s*:\s*(.+)/g);
-		var f = [];
-		
-		for (var r of raw) {
-			var d = r[1].split(/\s+/);
-			var values = d[1].split('');
+			var length = end - start;
+			var split = chunk.substr(start, length).split("/");
 			
-			for (var y = 0; y < values.length; y++) {
-				var v = +values[y];
-				
-				if (v == 0) continue;
-				
-				f.push({ id:[d[0], y].join("-"), value:v });
-			}
-		}
+			// Parse coordinates, state value & frame timestamp
+			var tmp1 = split[1].trim().split("(");
+			var tmp2 = split[3].trim().split(/\s|\(/g);
+			
+			// NOTE : Don't use regex, it's super slow.
+			var t = split[0].trim();								// time
+			var m = tmp1[0];										// model name
+			var c = tmp1[1].slice(0, -1).split(",").map(d => +d);	// coordinate
+			var p = split[2].trim();								// port
+			var v = parseFloat(tmp2[0]);							// value
+			var d = tmp2[2];										// destination
+			
+			parsed.push(new TransitionCA("Y", t, m, c, p, d, v));
+			
+			var start = chunk.indexOf(pattern, start + length);
+		};
 		
-		return f;
+		return parsed;
 	}
 	
 	ParsePalTypeA(lines) {		
 		// Type A: [rangeBegin;rangeEnd] R G B
-		return lines.map(function(line) { 
+		var palette = [];
+		
+		lines.forEach(function(line) { 
 			// skip it it's probably an empty line
 			if (line.length < 7) return;
 			
@@ -196,8 +208,10 @@ export default class CDpp extends Parser {
 			var g = parseInt(rgb[1], 10);
 			var b = parseInt(rgb[2], 10);
 			
-			return new PaletteBucket(begin, end, [r, g, b]);
+			palette.push(new PaletteBucket(begin, end, [r, g, b]));
 		});
+		
+		return palette;
 	}
 	
 	ParsePalTypeB(lines) {
@@ -218,9 +232,9 @@ export default class CDpp extends Parser {
 			else if (components.length == 3){ 
 			// this line is a palette element [R,G,B]
 				// Use parseInt(#, 10) to ensure we're processing in decimal not oct
-				paletteColors.push([parseInt(.95*parseInt(components[0],10)), 
-									parseInt(.95*parseInt(components[1],10)), 
-									parseInt(.95*parseInt(components[2],10))]); 
+				paletteColors.push([parseInt(.95 * parseInt(components[0],10)), 
+									parseInt(.95 * parseInt(components[1],10)), 
+									parseInt(.95 * parseInt(components[2],10))]); 
 			}
 		}
 
@@ -231,37 +245,57 @@ export default class CDpp extends Parser {
 		
 		return palette;
 	}
+	
+	MergeFrames(f1, f2) {
+		var index = {};
 		
-	ParseLogChunk(parsed, chunk, progress) {		
-		var lines = [];
-		var start = chunk.indexOf('Mensaje Y', 0);		
+		f1.forEach(t => index[t.coord.join(",")] = t);
 		
-		while (start > -1) {	
-			var end = chunk.indexOf('\n', start);
+		// f2 over f1, modifies f1, who cares.
+		f2.forEach(function(t2) {
+			var id = t2.coord.join(",");
 			
-			if (end == -1) end = chunk.length + 1;
+			// frame 1 has transition id from frame 2, replace
+			if (index[id])  {
+				index[id].value = t2.value;
+				index[id].diff = t2.diff;
+			}
 			
-			var length = end - start;
-			var split = chunk.substr(start, length).split("/");
-			
-			// Parse coordinates, state value & frame timestamp
-			var tmp = split[2].trim().split("(")
-			
-			// NOTE : Don't use regex, it's super slow.
-			var t = split[1].trim();							// time
-			var m = tmp[0];										// model name
-			var c = tmp[1].slice(0, -1);						// id / coordinate
-			var p = split[3].trim();							// port
-			var v = parseFloat(split[4]);						// value
-			var d = split[4].trim().split("(")[1].slice(0,-1)	// destination
-			
-			c = c.replace(/,/g, "-");
-			
-			parsed.push(new Transition("Y", t, m, c, p, v, d));
-			
-			var start = chunk.indexOf('Mensaje Y', start + length);
-		};
+			// frame 1 doesn't have transition id from frame 2, add it
+			else f1.push(t2);
+		});
+		
+		return f1;
+	}
+	
+	GlobalFrame(size, value) {
+		var f = [];
+		
+		for (var x = 0; x < size[0]; x++) {
+			for (var y = 0; y < size[1]; y++) {
+				// if (!size[2]) f.push(new TransitionCA("Y", "00:00:00:000", null, [x, y], "out", value, null));
 				
-		return parsed;
+				// else {
+					for (var z = 0; z < size[2]; z++) {					
+						f.push(new TransitionCA("Y", "00:00:00:000", null, [x, y, z], "out", null, value));
+					}
+				// }
+			}
+		}
+		
+		return f;
+	}
+	
+	RowsFrame(rows, line) {		
+		var d = line.split(/\s+/);
+		var values = d[1].split('');
+		
+		for (var y = 0; y < values.length; y++) {
+			// var v = +values[y];
+			
+			// if (v == 0) continue;
+			
+			rows.push(new TransitionCA("Y", "00:00:00:000", null, [d[0], y], "out", null, +values[y]));
+		}
 	}
 }

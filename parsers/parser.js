@@ -1,13 +1,24 @@
 'use strict';
 
-import Core from '../../basic-tools/tools/core.js';
-import Evented from '../../basic-tools/components/evented.js';
-import ChunkReader from '../../basic-tools/components/chunkReader.js';
+import Core from '../../api-basic/tools/core.js';
+import Evented from '../../api-basic/components/evented.js';
+import ChunkReader from '../../api-basic/components/chunkReader.js';
 
 export default class Parser extends Evented { 
 
 	Parse() {		
 		throw new Error("Parsers must implement a Parse() function");
+	}
+	
+	
+	ParseCsvChunk(parsed, chunk) {
+		var lines = chunk.split("\n");
+		
+		for (var i = 0; i < lines.length; i++) {
+			parsed.push(lines[i].trim().split(","));
+		}
+		
+		return parsed;
 	}
 	
 	Read(file, delegate) {
@@ -28,7 +39,7 @@ export default class Parser extends Evented {
 		var wrap = (parsed, chunk, progress) => {
 			if (!parsed) parsed = [];
 		
-			parsed = delegate(parsed, chunk, progress);
+			parsed = delegate(parsed, chunk);
 			
 			this.Emit("Progress", { progress: progress });
 			

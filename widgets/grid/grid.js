@@ -1,8 +1,8 @@
 'use strict';
 
-import Core from '../../../basic-tools/tools/core.js';
-import Dom from '../../../basic-tools/tools/dom.js';
-import Templated from '../../../basic-tools/components/templated.js';
+import Core from '../../../api-basic/tools/core.js';
+import Dom from '../../../api-basic/tools/dom.js';
+import Templated from '../../../api-basic/components/templated.js';
 
 const STROKE_WIDTH = 2;
 const DEFAULT_COLOR = "#fff";
@@ -19,6 +19,8 @@ export default Core.Templatable("Widgets.Grid", class Grid extends Templated {
 	
 	set Z(value) { this.z = value; }
 	
+	set Ports(value) { this.ports = value; }
+	
 	constructor(node) {
 		super(node);
 
@@ -28,6 +30,7 @@ export default Core.Templatable("Widgets.Grid", class Grid extends Templated {
 		this.spacing = null;
 		this.size = null;
 		this.z = null;
+		this.ports = null;
 		
 		this.ctx = this.Elem("canvas").getContext("2d");
 		
@@ -128,32 +131,42 @@ export default Core.Templatable("Widgets.Grid", class Grid extends Templated {
 	
 	// TODO : grid shouldn't use simulation object
 	DrawState(state, palette, simulation) {		
-		for (var k = 0; k < this.z.length; k++) {
-			var zero = this.layers[k];
-			
-			for (var i = 0; i < this.dimensions.x; i++) {
-				for (var j = 0; j < this.dimensions.y; j++) {
-					var id = i + "-" + j + "-" + this.z[k];	// id of cell to draw
-					var v = state.models[id];				// value of cell to draw
+		for (var k = 0; k < this.z.length; k++) {			
+			for (var x = 0; x < this.dimensions.x; x++) {
+				for (var y = 0; y < this.dimensions.y; y++) {
+					var z = this.z[k];
 					
-					this.DrawCell(i, j, k, palette.GetColor(v));
+					for (var p = 0; p < this.ports.length; p++) {
+						var v = state.GetValue([x, y, z], this.ports[p]);	// value of cell to draw
+						
+						this.DrawCell(x, y, k, palette.GetColor(v));
+					}
 					
-					if (simulation.IsSelected(id)) this.DrawCellBorder(i, j, k, palette.SelectedColor);
+					var id = x + "-" + y + "-" + z;		// id of cell to draw
+					
+					if (simulation.IsSelected(id)) this.DrawCellBorder(x, y, k, palette.SelectedColor);
 				}
 			}
 		}
 	}
 	
 	// TODO : grid shouldn't use simulation object
-	DrawChanges(frame, palette, simulation) {
-		frame.transitions.forEach((t) => {
+	DrawChanges(frame, palette, simulation) {				
+		this.ports.forEach(port => {
+			this.DrawPortChanges(frame, port, palette, simulation);
+		});
+	}
+	
+	DrawPortChanges(frame, port, palette, simulation) {
+		// TODO: If performance issue, then prefilter all transitions and keep copy in memory maybe?
+		frame.TransitionsByPort(port).forEach((t) => {
 			var k = this.z.indexOf(t.Z);
 			
 			if (k == -1) return;
 
 			this.DrawCell(t.X, t.Y, k, palette.GetColor(t.Value));
-					
-			if (simulation.IsSelected(t.id)) this.DrawCellBorder(t.X, t.Y, k, palette.SelectedColor);
+			
+			if (simulation.IsSelected(t.Id.join("-"))) this.DrawCellBorder(t.X, t.Y, k, palette.SelectedColor);
 		});
 	}
 	

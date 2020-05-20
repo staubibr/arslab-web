@@ -1,7 +1,5 @@
 'use strict';
 
-import State from './state.js';
-
 export default class Cache { 
 
 	constructor() {

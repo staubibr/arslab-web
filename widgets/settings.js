@@ -1,9 +1,9 @@
 'use strict';
 
-import Core from '../../basic-tools/tools/core.js';
-import Dom from '../../basic-tools/tools/dom.js';
-import Templated from '../../basic-tools/components/templated.js';
-import oSettings from '../../web-devs-tools/components/settings.js';
+import Core from '../../api-basic/tools/core.js';
+import Dom from '../../api-basic/tools/dom.js';
+import Templated from '../../api-basic/components/templated.js';
+import oSettings from '../../api-web-devs/components/settings.js';
 
 export default Core.Templatable("Widget.Settings", class Settings extends Templated { 
 	
@@ -38,11 +38,22 @@ export default Core.Templatable("Widget.Settings", class Settings extends Templa
 			});
 		})
 		
+		this.Elem(this.ui[0].node).disabled = this.settings.Get("diagram", "aspect");
+		this.Elem(this.ui[4].node).disabled = this.settings.Get("grid", "aspect");
+		
+		this.Node(this.ui[2].node).On("change", (ev) => {
+			this.Elem(this.ui[0].node).disabled = this.settings.Get("diagram", "aspect");
+		});
+		
+		this.Node(this.ui[8].node).On("change", (ev) => {
+			this.Elem(this.ui[4].node).disabled = this.settings.Get("grid", "aspect");
+		});
+		
 		// Special cases height and width because of aspect ratio
-		this.Node(this.ui[0].node).On("change", ev => this.UpdateElement(this.ui[1]));
-		this.Node(this.ui[1].node).On("change", ev => this.UpdateElement(this.ui[0]));
-		this.Node(this.ui[4].node).On("change", ev => this.UpdateElement(this.ui[5]));
-		this.Node(this.ui[5].node).On("change", ev => this.UpdateElement(this.ui[4]));
+		// this.Node(this.ui[0].node).On("change", ev => this.UpdateElement(this.ui[1]));
+		// this.Node(this.ui[1].node).On("change", ev => this.UpdateElement(this.ui[0]));
+		// this.Node(this.ui[4].node).On("change", ev => this.UpdateElement(this.ui[5]));
+		// this.Node(this.ui[5].node).On("change", ev => this.UpdateElement(this.ui[4]));
 		
 		// Initial UI values
 		this.UpdateUI();

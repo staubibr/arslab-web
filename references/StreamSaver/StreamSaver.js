@@ -25,7 +25,7 @@
     WritableStream: window.WritableStream || ponyfill.WritableStream,
     supported: true,
     version: { full: '2.0.0', major: 2, minor: 0, dot: 0 },
-    mitm: 'http://localhost/Dev/ARSLab/web-devs-tools/references/StreamSaver/mitm.html'
+    mitm: 'http://localhost/Dev/ARSLab/api-web-devs/references/StreamSaver/mitm.html'
   }
 
   /**

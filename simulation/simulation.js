@@ -1,91 +1,54 @@
 'use strict';
 
-import Evented from '../../basic-tools/components/evented.js';
+import Evented from '../../api-basic/components/evented.js';
 import Palette from './palettes/basic.js';
-import State from './state.js';
 import Cache from './cache.js';
 import Frame from './frame.js';
-import Transition from './transition.js';
-import TransitionCA from './transitionCA.js';
 
 export default class Simulation extends Evented { 
 	
-	get Size() { return this.size; }
-	
-	get Palette() { return this.palette; }
-		
 	get State() { return this.state; }
 
 	get Selected() { return this.selected; }
 	
-	// TODO : Should be in a SimulationCA class
-	get Dimensions() { 
-		if (this.type == "DEVS") return this.size;
-			
-		else return { x:this.size[0], y:this.size[1], z:this.size[2] } 
-	}
-	
-	get SVG() { return this.svg; }
-	
 	// TODO : Should vary in a SimulationCA class
 	get Ratio() { 
-		if (this.type == "DEVS") {			
-			var vb = this.diagram.match(/viewBox="(.*?)"/);
-			
-			if (!vb) throw new Error("The viewBox attribute must be specified on the svg element.");
-
-			var split = vb[1].split(" ");
-			
-			return split[2] / split[3];
-		}
-		
-		else return this.Dimensions.x / this.Dimensions.y;
+		throw new Error("get Ratio must be defined in child simulation class.");
 	}
 
-	constructor(name, simulator, type, frames, diagram, models, size, palette) {
+	constructor(name, simulator, type, models, frames) {
 		super();
 
 		this.name = name || null;
 		this.simulator = simulator || null;
 		this.type = type || null;
+		this.models = models || null;
 		this.frames = frames || [];
-		this.diagram = diagram || null;
-		this.models = models || [];
-		this.size = size || null;
-		this.palette = palette || new Palette();
 		
 		this.index = {};
 		this.selected = [];
-		this.state = null;
 		this.cache = new Cache();
 	}
 	
 	Initialize(nCache) {
-		this.BuildCache(nCache);
-		this.BuildDifferences();
-	}
-	
-	BuildCache(nCache) {
-		var zero = State.Zero(this.models);
+		this.state.Reset();
 		
-		this.cache.Build(nCache, this.frames, zero);
+		this.cache.Build(nCache, this.frames, this.state);
+		
+		this.state.Reset();
+		
+		this.frames.forEach((f) => f.Difference(this.state));
 		
 		this.state = this.cache.First();
 	}
 	
-	BuildDifferences() {		
-		var state = State.Zero(this.models);
-		
-		this.frames.forEach((f) => f.Difference(state));
-	}
-	
-	GetGridState(i) {
+	GetState(i) {
 		if (i == this.frames.length - 1) return this.cache.Last();
 		
 		if (i == 0) return this.cache.First();
 		
 		var cached = this.cache.GetClosest(i);
-					
+		
 		for (var j = cached.i + 1; j <= i; j++) {
 			cached.ApplyTransitions(this.Frame(j));
 		}
@@ -122,7 +85,7 @@ export default class Simulation extends Evented {
 	}
 	
 	GoToFrame(i) {
-		this.state = this.GetGridState(i);
+		this.state = this.GetState(i);
 		
 		this.Emit("Jump", { state:this.state });
 	}
@@ -169,12 +132,6 @@ export default class Simulation extends Evented {
 		this.Emit("Session", { simulation:this });
 	}
 	
-	LoopOnSize(delegate) {
-		for (var i = 0; i < this.size; i++) {
-			delegate(i);
-		}
-	}
-	
 	onSimulation_Error(message) {
 		this.Emit("Error", { error:new Error(message) });
 	}
@@ -206,27 +163,6 @@ export default class Simulation extends Evented {
 	}
 	
 	static FromJson(json) {
-		var models = (json.type == "Cell-DEVS") ? State.ModelsFromSize(json.size) : json.models;
-		
-		var simulation = new Simulation(json.name, json.simulator, json.type, null, json.svg, models, json.size, null);
-		
-		// build frames from flat transitions list		
-		for (var i = 0; i < json.transitions.length; i++) {
-			var t = json.transitions[i];
-			var f = simulation.Index(t.time) || simulation.AddFrame(new Frame(t.time));
-			
-			var add = null;
-			
-			if (simulation.type == "Cell-DEVS") add = new TransitionCA(t.type, t.model, t.id, t.port, t.value, t.destination);
-			
-			else add = new Transition(t.type, t.model, t.id, t.port, t.value, t.destination)
-			
-			f.AddTransition(add);
-		} 
-		
-		// Palette needs to be constructed.		
-		if (json.palette) json.palette.forEach(p => simulation.palette.AddClass(p.begin, p.end, p.color));
-		
-		return simulation;
+		throw new Error("function FromJson must be defined in child simulation class.");
 	}
 }

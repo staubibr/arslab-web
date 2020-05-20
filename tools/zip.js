@@ -1,10 +1,10 @@
-import Core from '../../basic-tools/tools/core.js';
+import Core from '../../api-basic/tools/core.js';
 
 if (!streamSaver) throw new Error("streamSaver is undefined, did you add it as a script?");
 if (!ZIP) throw new Error("zip-stream is undefined, did you add it as a script?");
 if (!zip) throw new Error("zip is undefined, did you add it as a script?");
 
-zip.workerScriptsPath = "../web-devs-tools/references/zip/";
+zip.workerScriptsPath = "../api-web-devs/references/zip/";
 		
 export default class Zip {
 	

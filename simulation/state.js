@@ -2,28 +2,26 @@
 
 export default class State { 
 
-	constructor(i, models) {
-		this.i = i;
-		this.models = models;
+	constructor() {
+		this.i = -1;
+		this.data = null;
 	}
 	
 	Clone(){
-		var clone = JSON.parse(JSON.stringify(this.models));
-
-		return new State(this.i, clone);
+		throw new Error("Clone function must be implemented by state");
 	}
 	
 	GetValue(id) {
-		return this.models[id];
+		throw new Error("GetValue function must be implemented by state");
 	}
 	
 	SetValue(id, value) {
-		this.models[id] = value;
+		throw new Error("SetValue function must be implemented by state");
 	}
 	
 	ApplyTransitions(frame) {
 		frame.transitions.forEach((t) => {
-			this.SetValue(t.id, t.value);
+			this.SetValue(t.Id, t.Port, t.Value);
 		});
 		
 		this.i++;
@@ -31,35 +29,11 @@ export default class State {
 	
 	RollbackTransitions(frame) {
 		frame.transitions.forEach((t) => {
-			var value = this.GetValue(t.id) - t.diff;
+			var value = this.GetValue(t.Id, t.Port) - t.diff;
 			
-			this.SetValue(t.id, value);
+			this.SetValue(t.Id, t.Port, t.Value);
 		});
 		
 		this.i--;
-	}
-	
-	static Zero(models) {
-		var index = {};
-		
-		models.forEach((id) => {
-			index[id] = 0;
-		});
-			
-		return new State(-1, index);
-	}
-	
-	static ModelsFromSize(size) {
-		var models = [];
-			
-		for (var x = 0; x < size[0]; x++) {
-			for (var y = 0; y < size[1]; y++) {
-				for (var z = 0; z < size[2]; z++) {					
-					models.push(`${x}-${y}-${z}`);
-				}
-			}
-		}
-			
-		return models;
 	}
 }

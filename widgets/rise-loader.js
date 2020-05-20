@@ -1,10 +1,10 @@
 'use strict';
 
-import Core from '../../basic-tools/tools/core.js';
-import Dom from '../../basic-tools/tools/dom.js';
-import Net from '../../basic-tools/tools/net.js';
-import Templated from '../../basic-tools/components/templated.js';
-// import Zip from '../../web-devs-tools/tools/zip.js';
+import Core from '../../api-basic/tools/core.js';
+import Dom from '../../api-basic/tools/dom.js';
+import Net from '../../api-basic/tools/net.js';
+import Templated from '../../api-basic/components/templated.js';
+// import Zip from '../../api-web-devs/tools/zip.js';
 
 export default Core.Templatable("Widget.RiseList", class RiseLoader extends Templated {
 

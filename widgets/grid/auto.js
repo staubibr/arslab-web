@@ -1,8 +1,8 @@
 'use strict';
 
-import Core from '../../../basic-tools/tools/core.js';
-import Dom from '../../../basic-tools/tools/dom.js';
-import Tooltip from '../../../basic-tools/ui/tooltip.js';
+import Core from '../../../api-basic/tools/core.js';
+import Dom from '../../../api-basic/tools/dom.js';
+import Tooltip from '../../../api-basic/ui/tooltip.js';
 import Grid from './grid.js';
 import Automator from '../../components/automator.js';
 
@@ -21,6 +21,10 @@ export default Core.Templatable("Auto.Grid", class AutoGrid extends Automator {
 		this.Widget.Columns = options.columns;
 		this.Widget.Spacing	= options.spacing;
 		this.Widget.Z = options.z;
+		this.Widget.Ports = options.ports;
+		
+		this.z = options.z;
+		this.ports = options.ports;
 	}
 	
 	AttachHandlers(options) {
@@ -51,7 +55,7 @@ export default Core.Templatable("Auto.Grid", class AutoGrid extends Automator {
 		this.Widget.DrawState(s.state, s.Palette, s);
 	}
 
-	onSimulationMove_Handler(ev) {	
+	onSimulationMove_Handler(ev) {		
 		var s = this.Simulation;
 		
 		this.Widget.DrawChanges(ev.frame, s.Palette, s);
@@ -70,13 +74,18 @@ export default Core.Templatable("Auto.Grid", class AutoGrid extends Automator {
 	}
 	
 	onMouseMove_Handler(ev) {
-		var id = ev.data.x + "-" + ev.data.y + "-" + ev.data.z;
-		var state = this.simulation.state.models[id];
-		var subs = [ev.data.x, ev.data.y, ev.data.z, state];
+		var labels = [];
 		
-		this.tooltip.nodes.label.innerHTML = Core.Nls("Grid_Tooltip_Title", subs);
-	
-		this.tooltip.Show(ev.x + 20, ev.y);
+		this.ports.forEach(port => {
+			var state = this.simulation.state.GetValue([ev.data.x, ev.data.y, ev.data.z], port);
+			var subs = [ev.data.x, ev.data.y, ev.data.z, state, port];
+			
+			labels.push(Core.Nls("Grid_Tooltip_Title", subs));
+		
+			this.tooltip.Show(ev.x + 20, ev.y);
+		});
+		
+		this.tooltip.nodes.label.innerHTML = labels.join("<br>");
 	}
 	
 	onMouseOut_Handler(ev) {

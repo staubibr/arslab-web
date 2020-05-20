@@ -39,7 +39,7 @@
 		"en" : "Width:"
 	},
 	"Settings_Diagram_Aspect" : {
-		"en" : "Lock aspect ratio:"
+		"en" : "Simulation aspect ratio:"
 	},
 	"Settings_Grid_Options" : {
 		"en" : "Grid widget options"
@@ -57,7 +57,7 @@
 		"en" : "Height:"
 	},
 	"Settings_Grid_Aspect" : {
-		"en" : "Lock aspect ratio:"
+		"en" : "Simulation aspect ratio:"
 	},
 	"Settings_Grid_Spacing" : {
 		"en" : "Spacing:"
@@ -84,6 +84,6 @@
 		"en" : "<b>{0}</b> emitted an output (<b>{1}</b>) to <b>{2}</b> through port <b>{3}</b>"		
 	},
 	"Grid_Tooltip_Title" : {
-		"en" : "The state of model ({0}, {1}, {2}) is {3}."		
+		"en" : "The state of cell <b>({0}, {1}, {2})</b> on port <b>{4}</b> is <b>{3}</b>."		
 	}
 }

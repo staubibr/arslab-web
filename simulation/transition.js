@@ -2,10 +2,9 @@
 
 export default class Transition { 
 			
-	constructor(type, model, id, port, value, destination) {
+	constructor(type, model, port, value, destination) {
 		this.type = type;
 		this.model = model;
-		this.id = id;
 		this.port = port;
 		this.value = value;
 		this.destination = destination;
@@ -16,8 +15,6 @@ export default class Transition {
 	get Type() { return this.type; }
 
 	get Model() { return this.model; }
-
-	get Id() { return this.id; }
 	
 	get Port() { return this.port; }
 
@@ -30,11 +27,6 @@ export default class Transition {
 	set Diff(value) { this.diff = value; }
 	
 	Reverse() {
-		return new Transition(this.type, this.model, this.id, this.port, this.value - this.diff, this.destination);
-		
-		// Not sure about this
-		t.diff = this.diff;
-		
-		return t;
+		throw new Error("function Reverse must be defined in child class.");
 	}
 }
