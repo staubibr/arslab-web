@@ -1,7 +1,7 @@
 'use strict';
 
-import Core from '../../basic-tools/tools/core.js';
-import Templated from '../../basic-tools/components/templated.js';
+import Core from '../../api-basic/tools/core.js';
+import Templated from '../../api-basic/components/templated.js';
 
 export default Core.Templatable("Widget.Header", class Header extends Templated { 
 

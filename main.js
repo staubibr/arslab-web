@@ -1,10 +1,10 @@
-import Core from "../basic-tools/tools/core.js";
-import Net from "../basic-tools/tools/net.js";
+import Core from "../api-basic/tools/core.js";
+import Net from "../api-basic/tools/net.js";
 
 import Application from "./application.js";
 
-var p1 = Net.JSON(`../basic-tools/nls.json`);
-var p2 = Net.JSON(`../web-devs-tools/nls.json`);
+var p1 = Net.JSON(`../api-basic/nls.json`);
+var p2 = Net.JSON(`../api-web-devs/nls.json`);
 var p3 = Net.JSON(`./nls.json`);
 var p4 = Net.JSON(`./application.json`);
 var p5 = Core.WaitForDocument();

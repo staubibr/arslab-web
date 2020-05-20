@@ -3,6 +3,9 @@
 html, body, select, .popup {
     font-family: sans-serif;
     font-size: 11pt;
+}
+
+html, body, .popup { 
 	background : #f9f9f9;
 }
 

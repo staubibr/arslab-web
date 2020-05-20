@@ -7,12 +7,6 @@
 		"color": [0, 0, 0]
 	},{
 		"label" : {
-			"en" : "healthy"
-		},
-		"bucket" : [-0.5, 0.5],
-        "color": [255, 255, 255]
-	},{
-		"label" : {
 			"en" : "infected"
 		},
 		"bucket" : [0.5, 7.5],
@@ -29,12 +23,6 @@
 		},
 		"bucket" : [15.5, 16.5],
 		"color": [0, 255, 0]
-	},{
-		"label" : {
-			"en" : "unknown"
-		},
-		"bucket" : [16.5, 100],
-		"color": [128, 128, 128]
 	}],
 	"series": [{
             "id": "tr01_drVar",

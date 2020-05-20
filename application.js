@@ -1,16 +1,16 @@
 'use strict';
 
-import Core from '../basic-tools/tools/core.js';
-import Dom from '../basic-tools/tools/dom.js';
-import Net from '../basic-tools/tools/net.js';
-import Templated from '../basic-tools/components/templated.js';
-import Tooltip from '../basic-tools/ui/tooltip.js';
-import oSettings from '../web-devs-tools/components/settings.js';
-import Standardized from '../web-devs-tools/parsers/standardized.js';
-import Simulation from '../web-devs-tools/simulation/simulation.js';
-import Playback from '../web-devs-tools/widgets/playback.js';
-import GridAuto from '../web-devs-tools/widgets/grid/auto.js';
-import Grid from '../web-devs-tools/widgets/grid/grid.js';
+import Core from '../api-basic/tools/core.js';
+import Dom from '../api-basic/tools/dom.js';
+import Net from '../api-basic/tools/net.js';
+import Templated from '../api-basic/components/templated.js';
+import Tooltip from '../api-basic/ui/tooltip.js';
+import oSettings from '../api-web-devs/components/settings.js';
+import Standardized from '../api-web-devs/parsers/standardized.js';
+import SimulationCA from '../api-web-devs/simulation/simulationCA.js';
+import Playback from '../api-web-devs/widgets/playback.js';
+import GridAuto from '../api-web-devs/widgets/grid/auto.js';
+import Grid from '../api-web-devs/widgets/grid/grid.js';
 import Header from './widgets/header.js';
 import Chart from './widgets/chart.js';
 
@@ -22,7 +22,7 @@ export default class Main extends Templated {
 		this.config = config;
 		this.simulation = null;
 		this.chart = null;
-						
+		
 		this.settings = new oSettings();
 		
 		this.settings.json.grid.width = 400;
@@ -74,7 +74,7 @@ export default class Main extends Templated {
 		var j = this.Elem("logs").value;
 		
 		var log = this.config.series[i].logs[j];
-		var path = `./log/tr_${log.transmission}_dr_${log.death}/`;
+		var path = `../devs-logs/COVID/tr_${log.transmission}_dr_${log.death}/`;
 		
 		var p1 = Net.File(path + `simulation.json`, 'simulation.json');
 		var p2 = Net.File(path + `transitions.csv`, 'transitions.csv');
@@ -94,7 +94,7 @@ export default class Main extends Templated {
 		Dom.AddCss(this.Elem("wait"), "hidden");
 		Dom.RemoveCss(this.Elem("simulation"), "hidden");
 		
-		this.simulation = Simulation.FromJson(json);
+		this.simulation = SimulationCA.FromJson(json);
 		
 		this.simulation.Initialize(this.settings.Get("playback", "cache"));
 		
@@ -105,12 +105,13 @@ export default class Main extends Templated {
 			clickEnabled:false,
 			columns : this.settings.Get("grid", "columns"), 
 			spacing : this.settings.Get("grid", "spacing"), 
+			ports : ["out"],
 			z: [0] 
 		}
 		
 		this.grid = new GridAuto(this.Elem("grid"), this.simulation, options);
-				
-		var size = this.settings.GridSize(options.z.length);
+		
+		var size = this.settings.GridSize(this.simulation);
 		var geom = Dom.Geometry(this.Elem("body"));
 		
 		this.Elem("grid-container").style.width = size.width + "px";
