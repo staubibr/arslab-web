@@ -26,67 +26,67 @@ export default Core.Templatable("Widget.RiseList", class RiseLoader extends Temp
 		this.models = [{
 				"name": "Alternate Bit Protocol Model",
 				"type" : "DEVS",
-				"url": path + "/log/ABP/"
+				"url": path + "/ABP/"
 			}, {
 				"name": "Addiction Model",
 				"type" : "Cell-DEVS",
-				"url": path + "/log/Addiction/"
+				"url": path + "/Addiction/"
 			}, {
 				"name": "CO2 Model",
 				"type" : "Cell-DEVS",
-				"url": path + "/log/CO2/"
+				"url": path + "/CO2/"
 			}, {
 				"name": "Farm Model",
 				"type" : "DEVS",
-				"url": path + "/log/Farm/"
+				"url": path + "/Farm/"
 			}, {
 				"name": "Fire Model",
 				"type" : "Cell-DEVS",
-				"url": path + "/log/Fire/"
+				"url": path + "/Fire/"
 			}, {
 				"name": "Fire And Rain Model",
 				"type" : "Cell-DEVS",
-				"url": path + "/log/Fire and Rain/"
+				"url": path + "/Fire and Rain/"
 			}, {
 				"name": "Life Model #1",
 				"type" : "Cell-DEVS",
-				"url": path + "/log/Life/1/"
+				"url": path + "/Life/1/"
 			}, {
 				"name": "Life Model #2",
 				"type" : "Cell-DEVS",
-				"url": path + "/log/Life/2/"
+				"url": path + "/Life/2/"
 			}, {
 				"name": "Life Model #3",
 				"type" : "Cell-DEVS",
-				"url": path + "/log/Life/3/"
+				"url": path + "/Life/3/"
 			}, {
 				"name": "Logistic Urban Growth Model #1",
 				"type" : "Cell-DEVS",
-				"url": path + "/log/LUG/1/"
+				"url": path + "/LUG/1/"
 			}, {
 				"name": "Logistic Urban Growth Model #2",
 				"type" : "Cell-DEVS",
-				"url": path + "/log/LUG/1/"
+				"url": path + "/LUG/1/"
 			}, {
 				"name": "Logistic Urban Growth Model #3",
 				"type" : "Cell-DEVS",
-				"url": path + "/log/LUG/1/"
+				"url": path + "/LUG/1/"
 			}, {
 				"name": "Swarm Model",
 				"type" : "Cell-DEVS",
-				"url": path + "/log/Swarm/"
+				"url": path + "/Swarm/"
 			}, {
 				"name": "Tumor Model",
 				"type" : "Cell-DEVS",
-				"url": path + "/log/Tumor/"
+				"url": path + "/Tumor/"
 			}, {
 				"name": "UAV Model",
 				"type" : "Cell-DEVS",
-				"url": path + "/log/UAV/"
+				"url": path + "/UAV/"
 			}, {
 				"name": "Worm Model",
 				"type" : "Cell-DEVS",
-				"url": path + "/log/Worm/"
+				"url": path + "/Worm/"
 			}
 		]
 		
