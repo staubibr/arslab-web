@@ -39,15 +39,15 @@ export default Core.Templatable("Widget.RiseList", class RiseLoader extends Temp
 				"name": "Farm Model",
 				"type" : "DEVS",
 				"url": path + "/Farm/"
-			}, {
+			}, /*{
 				"name": "Fire Model",
 				"type" : "Cell-DEVS",
 				"url": path + "/Fire/"
-			}, {
+			}, */{
 				"name": "Fire And Rain Model",
 				"type" : "Cell-DEVS",
 				"url": path + "/Fire and Rain/"
-			}, {
+			}, /*{
 				"name": "Life Model #1",
 				"type" : "Cell-DEVS",
 				"url": path + "/Life/1/"
@@ -59,7 +59,7 @@ export default Core.Templatable("Widget.RiseList", class RiseLoader extends Temp
 				"name": "Life Model #3",
 				"type" : "Cell-DEVS",
 				"url": path + "/Life/3/"
-			}, {
+			}, */{
 				"name": "Logistic Urban Growth Model #1",
 				"type" : "Cell-DEVS",
 				"url": path + "/LUG/1/"
@@ -71,11 +71,11 @@ export default Core.Templatable("Widget.RiseList", class RiseLoader extends Temp
 				"name": "Logistic Urban Growth Model #3",
 				"type" : "Cell-DEVS",
 				"url": path + "/LUG/1/"
-			}, {
+			}, /*{
 				"name": "Swarm Model",
 				"type" : "Cell-DEVS",
 				"url": path + "/Swarm/"
-			}, {
+			},*/ {
 				"name": "Tumor Model",
 				"type" : "Cell-DEVS",
 				"url": path + "/Tumor/"
