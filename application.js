@@ -101,7 +101,7 @@ export default class Main extends Templated {
 		this.simulation.On("Move", this.OnSimulation_Move.bind(this));
 		this.simulation.On("Jump", this.OnSimulation_Move.bind(this));
 		
-		var ports = this.simulation.models[0].ports;
+		var ports = this.simulation.models[0].ports.map(p => p.name);
 		
 		var options = { 
 			clickEnabled:false,
