@@ -5,8 +5,8 @@
         "aspect": true
     },
     "grid": {
-        "columns": 1,
-        "width": 400,
+        "columns": 3,
+        "width": 300,
         "height": 400,
         "spacing": 10,
         "showGrid": false,
