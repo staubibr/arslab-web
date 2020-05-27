@@ -99,7 +99,7 @@ export default Core.Templatable("Widget.RiseList", class RiseLoader extends Temp
 	
     onLiModelClick_Handler(model, ev){
 		this.Emit("ModelSelected", { model : model });
-				
+		
         this.getRiseModel(model);
     }
 

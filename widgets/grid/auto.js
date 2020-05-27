@@ -20,16 +20,17 @@ export default Core.Templatable("Auto.Grid", class AutoGrid extends Automator {
 		this.Widget.Dimensions = this.simulation.Dimensions;
 		this.Widget.Columns = options.columns;
 		this.Widget.Spacing	= options.spacing;
-		this.Widget.Z = options.z;
-		this.Widget.Ports = options.ports;
+		this.Widget.Layers	= options.layers;
+		// this.Widget.Z = options.z;
+		// this.Widget.Ports = options.ports;
 		
-		this.z = options.z;
-		this.ports = options.ports;
+		// this.z = options.z;
+		// this.ports = options.ports;
 	}
 	
 	AttachHandlers(options) {
 		var h = [];
-
+		
 		if (options.hoverEnabled != false) h.push(this.Widget.On("MouseMove", this.onMouseMove_Handler.bind(this)));
 		if (options.hoverEnabled != false) h.push(this.Widget.On("MouseOut", this.onMouseOut_Handler.bind(this)));
 		if (options.clickEnabled != false) h.push(this.Widget.On("Click", this.onClick_Handler.bind(this)));
@@ -76,12 +77,12 @@ export default Core.Templatable("Auto.Grid", class AutoGrid extends Automator {
 	onMouseMove_Handler(ev) {
 		var labels = [];
 		
-		this.ports.forEach(port => {
-			var state = this.simulation.state.GetValue([ev.data.x, ev.data.y, ev.data.z], port);
-			var subs = [ev.data.x, ev.data.y, ev.data.z, state, port];
+		ev.data.layer.ports.forEach(port => {
+			var state = this.simulation.state.GetValue([ev.data.x, ev.data.y, ev.data.layer.z], port.name);
+			var subs = [ev.data.x, ev.data.y, ev.data.layer.z, state, port.name];
 			
 			labels.push(Core.Nls("Grid_Tooltip_Title", subs));
-		
+			
 			this.tooltip.Show(ev.x + 20, ev.y);
 		});
 		

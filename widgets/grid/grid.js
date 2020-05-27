@@ -17,10 +17,8 @@ export default Core.Templatable("Widgets.Grid", class Grid extends Templated {
 	
 	set Spacing(value) { this.spacing = value; }
 	
-	set Z(value) { this.z = value; }
-	
-	set Ports(value) { this.ports = value; }
-	
+	set Layers(value) { this.layers = value; }
+
 	constructor(node) {
 		super(node);
 
@@ -29,9 +27,10 @@ export default Core.Templatable("Widgets.Grid", class Grid extends Templated {
 		this.columns = null;
 		this.spacing = null;
 		this.size = null;
-		this.z = null;
-		this.ports = null;
 		
+		this.layers = [];
+		this.grids = [];
+
 		this.ctx = this.Elem("canvas").getContext("2d");
 		
 		this.Node("canvas").On("mousemove", this.onCanvasMouseMove_Handler.bind(this));
@@ -47,18 +46,12 @@ export default Core.Templatable("Widgets.Grid", class Grid extends Templated {
 			   "</div>";
 	}
 	
-	TotalHeight(singleHeight, columns, z) {
-		var rows = this.GetRows(columns, z);
-		
-		return singleHeight * rows + (rows - 1) * this.spacing;
+	AddLayer(z, port) {
+		this.layers.push({ z:z, port:port });
 	}
 	
-	TotalWidth(singleWidth, columns) {		
-		return singleWidth * columns + (columns - 1) * this.spacing;
-	}
-	
-	GetRows(columns, z) {
-		return Math.ceil(z.length / columns) ;
+	GetRows(columns, layers) {
+		return Math.ceil(layers.length / columns) ;
 	}
 	
 	Resize() {
@@ -67,7 +60,7 @@ export default Core.Templatable("Widgets.Grid", class Grid extends Templated {
 		// Number of columns and rows
 		this.layout = {
 			columns : this.columns,
-			rows : this.GetRows(this.columns, this.z)
+			rows : this.GetRows(this.columns, this.layers)
 		}
 
 		// Size of one layer drawn, only used to determine cell size, shouldn't be used after
@@ -94,16 +87,16 @@ export default Core.Templatable("Widgets.Grid", class Grid extends Templated {
 			h : (this.size.h - this.total.h) / 2
 		}
 		
-		this.layers = this.z.map(k => {	
-			var row = Math.floor(k / this.layout.columns);
-			var col = k - (row * this.layout.columns);
+		this.grids = this.layers.map((l, i) => {	
+			var row = Math.floor(i / this.layout.columns);
+			var col = i - (row * this.layout.columns);
 
 			var x1 = col * (this.dimensions.x * this.cell.w + this.spacing);
 			var y1 = row * (this.dimensions.y * this.cell.h + this.spacing);
 			var x2 = x1 + this.cell.w * this.dimensions.x;
 			var y2 = y1 + this.cell.h * this.dimensions.y;
 
-			return { x1:x1, y1:y1, x2:x2, y2:y2, z:this.z[k] } 
+			return { x1:x1, y1:y1, x2:x2, y2:y2, z:l.z } 
 		}) 
 		
 		this.Elem("canvas").style.margin = `${this.margin.h}px ${this.margin.w}px`;		
@@ -130,55 +123,48 @@ export default Core.Templatable("Widgets.Grid", class Grid extends Templated {
 	}
 	
 	// TODO : grid shouldn't use simulation object
-	DrawState(state, palette, simulation) {		
-		for (var k = 0; k < this.z.length; k++) {			
+	DrawState(state, palette, simulation) {
+		for (var i = 0; i < this.layers.length; i++) {			
 			for (var x = 0; x < this.dimensions.x; x++) {
 				for (var y = 0; y < this.dimensions.y; y++) {
-					var z = this.z[k];
+					var l = this.layers[i];
 					
-					for (var p = 0; p < this.ports.length; p++) {
-						var v = state.GetValue([x, y, z], this.ports[p]);	// value of cell to draw
+					for (var p = 0; p < l.ports.length; p++) {
+						var v = state.GetValue([x, y, l.z], l.ports[p].name); // value of cell to draw
 						
-						this.DrawCell(x, y, k, palette.GetColor(v));
+						this.DrawCell(x, y, i, palette.GetColor(v));
 					}
 					
-					var id = x + "-" + y + "-" + z;		// id of cell to draw
+					var id = x + "-" + y + "-" + l.z; // id of cell to draw
 					
-					if (simulation.IsSelected(id)) this.DrawCellBorder(x, y, k, palette.SelectedColor);
+					if (simulation.IsSelected(id)) this.DrawCellBorder(x, y, i, palette.SelectedColor);
 				}
 			}
 		}
 	}
 	
 	// TODO : grid shouldn't use simulation object
-	DrawChanges(frame, palette, simulation) {				
-		this.ports.forEach(port => {
-			this.DrawPortChanges(frame, port, palette, simulation);
-		});
-	}
-	
-	DrawPortChanges(frame, port, palette, simulation) {
-		// TODO: If performance issue, then prefilter all transitions and keep copy in memory maybe?
-		frame.TransitionsByPort(port).forEach((t) => {
-			var k = this.z.indexOf(t.Z);
-			
-			if (k == -1) return;
-
-			this.DrawCell(t.X, t.Y, k, palette.GetColor(t.Value));
-			
-			if (simulation.IsSelected(t.Id.join("-"))) this.DrawCellBorder(t.X, t.Y, k, palette.SelectedColor);
+	DrawChanges(frame, palette, simulation) {
+		this.layers.forEach((l, i) => {
+			l.ports.forEach(p => {
+				frame.TransitionsByIndex(l.z, p.name).forEach((t) => {
+					this.DrawCell(t.X, t.Y, i, palette.GetColor(t.Value));
+					
+					if (simulation.IsSelected(t.Id.join("-"))) this.DrawCellBorder(t.X, t.Y, i, palette.SelectedColor);
+				});
+			});
 		});
 	}
 	
 	GetCell(layerX, layerY) {
 		var zero = null;
 		
-		for (var k = 0; k < this.layers.length; k++) {
-			if (layerX < this.layers[k].x1 || layerX > this.layers[k].x2) continue;
+		for (var k = 0; k < this.grids.length; k++) {
+			if (layerX < this.grids[k].x1 || layerX > this.grids[k].x2) continue;
 			
-			if (layerY < this.layers[k].y1 || layerY > this.layers[k].y2) continue;
+			if (layerY < this.grids[k].y1 || layerY > this.grids[k].y2) continue;
 			
-			zero = this.layers[k];
+			zero = this.grids[k];
 			
 			break;
 		}
@@ -195,11 +181,11 @@ export default Core.Templatable("Widgets.Grid", class Grid extends Templated {
 		var x = pX / this.cell.w; 
 		var y = pY / this.cell.h; 
 		
-		return { x:x, y:y, z:zero.z, k:k };
+		return { x:x, y:y, z:zero.z, k:k, layer:this.layers[k] };
 	}
 	
 	DrawCell(x, y, k, color) {			
-		var zero = this.layers[k];
+		var zero = this.grids[k];
 			
 		var x = zero.x1 + x * this.cell.w;
 		var y = zero.y1 + y * this.cell.h;
@@ -209,7 +195,7 @@ export default Core.Templatable("Widgets.Grid", class Grid extends Templated {
 	}
 	
 	DrawCellBorder(x, y, k, color) {	
-		var zero = this.layers[k];
+		var zero = this.grids[k];
 		
 		// Find the new X, Y coordinates of the clicked cell
 		var pX = zero.x1 + x * this.cell.w;

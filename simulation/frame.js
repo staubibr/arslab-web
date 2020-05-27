@@ -11,9 +11,11 @@ export default class Frame {
 	AddTransition(t) {
 		this.transitions.push(t);
 		
-		if (!this.index.hasOwnProperty(t.Port)) this.index[t.Port] = [];
+		if (!this.index.hasOwnProperty(t.Z)) this.index[t.Z] = {};
 		
-		this.index[t.Port].push(t);
+		if (!this.index[t.Z].hasOwnProperty(t.Port)) this.index[t.Z][t.Port] = [];
+		
+		this.index[t.Z][t.Port].push(t);
 		
 		return t;
 	}
@@ -22,8 +24,8 @@ export default class Frame {
 		return this.transitions;
 	}
 	
-	TransitionsByPort(port) {
-		return this.index[port] || [];
+	TransitionsByIndex(z, port) {
+		return this.index[z] && this.index[z][port] || [];
 	}
 		
 	Reverse () {
