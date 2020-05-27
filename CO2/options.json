@@ -10,7 +10,15 @@
         "height": 400,
         "spacing": 10,
         "showGrid": false,
-        "aspect": true
+        "aspect": true,
+        "layers": [{
+                "z": 0,
+                "ports": ["out_ty"]
+            }, {
+                "z": 0,
+                "ports": ["out_c"]
+            }
+        ]
     },
     "playback": {
         "speed": 25,
