@@ -130,7 +130,7 @@ export default Core.Templatable("Widgets.Grid", class Grid extends Templated {
 					var l = this.layers[i];
 					
 					for (var p = 0; p < l.ports.length; p++) {
-						var v = state.GetValue([x, y, l.z], l.ports[p].name); // value of cell to draw
+						var v = state.GetValue([x, y, l.z], l.ports[p]); // value of cell to draw
 						
 						this.DrawCell(x, y, i, palette.GetColor(v));
 					}
@@ -147,7 +147,7 @@ export default Core.Templatable("Widgets.Grid", class Grid extends Templated {
 	DrawChanges(frame, palette, simulation) {
 		this.layers.forEach((l, i) => {
 			l.ports.forEach(p => {
-				frame.TransitionsByIndex(l.z, p.name).forEach((t) => {
+				frame.TransitionsByIndex(l.z, p).forEach((t) => {
 					this.DrawCell(t.X, t.Y, i, palette.GetColor(t.Value));
 					
 					if (simulation.IsSelected(t.Id.join("-"))) this.DrawCellBorder(t.X, t.Y, i, palette.SelectedColor);

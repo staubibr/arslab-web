@@ -78,8 +78,8 @@ export default Core.Templatable("Auto.Grid", class AutoGrid extends Automator {
 		var labels = [];
 		
 		ev.data.layer.ports.forEach(port => {
-			var state = this.simulation.state.GetValue([ev.data.x, ev.data.y, ev.data.layer.z], port.name);
-			var subs = [ev.data.x, ev.data.y, ev.data.layer.z, state, port.name];
+			var state = this.simulation.state.GetValue([ev.data.x, ev.data.y, ev.data.layer.z], port);
+			var subs = [ev.data.x, ev.data.y, ev.data.layer.z, state, port];
 			
 			labels.push(Core.Nls("Grid_Tooltip_Title", subs));
 			

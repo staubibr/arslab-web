@@ -19,7 +19,8 @@ export default class Settings extends Evented {
 				height : 400,
 				spacing : 10,
 				showGrid : false,
-				aspect : true
+				aspect : true,
+				layers : null
 			},
 			playback : {
 				speed : 10,

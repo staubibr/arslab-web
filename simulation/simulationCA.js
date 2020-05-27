@@ -29,6 +29,18 @@ export default class SimulationCA extends Simulation {
 		this.state = new StateCA(size, models);
 	}
 	
+	LayersAndPorts() {
+		var layers = [];
+			
+		for (var z = 0; z < this.Dimensions.z; z++) {
+			this.models[0].ports.forEach(port => {
+				layers.push({ z:z, ports:[port.name] });
+			}); 
+		}
+		
+		return layers;
+	}
+	
 	static FromJson(json) {
 		var simulation = new SimulationCA(json.name, json.simulator, json.type, json.models, null, json.size, null);
 		
