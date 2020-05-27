@@ -1,0 +1,44 @@
+{
+    "Header_Lab": {
+        "en": "ARSLab"
+    },
+    "Header_App": {
+        "en": "DEVS Web Viewer"
+    },
+    "Header_Tutorial": {
+        "en": "&#128304; tutorials"
+    },
+    "Header_Sample": {
+        "en": "&#9733; samples"
+    },
+    "Header_Problem": {
+        "en": "&#9749; report a problem"
+    },
+	"Dropzone_Convert" : {
+		"en":"Convert model and log files to JSON format"
+	},
+	"Dropzone_Rise" : {
+		"en":"Load from RISE"
+	},
+	"Dropzone_Load" : {
+		"en":"Load simulation"
+	},
+	"Dropzone_Viz" : {
+		"en":"Visualize simulation"
+	},
+	"Popup_Rise_Title" : {
+		"en":"Load from RISE"
+	},
+	"Popup_Converter_Title" : {
+		"en":"Convert simulation results"
+	},
+	"Popup_Settings_Title" : {
+		"en":"Playback settings"
+	},
+	"Converter_Parser_NA" : {
+		"en" : "This parser is not available."
+	},
+	"DEVS_Diagram_Tooltip" : {
+		"en" : "Model Id : {0} <br>Last output : {1}"		
+	}
+}
