@@ -5,7 +5,7 @@
         "aspect": true
     },
     "grid": {
-        "columns": 3,
+        "columns": 2,
         "width": 300,
         "height": 400,
         "spacing": 10,
