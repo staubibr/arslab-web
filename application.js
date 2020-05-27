@@ -49,7 +49,7 @@ export default class Main extends Templated {
 		}
 		
 		this.settings = this.widgets.settings.Settings;
-				
+		
 		this.Elem('upload').Icon = 'fa-file-upload';
 		this.Elem('upload').Label = Core.Nls('Dropzone_Upload_Label');
 		this.Elem('upload').Label = Core.Nls('Dropzone_Upload_Label');
@@ -79,8 +79,13 @@ export default class Main extends Templated {
 	OnLoad_Click(ev) {		
 		var parser = new Standardized();
 		
-		var p = parser.Parse(this.Elem('upload').files);
+		var files = this.Elem('upload').files;
+		var options = files.find(f => f.name == "options.json");
+		var defs = [parser.Parse(this.Elem('upload').files)];
 		
+		if (options) defs.push(options.text());
+
+			
 		parser.On("Progress", (ev) => {
 			// TODO : Should use variable css colors			
 			var c1 = "#198CFF";
@@ -91,16 +96,22 @@ export default class Main extends Templated {
 			this.Elem("load").style.backgroundImage = bg;		
 		});
 		
-		p.then(this.OnParser_Parsed.bind(this), (error) => { this.OnWidget_Error({ error:error }); });
+		Promise.all(defs).then(this.OnParser_Parsed.bind(this), (error) => { this.OnWidget_Error({ error:error }); });
 	}
 	
-	OnParser_Parsed(json) {
+	OnParser_Parsed(results) {		
+		if (results[1]) {
+			var options = JSON.parse(results[1]);
+			
+			this.settings.json = options;
+		}
+		
 		this.Elem("load").style.backgroundImage = null;			
 		this.Elem("btnViz").disabled = false;
 		
-		var clss = (json.type == "DEVS") ? SimulationDEVS : SimulationCA;
+		var clss = (results[0].type == "DEVS") ? SimulationDEVS : SimulationCA;
 		
-		this.simulation = clss.FromJson(json);
+		this.simulation = clss.FromJson(results[0]);
 		
 		this.simulation.Initialize(this.settings.Get("playback", "cache"));
 		
@@ -177,7 +188,9 @@ export default class Main extends Templated {
 			var size = this.settings.DiagramSize(this.simulation);
 		}
 		else if (widget == "grid") {
-			var size = this.settings.GridSize(this.simulation);
+			var n = this.Elem("grid").layers.length;
+			
+			var size = this.settings.GridSize(this.simulation, n);
 		}
 		else {
 			throw new Error("Tried to retrieve size for invalid widget.");
@@ -198,19 +211,20 @@ export default class Main extends Templated {
 			this.current.auto = new DiagramAuto(this.Elem("diagram"), this.simulation, { clickEnabled:false });
 		}
 		else if (widget === "grid") {
-			var z = [];
+			var layers = [];
 			
-			for (var i = 0; i < this.simulation.Dimensions.z; i++) z.push(i);
+			for (var z = 0; z < this.simulation.Dimensions.z; z++) {
+				this.simulation.models[0].ports.forEach(port => {
+					layers.push({ z:z, ports:[port] });
+				}); 
+			}
 			
-			// TODO : Always only one model in cell-devs?
-			var ports = this.simulation.models[0].ports.map(p => p.name);
-			
+			// TODO : Always only one model in cell-devs?			
 			var options = { 
 				clickEnabled:false,
 				columns:this.settings.Get("grid", "columns"), 
 				spacing:this.settings.Get("grid", "spacing"), 
-				z:z,
-				ports: ports
+				layers:layers
 			}
 			
 			this.current.auto = new GridAuto(this.Elem("grid"), this.simulation, options);
