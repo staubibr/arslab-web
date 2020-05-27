@@ -1,0 +1,144 @@
+{
+    "chart" : [{
+		"label" : {
+			"en" : "deaths"
+		},
+		"bucket" : [-1.5, -0.5],
+		"color": [0, 0, 0]
+	},{
+		"label" : {
+			"en" : "infected"
+		},
+		"bucket" : [0.5, 7.5],
+        "color": [255, 255, 0]
+	},{
+		"label" : {
+			"en" : "sick"
+		},
+		"bucket" : [7.5, 15.5],
+        "color": [255, 0, 0]
+	},{
+		"label" : {
+			"en" : "recovered"
+		},
+		"bucket" : [15.5, 16.5],
+		"color": [0, 255, 0]
+	}],
+	"series": [{
+            "id": "tr01_drVar",
+            "label": {
+                "en": "Transmission 0.1 - Variable Death Rate"
+            },
+            "logs": [{
+                    "transmission": 0.1,
+                    "death": 0.001
+                }, {
+                    "transmission": 0.1,
+                    "death": 0.005
+                }, {
+                    "transmission": 0.1,
+                    "death": 0.01
+                }, {
+                    "transmission": 0.1,
+                    "death": 0.05
+                }, {
+                    "transmission": 0.1,
+                    "death": 0.1
+                }, {
+                    "transmission": 0.1,
+                    "death": 0.15
+                }, {
+                    "transmission": 0.1,
+                    "death": 0.025
+                }
+            ]
+        }, {
+            "id": "tr04_drVar",
+            "label": {
+                "en": "Transmission 0.4 - Variable Death Rate"
+            },
+            "logs": [{
+                    "transmission": 0.4,
+                    "death": 0.001
+                }, {
+                    "transmission": 0.4,
+                    "death": 0.005
+                }, {
+                    "transmission": 0.4,
+                    "death": 0.01
+                }, {
+                    "transmission": 0.4,
+                    "death": 0.05
+                }, {
+                    "transmission": 0.4,
+                    "death": 0.1
+                }, {
+                    "transmission": 0.4,
+                    "death": 0.15
+                }, {
+                    "transmission": 0.4,
+                    "death": 0.025
+                }
+            ]
+        }, {
+            "id": "tr015_drVar",
+            "label": {
+                "en": "Transmission 0.15 - Variable Death Rate"
+            },
+            "logs": [{
+                    "transmission": 0.15,
+                    "death": 0.001
+                }, {
+                    "transmission": 0.15,
+                    "death": 0.005
+                }, {
+                    "transmission": 0.15,
+                    "death": 0.01
+                }, {
+                    "transmission": 0.15,
+                    "death": 0.05
+                }, {
+                    "transmission": 0.15,
+                    "death": 0.1
+                }, {
+                    "transmission": 0.15,
+                    "death": 0.15
+                }, {
+                    "transmission": 0.15,
+                    "death": 0.025
+                }
+            ]
+        }, {
+            "id": "trVar_dr001",
+            "label": {
+                "en": "Variable Transmission - Death Rate 0.01"
+            },
+            "logs": [{
+                    "transmission": 0.05,
+                    "death": 0.001
+                }, {
+                    "transmission": 0.075,
+                    "death": 0.001
+                }, {
+                    "transmission": 0.09,
+                    "death": 0.001
+                }, {
+                    "transmission": 0.1,
+                    "death": 0.001
+                }, {
+                    "transmission": 0.15,
+                    "death": 0.001
+                }, {
+                    "transmission": 0.2,
+                    "death": 0.001
+                }, {
+                    "transmission": 0.4,
+                    "death": 0.001
+                }, {
+                    "transmission": 0.6,
+                    "death": 0.001
+                }
+            ]
+        }
+    ]
+}

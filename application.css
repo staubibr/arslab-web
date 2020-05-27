@@ -1,0 +1,255 @@
+@import url(https://fonts.googleapis.com/css?family=Varela+Round);
+
+html, body, select, .popup {
+    font-family: sans-serif;
+    font-size: 11pt;
+}
+
+html, body, .popup { 
+	background : #f9f9f9;
+}
+
+.popup {
+	background-color: #fff;
+}
+
+main {
+    margin: 30px auto;
+	max-width: 1200px;
+	min-width: 900px;
+}
+/*
+@media (min-width: 768px) {
+	main {
+		width: 768px;
+	}
+}
+
+@media (min-width: 992px) {
+	main {
+		width: 992px;
+	}
+}
+
+@media (min-width: 1200px) {
+	main {
+		width: 1200px;
+	}
+}
+*/
+h1, h2, h3, .popup .popup-title {
+	font-family: 'Varela Round', sans-serif;
+}
+
+h1, h2 {
+	margin: 0px;
+}
+
+h1 {
+    font-size: 1.5em;
+}
+
+h2 {
+    font-size: 1.3em;
+}
+
+h2 a {
+	color: #198CFF;
+}
+
+h3 {
+    font-size: 1.2em;
+}
+
+label, select {
+    font-size: 13.5pt;
+}
+
+select {
+	cursor:pointer;
+}
+
+hr {
+	margin: 20px 0px;
+}
+
+.popup button.close, 
+.popup .popup-title,
+.box i, .box label, a {
+    color: #0051A3;
+}
+
+a {
+    text-decoration: none;
+}
+
+button {
+    height: 30px;
+	background-color: #198CFF;
+    color: #eee;
+    font-size: 15px;
+    border: none;
+    border-bottom: solid 2px #0051A3;
+	border-radius: 4px;
+	cursor: pointer;
+}
+
+button:disabled {
+    cursor: not-allowed;
+	background-color: #cacaca;
+    color: #7e7e7e;
+    border-color: #7e7e7e;
+}
+
+button:not(:disabled):hover {
+  background: #0051A3;
+  transition: all .2s ease;
+}
+
+main .diagram-widget-container,
+main .grid-widget-container {
+	width : 100%;
+	height : 100%;
+}
+
+.row {
+	margin: 10px 0px;
+}
+
+.centered-row {
+	text-align:center;
+}
+
+.centered-row > * {
+	display:inline-block; 
+}
+
+.row.instructions > * {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.row.instructions > i {
+	margin-right : 10px;
+}
+
+/* Style for header */
+.links-container {
+	float:right;
+}
+
+.links-container a:hover {
+    border-bottom: solid 3px #898989;
+}
+
+.second-row > * {
+	display: inline-block;
+}
+
+.body {
+	margin: 20px 0px;
+}
+
+.body > * {
+	display:inline-block;
+}
+
+/* Style for body of application */
+.playback {
+	text-align:center; 
+}
+
+.playback .controls button:not(:last-child) {
+    border-right-color: #eee;
+}
+
+.playback .record {
+	display:none;
+}
+
+.row.parameter label, .row.parameter button {
+	margin-left : 20px;
+}
+
+.row.parameter label:not(:first-child) {
+	margin-left:10px;
+}
+
+/* Multi Trend style */
+.chart-svg {
+	width: 100%;
+	height: 100%;
+}
+
+.chart-svg .tick line {
+	stroke : #333333;
+	stroke-dasharray: 7px 3px;
+}
+
+.chart-svg .overlay {
+	cursor : pointer;
+}
+
+.chart-svg .overlay .hi-lite {
+	width : 10px;
+	fill : lightgrey;
+	fill-opacity : 0.7;
+}
+
+.chart-svg .data path {
+	fill: none;
+	stroke-width: 1.5px;
+}
+
+.chart-svg .y-axis-grid line {
+	fill: none;
+	stroke-width: 1px;
+    stroke: silver;
+}
+
+.chart-svg .x-axis line, .chart-svg .y-axis line,
+.chart-svg .y-axis path, .chart-svg .x-axis path {
+	stroke-width : 1px;
+	stroke : #2a2a2a !important;
+}
+
+.chart-svg .y-axis text,
+.chart-svg .x-axis text {
+    font-size: 11px;
+    transform: rotate(-45deg);
+}
+
+.chart-svg .labels text {
+    fill: black;
+    font-weight: bold;
+	font-size : 14px;
+	text-anchor : middle;
+}
+
+.chart-svg .overlay .overlay-vertical-line {
+	stroke : red;
+	stroke-dasharray: 7px 3px;
+}
+
+/* tooltip */
+.tooltip {
+	position: absolute;
+    padding: 5px;
+    border: solid thin silver;
+    border-radius: 4px;
+    pointer-events: none;
+    background: rgba(255, 255, 255, 0.9);
+}
+
+.tooltip .tooltip-title {
+	font-weight :bold;
+}
+
+.tooltip .tooltip-line {
+	margin-left:6px;
+}
+
+.tooltip .tooltip-line > * {
+	display: inline-block;
+	vertical-align: middle;
+}
