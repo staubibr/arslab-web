@@ -77,21 +77,15 @@ export default class Main extends Templated {
 		if (widget == "diagram") {			
 			this.current = new DiagramAuto(this.Elem("diagram"), this.simulation, { clickEnabled:false });
 		}
-		else if (widget === "grid") {
-			var layers = [];
-			
-			for (var z = 0; z < this.simulation.Dimensions.z; z++) {
-				this.simulation.models[0].ports.forEach(port => {
-					layers.push({ z:z, ports:[port] });
-				}); 
-			}
-			
+		else if (widget === "grid") {			
 			var options = { 
 				clickEnabled:false,
 				columns:this.settings.Get("grid", "columns"), 
 				spacing:this.settings.Get("grid", "spacing"), 
-				layers : layers
+				layers:this.settings.Get("grid", "layers")
 			}
+			
+			if (!options.layers) options.layers = this.simulation.LayersAndPorts();
 			
 			this.current = new GridAuto(this.Elem("grid"), this.simulation, options);
 		}
