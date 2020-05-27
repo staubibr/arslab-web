@@ -1,0 +1,89 @@
+{
+	"Playback_FastBackward" : {
+		"en" : "Go to first frame"
+	},
+	"Playback_StepBack" : {
+		"en" : "Step back"
+	},
+	"Playback_Backwards" : {
+		"en" : "Play backwards"
+	},
+	"Playback_Play" : {
+		"en" : "Play forward"
+	},
+	"Playback_StepForward" : {
+		"en" : "Step forward"
+	},
+	"Playback_FastForward" : {
+		"en" : "Go to last frame"
+	},
+	"Playback_Seek" : {
+		"en" : "Slide to seek frame"
+	},
+	"Playback_Record" : {
+		"en" : "Record simulation to .webm"
+	},
+	"Playback_Settings" : {
+		"en" : "Modify simulation playback settings"
+	},
+	"Settings_Title" : {
+		"en" : "Settings"
+	},
+	"Settings_Diagram_Options" : {
+		"en" : "DEVS diagram options"
+	},	
+	"Settings_Diagram_Height" : {
+		"en" : "Height:"
+	},
+	"Settings_Diagram_Width" : {
+		"en" : "Width:"
+	},
+	"Settings_Diagram_Aspect" : {
+		"en" : "Simulation aspect ratio:"
+	},
+	"Settings_Grid_Options" : {
+		"en" : "Grid widget options"
+	},	
+	"Settings_Grid_ShowGrid" : {
+		"en" : "Show grid:"
+	},
+	"Settings_Grid_Columns" : {
+		"en" : "Columns:"
+	},
+	"Settings_Grid_Width" : {
+		"en" : "Width:"
+	},
+	"Settings_Grid_Height" : {
+		"en" : "Height:"
+	},
+	"Settings_Grid_Aspect" : {
+		"en" : "Simulation aspect ratio:"
+	},
+	"Settings_Grid_Spacing" : {
+		"en" : "Spacing:"
+	},
+	"Settings_Playback_Options" : {
+		"en" : "Playback options"
+	},	
+	"Settings_Playback_Speed" : {
+		"en" : "Playback speed:"
+	},
+	"Settings_Playback_Loop" : {
+		"en" : "Loop:"
+	},
+	"Settings_Playback_Cache" : {
+		"en" : "Cache step:"
+	},
+	"Converter_Parse" : {
+		"en" : "Parse files"
+	},
+	"Diagram_Tooltip_X" : {
+		"en" : "<b>{0}</b> received an input (<b>{1}</b>) from <b>{2}</b> through port <b>{3}</b>"		
+	},
+	"Diagram_Tooltip_Y" : {
+		"en" : "<b>{0}</b> emitted an output (<b>{1}</b>) to <b>{2}</b> through port <b>{3}</b>"		
+	},
+	"Grid_Tooltip_Title" : {
+		"en" : "The state of cell <b>({0}, {1}, {2})</b> on port <b>{4}</b> is <b>{3}</b>."		
+	}
+}

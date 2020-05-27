@@ -1,0 +1,242 @@
+input[type=range]:disabled::-webkit-slider-runnable-track {
+	cursor : not-allowed;
+}
+
+input[type=range]::-webkit-slider-runnable-track { 
+  cursor: pointer;
+}
+
+input[type=range]:disabled::-webkit-slider-thumb{
+    visibility:hidden;
+}
+
+.playback .controls button {
+	border-radius : 0px;
+}
+
+.playback .controls button:first-child {
+	border-radius : 4px 0px 0px 4px;
+}
+
+.playback .controls button:last-child {
+	border-radius : 0px 4px 4px 0px;
+}
+
+.playback button.settings,
+.playback button.record {
+	border-radius : 4px;
+}
+
+.playback .controls button:not(:last-child) {
+	border-right: solid thin silver;
+}
+
+.playback label {
+	font-weight : bold;
+    color: #0051A3;
+}
+
+.playback > * {
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.playback .slider {
+    margin: auto 10px;
+    width: 200px;
+}
+
+.playback > * {
+    margin: auto 5px;
+}
+
+.playback .record:not(:disabled) {
+	color : #dd4237;
+}
+
+.popup-body {
+    margin: 10px 15px;
+}
+
+.rise-loader ul {
+    padding: 0;
+    margin: 0;
+    border: dotted thin;
+}
+  
+.rise-loader ul li {
+    padding: 6px;
+    list-style-type: none;
+    transition: all .2s ease;
+}
+  
+.wait {
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    z-index: 1000;
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.wait img{ 
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.converter .box {
+	display: inline-block;
+    width: 100%;
+}
+
+.converter .save {
+	margin-top: 10px;
+    width: 100%;
+}
+
+.converter .options-container {
+    text-align: center;
+}
+
+.converter .options-container > * {
+	display: inline-block;
+    margin-bottom: 10px;
+    vertical-align: top;
+}
+
+.converter .options-container .option {
+	cursor: pointer;
+}
+
+.converter .options-column {	
+    width: 50%;
+}
+
+.converter .options-column > * {
+	display: block;
+	text-align: left;
+    padding: 1px;
+}
+
+.converter .options-column > *:first-child {
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #198CFF;
+    padding-bottom: 4px;
+}
+
+.converter .options-column > *:not(:first-child) {
+    padding-left: 10px;
+}
+
+.settings .settings-group-label {
+    margin: 15px 0px 10px 0px;
+}
+
+.settings .settings-group {
+	margin-left: 15px;
+}
+
+.settings .settings-line {
+	margin-top : 5px;
+}
+
+.settings .settings-value {
+	margin-left : 5px;
+	cursor : pointer;
+}
+
+.settings input[type="number"] {
+	width : 60px;
+}
+
+.settings input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    vertical-align: middle;
+}
+
+.settings .settings-line > * {
+	display : inline-block;
+}
+
+.settings label[for] {
+	cursor:pointer;
+}
+
+.diagram-container {
+	width: 100%;
+	height: 100%;
+}
+
+.diagram-container svg {
+    pointer-events: visible;
+	cursor: pointer;
+    width: 100%;
+    height: 100%;
+}
+
+.diagram-container text.highlighted {
+    font-weight: bold !important;
+}
+
+.diagram-container rect.highlighted {
+	/*stroke-width: 1px !important;*/
+}
+
+.diagram-container path.highlighted {
+	/*stroke-width: 0.5px !important;*/
+}
+
+.diagram-container path.highlighted.X,
+.diagram-container rect.highlighted.X {
+    stroke: #1e94c3  !important;
+}
+
+.diagram-container text.highlighted.X,
+.diagram-container marker path.highlighted.X {
+    fill: #1e94c3  !important;
+}
+
+.diagram-container rect.highlighted.Y,
+.diagram-container path.highlighted.Y {
+    stroke: #d6b00a  !important;
+}
+
+.diagram-container marker path.highlighted.Y,
+.diagram-container text.highlighted.Y {
+    fill: #d6b00a  !important;
+}
+
+.diagram-container rect.highlighted.X.Y,
+.diagram-container path.highlighted.X.Y {
+    stroke: #27ad2f	!important;
+}
+
+.diagram-container marker path.highlighted.X.Y, 
+.diagram-container text.highlighted.X.Y {
+    fill: #27ad2f  !important;
+}
+
+.diagram-container rect.selected {
+	/*stroke-width: 1px !important;*/
+    stroke: red  !important;
+}
+
+.grid, 
+.grid .grid-canvas-container {
+	width : 100%;
+	height : 100%;
+    box-sizing: border-box;
+}
+.grid .grid-canvas-container canvas {
+	cursor : pointer;
+}
+/*
+.grid .grid-canvas-container .grid-canvas {
+	border:solid thin silver;
+}
+*/
