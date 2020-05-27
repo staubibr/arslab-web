@@ -26,7 +26,7 @@ export default class Main extends Templated {
 		this.simulation = null;
 		
 		this.current = null;
-				
+		
 		this.settings = oSettings.FromJson(options);
 		
 		var parser = new Standardized();
@@ -59,7 +59,9 @@ export default class Main extends Templated {
 			var size = this.settings.DiagramSize(this.simulation);
 		}
 		else if (widget == "grid") {
-			var size = this.settings.GridSize(this.simulation);
+			var n = this.Elem("grid").layers.length;
+			
+			var size = this.settings.GridSize(this.simulation, n);
 		}
 		else {
 			throw new Error("Tried to retrieve size for invalid widget.");
@@ -71,24 +73,24 @@ export default class Main extends Templated {
 	
 	SwitchWidget(widget) {		
 		Dom.SetCss(this.Elem("main"), `${widget}-visible`);
-				
+		
 		if (widget == "diagram") {			
 			this.current = new DiagramAuto(this.Elem("diagram"), this.simulation, { clickEnabled:false });
 		}
 		else if (widget === "grid") {
-			var z = [];
+			var layers = [];
 			
-			for (var i = 0; i < this.simulation.Dimensions.z; i++) z.push(i);
-			
-			// TODO : Always only one model in cell-devs?
-			var ports = this.simulation.models[0].ports.map(p => p.name);
+			for (var z = 0; z < this.simulation.Dimensions.z; z++) {
+				this.simulation.models[0].ports.forEach(port => {
+					layers.push({ z:z, ports:[port] });
+				}); 
+			}
 			
 			var options = { 
 				clickEnabled:false,
 				columns:this.settings.Get("grid", "columns"), 
 				spacing:this.settings.Get("grid", "spacing"), 
-				ports : ports,
-				z:z 
+				layers : layers
 			}
 			
 			this.current = new GridAuto(this.Elem("grid"), this.simulation, options);
