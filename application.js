@@ -32,14 +32,14 @@ export default class Main extends Templated {
 		
 		this.simulation.Initialize(this.settings.Get("playback", "cache"));
 		
-		var layers = [{ z:0, ports:[{ name:"out_ty", type:"output" }]}, 
-					  { z:0, ports:[{ name:"out_c", type:"output" }]}];
+		var layers = [{ z:0, ports:["out_ty"]}, 
+					  { z:0, ports:["out_c"]}];
 
 		var options = { 
 			clickEnabled:false,
 			columns:this.settings.Get("grid", "columns"), 
 			spacing:this.settings.Get("grid", "spacing"), 
-			layers : layers
+			layers:layers
 		}
 		
 		this.grid = new GridAuto(this.Elem("grid"), this.simulation, options);
