@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   version="1.1" viewBox="0 0 210 150" height="150mm" width="210mm">
+  <style>
+    .svg-arrow {
+      stroke:#000000;
+    }
+    
+    .svg-label {
+      font-style: italic;
+      font-size: 3.5px;
+      font-family: sans-serif;
+    }
+    
+    .svg-marker {
+      overflow:visible;
+     }
+    
+    .svg-path {
+      fill:none;
+      stroke:#000000;
+      stroke-width:0.2px;
+      stroke-linecap:butt;
+      stroke-linejoin:miter;
+      stroke-opacity:1;
+     }
+         
+     .svg-model {
+      fill:none;stroke:#000000;
+      stroke-width:0.24;
+      stroke-miterlimit:4;
+      stroke-opacity:1
+      }
+      
+      .svg-model.svg-coupled {
+      stroke-dasharray: 2, 1;
+      stroke-dashoffset:0;
+      }
+      
+      .svg-label.large {
+      font-style:normal;
+      font-size:4.9px;
+      }
+  </style>
+  <defs>
+    <marker refX="0.0" refY="0.0" orient="auto" class="svg-marker">
+      <path transform="scale(0.8) rotate(180) translate(12.5,0)" class="svg-arrow" d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z " />
+    </marker>
+    <marker refX="0.0" refY="0.0" orient="auto" class="svg-marker">
+      <path transform="scale(0.8) rotate(180) translate(12.5,0)" class="svg-arrow" d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z " />
+    </marker>
+    <marker orient="auto" refY="0.0" refX="0.0" class="svg-marker">
+      <path d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z " class="svg-arrow" transform="scale(0.8) rotate(180) translate(12.5,0)" />
+    </marker>
+    <marker refX="0.0" refY="0.0" orient="auto" class="svg-marker">
+      <path transform="scale(0.8) rotate(180) translate(12.5,0)" class="svg-arrow" d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z " />
+    </marker>
+    <marker orient="auto" refY="0.0" refX="0.0" class="svg-marker">
+      <path d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z " class="svg-arrow" transform="scale(0.8) rotate(180) translate(12.5,0)" />
+    </marker>
+    <rect height="6.9925595" width="12.284226" y="139.6622" x="78.052083" />
+  </defs>
+
+  <g inkscape:groupmode="layer" inkscape:label="Layer 1">
+
+    <text y="108.02782" x="56.456863" class="svg-label">Idle</text>
+    <circle
+       r="15.875"
+       cy="106.71437"
+       cx="59.86837"
+       type="atomic" 
+       name="idle"
+       class="svg-model"
+       style="fill:none;stroke:#000000;stroke-width:0.264999" />
+    <text
+       type="iPort" 
+       name="transitionin" 
+       model="idle" 
+       class="svg-label"
+       y="121.32094"
+       x="47.800678"
+       style="font-size:3.52777px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;white-space:pre;inline-size:28.3792;stroke-width:0.264583"
+       xml:space="preserve"
+       transform="translate(29.723278,-21.7104)"><tspan
+         x="47.800678"
+         y="121.32094"><tspan
+           style="font-size:3.52777px;stroke-width:0.264583"></tspan></tspan><tspan
+         x="47.800678"
+         y="125.73065"><tspan
+           style="font-size:3.52777px;stroke-width:0.264583">transitionIn</tspan></tspan>
+    </text>
+    <text
+       transform="translate(14.488914,-35.875686)"
+       xml:space="preserve"
+       style="font-size:3.52777px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;white-space:pre;inline-size:28.3792;stroke-width:0.264583"
+       x="47.800678"
+       y="121.32094"><tspan
+       type="oPort" 
+       name="transitionout" 
+       model="idle" 
+       class="svg-label"
+         x="47.800678"
+         y="121.32094"><tspan
+           style="font-size:3.52777px;stroke-width:0.264583"></tspan></tspan><tspan
+         x="47.800678"
+         y="125.73065"><tspan
+           style="font-size:3.52777px;stroke-width:0.264583">transitionOut</tspan></tspan>
+    </text>    
+
+    <text x="48.297695" y="46.136681" class="svg-label">SetRegulator</text>
+    <circle
+       style="fill:none;stroke:#000000;stroke-width:0.264999"
+       type="atomic" 
+       name="setregulator"
+       class="svg-model"
+       cx="59.868374"
+       cy="45.168541"
+       r="15.875" />
+    <text
+       type="iPort" 
+       name="transitionin" 
+       model="setregulator" 
+       class="svg-label"
+       y="121.32094"
+       x="47.800678"
+       style="font-size:3.52777px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;white-space:pre;inline-size:28.3792;stroke-width:0.264583"
+       xml:space="preserve"
+       transform="translate(15.023454,-56.722709)"><tspan
+         x="47.800678"
+         y="121.32094"><tspan
+           style="font-size:3.52777px;stroke-width:0.264583"></tspan></tspan><tspan
+         x="47.800678"
+         y="125.73065"><tspan
+           style="font-size:3.52777px;stroke-width:0.264583">transitionIn</tspan></tspan>
+    </text>         
+    <text
+       type="oPort" 
+       name="transitionout" 
+       model="setregulator" 
+       class="svg-label"       
+       y="121.32094"
+       x="47.800678"
+       style="font-size:3.52777px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;white-space:pre;inline-size:28.3792;stroke-width:0.264583"
+       xml:space="preserve"
+       transform="translate(28.671908,-83.595563)"><tspan
+         x="47.800678"
+         y="121.32094"><tspan
+           style="font-size:3.52777px;stroke-width:0.264583"></tspan></tspan><tspan
+         x="47.800678"
+         y="125.73065"><tspan
+           style="font-size:3.52777px;stroke-width:0.264583">transitionOut</tspan><tspan>
+        </tspan></tspan><tspan
+         x="47.800678"
+         y="130.14037"><tspan>    </tspan></tspan>
+    </text>
+
+    <text y="46.095276" x="151.8363" class="svg-label">Toasting</text>
+    <circle
+       r="15.875"
+       cy="45.168541"
+       cx="159.02536"
+       type="atomic" 
+       name="toasting"
+       class="svg-model"
+       style="fill:none;stroke:#000000;stroke-width:0.264999" />
+    <text
+       transform="translate(68.610994,-83.048757)"
+       xml:space="preserve"
+       style="font-size:3.52777px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;white-space:pre;inline-size:28.3792;stroke-width:0.264583"
+       x="47.800678"
+       y="121.32094"
+       type="iPort" 
+       name="transitionin" 
+       model="toasting" 
+       class="svg-label"><tspan       
+         x="47.800678"
+         y="121.32094"><tspan
+           style="font-size:3.52777px;stroke-width:0.264583"></tspan></tspan><tspan
+         x="47.800678"
+         y="125.73065"><tspan
+           style="font-size:3.52777px;stroke-width:0.264583">transitionIn</tspan></tspan>
+    </text>
+    <text
+       transform="translate(113.99539,-56.925127)"
+       xml:space="preserve"
+       style="font-size:3.52777px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;white-space:pre;inline-size:28.3792;stroke-width:0.264583"
+       x="47.800678"
+       y="121.32094"
+       type="oPort" 
+       name="transitionout" 
+       model="toasting" 
+       class="svg-label"><tspan
+         x="47.800678"
+         y="121.32094"><tspan
+           style="font-size:3.52777px;stroke-width:0.264583"></tspan></tspan><tspan
+         x="47.800678"
+         y="125.73065"><tspan
+           style="font-size:3.52777px;stroke-width:0.264583">transitionOut</tspan></tspan>
+    </text>
+
+    <text y="106.89353" x="146.16998" class="svg-label">ThermostatOff
+    </text>
+    <circle
+       cy="106.71437"
+       cx="158.99194"
+       type="atomic" 
+       name="thermostatoff"
+       class="svg-model"
+       style="fill:none;stroke:#000000;stroke-width:0.264999"
+       r="15.875" />    
+    <text
+       type="iPort" 
+       name="transitionin" 
+       model="thermostatoff" 
+       class="svg-label"  
+       y="121.32094"
+       x="47.800678"
+       style="font-size:3.52777px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;white-space:pre;inline-size:28.3792;stroke-width:0.264583"
+       xml:space="preserve"
+       transform="translate(114.84862,-35.341146)"><tspan
+         x="47.800678"
+         y="121.32094"><tspan
+           style="font-size:3.52777px;stroke-width:0.264583"></tspan></tspan><tspan
+         x="47.800678"
+         y="125.73065"><tspan
+           style="font-size:3.52777px;stroke-width:0.264583">transitionIn</tspan></tspan>
+    </text>
+    <text
+       transform="translate(67.94282,-21.844035)"
+       x="47.800678"
+       y="121.32094"
+       type="oPort" 
+       name="transitionout" 
+       model="thermostatoff" 
+       class="svg-label">transitionOut</tspan></tspan>
+    </text>
+   
+  
+    <path
+       type="link" modelA="Idle" portA="transitionOut" modelB="SetRegulator" portB="transitionIn"
+       d="m 59.868371,90.839366 2e-6,-29.795827"
+       class="svg-path"
+       style="marker-end:url(#marker1042)" />
+    <path
+       type="link" modelA="SetRegulator" portA="transitionOut" modelB="Toasting" portB="transitionIn" class="svg-path"
+       d="M 75.743373,45.168539 H 143.15037"
+       class="svg-path"
+       style="marker-end:url(#marker2843)" />
+    <path
+       type="link" modelA="Toasting" portA="transitionOut" modelB="ThermostatOff" portB="transitionIn" class="svg-path"
+       d="m 159.02537,61.043539 -0.0334,29.795827"
+       class="svg-path"
+       style="marker-end:url(#marker2779)" />
+    <path
+       type="link" modelA="ThermostatOff" portA="transitionOut" modelB="Idle" portB="transitionIn" class="svg-path"
+       d="M 143.11695,106.71437 H 75.743371"
+       class="svg-path"
+       style="marker-end:url(#marker1002)" />
+  </g>
+</svg>

@@ -1,0 +1,49 @@
+{
+    "name": "ToasterLOG",
+    "simulator": "CDpp",
+    "type": "DEVS",
+    "models": [{
+            "name": "idle",
+            "type": "atomic",
+            "ports": [{
+                    "name": "transitionin",
+                    "type": "input"
+                },{
+                    "name": "transitionout",
+                    "type": "output"
+                }]
+        },{
+            "name": "setregulator",
+            "type": "atomic",
+            "ports": [{
+                    "name": "transitionin",
+                    "type": "input"
+                },{
+                    "name": "transitionout",
+                    "type": "output"
+                }]
+        },{
+            "name": "toasting",
+            "type": "atomic",
+            "ports": [{
+                    "name": "transitionin",
+                    "type": "input"
+                },{
+                    "name": "transitionout",
+                    "type": "output"
+                }]
+        },{
+            "name": "thermostatoff",
+            "type": "atomic",
+            "ports": [{
+                    "name": "transitionin",
+                    "type": "input"
+                },{
+                    "name": "transitionout",
+                    "type": "output"
+                }]
+        }
+    ],
+    "size": 7,
+    "palette": null
+}

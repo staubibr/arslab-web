@@ -1,0 +1,10 @@
+Y,00:00:13:000,Idle,transitionOut,top,SetRegulator
+Y,00:00:23:000,SetRegulator,transitionOut,top,Toasting
+Y,00:00:23:000,SetRegulator,transitionOut,top,Toasting
+Y,00:00:43:000,Toasting,transitionOut,top,ThermostatOff
+Y,00:00:53:000,ThermostatOff,transitionOut,Idle,Idle
+Y,00:01:03:000,Idle,transitionOut,SetRegulator,SetRegulator
+Y,00:01:13:000,SetRegulator,transitionOut,Idle,Toasting
+Y,00:01:13:000,SetRegulator,transitionOut,Toasting,Toasting
+Y,00:01:23:000,Toasting,transitionOut,ThermostatOff,ThermostatOff
+Y,00:01:33:000,ThermostatOff,transitionOut,Idle,Idle

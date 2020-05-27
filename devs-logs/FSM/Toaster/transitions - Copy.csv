@@ -1,0 +1,68 @@
+Y,00:00:10:000,input_reader,input_reader,basic_models,On,top
+Y,00:00:10:000,top,top,ExtEventIn,On,Idle
+Y,00:00:10:000,top,top,ExtEventIn,On,SetRegulator
+Y,00:00:10:000,top,top,ExtEventIn,On,Toasting
+Y,00:00:10:000,top,top,ExtEventIn,On,ThermostatOff
+Y,00:00:13:000,Idle,Idle,stateOutput,SwitchedOn,top
+Y,00:00:13:000,top,top,OutputIdle,SwitchedOn,top
+Y,00:00:13:000,Idle,Idle,transitionOut,SetRegulator,SetRegulator
+Y,00:00:20:000,input_reader,input_reader,basic_models,Regulator1,top
+Y,00:00:20:000,top,top,ExtEventIn,Regulator1,Idle
+Y,00:00:20:000,top,top,ExtEventIn,Regulator1,SetRegulator
+Y,00:00:20:000,top,top,ExtEventIn,Regulator1,Toasting
+Y,00:00:20:000,top,top,ExtEventIn,Regulator1,ThermostatOff
+Y,00:00:23:000,SetRegulator,SetRegulator,stateOutput,Set To Regulator Level 1,top
+Y,00:00:23:000,top,top,OutputSetRegulator,Set To Regulator Level 1,top
+Y,00:00:23:000,SetRegulator,SetRegulator,transitionOut,Toasting,Idle
+Y,00:00:23:000,SetRegulator,SetRegulator,transitionOut,Toasting,Toasting
+Y,00:00:40:000,input_reader,input_reader,basic_models,TimerOut,top
+Y,00:00:40:000,top,top,ExtEventIn,TimerOut,Idle
+Y,00:00:40:000,top,top,ExtEventIn,TimerOut,SetRegulator
+Y,00:00:40:000,top,top,ExtEventIn,TimerOut,Toasting
+Y,00:00:40:000,top,top,ExtEventIn,TimerOut,ThermostatOff
+Y,00:00:43:000,Toasting,Toasting,stateOutput,Toasting done,top
+Y,00:00:43:000,top,top,OutputToasting,Toasting done,top
+Y,00:00:43:000,Toasting,Toasting,transitionOut,ThermostatOff,ThermostatOff
+Y,00:00:50:000,input_reader,input_reader,basic_models,SwitchOff,top
+Y,00:00:50:000,top,top,ExtEventIn,SwitchOff,Idle
+Y,00:00:50:000,top,top,ExtEventIn,SwitchOff,SetRegulator
+Y,00:00:50:000,top,top,ExtEventIn,SwitchOff,Toasting
+Y,00:00:50:000,top,top,ExtEventIn,SwitchOff,ThermostatOff
+Y,00:00:53:000,ThermostatOff,ThermostatOff,stateOutput,Switching Off the Toaster,top
+Y,00:00:53:000,top,top,OutputThermostatOff,Switching Off the Toaster,top
+Y,00:00:53:000,ThermostatOff,ThermostatOff,transitionOut,Idle,Idle
+Y,00:01:00:000,input_reader,input_reader,basic_models,On,top
+Y,00:01:00:000,top,top,ExtEventIn,On,Idle
+Y,00:01:00:000,top,top,ExtEventIn,On,SetRegulator
+Y,00:01:00:000,top,top,ExtEventIn,On,Toasting
+Y,00:01:00:000,top,top,ExtEventIn,On,ThermostatOff
+Y,00:01:03:000,Idle,Idle,stateOutput,SwitchedOn,top
+Y,00:01:03:000,top,top,OutputIdle,SwitchedOn,top
+Y,00:01:03:000,Idle,Idle,transitionOut,SetRegulator,SetRegulator
+Y,00:01:10:000,input_reader,input_reader,basic_models,Regulator2,top
+Y,00:01:10:000,top,top,ExtEventIn,Regulator2,Idle
+Y,00:01:10:000,top,top,ExtEventIn,Regulator2,SetRegulator
+Y,00:01:10:000,top,top,ExtEventIn,Regulator2,Toasting
+Y,00:01:10:000,top,top,ExtEventIn,Regulator2,ThermostatOff
+Y,00:01:13:000,SetRegulator,SetRegulator,stateOutput,Set To Regulator Level 2,top
+Y,00:01:13:000,top,top,OutputSetRegulator,Set To Regulator Level 2,top
+Y,00:01:13:000,SetRegulator,SetRegulator,transitionOut,Toasting,Idle
+Y,00:01:13:000,SetRegulator,SetRegulator,transitionOut,Toasting,Toasting
+Y,00:01:20:000,input_reader,input_reader,basic_models,TimerOut,top
+Y,00:01:20:000,top,top,ExtEventIn,TimerOut,Idle
+Y,00:01:20:000,top,top,ExtEventIn,TimerOut,SetRegulator
+Y,00:01:20:000,top,top,ExtEventIn,TimerOut,Toasting
+Y,00:01:20:000,top,top,ExtEventIn,TimerOut,ThermostatOff
+Y,00:01:23:000,Toasting,Toasting,stateOutput,Toasting done,top
+Y,00:01:23:000,top,top,OutputToasting,Toasting done,top
+Y,00:01:23:000,Toasting,Toasting,transitionOut,ThermostatOff,ThermostatOff
+Y,00:01:30:000,input_reader,input_reader,basic_models,Regulator4,top
+Y,00:01:30:000,top,top,ExtEventIn,Regulator4,Idle
+Y,00:01:30:000,top,top,ExtEventIn,Regulator4,SetRegulator
+Y,00:01:30:000,top,top,ExtEventIn,Regulator4,Toasting
+Y,00:01:30:000,top,top,ExtEventIn,Regulator4,ThermostatOff
+Y,00:01:33:000,ThermostatOff,ThermostatOff,stateOutput,Not a Valid Input,top
+Y,00:01:33:000,ThermostatOff,ThermostatOff,errorOut,Invalid Input,top
+Y,00:01:33:000,top,top,ExtErrorOut,Invalid Input,top
+Y,00:01:33:000,top,top,OutputThermostatOff,Not a Valid Input,top
+Y,00:01:33:000,ThermostatOff,ThermostatOff,transitionOut,Idle,Idle
