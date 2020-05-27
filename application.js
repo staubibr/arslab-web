@@ -210,22 +210,16 @@ export default class Main extends Templated {
 		if (widget == "diagram") {			
 			this.current.auto = new DiagramAuto(this.Elem("diagram"), this.simulation, { clickEnabled:false });
 		}
-		else if (widget === "grid") {
-			var layers = [];
-			
-			for (var z = 0; z < this.simulation.Dimensions.z; z++) {
-				this.simulation.models[0].ports.forEach(port => {
-					layers.push({ z:z, ports:[port] });
-				}); 
-			}
-			
+		else if (widget === "grid") {			
 			// TODO : Always only one model in cell-devs?			
 			var options = { 
 				clickEnabled:false,
 				columns:this.settings.Get("grid", "columns"), 
 				spacing:this.settings.Get("grid", "spacing"), 
-				layers:layers
+				layers:this.settings.Get("grid", "layers")
 			}
+			
+			if (!options.layers) options.layers = this.simulation.LayersAndPorts();
 			
 			this.current.auto = new GridAuto(this.Elem("grid"), this.simulation, options);
 		}
