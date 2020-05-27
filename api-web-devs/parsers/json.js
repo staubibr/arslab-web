@@ -88,7 +88,7 @@ export class TransitionDEVS extends Transition {
 	}
 
 	static FromCSV(csv) {
-		return new TransitionDEVS(csv[0], csv[1], csv[2], csv[3], csv[4], +csv[5]);
+		return new TransitionDEVS(csv[0], csv[1], csv[2], csv[3], csv[4], csv[5]);
 	}
 }
 

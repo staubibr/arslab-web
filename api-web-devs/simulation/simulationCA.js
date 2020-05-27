@@ -1,7 +1,7 @@
 'use strict';
 
 import Simulation from './simulation.js';
-import Frame from './frame.js';
+import FrameCA from './frameCA.js';
 import TransitionCA from './transitionCA.js';
 import StateCA from './stateCA.js';
 import Palette from './palettes/basic.js';
@@ -47,7 +47,7 @@ export default class SimulationCA extends Simulation {
 		// build frames from flat transitions list		
 		for (var i = 0; i < json.transitions.length; i++) {
 			var t = json.transitions[i];
-			var f = simulation.Index(t.time) || simulation.AddFrame(new Frame(t.time));
+			var f = simulation.Index(t.time) || simulation.AddFrame(new FrameCA(t.time));
 			
 			var add = new TransitionCA(t.type, t.model, t.coord, t.port, t.value, t.destination);
 			

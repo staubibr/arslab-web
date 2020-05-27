@@ -183,16 +183,7 @@ input[type=range]:disabled::-webkit-slider-thumb{
     font-weight: bold !important;
 }
 
-.diagram-container rect.highlighted {
-	/*stroke-width: 1px !important;*/
-}
-
-.diagram-container path.highlighted {
-	/*stroke-width: 0.5px !important;*/
-}
-
-.diagram-container path.highlighted.X,
-.diagram-container rect.highlighted.X {
+.diagram-container .highlighted.X:not(text) {
     stroke: #1e94c3  !important;
 }
 
@@ -201,8 +192,7 @@ input[type=range]:disabled::-webkit-slider-thumb{
     fill: #1e94c3  !important;
 }
 
-.diagram-container rect.highlighted.Y,
-.diagram-container path.highlighted.Y {
+.diagram-container .highlighted.Y:not(text) {
     stroke: #d6b00a  !important;
 }
 
@@ -211,8 +201,7 @@ input[type=range]:disabled::-webkit-slider-thumb{
     fill: #d6b00a  !important;
 }
 
-.diagram-container rect.highlighted.X.Y,
-.diagram-container path.highlighted.X.Y {
+.diagram-container .highlighted.X.Y:not(text) {
     stroke: #27ad2f	!important;
 }
 
@@ -221,7 +210,7 @@ input[type=range]:disabled::-webkit-slider-thumb{
     fill: #27ad2f  !important;
 }
 
-.diagram-container rect.selected {
+.diagram-container .selected:not(text) {
 	/*stroke-width: 1px !important;*/
     stroke: red  !important;
 }

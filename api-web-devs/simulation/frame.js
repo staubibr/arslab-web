@@ -1,39 +1,24 @@
 'use strict';
 
-export default class Frame { 
+export default class FrameCA { 
 
+	get Transitions() { return this.transitions; }
+	
+	get Time() { return this.time; }
+	
 	constructor(time) {
 		this.time = time;
 		this.transitions = [];
-		this.index = {};
 	}
 	
 	AddTransition(t) {
 		this.transitions.push(t);
 		
-		if (!this.index.hasOwnProperty(t.Z)) this.index[t.Z] = {};
-		
-		if (!this.index[t.Z].hasOwnProperty(t.Port)) this.index[t.Z][t.Port] = [];
-		
-		this.index[t.Z][t.Port].push(t);
-		
 		return t;
 	}
 	
-	Transitions() {
-		return this.transitions;
-	}
-	
-	TransitionsByIndex(z, port) {
-		return this.index[z] && this.index[z][port] || [];
-	}
-		
-	Reverse () {
-		var reverse = new Frame(this.time)
-		
-		this.transitions.forEach((t) => reverse.AddTransition(t.Reverse()));
-		
-		return reverse;
+	Reverse() {
+		throw new Error("function Reverse must be defined in child class.");
 	}
 	
 	Difference(state) {

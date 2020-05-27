@@ -1,7 +1,7 @@
 'use strict';
 
 import Simulation from './simulation.js';
-import Frame from './frame.js';
+import FrameDEVS from './frameDEVS.js';
 import TransitionDEVS from './transitionDEVS.js';
 import StateDEVS from './stateDEVS.js';
 
@@ -37,7 +37,7 @@ export default class SimulationDEVS extends Simulation {
 		// build frames from flat transitions list		
 		for (var i = 0; i < json.transitions.length; i++) {
 			var t = json.transitions[i];
-			var f = simulation.Index(t.time) || simulation.AddFrame(new Frame(t.time));
+			var f = simulation.Index(t.time) || simulation.AddFrame(new FrameDEVS(t.time));
 			
 			var add = new TransitionDEVS(t.type, t.model, t.port, t.value, t.destination);
 			
