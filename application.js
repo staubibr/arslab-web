@@ -101,17 +101,18 @@ export default class Main extends Templated {
 		this.simulation.On("Move", this.OnSimulation_Move.bind(this));
 		this.simulation.On("Jump", this.OnSimulation_Move.bind(this));
 		
+		var ports = this.simulation.models[0].ports;
+		
 		var options = { 
 			clickEnabled:false,
 			columns : this.settings.Get("grid", "columns"), 
 			spacing : this.settings.Get("grid", "spacing"), 
-			ports : ["out"],
-			z: [0] 
+			layers : [{ z:0, ports:ports }]
 		}
 		
 		this.grid = new GridAuto(this.Elem("grid"), this.simulation, options);
 		
-		var size = this.settings.GridSize(this.simulation);
+		var size = this.settings.GridSize(this.simulation, 1);
 		var geom = Dom.Geometry(this.Elem("body"));
 		
 		this.Elem("grid-container").style.width = size.width + "px";
