@@ -72,11 +72,11 @@ a {
 button {
     height: 30px;
     width: 30px;
-	background-color: #198CFF;
+	background-color: #a00000;
     color: #eee;
     font-size: 15px;
     border: none;
-    border-bottom: solid 2px #0051A3;
+    border-bottom: solid 2px #460202;
 	border-radius: 4px;
 	cursor: pointer;
 }
@@ -95,7 +95,7 @@ button:disabled {
 }
 
 button:not(:disabled):hover {
-  background: #0051A3;
+  background: #460202;
   transition: all .2s ease;
 }
 
@@ -175,6 +175,11 @@ button:not(:disabled):hover {
 	display:none;
 }
 
+.playback label {
+    color: #000000;
+}
+
+
 .popup button.close {
     border: none;
 	outline: none;
@@ -226,4 +231,24 @@ main .grid-widget-container {
 .tooltip .legend, .tooltip .legend rect {
 	width:12px;
 	height:2px;
+}
+
+.consent {
+	text-align:center;
+}
+
+.consent .consent-container {
+    max-width: 350px;
+    display: inline-block;
+}
+
+.consent .consent-container .consent-message {
+    font-size: 1.1em;
+    font-weight: bold;
+    margin: 10px;
+}
+
+.consent .consent-container .consent-button {
+    width: 100px;
+    margin: 10px;
 }

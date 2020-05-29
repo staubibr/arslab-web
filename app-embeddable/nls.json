@@ -43,5 +43,11 @@
 	},
 	"Grid_Tooltip_Title" : {
 		"en" : "The state of model ({0}, {1}, {2}) is {3}."		
+	},
+	"Consent_Size" : {
+		"en" : "Visualizing the results for this model will require downloading {0}Mb of data."
+	},
+	"Consent_Button" : {
+		"en" : "Proceed"
 	}
 }

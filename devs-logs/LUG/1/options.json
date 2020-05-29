@@ -5,12 +5,17 @@
         "aspect": true
     },
     "grid": {
-        "columns": 2,
-        "width": 500,
-        "height": 500,
+        "columns": 1,
+        "width": 400,
+        "height": 400,
         "spacing": 10,
         "showGrid": false,
-        "aspect": true
+        "aspect": true,
+        "layers": [{
+                "z": 0,
+                "ports": ["out"]
+            }
+        ]
     },
     "playback": {
         "speed": 25,
