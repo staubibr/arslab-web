@@ -239,7 +239,10 @@ main .grid-widget-container {
 
 .consent .consent-container {
     max-width: 350px;
-    display: inline-block;
+    left: 50%;
+    top: 50%;
+    position: absolute;
+    transform: translate(-50%, -50%);
 }
 
 .consent .consent-container .consent-message {
