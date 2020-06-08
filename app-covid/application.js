@@ -1,10 +1,10 @@
 'use strict';
 
-import Core from '../api-basic/tools/core.js';
-import Dom from '../api-basic/tools/dom.js';
-import Net from '../api-basic/tools/net.js';
-import Templated from '../api-basic/components/templated.js';
-import Tooltip from '../api-basic/ui/tooltip.js';
+import Core from '../api-web-devs/tools/core.js';
+import Dom from '../api-web-devs/tools/dom.js';
+import Net from '../api-web-devs/tools/net.js';
+import Templated from '../api-web-devs/components/templated.js';
+import Tooltip from '../api-web-devs/ui/tooltip.js';
 import oSettings from '../api-web-devs/components/settings.js';
 import Standardized from '../api-web-devs/parsers/standardized.js';
 import SimulationCA from '../api-web-devs/simulation/simulationCA.js';
@@ -65,7 +65,7 @@ export default class Main extends Templated {
 	}
 	
 	OnLoad_Click(ev) {
-		this.Elem("playback").Stop();
+		this.Widget("playback").Stop();
 		
 		Dom.RemoveCss(this.Elem("wait"), "hidden");
 		Dom.AddCss(this.Elem("simulation"), "hidden");
@@ -110,9 +110,9 @@ export default class Main extends Templated {
 			layers : [{ z:0, ports:ports }]
 		}
 		
-		this.grid = new GridAuto(this.Elem("grid"), this.simulation, options);
+		this.grid = new GridAuto(this.Widget("grid"), this.simulation, options);
 		
-		var size = this.settings.GridSize(this.simulation, 1);
+		var size = this.settings.CanvasSize(this.simulation, 1);
 		var geom = Dom.Geometry(this.Elem("body"));
 		
 		this.Elem("grid-container").style.width = size.width + "px";
@@ -122,7 +122,7 @@ export default class Main extends Templated {
 		
 		this.grid.Redraw();
 		
-		this.Elem("playback").Initialize(this.simulation, this.settings);
+		this.Widget("playback").Initialize(this.simulation, this.settings);
 		
 		if (!this.chart) {
 			this.chart = new Chart(this.Elem("chart"));
@@ -130,8 +130,6 @@ export default class Main extends Templated {
 			this.chart.On("mousemove", this.OnChart_MouseMove.bind(this));
 			this.chart.On("mouseout", this.OnChart_MouseOut.bind(this));
 		}
-		
-		// else this.chart.Empty();
 		
 		var data = this.GetChartData(this.simulation.frames);
 		var dates = this.GetDates(this.simulation.frames);

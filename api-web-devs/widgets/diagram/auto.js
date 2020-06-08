@@ -1,8 +1,8 @@
 'use strict';
 
-import Core from '../../../api-basic/tools/core.js';
-import Dom from '../../../api-basic/tools/dom.js';
-import Tooltip from '../../../api-basic/ui/tooltip.js';
+import Core from '../../tools/core.js';
+import Dom from '../../tools/dom.js';
+import Tooltip from '../../ui/tooltip.js';
 import Diagram from './diagram.js';
 import Automator from '../../components/automator.js';
 

@@ -1,8 +1,8 @@
 'use strict';
 
-import Core from '../../api-basic/tools/core.js';
-import Evented from '../../api-basic/components/evented.js';
-import ChunkReader from '../../api-basic/components/chunkReader.js';
+import Core from '../tools/core.js';
+import Evented from '../components/evented.js';
+import ChunkReader from '../components/chunkReader.js';
 
 export default class Parser extends Evented { 
 

@@ -1,8 +1,8 @@
 'use strict';
 
-import Core from '../../api-basic/tools/core.js';
-import Dom from '../../api-basic/tools/dom.js';
-import Templated from '../../api-basic/components/templated.js';
+import Core from '../tools/core.js';
+import Dom from '../tools/dom.js';
+import Templated from '../components/templated.js';
 
 export default Core.Templatable("Widget.Playback", class Playback extends Templated { 
 
@@ -10,13 +10,22 @@ export default Core.Templatable("Widget.Playback", class Playback extends Templa
 	
 	get Interval() { return 1000 / this.settings.Get("playback", "speed") }
 
-	constructor(id) {
-		super(id);
+	set Recorder(value) {
+		this.recorder = value;
+		
+		Dom.ToggleCss(this.Elem("record"), "hidden", !value);
+	}
+	
+	get Recording() {
+		return (this.recorder) ? this.recorder.Recording : false;
+	}
+
+	constructor(node) {
+		super(node);
 		
 		this.current = 0;
 		this.interval = null;
 		this.direction = null;
-		this.recording = false;
 		
 		this.Enable(false);
 		
@@ -81,10 +90,24 @@ export default Core.Templatable("Widget.Playback", class Playback extends Templa
 	}
 	
 	Play(loop, interval) {		
+		this.direction = "play";
+		
 		this.interval = setInterval(function(){ 
 			if (this.current < this.max) this.GoToNext();
 		
 			else if (loop) this.GoTo(this.min);
+			
+			else this.Stop();
+		}.bind(this), interval);
+	}
+	
+	Rewind(loop, interval) {
+		this.direction = "rewind";
+		
+		this.interval = setInterval(function(){ 
+			if (this.current > this.min) this.GoToPrevious();
+		
+			else if (loop) this.GoTo(this.max);
 			
 			else this.Stop();
 		}.bind(this), interval);
@@ -125,23 +148,13 @@ export default Core.Templatable("Widget.Playback", class Playback extends Templa
 	onRewindClick_Handler(ev) {
 		if (this.Stop() == "rewind") return;
 		
-		this.direction = "rewind";
-		
 		Dom.SetCss(this.Elem("rewind"), "fas fa-pause");
 		
-		this.interval = setInterval(function(){ 
-			if (this.current > this.min) this.GoToPrevious();
-		
-			else if (this.IsLooping) this.GoTo(this.max);
-			
-			else this.Stop();
-		}.bind(this), this.Interval);
+		this.Rewind(this.IsLooping, this.Interval);
 	}
 	
 	onPlayClick_Handler(ev) {
 		if (this.Stop() == "play") return;
-		
-		this.direction = "play";
 		
 		Dom.SetCss(this.Elem("play"), "fas fa-pause");
 		
@@ -162,16 +175,19 @@ export default Core.Templatable("Widget.Playback", class Playback extends Templa
 		this.GoTo(this.max);
 	}
 	
-	onRecordClick_Handler(ev) {		
-		this.recording = !this.recording;
-		
-		if (this.recording) this.simulation.StartRecord();
-		
-		else this.simulation.StopRecord();
-		
-		var css = this.recording ? "fas fa-square record" : "fas fa-circle record";
-		
-		Dom.SetCss(this.Elem("record"), css);
+	onRecordClick_Handler(ev) {
+		if (this.recorder.Recording) {
+			Dom.SetCss(this.Elem("record"), "fas fa-circle record");
+			
+			this.recorder.Stop().then(e => {
+				this.recorder.Download(this.simulation.Name);
+			});
+		}
+		else {
+			Dom.SetCss(this.Elem("record"), "fas fa-square record");
+			
+			this.recorder.Start();
+		}
 	}
 	
 	onSliderChange_Handler(ev) {
@@ -196,7 +212,7 @@ export default Core.Templatable("Widget.Playback", class Playback extends Templa
 			      "</div>" + 
 			      "<input handle='slider' class='slider' title='nls(Playback_Seek)' type='range' min='0' max='1'>" +
 			      "<label handle='label' class='label'>00:00:00:00</label>" + 
-			      "<button handle='record' title='nls(Playback_Record)' class='fas fa-circle record'></button>" +
+			      "<button handle='record' title='nls(Playback_Record)' class='fas fa-circle record hidden'></button>" +
 		       "</div>" ;
 	}
 });

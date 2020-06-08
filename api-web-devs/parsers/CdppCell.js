@@ -1,6 +1,6 @@
 'use strict';
 
-import Core from '../../api-basic/tools/core.js';
+import Core from '../tools/core.js';
 import Parser from "./parser.js";
 
 import { Simulation, TransitionCA, PaletteBucket } from './json.js';

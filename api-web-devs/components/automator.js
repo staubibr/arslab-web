@@ -1,8 +1,8 @@
 'use strict';
 
-import Core from '../../api-basic/tools/core.js';
-import Dom from '../../api-basic/tools/dom.js';
-import Evented from '../../api-basic/components/evented.js';
+import Core from '../tools/core.js';
+import Dom from '../tools/dom.js';
+import Evented from '../components/evented.js';
 
 export default class Automator { 
 	

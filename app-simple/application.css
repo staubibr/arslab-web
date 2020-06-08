@@ -121,23 +121,23 @@ button:not(:disabled):hover {
 }
 
 /* Style for body of application */
-.body-container {
+.body {
     text-align: center;
 	max-width: 1080px;
 	overflow-x : auto;
 }
 
-.body-container, .button-column {
+.body, .button-column {
 	vertical-align: top;
 	margin : 15px 5px;
 }
 
-.body-container .save,
-.body-container .box {
+.body .save,
+.body .box {
     width: 100%;
 }
 
-.body-container .save {
+.body .save {
 	margin-top : 10px;
 }
 
@@ -165,14 +165,11 @@ button:not(:disabled):hover {
 
 .playback {
 	text-align:center; 
+	margin-top:10px;
 }
 
 .playback .controls button:not(:last-child) {
     border-right-color: #eee;
-}
-
-.playback .record {
-	display:none;
 }
 
 .popup button.close {
@@ -209,10 +206,8 @@ main .dropzone-container {
 	width : 600px;
 }
 
-main.dropzone-visible .viz-container,
-main:not(.diagram-visible) .diagram-widget-container,
-main:not(.grid-visible) .grid-widget-container,
-main:not(.dropzone-visible) .dropzone-container {
+.viz-container:not(.DEVS) .diagram-widget-container,
+.viz-container:not(.Cell-DEVS) .grid-widget-container {
 	display:none;
 }
 

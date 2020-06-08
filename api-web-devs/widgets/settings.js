@@ -1,8 +1,8 @@
 'use strict';
 
-import Core from '../../api-basic/tools/core.js';
-import Dom from '../../api-basic/tools/dom.js';
-import Templated from '../../api-basic/components/templated.js';
+import Core from '../tools/core.js';
+import Dom from '../tools/dom.js';
+import Templated from '../components/templated.js';
 import oSettings from '../../api-web-devs/components/settings.js';
 
 export default Core.Templatable("Widget.Settings", class Settings extends Templated { 

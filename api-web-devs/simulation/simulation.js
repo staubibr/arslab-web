@@ -1,11 +1,13 @@
 'use strict';
 
-import Evented from '../../api-basic/components/evented.js';
+import Evented from '../components/evented.js';
 import Palette from './palettes/basic.js';
 import Cache from './cache.js';
 import Frame from './frame.js';
 
 export default class Simulation extends Evented { 
+	
+	get Name() { return this.name; }
 	
 	get State() { return this.state; }
 
@@ -105,14 +107,6 @@ export default class Simulation extends Evented {
 		this.state.RollbackTransitions(frame);
 		
 		this.Emit("Move", { frame : reverse, direction:"previous" });
-	}
-	
-	StartRecord() {
-		this.Emit("RecordStart");
-	}
-	
-	StopRecord() {
-		this.Emit("RecordStop");
 	}
 	
 	Save() {

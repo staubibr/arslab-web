@@ -1,9 +1,9 @@
 'use strict';
 
-import Core from '../api-basic/tools/core.js';
-import Net from '../api-basic/tools/net.js';
-import Dom from '../api-basic/tools/dom.js';
-import Templated from '../api-basic/components/templated.js';
+import Core from '../api-web-devs/tools/core.js';
+import Net from '../api-web-devs/tools/net.js';
+import Dom from '../api-web-devs/tools/dom.js';
+import Templated from '../api-web-devs/components/templated.js';
 
 export default class Consent extends Templated { 
 

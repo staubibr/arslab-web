@@ -163,10 +163,6 @@ main .grid-widget-container {
     border-right-color: #eee;
 }
 
-.playback .record {
-	display:none;
-}
-
 .row.parameter label, .row.parameter button {
 	margin-left : 20px;
 }

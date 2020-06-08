@@ -1,6 +1,6 @@
 'use strict';
 
-import Core from '../../../api-basic/tools/core.js';
+import Core from '../../tools/core.js';
 import Basic from './basic.js';
 
 const SELECTED_COLOR = "red";

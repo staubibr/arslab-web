@@ -51,6 +51,7 @@ export default class Templated extends Evented {
 		var named = this.template.querySelectorAll("[handle]");
 		
 		this.nodes = {};
+		this.widgets = {};
 		
 		// Can't use Array ForEach here since named is a NodeList, not an array
 		for (var i = 0; i < named.length; i++) { 
@@ -58,6 +59,12 @@ export default class Templated extends Evented {
 			
 			this.nodes[name] = named[i];
 		}
+	}
+	
+	AddWidget(id, widget) {
+		if (this.widgets[id]) throw new Error(`Widget with id ${id} already defined.`);
+		
+		this.widgets[id] = widget;
 	}
 	
 	BuildSubWidgets() {		
@@ -70,7 +77,7 @@ export default class Templated extends Evented {
 			var widget = new module(nodes[i]);
 			var handle = Dom.GetAttribute(widget.container, "handle");
 			
-			if (handle) this.nodes[handle] = widget;
+			if (handle) this.widgets[handle] = widget;
 		}
 	}
 	
@@ -107,5 +114,8 @@ export default class Templated extends Evented {
 		return this.nodes[id];
 	}
 	
+	Widget(id) {
+		return this.widgets[id];
+	}
 	// TODO : Build a root function
 }

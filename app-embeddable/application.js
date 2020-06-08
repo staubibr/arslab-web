@@ -1,22 +1,13 @@
 'use strict';
 
-import Core from '../api-basic/tools/core.js';
-import Net from '../api-basic/tools/net.js';
-import Dom from '../api-basic/tools/dom.js';
-import Templated from '../api-basic/components/templated.js';
-
+import Core from '../api-web-devs/tools/core.js';
+import Templated from '../api-web-devs/components/templated.js';
 import oSettings from '../api-web-devs/components/settings.js';
-
 import Standardized from '../api-web-devs/parsers/standardized.js'
-
 import SimulationDEVS from '../api-web-devs/simulation/simulationDEVS.js'
 import SimulationCA from '../api-web-devs/simulation/simulationCA.js'
-
 import Playback from '../api-web-devs/widgets/playback.js';
-import DiagramAuto from '../api-web-devs/widgets/diagram/auto.js'
-import Diagram from '../api-web-devs/widgets/diagram/diagram.js'
-import GridAuto from '../api-web-devs/widgets/grid/auto.js'
-import Grid from '../api-web-devs/widgets/grid/grid.js'
+import MultiView from '../api-web-devs/widgets/multiView.js'
 
 export default class Main extends Templated { 
 
@@ -24,8 +15,6 @@ export default class Main extends Templated {
 		super(node);
 		
 		this.simulation = null;
-		
-		this.current = null;
 		
 		this.settings = oSettings.FromJson(options);
 		
@@ -38,71 +27,52 @@ export default class Main extends Templated {
 	
 	OnParser_Parsed(json) {
 		var clss = (json.type == "DEVS") ? SimulationDEVS : SimulationCA;
-		
+
 		this.simulation = clss.FromJson(json);
 		
 		this.simulation.Initialize(this.settings.Get("playback", "cache"));
 		
-		var widget = (this.simulation.type == "DEVS") ? "diagram" : "grid";
-		
-		this.SwitchWidget(widget);
-		
-		this.Resize(widget);
-		
-		this.current.Redraw();
-		
-		this.Elem("playback").Initialize(this.simulation, this.settings);
-	}
-	
-	Resize(widget, nGrids) {
-		if (widget == "diagram") {
-			var size = this.settings.DiagramSize(this.simulation);
-		}
-		else if (widget == "grid") {
-			var n = this.Elem("grid").layers.length;
-			
-			var size = this.settings.GridSize(this.simulation, n);
+		this.Widget("playback").Initialize(this.simulation, this.settings);
+		this.Widget('multi').Initialize(this.simulation, this.settings);
+
+		if (this.simulation.type == "Cell-DEVS") {
+			var n = this.settings.Get("grid", "layers").length;
+			var size = this.settings.CanvasSize(this.simulation, n);
 		}
 		else {
-			throw new Error("Tried to retrieve size for invalid widget.");
+			var size = this.settings.DiagramSize(this.simulation);
 		}
 		
-		this.Elem("body").style.width = size.width + "px";
-		this.Elem("body").style.height = size.height + "px";
+		size = this.FitSize(size);
+
+		this.Widget("multi").Switch(this.simulation.type);
+		this.Widget("multi").Size = size;
+		this.Widget("multi").Redraw();
 	}
 	
-	SwitchWidget(widget) {		
-		Dom.SetCss(this.Elem("main"), `${widget}-visible`);
+	FitSize(size) {
+		var target = size.width / size.height;
+
+		// 20 for margin, 30 in height for playback
+		var width = document.documentElement.clientWidth - 10;
+		var height = document.documentElement.clientHeight - 40;
+		var ratio = width / height;
 		
-		if (widget == "diagram") {			
-			this.current = new DiagramAuto(this.Elem("diagram"), this.simulation, { clickEnabled:false });
+		if (ratio > target) {
+			height = width / ratio;
+			width = height * target;
 		}
-		else if (widget === "grid") {			
-			var options = { 
-				clickEnabled:false,
-				columns:this.settings.Get("grid", "columns"), 
-				spacing:this.settings.Get("grid", "spacing"), 
-				layers:this.settings.Get("grid", "layers")
-			}
-			
-			if (!options.layers) options.layers = this.simulation.LayersAndPorts();
-			
-			this.current = new GridAuto(this.Elem("grid"), this.simulation, options);
+		else {
+			width = height * ratio;
+			height = width / target;
 		}
+		
+		return { width:width, height:height };
 	}
 	
 	Template() {
 		return	"<main handle='main'>" +
-				    "<div class='centered-row'>" + 
-						"<div class='body-container'>" + 
-						   "<div handle='body' class='body'>" +
-							   "<div handle='viz' class='viz-container'>" +
-								   "<div handle='diagram' widget='Widgets.Diagram' class='diagram-widget-container'></div>" +
-								   "<div handle='grid' widget='Widgets.Grid' class='grid-widget-container'></div>" +
-							   "</div>" +
-						   "</div>" +
-						"</div>" +
-					"</div>" +
+					"<div handle='multi' widget='Widget.MultiView' class='multi'></div>" +
 					"<div handle='playback' widget='Widget.Playback'></div>" +
 				"</main>";
 	}

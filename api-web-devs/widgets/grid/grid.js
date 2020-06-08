@@ -1,15 +1,15 @@
 'use strict';
 
-import Core from '../../../api-basic/tools/core.js';
-import Dom from '../../../api-basic/tools/dom.js';
-import Templated from '../../../api-basic/components/templated.js';
+import Core from '../../tools/core.js';
+import Dom from '../../tools/dom.js';
+import Templated from '../../components/templated.js';
 
 const STROKE_WIDTH = 2;
 const DEFAULT_COLOR = "#fff";
 
 export default Core.Templatable("Widgets.Grid", class Grid extends Templated { 
 
-	get Canvas() { return this.Node("canvas"); }
+	get Canvas() { return this.Elem("canvas"); }
 	
 	set Dimensions(value) { this.dimensions = value; }
 	
@@ -106,7 +106,7 @@ export default Core.Templatable("Widgets.Grid", class Grid extends Templated {
 		this.Elem("canvas").height = this.total.h;	
 	}
 	
-	// TODO : grid shouldn't use simulation object
+	// TODO : grid shouldn't use simulation object maybe?
 	Draw(state, palette, simulation) {
 		if (this.dimensions) this.DrawState(state, palette, simulation);
 		
@@ -122,7 +122,7 @@ export default Core.Templatable("Widgets.Grid", class Grid extends Templated {
 		this.ctx.fillRect(0, 0, this.size.w, this.size.h);
 	}
 	
-	// TODO : grid shouldn't use simulation object
+	// TODO : grid shouldn't use simulation object maybe?
 	DrawState(state, palette, simulation) {
 		for (var i = 0; i < this.layers.length; i++) {			
 			for (var x = 0; x < this.dimensions.x; x++) {
@@ -143,7 +143,7 @@ export default Core.Templatable("Widgets.Grid", class Grid extends Templated {
 		}
 	}
 	
-	// TODO : grid shouldn't use simulation object
+	// TODO : grid shouldn't use simulation object maybe?
 	DrawChanges(frame, palette, simulation) {
 		this.layers.forEach((l, i) => {
 			l.ports.forEach(p => {

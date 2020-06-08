@@ -1,9 +1,9 @@
 'use strict';
 
-import Core from '../../api-basic/tools/core.js';
-import Dom from '../../api-basic/tools/dom.js';
-import Templated from '../../api-basic/components/templated.js';
-import BoxInput from '../../api-basic/ui/box-input-files.js';
+import Core from '../tools/core.js';
+import Dom from '../tools/dom.js';
+import Templated from '../components/templated.js';
+import BoxInput from '../ui/box-input-files.js';
 
 import Zip from '../../api-web-devs/tools/zip.js';
 
@@ -64,7 +64,7 @@ export default Core.Templatable("Widget.Converter", class Converter extends Temp
 		});
 
 		this.Node("parse").On("click", this.onParseButton_Click.bind(this));
-		this.Elem("dropzone").On("change", this.onDropzone_Change.bind(this));
+		this.Widget("dropzone").On("change", this.onDropzone_Change.bind(this));
 	}
 	
 	onDropzone_Change(ev) {

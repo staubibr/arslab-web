@@ -1,8 +1,8 @@
 'use strict';
 
-import Core from '../../../api-basic/tools/core.js';
-import Dom from '../../../api-basic/tools/dom.js';
-import Templated from '../../../api-basic/components/templated.js';
+import Core from '../../tools/core.js';
+import Dom from '../../tools/dom.js';
+import Templated from '../../components/templated.js';
 import DiagramData from './diagramData.js';
 
 export default Core.Templatable("Widgets.Diagram", class Diagram extends Templated { 
@@ -35,7 +35,7 @@ export default Core.Templatable("Widgets.Diagram", class Diagram extends Templat
 	
 	onSvgMouseMove_Handler(ev) {
 		var model = ev.target.getAttribute('name').toLowerCase();
-				
+		
 		this.Emit("MouseMove", { x:ev.pageX, y:ev.pageY , model:model });
 	}
 		

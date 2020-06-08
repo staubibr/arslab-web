@@ -1,4 +1,4 @@
-import Core from '../../api-basic/tools/core.js';
+import Core from '../tools/core.js';
 
 if (!streamSaver) throw new Error("streamSaver is undefined, did you add it as a script?");
 if (!ZIP) throw new Error("zip-stream is undefined, did you add it as a script?");

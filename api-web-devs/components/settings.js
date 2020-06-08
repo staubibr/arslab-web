@@ -1,6 +1,6 @@
 'use strict';
 
-import Evented from '../../api-basic/components/evented.js';
+import Evented from '../components/evented.js';
 
 export default class Settings extends Evented { 
 
@@ -30,7 +30,7 @@ export default class Settings extends Evented {
 		}
 	}
 	
-	GridSize(simulation, nGrids) {
+	CanvasSize(simulation, nGrids) {
 		nGrids = nGrids || simulation.Dimensions.z;
 		
 		var aspect = this.Get("grid", "aspect");
@@ -47,7 +47,7 @@ export default class Settings extends Evented {
 		
 		return { width : width, height : height }
 	}
-		
+	
 	DiagramSize(simulation) {		
 		var aspect = this.Get("diagram", "aspect");
 		var width = this.Get("diagram", "width");

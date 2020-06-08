@@ -1,72 +1,20 @@
 @import url(https://fonts.googleapis.com/css?family=Varela+Round);
 
-html, body, .popup {
+html, body {
+    margin: 0px;
     font-family: sans-serif;
     font-size: 11pt;
 	background : #f9f9f9;
-}
-
-.popup {
-	background-color: #fff;
+    overflow: hidden;
+	height : 100%;
 }
 
 main {
-    margin: 30px auto;
-	min-width: 600px;
-}
-/*
-@media (min-width: 768px) {
-	main {
-		width: 750px;
-	}
-}
-
-@media (min-width: 992px) {
-	main {
-		width: 970px;
-	}
-}
-
-@media (min-width: 1200px) {
-	main {
-		width: 1170px;
-	}
-}
-*/
-h1, h2, h3, .popup .popup-title {
-	font-family: 'Varela Round', sans-serif;
-}
-
-h1, h2 {
-	margin: 0px;
-}
-
-h1 {
-    font-size: 1.5em;
-}
-
-h2 {
-    font-size: 1.3em;
-}
-
-h2 a {
-	color: #198CFF;
-}
-
-h3 {
-    font-size: 1.2em;
-}
-
-.popup button.close, 
-.popup .popup-title,
-.box i, 
-.box label, 
-a {
-    color: #0051A3;
-}
-
-a {
-    text-decoration: none;
+	margin:0px;
+	position:relative;
+	top:50%;
+	left:50%;
+	transform:translate(-50%, -50%);
 }
 
 button {
@@ -88,12 +36,6 @@ button:disabled {
     border-color: #7e7e7e;
 }
 
-.box:hover {
-  background: #9eceff9e;
-  border-color: #0051a3;
-  transition: all .2s ease;
-}
-
 button:not(:disabled):hover {
   background: #460202;
   transition: all .2s ease;
@@ -107,62 +49,7 @@ button:not(:disabled):hover {
 	display:inline-block; 
 }
 
-/* Style for header */
-.links-container {
-	float:right;
-}
-
-.links-container a:hover {
-    border-bottom: solid 3px #898989;
-}
-
-.second-row > * {
-	display: inline-block;
-}
-
 /* Style for body of application */
-.body-container {
-    text-align: center;
-	/*max-width: 1080px;*/
-	overflow-x : auto;
-}
-
-.body-container, .button-column {
-	vertical-align: top;
-	margin : 15px 5px;
-}
-
-.body-container .save,
-.body-container .box {
-    width: 100%;
-}
-
-.body-container .save {
-	margin-top : 10px;
-}
-
-.button-column {
-    height: 100%;
-	width: 30px;
-}
-
-.button-column button {
-	margin-bottom: 6px;
-}
-
-.box {
-    background: #fff;
-	border-color: #198CFF;
-	text-align:center;
-}
-
-.box i, .box label {
-    font-weight: bold;
-    word-wrap: break-word;
-    padding: 0px 20px;
-    box-sizing: border-box;
-}
-
 .playback {
 	text-align:center; 
 }
@@ -171,54 +58,14 @@ button:not(:disabled):hover {
     border-right-color: #eee;
 }
 
-.playback .record {
-	display:none;
-}
-
 .playback label {
     color: #000000;
 }
 
-
-.popup button.close {
-    border: none;
-	outline: none;
-}
-
-.rise-loader ul li {
-    cursor: pointer;
-    font-size: 16px;
-}
-
-.rise-loader ul li:nth-child(even) {
-    background: #eeeeee;
-}
-  
-.rise-loader ul li:hover {
-    background: #ccc;
-}
-
-.popup.popup-converter {
-    max-height: 460px;
-}
-
-.popup.popup-rise {
-	max-height : 350px;
-}
-
-.popup.popup-settings {
-    max-height: 490px;
-}
-
-main .dropzone-container {
-	width : 600px;
-}
-
-main.dropzone-visible .viz-container,
-main:not(.diagram-visible) .diagram-widget-container,
-main:not(.grid-visible) .grid-widget-container,
-main:not(.dropzone-visible) .dropzone-container {
-	display:none;
+main .viz-container {
+    left: 50%;
+    position: relative;
+    transform: translate(-50%);
 }
 
 main .viz-container,
@@ -254,4 +101,9 @@ main .grid-widget-container {
 .consent .consent-container .consent-button {
     width: 100px;
     margin: 10px;
+}
+
+.viz-container:not(.DEVS) .diagram-widget-container,
+.viz-container:not(.Cell-DEVS) .grid-widget-container {
+	display:none;
 }

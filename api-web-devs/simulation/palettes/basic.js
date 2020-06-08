@@ -1,7 +1,7 @@
 'use strict';
 
-import Core from '../../../api-basic/tools/core.js';
-import Evented from '../../../api-basic/components/evented.js';
+import Core from '../../tools/core.js';
+import Evented from '../../components/evented.js';
 
 const SELECTED_COLOR = "red";
 

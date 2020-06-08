@@ -1,9 +1,9 @@
 'use strict';
 
-import Core from '../../api-basic/tools/core.js';
-import Dom from '../../api-basic/tools/dom.js';
-import Net from '../../api-basic/tools/net.js';
-import Templated from '../../api-basic/components/templated.js';
+import Core from '../tools/core.js';
+import Dom from '../tools/dom.js';
+import Net from '../tools/net.js';
+import Templated from '../components/templated.js';
 // import Zip from '../../api-web-devs/tools/zip.js';
 
 export default Core.Templatable("Widget.RiseList", class RiseLoader extends Templated {

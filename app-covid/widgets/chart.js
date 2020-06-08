@@ -1,7 +1,7 @@
 'use strict';
 
-import Core from '../../api-basic/tools/core.js';
-import Evented from '../../api-basic/components/evented.js';
+import Core from '../../api-web-devs/tools/core.js';
+import Evented from '../../api-web-devs/components/evented.js';
 
 export default class Chart extends Evented { 
 
