@@ -51,6 +51,7 @@ button:not(:disabled):hover {
 
 /* Style for body of application */
 .playback {
+    margin-top: 10px;
 	text-align:center; 
 }
 

@@ -55,7 +55,7 @@ export default class Main extends Templated {
 
 		// 20 for margin, 30 in height for playback
 		var width = document.documentElement.clientWidth - 10;
-		var height = document.documentElement.clientHeight - 40;
+		var height = document.documentElement.clientHeight - 50;
 		var ratio = width / height;
 		
 		if (ratio > target) {
