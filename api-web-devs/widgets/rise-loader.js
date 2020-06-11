@@ -32,7 +32,7 @@ export default Core.Templatable("Widget.RiseList", class RiseLoader extends Temp
 			}, {
 				"name": "Classroom CO2",
 				"type" : "Cell-DEVS",
-				"url": path + "/CO2/computer_lab/"
+				"url": path + "/CO2/"
 			}, {
 				"name": "COVID (TR 0.4, DR 0.01)",
 				"type" : "Cell-DEVS",
