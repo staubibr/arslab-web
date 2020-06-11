@@ -1,0 +1,1 @@
+{"name":"WormModelling","simulator":"CDpp","type":"Cell-DEVS","models":[{"name":"wormmodel","ports":[{"name":"out","type":"output"}]}],"size":[50,50,1]}

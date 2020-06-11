@@ -4,13 +4,10 @@ import Simulation from './simulation.js';
 import FrameCA from './frameCA.js';
 import TransitionCA from './transitionCA.js';
 import StateCA from './stateCA.js';
-import Palette from './palettes/basic.js';
 
 export default class SimulationCA extends Simulation { 
 	
 	get Size() { return this.size; }
-	
-	get Palette() { return this.palette; }
 	
 	get Dimensions() { 
 		return { x:this.size[0], y:this.size[1], z:this.size[2] } 
@@ -20,11 +17,10 @@ export default class SimulationCA extends Simulation {
 		return this.Dimensions.x / this.Dimensions.y;
 	}
 	
-	constructor(name, simulator, type, models, frames, size, palette) {
+	constructor(name, simulator, type, models, frames, size) {
 		super(name, simulator, type, models, frames);
 
 		this.size = size || null;
-		this.palette = palette || new Palette();
 		
 		this.state = new StateCA(size, models);
 	}
@@ -41,21 +37,21 @@ export default class SimulationCA extends Simulation {
 		return layers;
 	}
 	
-	static FromJson(json) {
-		var simulation = new SimulationCA(json.name, json.simulator, json.type, json.models, null, json.size, null);
+	static FromFiles(files) {
+		var s = files.simulation;
+		var t = files.transitions;
+		
+		var simulation = new SimulationCA(s.name, s.simulator, s.type, s.models, null, s.size, null);
 		
 		// build frames from flat transitions list		
-		for (var i = 0; i < json.transitions.length; i++) {
-			var t = json.transitions[i];
-			var f = simulation.Index(t.time) || simulation.AddFrame(new FrameCA(t.time));
+		for (var i = 0; i < t.length; i++) {
+			var m = t[i];
+			var f = simulation.Index(m.time) || simulation.AddFrame(new FrameCA(m.time));
 			
-			var add = new TransitionCA(t.type, t.model, t.coord, t.port, t.value, t.destination);
+			var add = new TransitionCA(m.type, m.model, m.coord, m.port, m.value, m.destination);
 			
 			f.AddTransition(add);
-		} 
-		
-		// Palette needs to be constructed.		
-		if (json.palette) json.palette.forEach(p => simulation.palette.AddClass(p.begin, p.end, p.color));
+		}
 		
 		return simulation;
 	};

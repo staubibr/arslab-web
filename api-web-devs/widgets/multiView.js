@@ -97,10 +97,9 @@ export default Core.Templatable("Widget.MultiView", class MultiView extends Temp
 				clickEnabled:false,
 				columns:this.settings.Get("grid", "columns"), 
 				spacing:this.settings.Get("grid", "spacing"), 
-				layers:this.settings.Get("grid", "layers")
+				layers:this.settings.Get("grid", "layers") || simulation.LayersAndPorts(), 
+				styler:this.settings.styler
 			}
-			
-			if (!options.layers) options.layers = this.simulation.LayersAndPorts();
 			
 			this.view = new GridAuto(this.Widget("grid"), this.simulation, options);
 		}

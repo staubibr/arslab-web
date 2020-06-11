@@ -113,7 +113,7 @@ export default Core.Templatable("Widget.Converter", class Converter extends Temp
 		Dom.AddCss(this.Elem("wait"), "hidden");
 		
 		try {
-			Zip.SaveZipStream(result.name, result.ToStandardFiles()).then((ev) => {
+			Zip.SaveZipStream(result.name, result.AsFiles()).then((ev) => {
 				this.Emit("converted");
 			});
 		}

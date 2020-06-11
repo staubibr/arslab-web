@@ -1,7 +1,6 @@
 'use strict';
 
 import Evented from '../components/evented.js';
-import Palette from './palettes/basic.js';
 import Cache from './cache.js';
 import Frame from './frame.js';
 
@@ -112,8 +111,7 @@ export default class Simulation extends Evented {
 	Save() {
 		return {
 			i : this.state.i,
-			selection : this.selected,
-			palette : this.palette.Save()
+			selection : this.selected
 		}
 	}
 	
@@ -121,7 +119,6 @@ export default class Simulation extends Evented {
 		this.GoToFrame(config.i);
 		
 		this.selected = config.selection;
-		this.palette.Load(config.palette);
 		
 		this.Emit("Session", { simulation:this });
 	}

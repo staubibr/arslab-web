@@ -199,7 +199,8 @@ button:not(:disabled):hover {
 }
 
 .popup.popup-settings {
-    max-height: 490px;
+    max-height: 535px;
+    min-width: 375px;
 }
 
 main .dropzone-container {
@@ -216,6 +217,7 @@ main .diagram-widget-container,
 main .grid-widget-container {
 	width : 100%;
 	height : 100%;
+	display:inline-block;
 }
 
 .tooltip .legend, .tooltip .legend rect {

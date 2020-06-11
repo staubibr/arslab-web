@@ -31,15 +31,19 @@ export default class SimulationDEVS extends Simulation {
 		this.state = new StateDEVS(models);
 	}
 	
-	static FromJson(json) {		
-		var simulation = new SimulationDEVS(json.name, json.simulator, json.type, json.models, null, json.svg);
+	static FromFiles(files) {
+		var s = files.simulation;
+		var t = files.transitions;
+		var d = files.diagram;
+		
+		var simulation = new SimulationDEVS(s.name, s.simulator, s.type, s.models, null, d);
 		
 		// build frames from flat transitions list		
-		for (var i = 0; i < json.transitions.length; i++) {
-			var t = json.transitions[i];
-			var f = simulation.Index(t.time) || simulation.AddFrame(new FrameDEVS(t.time));
+		for (var i = 0; i < t.length; i++) {
+			var m = t[i];
+			var f = simulation.Index(m.time) || simulation.AddFrame(new FrameDEVS(m.time));
 			
-			var add = new TransitionDEVS(t.type, t.model, t.port, t.value, t.destination);
+			var add = new TransitionDEVS(m.type, m.model, m.port, m.value, m.destination);
 			
 			f.AddTransition(add);
 		}

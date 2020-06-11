@@ -21,13 +21,8 @@ export default class Main extends Templated {
 		
 		this.config = config;
 		this.simulation = null;
+		this.settings = null;
 		this.chart = null;
-		
-		this.settings = new oSettings();
-		
-		this.settings.json.grid.width = 400;
-		this.settings.json.grid.height = 400;
-		this.settings.json.playback.speed = 25;
 		
 		this.LoadSeries(config.series);
 		this.LoadLogs(config.series[0].logs);
@@ -78,8 +73,9 @@ export default class Main extends Templated {
 		
 		var p1 = Net.File(path + `simulation.json`, 'simulation.json');
 		var p2 = Net.File(path + `transitions.csv`, 'transitions.csv');
+		var p3 = Net.File(path + `options.json`, 'options.json');
 		
-		Promise.all([p1, p2]).then(this.OnFiles_Loaded.bind(this), (error) => { this.OnWidget_Error({ error:error }); });
+		Promise.all([p1, p2, p3]).then(this.OnFiles_Loaded.bind(this), (error) => { this.OnWidget_Error({ error:error }); });
 	}
 	
 	OnFiles_Loaded(files) {		
@@ -90,11 +86,18 @@ export default class Main extends Templated {
 		p.then(this.OnParser_Parsed.bind(this), (error) => { this.OnWidget_Error({ error:error }); });
 	}
 	
-	OnParser_Parsed(json) {	
+	OnParser_Parsed(files) {	
 		Dom.AddCss(this.Elem("wait"), "hidden");
 		Dom.RemoveCss(this.Elem("simulation"), "hidden");
 		
-		this.simulation = SimulationCA.FromJson(json);
+		var content = files.Content();
+		
+		this.simulation = SimulationCA.FromFiles(content);
+		this.settings = oSettings.FromJson(content.options);
+		
+		this.settings.json.grid.width = 400;
+		this.settings.json.grid.height = 400;
+		this.settings.json.playback.speed = 25;
 		
 		this.simulation.Initialize(this.settings.Get("playback", "cache"));
 		
@@ -107,7 +110,8 @@ export default class Main extends Templated {
 			clickEnabled:false,
 			columns : this.settings.Get("grid", "columns"), 
 			spacing : this.settings.Get("grid", "spacing"), 
-			layers : [{ z:0, ports:ports }]
+			layers : [{ z:0, ports:ports, style:0 }], 
+			styler:this.settings.styler
 		}
 		
 		this.grid = new GridAuto(this.Widget("grid"), this.simulation, options);

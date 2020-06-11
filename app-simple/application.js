@@ -62,12 +62,6 @@ export default class Main extends Templated {
 	
 	OnLoad_Click(ev) {		
 		var parser = new Standardized();
-		
-		var files = this.Widget('upload').files;
-		var options = files.find(f => f.name == "options.json");
-		var defs = [parser.Parse(this.Widget('upload').files)];
-		
-		if (options) defs.push(options.text());
 
 		parser.On("Progress", (ev) => {
 			// TODO : Should use variable css colors			
@@ -79,22 +73,22 @@ export default class Main extends Templated {
 			this.Elem("load").style.backgroundImage = bg;		
 		});
 		
-		Promise.all(defs).then(this.OnParser_Parsed.bind(this), (error) => { this.OnWidget_Error({ error:error }); });
+		var p = parser.Parse(this.Widget('upload').files);
+		
+		p.then(this.OnParser_Parsed.bind(this), (error) => { this.OnWidget_Error({ error:error }); });
 	}
 	
-	OnParser_Parsed(results) {		
-		if (results[1]) {
-			var options = JSON.parse(results[1]);
-			
-			this.settings.json = options;
-		}
-		
+	OnParser_Parsed(files) {
 		this.Elem("load").style.backgroundImage = null;			
 		this.Elem("btnViz").disabled = false;
 		
-		var clss = (results[0].type == "DEVS") ? SimulationDEVS : SimulationCA;
+		var content = files.Content();
 		
-		this.simulation = clss.FromJson(results[0]);
+		if (content.options) this.settings.json = content.options;
+		
+		var clss = (content.simulation.type == "DEVS") ? SimulationDEVS : SimulationCA;
+		
+		this.simulation = clss.FromFiles(content);
 		
 		this.simulation.Initialize(this.settings.Get("playback", "cache"));
 		

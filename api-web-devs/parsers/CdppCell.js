@@ -3,8 +3,10 @@
 import Core from '../tools/core.js';
 import Parser from "./parser.js";
 
-import { Simulation, TransitionCA, PaletteBucket } from './json.js';
+import { Simulation, TransitionsCA, TransitionCA, Options, Files } from './files.js';
 
+import Settings from '../components/settings.js';
+import Scale from '../components/scales/basic.js';
 import State from '../simulation/state.js';
 
 export default class CDpp extends Parser { 
@@ -24,16 +26,15 @@ export default class CDpp extends Parser {
 		}
 		
 		var name = ma.name.substr(0, ma.name.length - 3);
-		var simulation = new Simulation(name, "CDpp", "Cell-DEVS");
 		
 		var p1 = this.Read(val, this.ParseValFile.bind(this));
 		var p2 = this.Read(pal, this.ParsePalFile.bind(this));
 		var p3 = this.Read(ma, this.ParseMaFile.bind(this));
 		var p4 = this.ReadByChunk(log, this.ParseLogChunk.bind(this));
-			
+		
 		var defs = [p1, p2, p3, p4];
 	
-		Promise.all(defs).then((data) => {
+		Promise.all(defs).then((data) => {		
 			var val = data[0];
 			var ma = data[2];
 			
@@ -51,35 +52,23 @@ export default class CDpp extends Parser {
 				t.destination = ma.models[0].name;
 			});
 			
-			simulation.transitions = initial.concat(data[3]);
-			simulation.palette = data[1];
-			simulation.models = ma.models;
-			simulation.size = ma.size;
-			// simulation.template = this.Template();
+			var simulation = new Simulation(name, "CDpp", "Cell-DEVS", ma.models, ma.size);	
+			var transitions = new TransitionsCA(initial.concat(data[3]));
 			
-			d.Resolve(simulation);
+			var options = Settings.Default(simulation.content.size[2], simulation.content.models[0].ports);
+			
+			options.grid.styles.push(data[1]);
+			
+			var files = new Files(simulation, transitions, null, new Options(options));
+			
+			d.Resolve(files);
 		}, (error) => {
 			d.Reject(error);
 		});
 		
 		return d.promise;
 	}
-	/*
-	Template() {
-		return {
-			"type" : 0,
-			"time" : 1,
-			"model" : 2,
-			"coord" : [3, 4, 5],
-			"port" : 6,
-			"value" : {
-				"out": 7,
-			},
-			"destination" : 8		
-		}
-	}
-	*/
-	
+
 	ParseMaFile(file) {
 		var ma = {
 			size : [0, 0, 1],
@@ -111,7 +100,7 @@ export default class CDpp extends Parser {
 			
 			else if (d[0] == "initialvalue") ma.initial.global = this.GlobalFrame(ma.size, +d[1]);
 			
-			else if (d[0] == "initialrowvalue") ma.initial.rows = this.RowsFrame(ma.initial.rows, d[1]);
+			else if (d[0] == "initialrowvalue") ma.initial.rows = this.RowsFrame(d[1]);
 		});
 		
 		ma.models = ma.models.map(m => {  
@@ -148,7 +137,7 @@ export default class CDpp extends Parser {
 		var lines = file.trim().split(/\n/);
 		
 		if (lines[0].indexOf('[') != -1) return this.ParsePalTypeA(lines);
-			
+		
 		else return this.ParsePalTypeB(lines);
 	}	
 		
@@ -188,13 +177,13 @@ export default class CDpp extends Parser {
 	
 	ParsePalTypeA(lines) {		
 		// Type A: [rangeBegin;rangeEnd] R G B
-		var palette = [];
+		var scale = new Scale;
 		
 		lines.forEach(function(line) { 
 			// skip it it's probably an empty line
 			if (line.length < 7) return;
 			
-			var begin = parseFloat(line.substr(1));
+			var start = parseFloat(line.substr(1));
 			var end   = parseFloat(line.substr(line.indexOf(';') + 1));
 			var rgb = line.substr(line.indexOf(']') + 2).trim().split(' ');
 			
@@ -208,15 +197,15 @@ export default class CDpp extends Parser {
 			var g = parseInt(rgb[1], 10);
 			var b = parseInt(rgb[2], 10);
 			
-			palette.push(new PaletteBucket(begin, end, [r, g, b]));
+			scale.AddClass(start, end, [r, g, b]);
 		});
 		
-		return palette;
+		return scale.ToJson();
 	}
 	
 	ParsePalTypeB(lines) {
 		// Type B (VALIDSAVEFILE: lists R,G,B then lists ranges)
-		var palette = [];
+		var scale = new Scale();
 		var paletteRanges = [];
 		var paletteColors =[];
 		
@@ -225,13 +214,11 @@ export default class CDpp extends Parser {
 			var components = lines[i].split(',');
 			
 			if(components.length == 2) {
-			// this line is a value range [start, end]
-				// Use parseFloat to ensure we're processing in decimal not oct
+				// this line is a value range [start, end]
 				paletteRanges.push([parseFloat(components[0]), parseFloat(components[1])]); 
 			}
 			else if (components.length == 3){ 
-			// this line is a palette element [R,G,B]
-				// Use parseInt(#, 10) to ensure we're processing in decimal not oct
+				// this line is a palette element [R,G,B]
 				paletteColors.push([parseInt(.95 * parseInt(components[0],10)), 
 									parseInt(.95 * parseInt(components[1],10)), 
 									parseInt(.95 * parseInt(components[2],10))]); 
@@ -239,11 +226,11 @@ export default class CDpp extends Parser {
 		}
 
 		// populate grid palette object
-		for (var i = paletteRanges.length; i-- > 0;){			
-			palette.push(new PaletteBucket(paletteRanges[i][0], paletteRanges[i][1], paletteColors[i]));
+		for (var i = paletteRanges.length; i-- > 0;){
+			scale.AddClass(paletteRanges[i][0], paletteRanges[i][1], paletteColors[i]);
 		}
 		
-		return palette;
+		return scale.ToJson();
 	}
 	
 	MergeFrames(f1, f2) {
@@ -273,29 +260,24 @@ export default class CDpp extends Parser {
 		
 		for (var x = 0; x < size[0]; x++) {
 			for (var y = 0; y < size[1]; y++) {
-				// if (!size[2]) f.push(new TransitionCA("Y", "00:00:00:000", null, [x, y], "out", value, null));
-				
-				// else {
-					for (var z = 0; z < size[2]; z++) {					
-						f.push(new TransitionCA("Y", "00:00:00:000", null, [x, y, z], "out", null, value));
-					}
-				// }
+				for (var z = 0; z < size[2]; z++) {					
+					f.push(new TransitionCA("Y", "00:00:00:000", null, [x, y, z], "out", null, value));
+				}
 			}
 		}
 		
 		return f;
 	}
 	
-	RowsFrame(rows, line) {		
+	RowsFrame(line) {		
 		var d = line.split(/\s+/);
 		var values = d[1].split('');
+		var rows = [];
 		
 		for (var y = 0; y < values.length; y++) {
-			// var v = +values[y];
-			
-			// if (v == 0) continue;
-			
 			rows.push(new TransitionCA("Y", "00:00:00:000", null, [d[0], y], "out", null, +values[y]));
 		}
+		
+		return rows;
 	}
 }

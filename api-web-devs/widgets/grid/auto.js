@@ -23,6 +23,7 @@ export default Core.Templatable("Auto.Grid", class AutoGrid extends Automator {
 		this.Widget.Columns = options.columns;
 		this.Widget.Spacing	= options.spacing;
 		this.Widget.Layers	= options.layers;
+		this.Widget.Styler	= options.styler;
 	}
 	
 	AttachHandlers(options) {
@@ -34,8 +35,9 @@ export default Core.Templatable("Auto.Grid", class AutoGrid extends Automator {
 		
 		h.push(this.Simulation.On("Move", this.onSimulationMove_Handler.bind(this)));
 		h.push(this.Simulation.On("Jump", this.onSimulationJump_Handler.bind(this)));
-		h.push(this.Simulation.palette.On("Change", this.onSimulationPaletteChanged_Handler.bind(this)));
 		
+		h.push(options.styler.On("Change", this.onSimulationPaletteChanged_Handler.bind(this)));
+			
 		this.Handle(h);
 	}
 		
@@ -50,25 +52,25 @@ export default Core.Templatable("Auto.Grid", class AutoGrid extends Automator {
 		
 		var s = this.Simulation;
 		
-		this.Widget.DrawState(s.state, s.Palette, s);
+		this.Widget.DrawState(s.state, s);
 	}
 
 	onSimulationMove_Handler(ev) {		
 		var s = this.Simulation;
 		
-		this.Widget.DrawChanges(ev.frame, s.Palette, s);
+		this.Widget.DrawChanges(ev.frame, s);
 	}
 	
 	onSimulationJump_Handler(ev) {
 		var s = this.Simulation;
 		
-		this.Widget.DrawState(s.state, s.Palette, s);
+		this.Widget.DrawState(s.state, s);
 	}
 	
 	onSimulationPaletteChanged_Handler(ev) {
 		var s = this.Simulation;
 		
-		this.Widget.DrawState(s.state, s.Palette, s);
+		this.Widget.DrawState(s.state, s);
 	}
 	
 	onMouseMove_Handler(ev) {

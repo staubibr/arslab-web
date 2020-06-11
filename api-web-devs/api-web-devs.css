@@ -334,6 +334,19 @@ input[type=range]:disabled::-webkit-slider-thumb{
 	cursor : pointer;
 }
 
+.settings .settings-save-line {
+	margin-top: 20px;
+	text-align: center;
+}
+
+.settings button.settings-save {
+	width: 140px;
+}
+
+.settings button.settings-save i {
+	padding-left:10px;
+}
+
 .settings input[type="number"] {
 	width : 60px;
 }

@@ -82,7 +82,7 @@ export default class Net {
 	*
 	* Parameters :
 	*	name : String, the name of the file to download
-	*	content : 
+	*	content : String, the content of the file to save
 	* Return : none
 	*/
 	static Download(name, content) {

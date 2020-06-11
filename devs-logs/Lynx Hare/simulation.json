@@ -1,0 +1,1 @@
+{"name":"LynxHare","simulator":"CDpp","type":"Cell-DEVS","models":[{"name":"lynxhare","ports":[{"name":"out","type":"output"}]}],"size":[20,20,1]}

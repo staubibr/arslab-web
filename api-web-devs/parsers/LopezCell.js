@@ -3,8 +3,10 @@
 import Core from '../tools/core.js';
 import Parser from "./parser.js";
 
-import { Simulation, TransitionCA, PaletteBucket } from './json.js';
+import { Simulation, TransitionsCA, TransitionCA, Options, Files } from './files.js';
 
+import Settings from '../components/settings.js';
+import Scale from '../components/scales/basic.js';
 import State from '../simulation/state.js';
 
 export default class LopezCell extends Parser { 
@@ -23,7 +25,6 @@ export default class LopezCell extends Parser {
 		}
 		
 		var name = ma.name.substr(0, ma.name.length - 3);
-		var simulation = new Simulation(name, "Lopez", "Cell-DEVS");
 		
 		var p1 = this.Read(pal, this.ParsePalFile.bind(this));
 		var p2 = this.Read(ma, this.ParseMaFile.bind(this));
@@ -34,12 +35,16 @@ export default class LopezCell extends Parser {
 		Promise.all(defs).then((data) => {			
 			if (!data[2]) return d.Reject(new Error("Unable to parse the log (.log) file."));
 			
-			simulation.transitions = data[2];
-			simulation.models = data[1].models;
-			simulation.size = data[1].size;
-			simulation.palette = data[0];
+			var simulation = new Simulation(name, "Lopez", "Cell-DEVS", data[1].models, data[1].size);
+			var transitions = new TransitionsCA(data[2]);
 			
-			d.Resolve(simulation);
+			var options = Settings.Default(data[1].size[2], data[1].models[0].ports);
+
+			options.grid.styles.push(data[0]);
+			
+			var files = new Files(simulation, transitions, null, new Options(options));
+			
+			d.Resolve(files);
 		}, (error) => {
 			d.Reject(error);
 		});
@@ -75,6 +80,10 @@ export default class LopezCell extends Parser {
 			
 				ma.size = [+s[0], +s[1], +s[2] || 1];
 			}
+			
+			else if (d[0] == "height") ma.size[0] = +d[1];
+			
+			else if (d[0] == "width") ma.size[1] = +d[1];
 
 			// TODO : Always one model?
 			else if (d[0] == "NeighborPorts")  ma.models[0].ports = d[1].trim().split(" ");
@@ -139,13 +148,13 @@ export default class LopezCell extends Parser {
 	
 	ParsePalTypeA(lines) {		
 		// Type A: [rangeBegin;rangeEnd] R G B
-		var palette = [];
+		var scale = new Scale();
 		
 		lines.forEach(function(line) { 
 			// skip it it's probably an empty line
 			if (line.length < 7) return;
 			
-			var begin = parseFloat(line.substr(1));
+			var start = parseFloat(line.substr(1));
 			var end   = parseFloat(line.substr(line.indexOf(';') + 1));
 			var rgb = line.substr(line.indexOf(']') + 2).trim().split(' ');
 			
@@ -159,15 +168,16 @@ export default class LopezCell extends Parser {
 			var g = parseInt(rgb[1], 10);
 			var b = parseInt(rgb[2], 10);
 			
-			palette.push(new PaletteBucket(begin, end, [r, g, b]));
+			scale.AddClass(start, end, [r, g, b]);
 		});
 		
-		return palette;
+		return scale.ToJson();
 	}
 	
 	ParsePalTypeB(lines) {
 		// Type B (VALIDSAVEFILE: lists R,G,B then lists ranges)
-		var palette = [];
+		var scale = new Scale();
+		
 		var paletteRanges = [];
 		var paletteColors =[];
 		
@@ -190,10 +200,10 @@ export default class LopezCell extends Parser {
 		}
 
 		// populate grid palette object
-		for (var i = paletteRanges.length; i-- > 0;){			
-			palette.push(new PaletteBucket(paletteRanges[i][0], paletteRanges[i][1], paletteColors[i]));
+		for (var i = paletteRanges.length; i-- > 0;){	
+			scale.AddClass(paletteRanges[i][0], paletteRanges[i][1], paletteColors[i]);
 		}
 		
-		return palette;
+		return scale.ToJson();
 	}
 }

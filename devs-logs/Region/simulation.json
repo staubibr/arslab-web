@@ -1,0 +1,1 @@
+{"name":"Region","simulator":"Lopez","type":"Cell-DEVS","models":[{"name":"region","ports":[{"name":"out","type":"output"},{"name":"out_scenario1","type":"output"},{"name":"out_scenario2","type":"output"},{"name":"out_scenario3","type":"output"},{"name":"out_scenario4","type":"output"}]}],"size":[30,30,1]}

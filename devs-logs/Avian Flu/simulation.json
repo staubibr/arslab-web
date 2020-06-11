@@ -1,0 +1,1 @@
+{"name":"avian flu","simulator":"CDpp","type":"Cell-DEVS","models":[{"name":"avain","ports":[{"name":"out","type":"output"}]}],"size":[35,35,1]}

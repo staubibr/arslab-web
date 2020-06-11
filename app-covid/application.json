@@ -115,28 +115,28 @@
             },
             "logs": [{
                     "transmission": 0.05,
-                    "death": 0.001
+                    "death": 0.01
                 }, {
                     "transmission": 0.075,
-                    "death": 0.001
+                    "death": 0.01
                 }, {
                     "transmission": 0.09,
-                    "death": 0.001
+                    "death": 0.01
                 }, {
                     "transmission": 0.1,
-                    "death": 0.001
+                    "death": 0.01
                 }, {
                     "transmission": 0.15,
-                    "death": 0.001
+                    "death": 0.01
                 }, {
                     "transmission": 0.2,
-                    "death": 0.001
+                    "death": 0.01
                 }, {
                     "transmission": 0.4,
-                    "death": 0.001
+                    "death": 0.01
                 }, {
                     "transmission": 0.6,
-                    "death": 0.001
+                    "death": 0.01
                 }
             ]
         }

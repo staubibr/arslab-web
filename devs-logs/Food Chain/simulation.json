@@ -1,0 +1,1 @@
+{"name":"food_chain","simulator":"CDpp","type":"Cell-DEVS","models":[{"name":"food_chain","ports":[{"name":"out","type":"output"}]}],"size":[20,20,1]}

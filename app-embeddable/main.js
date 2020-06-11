@@ -31,15 +31,13 @@ function CheckConsent(responses) {
 
 function Finish(json) {
 	var p1 = Net.Request(`../devs-logs/${model}/transitions.csv`, null, 'blob');
-	var p2 = Net.JSON(`../devs-logs/${model}/options.json`);
+	var p2 = Net.Request(`../devs-logs/${model}/options.json`, null, 'blob');
 	
 	var defs = [p1, p2];
 	
 	if (json.type == "DEVS") defs.push(Net.Request(`../devs-logs/${model}/diagram.svg`, null, 'blob'));
 	
 	Promise.all(defs).then((responses) => {
-		var options = responses[1];
-
 		var files = [];
 		
 		var blob = new Blob([JSON.stringify(json)], { type:"application/json" })
@@ -49,9 +47,11 @@ function Finish(json) {
 	
 		if (json.type == "DEVS") files.push(new File([responses[2]], 'diagram.svg'));
 		
+		files.push(new File([responses[1]], 'options.json'));
+		
 		Dom.Empty(document.body);
 		
-		var app = new Application(document.body, files, options);
+		var app = new Application(document.body, files);
 	}, Fail);
 }
 

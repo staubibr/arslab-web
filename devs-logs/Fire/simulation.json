@@ -1,0 +1,1 @@
+{"name":"Fire","simulator":"CDpp","type":"Cell-DEVS","models":[{"name":"forestfire","ports":[{"name":"out","type":"output"}]}],"size":[30,30,1]}

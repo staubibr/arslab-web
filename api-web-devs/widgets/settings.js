@@ -2,6 +2,7 @@
 
 import Core from '../tools/core.js';
 import Dom from '../tools/dom.js';
+import Net from '../tools/net.js';
 import Templated from '../components/templated.js';
 import oSettings from '../../api-web-devs/components/settings.js';
 
@@ -55,7 +56,8 @@ export default Core.Templatable("Widget.Settings", class Settings extends Templa
 		// this.Node(this.ui[4].node).On("change", ev => this.UpdateElement(this.ui[5]));
 		// this.Node(this.ui[5].node).On("change", ev => this.UpdateElement(this.ui[4]));
 		
-		// Initial UI values
+		this.Node("save").On('click', this.onSave_Click.bind(this));
+		
 		this.UpdateUI();
 	}
 	
@@ -78,6 +80,12 @@ export default Core.Templatable("Widget.Settings", class Settings extends Templa
 	//		ui.ui(this.Elem(ui.node), c.value);
 	//	});
 	//}
+	
+	onSave_Click(ev) {
+		var content = this.settings.ToString();
+		
+		Net.Download("options.json", content);
+	}
 	
 	Template() {
 		return "<div class='settings'>" +
@@ -131,7 +139,6 @@ export default Core.Templatable("Widget.Settings", class Settings extends Templa
 								"<input class='settings-value' handle='gridShowGrid' type='checkbox' disabled></input>" +
 							"</label>" + 
 						"</div>" +
-					
 					"</div>" +
 					"<h3 class='settings-group-label'>nls(Settings_Playback_Options)</h3>" +
 					"<div class='settings-group'>" + 
@@ -150,6 +157,11 @@ export default Core.Templatable("Widget.Settings", class Settings extends Templa
 								"<input class='settings-value' handle='playbackCache' type='number' min=10 max=1000 disabled></input>" +
 							"</label>" + 
 						"</div>"+
+					"</div>" +
+					"<div class='settings-save-line'>" +
+						"<button handle='save' class='settings-save'>nls(Settings_Save)" +
+							"<i class='fas fa-file-download'></i>" + 
+						"</button>" +
 					"</div>" +
 			   "</div>";
 	}

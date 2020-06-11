@@ -3,7 +3,9 @@
 import Core from '../tools/core.js';
 import Parser from "./parser.js";
 
-import { Simulation, TransitionDEVS, PaletteBucket } from './json.js';
+import { Simulation, TransitionDEVS, TransitionsDEVS, Diagram, Options, Files } from './files.js';
+
+import Settings from '../components/settings.js';
 
 export default class CDppDEVS extends Parser { 
 		
@@ -21,7 +23,6 @@ export default class CDppDEVS extends Parser {
 		}
 		
 		var name = log.name.substr(0, log.name.length - 4);
-		var simulation = new Simulation(name, "CDpp", "DEVS");
 		
 		var p1 = this.Read(ma, this.ParseMaFile.bind(this));
 		var p2 = this.Read(svg, this.ParseSVGFile.bind(this));
@@ -34,13 +35,14 @@ export default class CDppDEVS extends Parser {
 			
 			if (!data[2]) return d.Reject(new Error("Unable to parse the log (.log) file or it contained no X and Y messages."));
 			
-			simulation.models = data[0].models;
-			simulation.transitions = data[2];
-			simulation.svg = data[1];
-			simulation.size = data[0].size;
-			simulation.palette = null;
+			var simulation = new Simulation(name, "CDpp", "DEVS", data[0].models, data[0].size);
+			var transitions = new TransitionsDEVS(data[2]);
+			var diagram = new Diagram(data[1]);
+			var options = new Options(Settings.Default());
 			
-			d.Resolve(simulation);
+			var files = new Files(simulation, transitions, diagram, options);
+
+			d.Resolve(files);
 		}, (error) => {
 			d.Reject(error);
 		});

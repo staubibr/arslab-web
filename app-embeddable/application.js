@@ -11,12 +11,11 @@ import MultiView from '../api-web-devs/widgets/multiView.js'
 
 export default class Main extends Templated { 
 
-	constructor(node, files, options) {		
+	constructor(node, files) {		
 		super(node);
 		
 		this.simulation = null;
-		
-		this.settings = oSettings.FromJson(options);
+		this.settings = null;
 		
 		var parser = new Standardized();
 		
@@ -25,10 +24,13 @@ export default class Main extends Templated {
 		p.then(this.OnParser_Parsed.bind(this), (error) => { this.OnWidget_Error({ error:error }); });
 	}
 	
-	OnParser_Parsed(json) {
-		var clss = (json.type == "DEVS") ? SimulationDEVS : SimulationCA;
+	OnParser_Parsed(files) {
+		var content = files.Content();
+		
+		var clss = (content.simulation.type == "DEVS") ? SimulationDEVS : SimulationCA;
 
-		this.simulation = clss.FromJson(json);
+		this.settings = oSettings.FromJson(content.options);
+		this.simulation = clss.FromFiles(content);
 		
 		this.simulation.Initialize(this.settings.Get("playback", "cache"));
 		

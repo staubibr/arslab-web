@@ -74,6 +74,9 @@
 	"Settings_Playback_Cache" : {
 		"en" : "Cache step:"
 	},
+	"Settings_Save" : {
+		"en" : "Save"
+	},
 	"Converter_Parse" : {
 		"en" : "Parse files"
 	},
