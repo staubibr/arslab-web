@@ -18,7 +18,7 @@ export class Simulation {
 	ToFile() {
 		var content = JSON.stringify(this.content);
 		
-		return new File([content], "simulation.json", { type:"application/json",endings:'native' });
+		return new File([content], "simulation.json", { type:"application/json", endings:'native' });
 	}
 }
 

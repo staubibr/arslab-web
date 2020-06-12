@@ -43,7 +43,6 @@ export default class Zip {
 		
 		return d.promise;
 	}
-	
 
 	static ReadEntry(entry) {
 		var d = Core.Defer();
@@ -54,7 +53,7 @@ export default class Zip {
 
 			d.Resolve(file);
 		});
-				
+		
 		return d.promise;
 	}
 

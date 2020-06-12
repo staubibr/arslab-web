@@ -167,13 +167,18 @@ export default Core.Templatable("Widgets.Grid", class Grid extends Templated {
 		});
 	}
 	
-	GetCell(layerX, layerY) {
+	GetCell(clientX, clientY) {
+		var rect = this.Elem("canvas").getBoundingClientRect();
+		
+		var x = clientX - rect.left;
+		var y = clientY - rect.top;
+		
 		var zero = null;
 		
 		for (var k = 0; k < this.grids.length; k++) {
-			if (layerX < this.grids[k].x1 || layerX > this.grids[k].x2) continue;
+			if (x < this.grids[k].x1 || x > this.grids[k].x2) continue;
 			
-			if (layerY < this.grids[k].y1 || layerY > this.grids[k].y2) continue;
+			if (y < this.grids[k].y1 || y > this.grids[k].y2) continue;
 			
 			zero = this.grids[k];
 			
@@ -182,17 +187,14 @@ export default Core.Templatable("Widgets.Grid", class Grid extends Templated {
 		
 		if (!zero) return null;
 		
-		layerX = layerX - zero.x1;
-		layerY = layerY - zero.y1;
+		x = x - zero.x1;
+		y = y - zero.y1;
 		
 		// Find the new X, Y coordinates of the clicked cell
-		var pX = layerX - layerX % this.cell.w;
-		var pY = layerY - layerY % this.cell.h;
-		
-		var x = pX / this.cell.w; 
-		var y = pY / this.cell.h; 
-		
-		return { x:x, y:y, z:zero.z, k:k, layer:this.layers[k] };
+		var pX = x - x % this.cell.w;
+		var pY = y - y % this.cell.h;
+				
+		return { x:pX / this.cell.w, y:pY / this.cell.h, z:zero.z, k:k, layer:this.layers[k] };
 	}
 	
 	DrawCell(x, y, k, color) {			
@@ -225,21 +227,21 @@ export default Core.Templatable("Widgets.Grid", class Grid extends Templated {
 	}
 	
 	onCanvasClick_Handler(ev) {		
-		var data = this.GetCell(ev.layerX, ev.layerY);
+		var data = this.GetCell(ev.clientX, ev.clientY);
 		
 		if (!data) return;
 		
 		this.Emit("Click", { x:ev.pageX, y:ev.pageY, data:data });
 	}
 	
-	onCanvasMouseMove_Handler(ev) {		
-		var data = this.GetCell(ev.layerX, ev.layerY);
+	onCanvasMouseMove_Handler(ev) {				
+		var data = this.GetCell(ev.clientX, ev.clientY);
 		
 		if (!data) return;
 		
 		this.Emit("MouseMove", { x:ev.pageX, y:ev.pageY, data:data });
 	}
-	
+		
 	onCanvasMouseOut_Handler(ev) {		
 		this.Emit("MouseOut", { x:ev.pageX, y:ev.pageY });
 	}
