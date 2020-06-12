@@ -10,6 +10,7 @@ import Zip from '../../api-web-devs/tools/zip.js';
 import CdppDevs	from '../parsers/CdppDevs.js';
 import CdppCell	from '../parsers/CdppCell.js';
 import LopezCell from '../parsers/LopezCell.js';
+import CadmiumCell from '../parsers/CadmiumCell.js';
 
 export default Core.Templatable("Widget.Converter", class Converter extends Templated { 
 	
@@ -41,7 +42,7 @@ export default Core.Templatable("Widget.Converter", class Converter extends Temp
 			},
 			"Cadmium" : {
 				"DEVS" : null,
-				"Cell-DEVS" : null
+				"Cell-DEVS" : CadmiumCell
 			}
 		};
     }

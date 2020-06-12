@@ -115,7 +115,7 @@ export default class Settings extends Evented {
 			});
 		}
 		
-		options.grid.columns = (layers.length > 3) ? 3 : layers.length;	
+		options.grid.columns = (layers > 3) ? 3 : layers;	
 		
 		return options;
 	}
