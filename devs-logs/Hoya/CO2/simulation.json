@@ -1,0 +1,21 @@
+{
+    "name": "CO2_model",
+    "simulator": "Cadmium",
+    "type": "Cell-DEVS",
+    "models": [{
+            "name": "CO2_model",
+            "ports": [{
+                    "name": "out_port0",
+                    "type": "output"
+                }, {
+                    "name": "out_port1",
+                    "type": "output"
+                }, {
+                    "name": "out_port2",
+                    "type": "output"
+                }
+            ]
+        }
+    ],
+    "size": [38, 57, 1]
+}

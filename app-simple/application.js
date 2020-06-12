@@ -92,12 +92,11 @@ export default class Main extends Templated {
 		
 		this.simulation.Initialize(this.settings.Get("playback", "cache"));
 		
+		this.ShowDropzone(false);	
+		
 		this.Widget("playback").Initialize(this.simulation, this.settings);
-		this.Widget('multi').Initialize(this.simulation, this.settings);
+		this.Widget('multi').Initialize(this.simulation, this.settings);	
 		
-		this.ShowDropzone(false);		
-		
-		this.Widget("multi").Switch(this.simulation.type);
 		this.Widget("multi").Resize();
 		this.Widget("multi").Redraw();
 	}
@@ -130,8 +129,6 @@ export default class Main extends Templated {
 	
 	OnRise_Loaded(ev) {
 		this.HidePopup();
-		
-		this.settings.json = ev.options;
 		
 		this.Widget("upload").files = ev.files;
 		this.Widget("upload").Update(ev.files);

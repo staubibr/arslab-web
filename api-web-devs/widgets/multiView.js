@@ -5,7 +5,9 @@ import Dom from '../tools/dom.js';
 import Templated from '../components/templated.js';
 
 import DiagramAuto from './diagram/auto.js'
+import Diagram from './diagram/diagram.js';
 import GridAuto from './grid/auto.js'
+import Grid from './grid/grid.js';
 
 export default Core.Templatable("Widget.MultiView", class MultiView extends Templated { 
 
@@ -25,11 +27,16 @@ export default Core.Templatable("Widget.MultiView", class MultiView extends Temp
 		}
 	}
 
+	get Type() {
+		return this.simulation.type;
+	}
+
 	get AutoSize() {
-		if (this.type == "DEVS") {
+		// TODO : Maybe should be done by view (diagram or grid) widget
+		if (this.Type == "DEVS") {
 			return this.settings.DiagramSize(this.simulation);
 		}
-		else if (this.type == "Cell-DEVS") {
+		else if (this.Type == "Cell-DEVS") {
 			var n = this.Widget("grid").layers.length;
 			
 			return this.settings.CanvasSize(this.simulation, n);
@@ -54,8 +61,36 @@ export default Core.Templatable("Widget.MultiView", class MultiView extends Temp
 	}
 	
 	Initialize(simulation, settings) {
+		this.Clear();
+		
 		this.Simulation = simulation;
 		this.Settings = settings;
+		
+		Dom.SetCss(this.Elem("viz"), `viz-container ${this.Type}`);
+		
+		// TODO : Maybe just pass settings to auto, not sure what to do with clickEnabled though
+		if (this.Type == "DEVS") {			
+			var options = {
+				clickEnabled:false
+			}
+			
+			this.view = new DiagramAuto(this.Widget("diagram"), this.simulation, options);
+		}
+		else if (this.Type === "Cell-DEVS") {
+			var options = { 
+				clickEnabled:false,
+				columns:this.settings.Get("grid", "columns"), 
+				spacing:this.settings.Get("grid", "spacing"), 
+				layers:this.settings.Get("grid", "layers") || simulation.LayersAndPorts(), 
+				styler:this.settings.styler
+			}
+			
+			this.view = new GridAuto(this.Widget("grid"), this.simulation, options);
+		}
+		else {
+			this.Elem("viz").style.width = null;
+			this.Elem("viz").style.height = null;
+		}
 	}
 	
 	OnSettings_Change(ev) {
@@ -76,37 +111,9 @@ export default Core.Templatable("Widget.MultiView", class MultiView extends Temp
 		this.Size = this.AutoSize;
 	}
 	
-	Switch(type) {
-		if (type == this.type) return;
-		
-		this.type = type;
-		
-		Dom.SetCss(this.Elem("viz"), `viz-container ${type}`);
-		
-		if (this.view) this.view.Destroy();
-		
-		if (type == "DEVS") {			
-			var options = {
-				clickEnabled:false
-			}
-			
-			this.view = new DiagramAuto(this.Widget("diagram"), this.simulation, options);
-		}
-		else if (type === "Cell-DEVS") {
-			var options = { 
-				clickEnabled:false,
-				columns:this.settings.Get("grid", "columns"), 
-				spacing:this.settings.Get("grid", "spacing"), 
-				layers:this.settings.Get("grid", "layers") || simulation.LayersAndPorts(), 
-				styler:this.settings.styler
-			}
-			
-			this.view = new GridAuto(this.Widget("grid"), this.simulation, options);
-		}
-		else {
-			this.Elem("viz").style.width = null;
-			this.Elem("viz").style.height = null;
-			
+	Clear() {
+		if (this.view) {			
+			this.view.Destroy();
 			this.view = null;
 		}
 	}

@@ -126,7 +126,7 @@ export default Core.Templatable("Widget.RiseList", class RiseLoader extends Temp
 
 		var p1 = Net.Request(`${model.url}simulation.json`, null, 'blob');
 		var p2 = Net.Request(`${model.url}transitions.csv`, null, 'blob');
-		var p3 = Net.JSON(`${model.url}options.json`);
+		var p3 = Net.Request(`${model.url}options.json`, null, 'blob');
 
 		var defs = [p1, p2, p3];
 
@@ -141,10 +141,11 @@ export default Core.Templatable("Widget.RiseList", class RiseLoader extends Temp
 			
 			files.push(new File([responses[0]], 'simulation.json'));
 			files.push(new File([responses[1]], 'transitions.csv'));
+			files.push(new File([responses[2]], 'options.json'));
 			
 			if (model.type == "DEVS") files.push(new File([responses[3]], 'diagram.svg'));
 			
-			this.Emit("FilesReady", { files : files, options : options });
+			this.Emit("FilesReady", { files : files });
 		}.bind(this);
 
 		Promise.all(defs).then(success, this.onError_Handler.bind(this));

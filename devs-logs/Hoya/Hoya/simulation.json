@@ -1,0 +1,27 @@
+{
+    "name": "Hoya",
+    "simulator": "Cadmium",
+    "type": "Cell-DEVS",
+    "models": [{
+            "name": "Hoya",
+            "ports": [{
+                    "name": "out_port0",
+                    "type": "output"
+                }, {
+                    "name": "out_port1",
+                    "type": "output"
+                }, {
+                    "name": "out_port2",
+                    "type": "output"
+                }, {
+                    "name": "out_port3",
+                    "type": "output"
+                }, {
+                    "name": "out_port4",
+                    "type": "output"
+                }
+            ]
+        }
+    ],
+    "size": [50, 50, 1]
+}

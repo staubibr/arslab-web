@@ -3,9 +3,7 @@
 import Core from '../../tools/core.js';
 import Dom from '../../tools/dom.js';
 import Tooltip from '../../ui/tooltip.js';
-import Diagram from './diagram.js';
 import Automator from '../../components/automator.js';
-
 
 export default Core.Templatable("Auto.Diagram", class AutoDiagram extends Automator { 
 

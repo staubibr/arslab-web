@@ -3,7 +3,6 @@
 import Core from '../../tools/core.js';
 import Dom from '../../tools/dom.js';
 import Tooltip from '../../ui/tooltip.js';
-import Grid from './grid.js';
 import Automator from '../../components/automator.js';
 
 export default Core.Templatable("Auto.Grid", class AutoGrid extends Automator { 
@@ -37,7 +36,7 @@ export default Core.Templatable("Auto.Grid", class AutoGrid extends Automator {
 		h.push(this.Simulation.On("Jump", this.onSimulationJump_Handler.bind(this)));
 		
 		h.push(options.styler.On("Change", this.onSimulationPaletteChanged_Handler.bind(this)));
-			
+		
 		this.Handle(h);
 	}
 		

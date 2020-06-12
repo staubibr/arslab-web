@@ -47,7 +47,6 @@ export default class Main extends Templated {
 		
 		size = this.FitSize(size);
 
-		this.Widget("multi").Switch(this.simulation.type);
 		this.Widget("multi").Size = size;
 		this.Widget("multi").Redraw();
 	}
