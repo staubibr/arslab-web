@@ -88,8 +88,8 @@ export default class Settings extends Evented {
 			},
 			grid : {
 				columns : 1,
-				width : 360,
-				height : 360,
+				width : 350,
+				height : 350,
 				spacing : 10,
 				showGrid : false,
 				aspect : true,
@@ -115,7 +115,9 @@ export default class Settings extends Evented {
 			});
 		}
 		
-		options.grid.columns = (layers > 3) ? 3 : layers;	
+		var n = options.grid.layers.length;
+		
+		options.grid.columns = (n > 3) ? 3 : n;	
 		
 		return options;
 	}

@@ -5,9 +5,9 @@
         "aspect": true
     },
     "grid": {
-        "columns": 5,
-        "width": 400,
-        "height": 400,
+        "columns": 3,
+        "width": 360,
+        "height": 360,
         "layers": [{
                 "z": 0,
                 "ports": ["out_port0"],
@@ -442,8 +442,8 @@
         "aspect": true
     },
     "playback": {
-        "speed": 8,
-        "loop": false,
+        "speed": 15,
+        "loop": true,
         "cache": 10
     }
 }
