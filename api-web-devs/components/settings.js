@@ -106,11 +106,13 @@ export default class Settings extends Evented {
 		if (!layers) return options;
 		
 		for (var i = 0; i < layers; i++) {
-			ports.forEach(p => {
+			ports.forEach((p, j) => {
+				var k = (i * ports.length) + j;
+				
 				options.grid.layers.push({
 					z : i,
 					ports : [p.name],
-					style : p.style || 0
+					style : p.style || k
 				})
 			});
 		}

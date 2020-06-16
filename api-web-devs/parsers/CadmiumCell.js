@@ -24,12 +24,19 @@ export default class CadmiumCell extends Parser {
 		}
 		
 		this.time = "0";
-		this.min = Infinity;
-		this.max = -Infinity;
+		// this.min = Infinity;
+		this.min = {};
+		// this.max = -Infinity;
+		this.max = {};
 		
 		this.Read(cfg, (content) => JSON.parse(content)).then(cfg => {
 			if (!cfg) return d.Reject(new Error("Unable to parse the config (.json) file."));
-				
+			
+			cfg.ports.forEach(p => {
+				this.min[p.name] = Infinity;
+				this.max[p.name] = -Infinity;
+			});
+			
 			this.ReadByChunk(log, this.ParseLogChunk.bind(this, cfg)).then(log => {				
 				if (!log) return d.Reject(new Error("Unable to parse the log (.log) file."));
 				
@@ -43,12 +50,29 @@ export default class CadmiumCell extends Parser {
 				
 				var options = Settings.Default(1, cfg.ports);
 				
-				options.grid.styles = [[]];
+				options.grid.styles = [];
 				
 				if (cfg.styles) options.grid.styles = cfg.styles;
 				
 				else {
+					var colors = [[215,48,39],[244,109,67],[253,174,97],[254,224,144],[255,255,191],[224,243,248],[171,217,233]];
+
 					// AUTO GENERATE STYLE. THIS WILL HAVE TO GO AWAY. WHAT IF VALUE IS NOT A NUMBER? NOMINAL CLASSES WONT WORK
+					cfg.ports.forEach(p => {
+						var step = (this.max[p.name] - this.min[p.name]) / colors.length;
+						
+						var style = colors.map((c, i) => {
+							var start = this.min[p.name] + i * step;
+							
+							return { start:start, end:start + step, color:c }
+						});
+						
+						options.grid.styles.push(style);
+					});
+					// END OF AUTO STYLE GENERATION
+					
+					// AUTO GENERATE STYLE. THIS WILL HAVE TO GO AWAY. WHAT IF VALUE IS NOT A NUMBER? NOMINAL CLASSES WONT WORK
+					/*
 					var colors = [[215,48,39],[244,109,67],[253,174,97],[254,224,144],[255,255,191],[224,243,248],[171,217,233],[116,173,209],[69,117,180]];
 					var step = (this.max - this.min) / colors.length;
 					
@@ -59,6 +83,7 @@ export default class CadmiumCell extends Parser {
 					});
 					
 					options.grid.styles[0][4].end++;
+					*/
 					// END OF AUTO STYLE GENERATION
 				}
 				
@@ -100,11 +125,12 @@ export default class CadmiumCell extends Parser {
 				
 				for (var i = 0; i < values.length; i++) {
 					var v = +values[i];
+					var p = cfg.ports[i].name;
 					
-					if (v > this.max) this.max = v;
-					if (v < this.min) this.min = v;
+					if (v > this.max[p]) this.max[p] = v;
+					if (v < this.min[p]) this.min[p] = v;
 				
-					parsed.push(new TransitionCA("Y", this.time, m, c, cfg.ports[i].name, m, v));
+					parsed.push(new TransitionCA("Y", this.time, m, c, p, m, v));
 				}
 			}
 			else this.time = line;
