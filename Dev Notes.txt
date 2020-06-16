@@ -1,0 +1,57 @@
+TODO : 
+
+	Parsing: 
+
+		Talk about Lexers, lexerless parsing, grammar
+		CD++ : Initial values are not in log file
+		Lopez : Initial values are in log file
+
+	- Difficulty: model ids are unique, port names are not unique.
+
+History
+	2019:
+		- Converted to more Object Oriented pattern. A lot of development over the year, see related papers.
+	
+	2019 December :
+		- Dashboard is a "failure", flushed it and moved to simplified app. Added embeddable app and case specific apps (covid)	
+
+	2020 February:
+		- Decision to convert log results into 3 files (simulation.json, transitions.csv, options.json)
+
+	2020 April:
+		- Decision on SVG diagram structure. All elements should be optional. Keep SVG independent (svg) from model 
+		  structure (json). Users can specify their SVG any way they want as long as corresponding ids are there.
+		  This provides more expressive visual representation possibilities, easier for non experts. Link structure 
+		  to SVG by id.  
+
+	2020 May:
+		- Decision to add model structure to simulation.json. Try to follow DEVS formalism but consider ease of development.
+		  Couplings are at the model level (not coupled). Only outgoing couplings are stored.
+		- Embeddable apps added to ARSLab websites and SUSTAIN.
+
+	2020 June 2nd:
+		- Decision to remove destination and inputs from log file. Use newly asdded model structure to determine message 
+		  paths. Start working on diagram to support new structure. 
+
+
+	2020 June 2nd:
+		- Decision to allow grids by layer and ports. Allow users to configure which combinations they want to show.
+		  Ports can be combined on a single grid, precendence is controlled by user.
+
+		- Question : Should ports and z layer be treated as complex outputs? Use a delegate to "read" the complex output?
+		  See Cadmium.
+
+	2020 June 9th:
+		- Added Cadmium Cell-DEVS parser. Decision to use an additional config file to solve Cadmium limitations. File 
+		  contains model name, grid size, etc.
+		- options.json file is difficult to create manually, added a save button in the UI to download current config. 
+		  still missing UI for layers and styles.
+	
+	2020 June 16th:
+		- Decision to allow users to specify a palette (style) in the input config for Cadmium to Std conversion. This way
+		  users don't have to always manually modify options file to add styles. 
+		- Options file can also be saved and reused for many simulations.
+		- Decision to rename options.json to viewer.json.
+		- Decision to allow users to style by grid. Different styles can be used for different grids. Same values can be colored
+		  differently on different grids.
+
