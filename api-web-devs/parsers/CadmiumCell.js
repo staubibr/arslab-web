@@ -35,27 +35,29 @@ export default class CadmiumCell extends Parser {
 				
 				var models = [{
 					name: cfg.model,
-					ports : cfg.ports.map(p => ({ name: p, type: "output" }))
+					ports : cfg.ports.map(p => ({ name: p.name, type: "output" }))
 				}];
 				
 				var simulation = new Simulation(cfg.model, "Cadmium", "Cell-DEVS", models, cfg.size);
 				var transitions = new TransitionsCA(log);
 				
-				var options = Settings.Default(1, cfg.ports.map(p => ({ name:p })));
+				var options = Settings.Default(1, cfg.ports);
 				
 				options.grid.styles = [[]];
 				
+				if (cfg.styles) options.grid.styles = cfg.styles;
+				
 				// AUTO GENERATE STYLE. THIS WILL HAVE TO GO AWAY. WHAT IF VALUE IS NOT A NUMBER? NOMINAL CLASSES WONT WORK
-				var colors = [[215,48,39],[244,109,67],[253,174,97],[254,224,144],[255,255,191],[224,243,248],[171,217,233],[116,173,209],[69,117,180]];
-				var step = (this.max - this.min) / colors.length;
+				//var colors = [[215,48,39],[244,109,67],[253,174,97],[254,224,144],[255,255,191],[224,243,248],[171,217,233],[116,173,209],[69,117,180]];
+				//var step = (this.max - this.min) / colors.length;
 				
-				options.grid.styles[0] = colors.map((c, i) => {
-					var start = this.min + i * step;
-					
-					return { start:start, end:start + step, color:colors[i] }
-				});
+				//options.grid.styles[0] = colors.map((c, i) => {
+				//	var start = this.min + i * step;
+				//	
+				//	return { start:start, end:start + step, color:colors[i] }
+				//});
 				
-				options.grid.styles[0][4].end++;
+				//options.grid.styles[0][4].end++;
 				// END OF AUTO STYLE GENERATION
 				
 				var files = new Files(simulation, transitions, null, new Options(options));
@@ -100,7 +102,7 @@ export default class CadmiumCell extends Parser {
 					if (v > this.max) this.max = v;
 					if (v < this.min) this.min = v;
 				
-					parsed.push(new TransitionCA("Y", this.time, m, c, cfg.ports[i], m, v));
+					parsed.push(new TransitionCA("Y", this.time, m, c, cfg.ports[i].name, m, v));
 				}
 			}
 			else this.time = line;

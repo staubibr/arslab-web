@@ -110,7 +110,7 @@ export default class Settings extends Evented {
 				options.grid.layers.push({
 					z : i,
 					ports : [p.name],
-					style : 0
+					style : p.style || 0
 				})
 			});
 		}
