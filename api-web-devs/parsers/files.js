@@ -7,7 +7,8 @@ export class Simulation {
 			simulator : simulator || null,
 			type : type || null,
 			models : models || [],	
-			size : size || null
+			size : size || null,	
+			filesize : 0
 		}
 	}
 	
@@ -15,7 +16,9 @@ export class Simulation {
 		return new Simulation(json.name, json.simulator, json.type, json.models, json.size);		
 	}
 	
-	ToFile() {
+	ToFile(filesize) {
+		this.content.filesize = filesize;
+		
 		var content = JSON.stringify(this.content);
 		
 		return new File([content], "simulation.json", { type:"application/json", endings:'native' });
@@ -178,9 +181,11 @@ export class Files {
 	
 	AsFiles() {
 		var files = [];
+
+		var t = this.transitions.ToFile();
 		
-		files.push(this.simulation.ToFile());
-		files.push(this.transitions.ToFile());
+		files.push(this.simulation.ToFile(t.size));
+		files.push(t);
 		
 		if (this.diagram) files.push(this.diagram.ToFile());
 		

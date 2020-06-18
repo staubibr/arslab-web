@@ -47,10 +47,10 @@ export default class Main extends Templated {
 		this.Node('btnRise').On('click', this.OnButtonRise_Click.bind(this));
 		this.Node('btnSettings').On('click', this.OnButtonSettings_Click.bind(this));
 		
-		this.Widget("converter").On("converted", this.OnConverter_Converted.bind(this));
+		this.Widget("converter").On("converted", this.OnFiles_Loaded.bind(this));
 		this.Widget("converter").On("error", this.OnWidget_Error.bind(this));
 		
-		this.Widget("rise").On("FilesReady", this.OnRise_Loaded.bind(this));
+		this.Widget("rise").On("FilesReady", this.OnFiles_Loaded.bind(this));
 		this.Widget("rise").On("error", this.OnWidget_Error.bind(this));
 		
 		this.Widget("playback").Recorder = new Recorder(this.Widget("multi").Canvas);
@@ -122,12 +122,8 @@ export default class Main extends Templated {
 		
 		this.ShowPopup(Core.Nls("Popup_Settings_Title"), this.Widget("settings"), 'settings');
 	}
-	
-	OnConverter_Converted(ev) {
-		this.HidePopup();
-	}
-	
-	OnRise_Loaded(ev) {
+		
+	OnFiles_Loaded(ev) {
 		this.HidePopup();
 		
 		this.Widget("upload").files = ev.files;

@@ -107,19 +107,21 @@ export default Core.Templatable("Widget.Converter", class Converter extends Temp
 			Dom.AddCss(this.Elem("wait"), "hidden");
 		
 			this.Emit("error", { error:error })
-		});
+		}, this.OnError);
 	}
 	
 	onParser_Parsed(parser, result) {
 		Dom.AddCss(this.Elem("wait"), "hidden");
 		
 		try {
-			Zip.SaveZipStream(result.name, result.AsFiles()).then((ev) => {
-				this.Emit("converted");
-			});
+			var files = result.AsFiles();
+			
+			Zip.SaveZipStream(result.name, files).then((ev) => {
+				this.Emit("converted", { files:files });
+			}, this.OnError);
 		}
 		catch (error) {
-			this.Emit("error", { error:error });
+			this.OnError(error);
 		}
 	}
 	
@@ -128,6 +130,10 @@ export default Core.Templatable("Widget.Converter", class Converter extends Temp
 		var type = this.Node("types").Node("input:checked");
 		
 		this.Elem("parse").disabled = !simulator || !type || this.files == null;
+	}
+
+	OnError(error) {
+		this.Emit("error", { error:error });
 	}
 
 	Template() {
