@@ -13,7 +13,7 @@ export default Core.Templatable("Auto.Diagram", class AutoDiagram extends Automa
 		super(diagram, simulation);
 		
 		this.Widget.SetDiagram(this.Simulation.diagram);
-		
+		this.Widget.setDependenceTreeMap(this.Simulation.models);	//Added
 		this.Widget.Draw(this.Simulation.CurrentFrame().transitions);
 		
 		this.selected = [];

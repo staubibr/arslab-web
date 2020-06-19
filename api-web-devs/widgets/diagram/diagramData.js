@@ -7,7 +7,8 @@ export default class DiagramData {
 		this.models = {};
 		this.ports = {};
 		this.links = {};
-		
+		this.link_branches = [];
+
 		this.SetModels(svg);
 		this.SetPorts(svg);
 		this.SetLinks(svg);
@@ -40,7 +41,18 @@ export default class DiagramData {
 			
 			if (!this.ports[model]) this.ports[model] = {};
 			
-			this.ports[model][name] = { name:name, model:model, type:type, node:node };
+			// this.ports[model][name] = { name:name, model:model, type:type, node:node };
+			//Array of port nodes in case of multiple tags...
+			if (!this.ports[model][name]) {
+				var nodeArray=[];
+				nodeArray.push(node);
+				this.ports[model][name] = { name:name, model:model, type:type, node:nodeArray };
+			}else{
+				var nodeArray=[];
+				nodeArray=this.ports[model][name].node;
+				nodeArray.push(node);
+				this.ports[model][name] = { name:name, model:model, type:type, node:nodeArray };
+			}
 		});
 	}
 	
@@ -70,14 +82,18 @@ export default class DiagramData {
 			
 			if (modelA) {
 				if (!this.links[modelA]) this.links[modelA] = { in:{}, out:{} };
-				
+				if (!this.link_branches[modelA]) this.link_branches[modelA] = { in:[], out:[] }; 
+
 				this.links[modelA].out[portA] = link;
+				this.link_branches[modelA].out.push(link);	//Ports with multiple destinations
 			}
 			
 			if (modelB) {
 				if (!this.links[modelB]) this.links[modelB] = { in:{}, out:{} };
-				
+				if (!this.link_branches[modelB]) this.link_branches[modelB] = { in:[], out:[] };
+
 				this.links[modelB].in[portB] = link;
+				this.link_branches[modelB].in.push(link);	//Ports with multiple input links
 			}
 		});
 	}
@@ -111,7 +127,18 @@ export default class DiagramData {
 		
 		return m[dir][port] || null;
 	}
-	
+
+	LinkBranches(model, port) {		//Added
+		var m = this.link_branches[model]
+
+		if (!m) return null;
+
+		var lks = m["out"];
+
+		// console.log("Link_tree retrieved by dir and port: ",lks);
+		return lks || null;
+	}
+
 	Nodes() {
 		return this.nodes;
 	}
