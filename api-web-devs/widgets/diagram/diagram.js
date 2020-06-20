@@ -50,13 +50,15 @@ export default Core.Templatable("Widgets.Diagram", class Diagram extends Templat
 			if (outlink.portA == port){
 				if (outlink.modelB){
 					tree.branch_nodes.push( this.data.models[outlink.modelB].node);	
-					if (this.data.ports[outlink.modelB][outlink.portB]){
-						if (Array.isArray(this.data.ports[outlink.modelB][outlink.portB].node)){
-							this.data.ports[outlink.modelB][outlink.portB].node.forEach( port => {
-								tree.branch_nodes.push(port);		
-							});
-						}else{
-							tree.branch_nodes.push( this.data.ports[outlink.modelB][outlink.portB].node);	
+					if (this.data.ports[outlink.modelB]){
+						if (this.data.ports[outlink.modelB][outlink.portB]){
+							if (Array.isArray(this.data.ports[outlink.modelB][outlink.portB].node)){
+								this.data.ports[outlink.modelB][outlink.portB].node.forEach( port => {
+									tree.branch_nodes.push(port);		
+								});
+							}else{
+								tree.branch_nodes.push( this.data.ports[outlink.modelB][outlink.portB].node);	
+							}
 						}
 					}
 					tree.branch_nodes.push( outlink.node);	
