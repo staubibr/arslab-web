@@ -107,7 +107,7 @@ export default Core.Templatable("Widget.Converter", class Converter extends Temp
 			Dom.AddCss(this.Elem("wait"), "hidden");
 		
 			this.Emit("error", { error:error })
-		}, this.OnError);
+		}, (error) => { this.OnError(error); });
 	}
 	
 	onParser_Parsed(parser, result) {
@@ -118,7 +118,11 @@ export default Core.Templatable("Widget.Converter", class Converter extends Temp
 			
 			Zip.SaveZipStream(result.name, files).then((ev) => {
 				this.Emit("converted", { files:files });
-			}, this.OnError);
+			}, (error) => { 
+				this.OnError(error); 
+				
+				this.Emit("converted", { files:files });
+			});
 		}
 		catch (error) {
 			this.OnError(error);
