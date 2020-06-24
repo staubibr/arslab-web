@@ -113,19 +113,17 @@ export default Core.Templatable("Widget.Converter", class Converter extends Temp
 	onParser_Parsed(parser, result) {
 		Dom.AddCss(this.Elem("wait"), "hidden");
 		
+		var files = result.AsFiles();
+		
 		try {
-			var files = result.AsFiles();
-			
-			Zip.SaveZipStream(result.name, files).then((ev) => {
-				this.Emit("converted", { files:files });
-			}, (error) => { 
-				this.OnError(error); 
-				
-				this.Emit("converted", { files:files });
-			});
+			// This function is async, but we just fire it off and hope all goes well. Some browsers don't support the 3rd party library.
+			Zip.SaveZipStream(result.name, files);
 		}
 		catch (error) {
 			this.OnError(error);
+		}
+		finally {
+			this.Emit("converted", { files:files });
 		}
 	}
 	
