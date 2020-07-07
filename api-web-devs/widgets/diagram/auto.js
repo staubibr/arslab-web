@@ -12,8 +12,10 @@ export default Core.Templatable("Auto.Diagram", class AutoDiagram extends Automa
 		
 		super(diagram, simulation);
 		
-		this.Widget.SetDiagram(this.Simulation.diagram);
-		this.Widget.setDependenceTreeMap(this.Simulation.models);	//Added
+		//this.Widget.SetDiagram(this.Simulation.diagram,this.Simulation.models);
+		this.Widget.SetDiagram(this.Simulation);
+		// this.Widget.setDependenceTreeMap(this.Simulation.models);	//Now we do this in diagramData
+		
 		this.Widget.Draw(this.Simulation.CurrentFrame().transitions);
 		
 		this.selected = [];
@@ -70,7 +72,9 @@ export default Core.Templatable("Auto.Diagram", class AutoDiagram extends Automa
 		Dom.Empty(this.tooltip.Elem("content"));
 		
 		var tX = f.transitions.filter(t => t.Type == "X" && t.Destination == ev.model);
-		var tY = f.transitions.filter(t => t.Type == "Y" && t.Model == ev.model);
+		// var tY = f.transitions.filter(t => t.Type == "Y" && t.Model == ev.model);
+		var mm=this.Simulation.modelMap.get(ev.model);
+		var tY = f.transitions.filter(t => t.Type == "Y" && t.Model == mm);
 		
 		if (tX.length == 0 && tY.length == 0) return;
 			

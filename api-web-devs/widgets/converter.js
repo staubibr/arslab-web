@@ -11,6 +11,7 @@ import CdppDevs	from '../parsers/CdppDevs.js';
 import CdppCell	from '../parsers/CdppCell.js';
 import LopezCell from '../parsers/LopezCell.js';
 import CadmiumCell from '../parsers/CadmiumCell.js';
+import CadmiumDEVS from '../parsers/CadmiumDEVS.js';
 
 export default Core.Templatable("Widget.Converter", class Converter extends Templated { 
 	
@@ -41,7 +42,8 @@ export default Core.Templatable("Widget.Converter", class Converter extends Temp
 				"Cell-DEVS" : LopezCell
 			},
 			"Cadmium" : {
-				"DEVS" : null,
+				// "DEVS" : null,
+				"DEVS" : CadmiumDEVS,
 				"Cell-DEVS" : CadmiumCell
 			}
 		};

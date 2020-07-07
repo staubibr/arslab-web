@@ -52,40 +52,7 @@ export default class CadmiumCell extends Parser {
 				
 				options.grid.styles = [];
 				
-				if (cfg.styles) options.grid.styles = cfg.styles;
-				
-				else {
-					var colors = [[215,48,39],[244,109,67],[253,174,97],[254,224,144],[255,255,191],[224,243,248],[171,217,233]];
-
-					// AUTO GENERATE STYLE. THIS WILL HAVE TO GO AWAY. WHAT IF VALUE IS NOT A NUMBER? NOMINAL CLASSES WONT WORK
-					cfg.ports.forEach(p => {
-						var step = (this.max[p.name] - this.min[p.name]) / colors.length;
-						
-						var style = colors.map((c, i) => {
-							var start = this.min[p.name] + i * step;
-							
-							return { start:start, end:start + step, color:c }
-						});
-						
-						options.grid.styles.push(style);
-					});
-					// END OF AUTO STYLE GENERATION
-					
-					// AUTO GENERATE STYLE. THIS WILL HAVE TO GO AWAY. WHAT IF VALUE IS NOT A NUMBER? NOMINAL CLASSES WONT WORK
-					/*
-					var colors = [[215,48,39],[244,109,67],[253,174,97],[254,224,144],[255,255,191],[224,243,248],[171,217,233],[116,173,209],[69,117,180]];
-					var step = (this.max - this.min) / colors.length;
-					
-					options.grid.styles[0] = colors.map((c, i) => {
-						var start = this.min + i * step;
-						
-						return { start:start, end:start + step, color:colors[i] }
-					});
-					
-					options.grid.styles[0][4].end++;
-					*/
-					// END OF AUTO STYLE GENERATION
-				}
+				//Before: here there was some code for auto style generation for CellDEVS.
 				
 				var files = new Files(simulation, transitions, null, new Options(options));
 				

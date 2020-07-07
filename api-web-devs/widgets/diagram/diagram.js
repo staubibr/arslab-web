@@ -5,94 +5,42 @@ import Dom from '../../tools/dom.js';
 import Templated from '../../components/templated.js';
 import DiagramData from './diagramData.js';
 
-export class DependenceTree{	//Added
-	constructor(model,outPort){
-		this.modelName=model;
 
-		this.outPort=outPort;
-
-		this.atomic=[];	//Remove unless we use different colours for links and destination models
-	
-		this.coupled=[];//Remove unless we use different colours for links and destination models
-
-		this.branch_nodes=[];
-	}
-}
 
 export default Core.Templatable("Widgets.Diagram", class Diagram extends Templated { 
 
 	constructor(node) {
 		super(node);
 	}
-	
-	dependenceTreeMap = new Map();	//Added
 
-	setDependenceTreeMap(models_sim){	//Added
-		for (var model in models_sim) {
-			if (Object.prototype.hasOwnProperty.call(models_sim,model)) {	
-				if (models_sim[model].type=="atomic"){
-					models_sim[model].ports.forEach(p => { 
-						if (p.type == "output"){
-							var tree = new DependenceTree(models_sim[model],p);
-							this.searchDependencies(models_sim[model],p.name,tree);
-							this.dependenceTreeMap.set(models_sim[model].name + p.name,tree)	//Insert tree head in the map
-						} 
-					});
-				}
-			}
-		}
-		// console.log(this.dependenceTreeMap);
-	}
+	// SetDiagram(svg,models_sim,simulation) {
+	SetDiagram(Simulation) {
 
-	searchDependencies(model,port,tree){	//Added
-		if (!this.data.link_branches[model.name].out){return;}
-		this.data.link_branches[model.name].out.forEach(	outlink => {
-			if (outlink.portA == port){
-				if (outlink.modelB){
-					tree.branch_nodes.push( this.data.models[outlink.modelB].node);	
-					if (this.data.ports[outlink.modelB]){
-						if (this.data.ports[outlink.modelB][outlink.portB]){
-							if (Array.isArray(this.data.ports[outlink.modelB][outlink.portB].node)){
-								this.data.ports[outlink.modelB][outlink.portB].node.forEach( port => {
-									tree.branch_nodes.push(port);		
-								});
-							}else{
-								tree.branch_nodes.push( this.data.ports[outlink.modelB][outlink.portB].node);	
-							}
-						}
-					}
-					tree.branch_nodes.push( outlink.node);	
-					var mk=outlink.marker;
-					if (mk) {
-						tree.branch_nodes.push(mk);	
-					}
-					if (this.data.models[outlink.modelB].type=="coupled"){
-						tree.coupled.push(this.data.models[outlink.modelB].name);
-						this.searchDependencies(this.data.models[outlink.modelB],outlink.portB,tree);
-					}else{
-						tree.atomic.push(this.data.models[outlink.modelB].name);
-					}
-				}
-			}
-		})
-	}
-
-	
-
-	SetDiagram(svg) {
-		this.Elem('diagram').innerHTML = svg;
+		this.Elem('diagram').innerHTML = Simulation.diagram;
 		
 		this.Node('diagram').Elem("svg").setAttribute("preserveAspectRatio", "none");
 		
-		var models = this.Node('diagram').Elems("[type='atomic'],[type='coupled']");
+		Simulation.setDependencyNodes(this.Elem('diagram').firstElementChild,Simulation.dependenceTreeMap);
 
-		models.forEach((model) => {			
+		this.Simulation = Simulation;
+
+		this.models = []
+
+		this.Simulation.models.forEach( model => {
+			if (model.svg){
+				var str = '[id='+model.svg+']';
+				var m = this.Elem('diagram').firstElementChild.querySelector(str);	
+				this.models.push(m);
+			}
+		});
+
+		this.models.forEach((model) => {			
 			model.addEventListener("mousemove", this.onSvgMouseMove_Handler.bind(this));
 			model.addEventListener("click", this.onSvgClick_Handler.bind(this));
 			model.addEventListener("mouseout", this.onSvgMouseOut_Handler.bind(this));
 		});
 		
-		this.data = new DiagramData(this.Elem('diagram').firstElementChild);
+		// this.data = new DiagramData(this.Elem('diagram').firstElementChild,models_sim);
 	}
 	
 	SetCss() {
@@ -102,9 +50,10 @@ export default Core.Templatable("Widgets.Diagram", class Diagram extends Templat
 	}
 	
 	onSvgMouseMove_Handler(ev) {
-		var model = ev.target.getAttribute('name').toLowerCase();
-		
+		// var model = ev.target.getAttribute('name').toLowerCase();
+		var model = ev.target.getAttribute('id').toLowerCase();
 		this.Emit("MouseMove", { x:ev.pageX, y:ev.pageY , model:model });
+		// this.Emit("MouseMove", { x:ev.pageX, y:ev.pageY, model:ev.target.getAttribute('id') });
 	}
 		
 	onSvgMouseOut_Handler(ev) {
@@ -158,47 +107,33 @@ export default Core.Templatable("Widgets.Diagram", class Diagram extends Templat
 		if (l && l.marker) this.AddModelCss(l.marker, ["highlighted", t.type]);	
 	}
 
-	DrawYTransition(t) {
-		var m = this.data.Model(t.Id);
-		
-		if (m) this.AddModelCss(m.node, ["highlighted", t.type]);
-		
-		var p = this.data.Port(t.Id, t.port);
-		
-		// if (p) this.AddModelCss(p.node, ["highlighted", t.type]);
-		if (p){
-			if (p.node.length>0){
-				p.node.forEach(portNode => {
-					this.AddModelCss(portNode, ["highlighted", t.type]);
-				});
-			}
-		}
-		var l = this.data.Link(t.Id, t.port, t.type);
-		
-		if (l) this.AddModelCss(l.node, ["highlighted", t.type]);
-		
-		if (l && l.marker) this.AddModelCss(l.marker, ["highlighted", t.type]);
-
-		//Search for ports with branches.	//Added
-		var l2 = this.data.LinkBranches(t.Id, t.port);
-		if (l2){
-			l2.forEach(l3 => {
-				if (l3.portA==t.port){
-					if (l3) this.AddModelCss(l3.node, ["highlighted", t.type]);
-					if (l3 && l3.marker) this.AddModelCss(l3.marker, ["highlighted", t.type]);	
-				}
-			 } );
-		}
+	DrawYTransition(t) {  
 		
 		//Search for dependence tree.		//Added
-		var map = this.dependenceTreeMap.get(t.Id + t.port);
-		if (map){
-			map.branch_nodes.forEach(node => {
+		// var map = this.dependenceTreeMap.get(t.Id + t.port);
+		var tree = this.Simulation.dependenceTreeMap.get(t.Id + t.port);
+		if (tree){
+			this.AddModelCss(tree.modelNode, ["highlighted", "Y"]);
+			
+			// this.AddModelCss(tree.portNode, ["highlighted", "Y"]);
+			if (Array.isArray(tree.portNode)){
+				tree.portNode.forEach(p => {
+					this.AddModelCss(p, ["highlighted", "Y"]);
+				});
+			}
+			else
+			{
+				this.AddModelCss(tree.portNode, ["highlighted", "Y"]);
+			}
+			
+			tree.nodes.forEach(node => {
 				if (node) this.AddModelCss(node, ["highlighted", "X"]);
 			 } );
 		}
 
 	}
+
+
 
 	AddModelCss(model, css) {
 		css.forEach(c => model.classList.add(c));
@@ -209,6 +144,22 @@ export default Core.Templatable("Widgets.Diagram", class Diagram extends Templat
 	}
 	
 	Reset() {
-		this.data.Nodes().forEach(n => { this.RemoveModelCss(n, ["highlighted", "X", "Y"]); })
+		// this.data.Nodes().forEach(n => { this.RemoveModelCss(n, ["highlighted", "X", "Y"]); })
+		this.Simulation.dependenceTreeMap.forEach(tree => { 
+			this.RemoveModelCss(tree.modelNode, ["highlighted", "X", "Y"]); 
+			// this.RemoveModelCss(tree.portNode, ["highlighted", "X", "Y"]); 
+			if (Array.isArray(tree.portNode)){
+				tree.portNode.forEach(p2=> {
+					this.RemoveModelCss(p2, ["highlighted", "X", "Y"]); 
+				});	
+			}else{
+				this.RemoveModelCss(tree.portNode, ["highlighted", "X", "Y"]); 
+			}
+			
+			tree.nodes.forEach(br => { 
+				this.RemoveModelCss(br, ["highlighted", "X", "Y"]); 
+			})		
+
+		})
 	}
 });
