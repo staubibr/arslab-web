@@ -1,0 +1,214 @@
+{
+    "name": "ElevatorLOG",
+    "simulator": "Cadmium",
+    "type": "DEVS",
+    "models": [
+        {
+            "name": "idle",
+            "svg": "idleCirc",
+            "type": "atomic",
+            "submodels": [],
+            "ports": [
+                {
+                    "svg": ["idle_pIn1","idle_pIn2"],
+                    "name": "transitionin",
+                    "type": "input"
+                },
+                {
+                    "svg": ["idle_pOut1","idle_pOut2"],
+                    "name": "transitionout",
+                    "type": "output"
+                }
+            ],
+            "links": [
+                {
+                    "svg": "Link1",
+                    "portB": "transitionin",
+                    "modelB": "movingup",
+                    "portA": "transitionout",
+                    "modelA": "idle"
+                },
+                {
+                    "svg": "Link4",
+                    "portB": "transitionin",
+                    "modelB": "movingdown",
+                    "portA": "transitionout",
+                    "modelA": "idle"
+                }
+            ]
+        },
+        {
+            "name": "movingup",
+            "svg": "movingupCirc",
+            "type": "atomic",
+            "submodels": [],
+            "ports": [
+                {
+                    "svg": ["movingup_pIn1","movingup_pIn2"],
+                    "name": "transitionin",
+                    "type": "input"
+                },
+                {
+                    "svg": ["movingup_pOut1","movingup_pOut2"],
+                    "name": "transitionout",
+                    "type": "output"
+                }
+            ],
+            "links": [
+                {
+                    "svg": "Link2",
+                    "portB": "transitionin",
+                    "modelB": "idle",
+                    "portA": "transitionout",
+                    "modelA": "movingup"
+                },
+                {
+                    "svg": "Link5",
+                    "portB": "transitionin",
+                    "modelB": "topposition",
+                    "portA": "transitionout",
+                    "modelA": "movingup"
+                }
+            ]
+        },
+        {
+            "name": "movingdown",
+            "svg": "movingdownCirc",
+            "type": "atomic",
+            "submodels": [],
+            "ports": [
+                {
+                    "svg": ["movingdown_pIn1","movingdown_pIn2"],
+                    "name": "transitionin",
+                    "type": "input"
+                },
+                {
+                    "svg": ["movingdown_pOut1","movingdown_pOut2"],
+                    "name": "transitionout",
+                    "type": "output"
+                }
+            ],
+            "links": [
+                {
+                    "svg": "Link3",
+                    "portB": "transitionin",
+                    "modelB": "idle",
+                    "portA": "transitionout",
+                    "modelA": "movingdown"
+                },
+                {
+                    "svg": "Link8",
+                    "portB": "transitionin",
+                    "modelB": "bottomposition",
+                    "portA": "transitionout",
+                    "modelA": "movingdown"
+                }
+            ]
+        },
+        {
+            "name": "topposition",
+            "svg": "toppositionCirc",
+            "type": "atomic",
+            "submodels": [],
+            "ports": [
+                {
+                    "svg": "topposition_pIn",
+                    "name": "transitionin",
+                    "type": "input"
+                },
+                {
+                    "svg": "topposition_pOut",
+                    "name": "transitionout",
+                    "type": "output"
+                }
+            ],
+            "links": [
+                {
+                    "svg": "Link6",
+                    "portB": "transitionin",
+                    "modelB": "movingdown",
+                    "portA": "transitionout",
+                    "modelA": "topposition"
+                }
+            ]
+        },
+        {
+            "name": "bottomposition",
+            "svg": "bottompositionCirc",
+            "type": "atomic",
+            "submodels": [],
+            "ports": [
+                {
+                    "svg": "bottomposition_pIn",
+                    "name": "transitionin",
+                    "type": "input"
+                },
+                {
+                    "svg": "bottomposition_pOut",
+                    "name": "transitionout",
+                    "type": "output"
+                }
+            ],
+            "links": [
+                {
+                    "svg": "Link7",
+                    "portB": "transitionin",
+                    "modelB": "movingup",
+                    "portA": "transitionout",
+                    "modelA": "bottomposition"
+                }
+            ]
+        },
+        {
+            "name": "input_reader",
+            "svg": "input_readercirc",
+            "type": "atomic",
+            "submodels": [],
+            "ports": [
+                {
+                    "svg": "input_readerport",
+                    "name": "out",
+                    "type": "output"
+                }
+            ],
+            "links": [
+                {
+                    "svg": "input_readerlink2",
+                    "portB": "transitionin",
+                    "modelB": "movingup",
+                    "portA": "out",
+                    "modelA": "input_reader"
+                },
+                {
+                    "svg": "input_readerlink4",
+                    "portB": "transitionin",
+                    "modelB": "movingdown",
+                    "portA": "out",
+                    "modelA": "input_reader"
+                },
+                {
+                    "svg": "input_readerlink1",
+                    "portB": "transitionin",
+                    "modelB": "topposition",
+                    "portA": "out",
+                    "modelA": "input_reader"
+                },
+                {
+                    "svg": "input_readerlink5",
+                    "portB": "transitionin",
+                    "modelB": "bottomposition",
+                    "portA": "out",
+                    "modelA": "input_reader"
+                },
+                {
+                    "svg": "input_readerlink3",
+                    "portB": "transitionin",
+                    "modelB": "idle",
+                    "portA": "out",
+                    "modelA": "input_reader"
+                }
+            ]
+        }
+    ],
+    "size": 7
+}
