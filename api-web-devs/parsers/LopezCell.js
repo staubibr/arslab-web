@@ -97,7 +97,7 @@ export default class LopezCell extends Parser {
 			} 
 		});
 		
-		ma.models[0].ports.unshift({ name:"out", type:"output" });
+		ma.models[0].ports.unshift({ name:"out", type:"output", style:0 });
 		
 		return ma;
 	}
