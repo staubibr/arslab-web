@@ -92,7 +92,8 @@ export default class LopezCell extends Parser {
 		ma.models[0].ports = ma.models[0].ports.map(p => { 
 			return {
 				name : "out_" + p,
-				type : "output"
+				type : "output",
+				style : 0
 			} 
 		});
 		
