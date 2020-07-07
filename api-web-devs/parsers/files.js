@@ -35,6 +35,8 @@ export class Diagram {
 	}
 	
 	ToFile() {
+		if (!this.content) return null;
+		
 		return new File([this.content], "diagram.svg", { type:"image/svg+xml" })
 	}
 }
@@ -187,7 +189,7 @@ export class Files {
 		files.push(this.simulation.ToFile(t.size));
 		files.push(t);
 		
-		if (this.diagram) files.push(this.diagram.ToFile());
+		if (this.diagram.content) files.push(this.diagram.ToFile());
 		
 		files.push(this.options.ToFile());
 		

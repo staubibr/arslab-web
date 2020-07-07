@@ -5,17 +5,19 @@ import Core from '../api-web-devs/tools/core.js';
 import Net from '../api-web-devs/tools/net.js';
 import Dom from '../api-web-devs/tools/dom.js';
 import Templated from '../api-web-devs/components/templated.js';
+import oSettings from '../api-web-devs/components/settings.js';
 import BoxInput from '../api-web-devs/ui/box-input-files.js';
 import Popup from '../api-web-devs/ui/popup.js';
 import Playback from '../api-web-devs/widgets/playback.js';
 import Rise from '../api-web-devs/widgets/rise-loader.js';
 import Converter from '../api-web-devs/widgets/converter.js';
-import Settings from '../api-web-devs/widgets/settings.js';
+import Settings from '../api-web-devs/widgets/settings/settings.js';
 import Standardized from '../api-web-devs/parsers/standardized.js'
 import SimulationDEVS from '../api-web-devs/simulation/simulationDEVS.js'
 import SimulationCA from '../api-web-devs/simulation/simulationCA.js'
 import MultiView from '../api-web-devs/widgets/multiView.js'
 import Recorder from '../api-web-devs/components/recorder.js';
+import Zip from '../api-web-devs/tools/zip.js';
 
 export default class Main extends Templated { 
 
@@ -26,13 +28,11 @@ export default class Main extends Templated {
 		
 		this.simulation = null;
 		
-		this.popup = new Popup(this.Elem('main'));
+		this.popup = new Popup();
 		
 		this.AddWidget("converter", new Converter());
 		this.AddWidget("rise", new Rise());
 		this.AddWidget("settings", new Settings());
-		
-		this.settings = this.Widget("settings").Settings;
 		
 		this.Widget('upload').Icon = 'fa-file-upload';
 		this.Widget('upload').Label = Core.Nls('Dropzone_Upload_Label');
@@ -46,11 +46,12 @@ export default class Main extends Templated {
 		this.Node('btnConvert').On('click', this.OnButtonConvert_Click.bind(this));
 		this.Node('btnRise').On('click', this.OnButtonRise_Click.bind(this));
 		this.Node('btnSettings').On('click', this.OnButtonSettings_Click.bind(this));
+		this.Node('btnDownload').On('click', this.OnButtonDownload_Click.bind(this));
 		
 		this.Widget("converter").On("converted", this.OnFiles_Loaded.bind(this));
 		this.Widget("converter").On("error", this.OnWidget_Error.bind(this));
 		
-		this.Widget("rise").On("FilesReady", this.OnFiles_Loaded.bind(this));
+		this.Widget("rise").On("filesready", this.OnFiles_Loaded.bind(this));
 		this.Widget("rise").On("error", this.OnWidget_Error.bind(this));
 		
 		this.Widget("playback").Recorder = new Recorder(this.Widget("multi").Canvas);
@@ -81,8 +82,14 @@ export default class Main extends Templated {
 	OnParser_Parsed(files) {
 		this.Elem("load").style.backgroundImage = null;			
 		this.Elem("btnViz").disabled = false;
+		this.Elem("btnSettings").disabled = false;
+		this.Elem("btnDownload").disabled = false;
+		
+		this.files = files;
 		
 		var content = files.Content();
+		
+		this.settings = oSettings.FromJson(content.options);
 		
 		if (content.options) this.settings.json = content.options;
 		
@@ -96,6 +103,7 @@ export default class Main extends Templated {
 		
 		this.Widget("playback").Initialize(this.simulation, this.settings);
 		this.Widget('multi').Initialize(this.simulation, this.settings);	
+		this.Widget('settings').Initialize(this.simulation, this.settings);	
 		
 		this.Widget("multi").Resize();
 		this.Widget("multi").Redraw();
@@ -119,8 +127,23 @@ export default class Main extends Templated {
 	
 	OnButtonSettings_Click(ev) {
 		this.Widget("settings").UpdateUI();
+		this.Widget("settings").Show();
+	}
+	
+	OnButtonDownload_Click(ev) {	
+		var files = []
 		
-		this.ShowPopup(Core.Nls("Popup_Settings_Title"), this.Widget("settings"), 'settings');
+		files.push(this.files.simulation.ToFile());
+		files.push(this.files.transitions.ToFile());
+		files.push(this.settings.ToFile());
+				
+		try {
+			// This is an async call, Fire and forget, pew! 
+			Zip.SaveZipStream(this.files.name, files);
+		}
+		catch (error) {
+			this.OnWidget_Error({ error:error });
+		}
 	}
 		
 	OnFiles_Loaded(ev) {
@@ -142,8 +165,8 @@ export default class Main extends Templated {
 		Dom.ToggleCss(this.Elem("views"), "hidden", visible);
 	}
 	
-	ShowPopup(title, widget, css) {
-		this.popup.Widget = widget;
+	ShowPopup(title, content, css) {
+		this.popup.Content = content;
 		this.popup.Title = title;
 		
 		this.popup.SetCss(`popup popup-${css}`);
@@ -176,7 +199,8 @@ export default class Main extends Templated {
 						"<div class='button-column'>" + 
 						   "<button handle='btnConvert' title='nls(Dropzone_Convert)' class='fas fa-exchange-alt'></button>" +
 						   "<button handle='btnRise' title='nls(Dropzone_Rise)' class='fas fa-cloud-download-alt'></button>" +
-						   "<button handle='btnSettings' title='nls(Playback_Settings)' class='fas fa-tools'></button>" +
+						   "<button handle='btnSettings' title='nls(Playback_Settings)' class='fas fa-tools' disabled></button>" +
+						   "<button handle='btnDownload' title='nls(Download_Files)' class='fas fa-download' disabled></button>" +
 						"</div>" +
 					"</div>" +
 				"</main>";

@@ -2,7 +2,6 @@
 
 import Core from '../tools/core.js';
 import Dom from '../tools/dom.js';
-
 import Templated from '../components/templated.js';
 
 export default class Tooltip extends Templated  {
@@ -11,8 +10,12 @@ export default class Tooltip extends Templated  {
 		return this.Elem("root").getBoundingClientRect();
 	}
 	
-	constructor(css) {	
-		super(document.body);		
+	set Content(value) {
+		Dom.Place(value, this.Elem("content"));
+	}
+	
+	constructor(node, css) {	
+		super(node || document.body);		
 
 		if (css) Dom.AddCss(this.Elem("root"), css);		
 	}

@@ -5,8 +5,6 @@ import Dom from '../tools/dom.js';
 import Templated from '../components/templated.js';
 import BoxInput from '../ui/box-input-files.js';
 
-import Zip from '../../api-web-devs/tools/zip.js';
-
 import CdppDevs	from '../parsers/CdppDevs.js';
 import CdppCell	from '../parsers/CdppCell.js';
 import LopezCell from '../parsers/LopezCell.js';
@@ -107,22 +105,13 @@ export default Core.Templatable("Widget.Converter", class Converter extends Temp
 			Dom.AddCss(this.Elem("wait"), "hidden");
 		
 			this.Emit("error", { error:error })
-		}, this.OnError);
+		}, (error) => { this.OnError(error); });
 	}
 	
 	onParser_Parsed(parser, result) {
 		Dom.AddCss(this.Elem("wait"), "hidden");
-		
-		try {
-			var files = result.AsFiles();
-			
-			Zip.SaveZipStream(result.name, files).then((ev) => {
-				this.Emit("converted", { files:files });
-			}, this.OnError);
-		}
-		catch (error) {
-			this.OnError(error);
-		}
+					
+		this.Emit("converted", { files:result.AsFiles() });
 	}
 	
 	UpdateButton() {

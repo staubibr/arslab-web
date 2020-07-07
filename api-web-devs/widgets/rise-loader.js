@@ -145,7 +145,7 @@ export default Core.Templatable("Widget.RiseList", class RiseLoader extends Temp
 			
 			if (model.type == "DEVS") files.push(new File([responses[3]], 'diagram.svg'));
 			
-			this.Emit("FilesReady", { files : files });
+			this.Emit("filesready", { files : files });
 		}.bind(this);
 
 		Promise.all(defs).then(success, this.onError_Handler.bind(this));

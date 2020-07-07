@@ -17,6 +17,10 @@
                 "style": 0
             },{
                 "z": 0,
+                "ports": ["out_c", "out_ty"],
+                "style": 0
+            },{
+                "z": 0,
                 "ports": ["out_c"],
                 "style": 0
             }

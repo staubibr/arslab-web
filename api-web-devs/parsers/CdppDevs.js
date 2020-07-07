@@ -23,29 +23,32 @@ export default class CDppDEVS extends Parser {
 		}
 		
 		var name = log.name.substr(0, log.name.length - 4);
-		
-		var p1 = this.Read(ma, this.ParseMaFile.bind(this));
-		var p2 = this.Read(svg, this.ParseSVGFile.bind(this));
-		var p3 = this.ReadByChunk(log, this.ParseLogChunk.bind(this));
-
-		var defs = [p1, p2, p3];
 	
-		Promise.all(defs).then((data) => {
-			if (!data[0]) return d.Reject(new Error("Unable to parse the model (.ma) file."));
+		this.Read(ma, this.ParseMaFile.bind(this)).then((ma) => {
+			var p1 = this.Read(svg, this.ParseSVGFile.bind(this));
+			var p2 = this.ReadByChunk(log, this.ParseLogChunk.bind(this, ma));
 			
-			if (!data[2]) return d.Reject(new Error("Unable to parse the log (.log) file or it contained no X and Y messages."));
-			
-			var simulation = new Simulation(name, "CDpp", "DEVS", data[0].models, data[0].size);
-			var transitions = new TransitionsDEVS(data[2]);
-			var diagram = new Diagram(data[1]);
-			var options = new Options(Settings.Default());
-			
-			var files = new Files(simulation, transitions, diagram, options);
+			var defs = [p1, p2];
+	
+			Promise.all(defs).then((data) => {
+				var svg = data[0];
+				var log = data[1];
+				
+				if (!ma) return d.Reject(new Error("Unable to parse the model (.ma) file."));
+				
+				if (!log) return d.Reject(new Error("Unable to parse the log (.log) file or it contained no X and Y messages."));
+				
+				var simulation = new Simulation(name, "CDpp", "DEVS", data[0].models, data[0].size);
+				var transitions = new TransitionsDEVS(data[2]);
+				var diagram = new Diagram(data[1]);
+				var options = new Options(Settings.Default());
+				
+				var files = new Files(simulation, transitions, diagram, options);
 
-			d.Resolve(files);
-		}, (error) => {
-			d.Reject(error);
-		});
+				d.Resolve(files);
+			}, (error) => { d.Reject(error); });
+			
+		}, (error) => { d.Reject(error); });
 
 		return d.promise;
 	}
@@ -121,7 +124,9 @@ export default class CDppDEVS extends Parser {
 		return file;
 	}
 	
-	ParseLogChunk(parsed, chunk) {		
+	ParseLogChunk(ma, parsed, chunk) {	
+		debugger;
+	
 		function IndexOf(chunk, text, start) {
 			var idx = chunk.indexOf(text, start);
 			

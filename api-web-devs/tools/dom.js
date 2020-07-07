@@ -126,13 +126,14 @@ export default class Dom {
 	*
 	* Parameters :
 	*	elem : Element, the Element to remove
-	*	pNode : Element, the parent Element containing the Element to remove
 	* Return : none
 	*/
-	static Remove(elem, pNode) {
-		if (!pNode.children.some(function(child) { return (child === elem); })) return;
+	static Remove(elem) {
+		elem.parentElement.removeChild(elem);
 		
-		pNode.removeChild(elem);
+		// if (!pNode.children.some(function(child) { return (child === elem); })) return;
+		
+		// pNode.removeChild(elem);
 	}
 
 	/**

@@ -17,6 +17,12 @@ export default class SimulationCA extends Simulation {
 		return this.Dimensions.x / this.Dimensions.y;
 	}
 	
+	get MaxX() { return this.size[0] }
+	
+	get MaxY() { return this.size[1] }
+	
+	get MaxZ() { return this.size[2] }
+	
 	constructor(name, simulator, type, models, frames, size) {
 		super(name, simulator, type, models, frames);
 
@@ -25,14 +31,26 @@ export default class SimulationCA extends Simulation {
 		this.state = new StateCA(size, models);
 	}
 	
+	get Ports() {
+		return this.models[0].ports.map(p => p.name);
+	}
+	
+	get Layers() {
+		var layers = [];
+		
+		for (var i = 0; i < this.Dimensions.z; i++) layers.push(i);
+		
+		return layers;
+	}
+	
 	LayersAndPorts() {
 		var layers = [];
 			
-		for (var z = 0; z < this.Dimensions.z; z++) {
-			this.models[0].ports.forEach(port => {
-				layers.push({ z:z, ports:[port.name] });
+		this.Layers.forEach(z => {
+			this.Ports.forEach(port => {
+				layers.push({ z:z, ports:[port] });
 			}); 
-		}
+		})
 		
 		return layers;
 	}
