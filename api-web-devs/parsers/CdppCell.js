@@ -104,7 +104,7 @@ export default class CDpp extends Parser {
 		});
 		
 		ma.models = ma.models.map(m => {  
-			return { name:m, ports:[{ name:"out", type:"output" }] }
+			return { name:m, ports:[{ name:"out", type:"output", style:0 }] }
 		});
 		
 		return ma;
