@@ -1,0 +1,852 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="232.38326mm"
+   height="145.50807mm"
+   viewBox="0 0 232.38325 145.50807"
+   version="1.1"
+   id="svg164"
+   inkscape:version="1.0 (4035a4fb49, 2020-05-01)"
+   sodipodi:docname="diagram.svg">
+  <style
+     id="style2">.svg-arrow { stroke:#000000; } .svg-label { font-style: italic; font-size: 3.5px; font-family: sans-serif; } .svg-marker { overflow:visible; } .svg-path { fill:none; stroke:#000000; stroke-width:0.2px; stroke-linecap:butt; stroke-linejoin:miter; stroke-opacity:1; } .svg-model { fill:none;stroke:#000000; stroke-width:0.24; stroke-miterlimit:4; stroke-opacity:1 } .svg-model.svg-coupled { stroke-dasharray: 2, 1; stroke-dashoffset:0; } .svg-label.large { font-style:normal; font-size:4.9px; }</style>
+  <defs
+     id="defs158">
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       class="svg-marker"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker1343"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         id="path1341"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="marker1255"
+       refX="0"
+       refY="0"
+       orient="auto"
+       class="svg-marker"
+       inkscape:stockid="Arrow1Lend"
+       inkscape:collect="always">
+      <path
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path1253" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       class="svg-marker"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker1173"
+       style="overflow:visible"
+       inkscape:isstock="true"
+       inkscape:collect="always">
+      <path
+         id="path1171"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="marker1097"
+       refX="0"
+       refY="0"
+       orient="auto"
+       class="svg-marker"
+       inkscape:stockid="Arrow1Lend"
+       inkscape:collect="always">
+      <path
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path1095" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       class="svg-marker"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker1027"
+       style="overflow:visible"
+       inkscape:isstock="true"
+       inkscape:collect="always">
+      <path
+         id="path1025"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="marker1630"
+       refX="0"
+       refY="0"
+       orient="auto"
+       class="svg-marker"
+       inkscape:stockid="Arrow1Lend"
+       inkscape:collect="always">
+      <path
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path1628" />
+    </marker>
+    <marker
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="marker1572"
+       refX="0"
+       refY="0"
+       orient="auto"
+       class="svg-marker"
+       inkscape:stockid="Arrow1Lend">
+      <path
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path1570" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker1520"
+       style="overflow:visible"
+       inkscape:isstock="true"
+       class="svg-marker"
+       inkscape:collect="always">
+      <path
+         id="path1518"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker1474"
+       style="overflow:visible"
+       inkscape:isstock="true"
+       class="svg-marker"
+       inkscape:collect="always">
+      <path
+         id="path1472"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="marker1434"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Lend"
+       class="svg-marker"
+       inkscape:collect="always">
+      <path
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path1432" />
+    </marker>
+    <marker
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="marker1400"
+       refX="0"
+       refY="0"
+       orient="auto"
+       inkscape:stockid="Arrow1Lend"
+       class="svg-marker"
+       inkscape:collect="always">
+      <path
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path1398" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker1378"
+       style="overflow:visible"
+       inkscape:isstock="true"
+       class="svg-marker"
+       inkscape:collect="always">
+      <path
+         id="path1376"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Lend"
+       style="overflow:visible"
+       inkscape:isstock="true"
+       class="svg-marker"
+       inkscape:collect="always">
+      <path
+         id="path1103"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.98994949"
+     inkscape:cx="510.43432"
+     inkscape:cy="315.05768"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     inkscape:document-rotation="0"
+     showgrid="false"
+     showguides="true"
+     inkscape:snap-bbox="true"
+     inkscape:snap-bbox-midpoints="true"
+     inkscape:guide-bbox="true"
+     inkscape:snap-bbox-edge-midpoints="true"
+     inkscape:snap-smooth-nodes="true"
+     inkscape:object-nodes="true"
+     inkscape:snap-intersection-paths="true"
+     inkscape:object-paths="true"
+     inkscape:window-width="1920"
+     inkscape:window-height="1001"
+     inkscape:window-x="-9"
+     inkscape:window-y="-9"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata161">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(45.328914,-14.390115)">
+    <circle
+       style="fill:none;stroke:#000000;stroke-width:0.264999"
+       id="idleCirc"
+       cx="33.418465"
+       cy="87.129868"
+       r="15.497024"
+       class="svg-model"
+       name="idle"
+       type="atomic" />
+    <text
+       xml:space="preserve"
+       style="font-size:3.88056px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;stroke-width:0.264583"
+       x="29.756756"
+       y="88.574654"
+       class="svg-label"
+       id="Label_idle"><tspan
+         sodipodi:role="line"
+         id="tspan168"
+         x="29.756756"
+         y="88.574654"
+         style="stroke-width:0.264583">Idle</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:3.52777px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;stroke-width:0.264583"
+       x="6.7753134"
+       y="68.470161"
+       id="idle_pOut1"
+       class="svg-label"
+       model="idle"
+       name="transitionout"
+       type="oPort">
+ 
+<tspan
+   sodipodi:role="line"
+   id="tspan1273"
+   x="6.7753134"
+   y="68.470161"
+   style="stroke-width:0.264583">transitionout</tspan>
+</text>
+    <text
+       id="idle_pIn1"
+       y="107.36123"
+       x="7.4711246"
+       style="font-size:3.52777px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;stroke-width:0.264583"
+       xml:space="preserve"
+       class="svg-label"
+       model="idle"
+       name="transitionin"
+       type="iPort">
+ 
+<tspan
+   style="stroke-width:0.264583"
+   y="107.36123"
+   x="7.4711246"
+   id="tspan1273-3"
+   sodipodi:role="line">transitionin</tspan>
+</text>
+    <text
+       xml:space="preserve"
+       style="font-size:3.52777px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;stroke-width:0.264583"
+       x="43.700485"
+       y="74.081238"
+       id="idle_pIn2"
+       class="svg-label"
+       model="idle"
+       name="transitionin"
+       type="iPort">
+ 
+<tspan
+   sodipodi:role="line"
+   id="tspan1273-3-1"
+   x="43.700485"
+   y="74.081238"
+   style="stroke-width:0.264583">transitionin</tspan>
+</text>
+    <text
+       id="idle_pOut2"
+       y="93.943069"
+       x="50.371422"
+       style="font-size:3.52777px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;stroke-width:0.264583"
+       xml:space="preserve"
+       class="svg-label"
+       model="idle"
+       name="transitionout"
+       type="oPort">
+ 
+<tspan
+   style="stroke-width:0.264583"
+   y="93.943069"
+   x="50.371422"
+   id="tspan1273-6"
+   sodipodi:role="line">transitionout</tspan>
+</text>
+    <circle
+       r="15.497024"
+       cy="34.962799"
+       cx="88.446426"
+       id="movingupCirc"
+       style="fill:none;stroke:#000000;stroke-width:0.264999"
+       class="svg-model"
+       name="movingup"
+       type="atomic" />
+    <text
+       id="Label_movingup"
+       y="35.982204"
+       x="78.899452"
+       style="font-size:3.88056px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;stroke-width:0.264583"
+       xml:space="preserve"
+       class="svg-label"><tspan
+         style="stroke-width:0.264583"
+         y="35.982204"
+         x="78.899452"
+         id="tspan168-9"
+         sodipodi:role="line">MovingUp</tspan></text>
+    <text
+       id="movingup_pIn1"
+       y="31.369925"
+       x="48.047211"
+       style="font-size:3.52777px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;stroke-width:0.264583"
+       xml:space="preserve"
+       class="svg-label"
+       model="movingup"
+       name="transitionin"
+       type="iPort">
+ 
+<tspan
+   style="stroke-width:0.264583"
+   y="31.369925"
+   x="48.047211"
+   id="tspan1273-3-1-3"
+   sodipodi:role="line">transitionin</tspan>
+</text>
+    <text
+       id="movingup_pIn2"
+       y="50.268734"
+       x="98.885002"
+       style="font-size:3.52777px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;stroke-width:0.264583"
+       xml:space="preserve"
+       class="svg-label"
+       model="movingup"
+       name="transitionin"
+       type="iPort">
+ 
+<tspan
+   style="stroke-width:0.264583"
+   y="50.268734"
+   x="98.885002"
+   id="tspan1273-3-1-38"
+   sodipodi:role="line">transitionin</tspan>
+</text>
+    <text
+       id="movingup_pOut1"
+       y="32.601665"
+       x="106.82327"
+       style="font-size:3.52777px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;stroke-width:0.264583"
+       xml:space="preserve"
+       class="svg-label"
+       model="movingup"
+       name="transitionout"
+       type="oPort">
+ 
+<tspan
+   style="stroke-width:0.264583"
+   y="32.601665"
+   x="106.82327"
+   id="tspan1273-9"
+   sodipodi:role="line">transitionout</tspan>
+</text>
+    <text
+       xml:space="preserve"
+       style="font-size:3.52777px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;stroke-width:0.264583"
+       x="55.929916"
+       y="52.23333"
+       id="movingup_pOut2"
+       class="svg-label"
+       model="movingup"
+       name="transitionout"
+       type="oPort">
+ 
+<tspan
+   sodipodi:role="line"
+   id="tspan1273-9-7"
+   x="55.929916"
+   y="52.23333"
+   style="stroke-width:0.264583">transitionout</tspan>
+</text>
+    <circle
+       r="15.497024"
+       cy="139.2518"
+       cx="88.446426"
+       id="movingdownCirc"
+       style="fill:none;stroke:#000000;stroke-width:0.264999"
+       class="svg-model"
+       name="movingdown"
+       type="atomic" />
+    <text
+       id="Label_movingdown"
+       y="140.27121"
+       x="76.083771"
+       style="font-size:3.88056px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;stroke-width:0.264583"
+       class="svg-label"
+       xml:space="preserve"><tspan
+         style="stroke-width:0.264583"
+         y="140.27121"
+         x="76.083771"
+         id="tspan168-5"
+         sodipodi:role="line">MovingDown</tspan></text>
+    <text
+       id="movingdown_pIn1"
+       y="122.01302"
+       x="63.875332"
+       style="font-size:3.52777px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;stroke-width:0.264583"
+       xml:space="preserve"
+       class="svg-label"
+       model="movingdown"
+       name="transitionin"
+       type="iPort">
+ 
+<tspan
+   style="stroke-width:0.264583"
+   y="122.01302"
+   x="63.875332"
+   id="tspan1273-3-1-5"
+   sodipodi:role="line">transitionin</tspan>
+</text>
+    <text
+       xml:space="preserve"
+       style="font-size:3.52777px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;stroke-width:0.264583"
+       x="47.725586"
+       y="143.53355"
+       id="movingdown_pOut1"
+       class="svg-label"
+       model="movingdown"
+       name="transitionout"
+       type="oPort">
+ 
+<tspan
+   sodipodi:role="line"
+   id="tspan1273-6-9"
+   x="47.725586"
+   y="143.53355"
+   style="stroke-width:0.264583">transitionout</tspan>
+</text>
+    <text
+       id="movingdown_pOut2"
+       y="144.48221"
+       x="108.32246"
+       style="font-size:3.52777px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;stroke-width:0.264583"
+       xml:space="preserve"
+       class="svg-label"
+       model="movingdown"
+       name="transitionout"
+       type="oPort">
+ 
+<tspan
+   style="stroke-width:0.264583"
+   y="144.48221"
+   x="108.32246"
+   id="tspan1273-2"
+   sodipodi:role="line">transitionout</tspan>
+</text>
+    <text
+       id="movingdown_pIn2"
+       y="130.58868"
+       x="107.0115"
+       style="font-size:3.52777px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;stroke-width:0.264583"
+       xml:space="preserve"
+       class="svg-label"
+       model="movingdown"
+       name="transitionin"
+       type="iPort">
+ 
+<tspan
+   style="stroke-width:0.264583"
+   y="130.58868"
+   x="107.0115"
+   id="tspan1273-3-1-2"
+   sodipodi:role="line">transitionin</tspan>
+</text>
+    <circle
+       r="15.497024"
+       cy="34.96278"
+       cx="171.16356"
+       id="toppositionCirc"
+       style="fill:none;stroke:#000000;stroke-width:0.264999"
+       class="svg-model"
+       name="topposition"
+       type="atomic" />
+    <text
+       id="Label_topposition"
+       y="35.992607"
+       x="160.36412"
+       style="font-size:3.88056px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;stroke-width:0.264583"
+       class="svg-label"
+       xml:space="preserve"><tspan
+         style="stroke-width:0.264583"
+         y="35.992607"
+         x="160.36412"
+         id="tspan168-3"
+         sodipodi:role="line">topposition</tspan></text>
+    <text
+       id="topposition_pOut"
+       y="55.32724"
+       x="159.57515"
+       style="font-size:3.52777px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;stroke-width:0.264583"
+       xml:space="preserve"
+       class="svg-label"
+       model="topposition"
+       name="transitionout"
+       type="oPort">
+ 
+<tspan
+   style="stroke-width:0.264583"
+   y="55.32724"
+   x="159.57515"
+   id="tspan1273-4"
+   sodipodi:role="line">transitionout</tspan>
+</text>
+    <text
+       id="topposition_pIn"
+       y="41.008316"
+       x="133.46983"
+       style="font-size:3.52777px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;stroke-width:0.264583"
+       xml:space="preserve"
+       class="svg-label"
+       model="topposition"
+       name="transitionin"
+       type="iPort">
+ 
+<tspan
+   style="stroke-width:0.264583"
+   y="41.008316"
+   x="133.46983"
+   id="tspan1273-3-1-4"
+   sodipodi:role="line">transitionin</tspan>
+</text>
+    <circle
+       r="15.497024"
+       cy="139.25179"
+       cx="171.16356"
+       id="bottompositionCirc"
+       style="fill:none;stroke:#000000;stroke-width:0.264999"
+       class="svg-model"
+       name="bottomposition"
+       type="atomic" />
+    <text
+       id="Label_bottomposition"
+       y="140.64258"
+       x="156.50441"
+       style="font-size:3.88056px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;stroke-width:0.264583"
+       class="svg-label"
+       xml:space="preserve"><tspan
+         style="stroke-width:0.264583"
+         y="140.64258"
+         x="156.50441"
+         id="tspan168-0"
+         sodipodi:role="line">BottomPosition</tspan></text>
+    <text
+       id="bottomposition_pOut"
+       y="115.6767"
+       x="159.03958"
+       style="font-size:3.52777px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;stroke-width:0.264583"
+       xml:space="preserve"
+       class="svg-label"
+       model="bottomposition"
+       name="transitionout"
+       type="oPort">
+ 
+<tspan
+   style="stroke-width:0.264583"
+   y="115.6767"
+   x="159.03958"
+   id="tspan1273-8"
+   sodipodi:role="line">transitionout</tspan>
+</text>
+    <text
+       id="bottomposition_pIn"
+       y="135.91647"
+       x="132.91074"
+       style="font-size:3.52777px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;stroke-width:0.264583"
+       xml:space="preserve"
+       class="svg-label"
+       model="bottomposition"
+       name="transitionin"
+       type="iPort">
+ 
+<tspan
+   style="stroke-width:0.264583"
+   y="135.91647"
+   x="132.91074"
+   id="tspan1273-3-1-9"
+   sodipodi:role="line">transitionin</tspan>
+</text>
+    <circle
+       type="atomic"
+       name="input_reader"
+       class="svg-model"
+       r="15.497025"
+       cy="87.368973"
+       cx="-29.69939"
+       id="input_readercirc"
+       style="fill:none;stroke:#000000;stroke-width:0.264999;stroke-miterlimit:4;stroke-opacity:1"
+       inkscape:label="input_readercirc" />
+    <text
+       id="Label_input_reader"
+       class="svg-label"
+       y="88.452805"
+       x="-42.62196"
+       style="font-style:italic;font-size:3.88056px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;stroke-width:0.264583"
+       xml:space="preserve"
+       inkscape:label="Label_input_reader"><tspan
+         style="stroke-width:0.264583"
+         y="88.452805"
+         x="-42.62196"
+         id="tspan168-6"
+         sodipodi:role="line">Input Reader</tspan></text>
+    <text
+       type="oPort"
+       name="out"
+       model="input_reader"
+       class="svg-label"
+       id="input_readerport"
+       y="80.056137"
+       x="-13.854543"
+       style="font-style:italic;font-size:3.52777px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;stroke-width:0.264583"
+       xml:space="preserve"
+       inkscape:label="input_readerport">
+     
+<tspan
+   style="stroke-width:0.264583"
+   y="80.056137"
+   x="-13.854543"
+   id="tspan1273-0"
+   sodipodi:role="line">out</tspan>
+</text>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#marker1474)"
+       d="m 81.006644,48.557187 0.10235,29.59209 -35.267102,-0.106571"
+       id="Link2"
+       sodipodi:nodetypes="ccc"
+       class="svg-path"
+       portB="transitionin"
+       modelB="idle"
+       portA="transitionout"
+       modelA="movingup"
+       type="link" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#marker1630)"
+       d="M 72.9494,139.2518 33.539622,139.11368 33.418465,102.62689"
+       id="Link3"
+       sodipodi:nodetypes="ccc"
+       class="svg-path"
+       portB="transitionin"
+       modelB="idle"
+       portA="transitionout"
+       modelA="movingdown"
+       type="link" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#marker1572)"
+       d="m 33.418465,71.632846 -0.456256,-36.666869 39.987196,-0.0032"
+       id="Link1"
+       sodipodi:nodetypes="ccc"
+       class="svg-path"
+       portB="transitionin"
+       modelB="movingup"
+       portA="transitionout"
+       modelA="idle"
+       type="link" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#marker1520)"
+       d="m 49.182759,88.867122 37.920182,0.01971 1.0566,34.615898"
+       id="Link4"
+       sodipodi:nodetypes="ccc"
+       class="svg-path"
+       portB="transitionin"
+       modelB="movingdown"
+       portA="transitionout"
+       modelA="idle"
+       type="link" />
+    <path
+       sodipodi:nodetypes="cc"
+       style="fill:none;stroke:#000000;stroke-width:0.265;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow1Lend)"
+       d="m 103.94345,34.962798 51.72309,-1.8e-5"
+       id="Link5"
+       class="svg-path"
+       portB="transitionin"
+       modelB="topposition"
+       portA="transitionout"
+       modelA="movingup"
+       type="link" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#marker1400)"
+       d="M 159.77743,45.475336 102.1985,132.1077"
+       id="Link6"
+       sodipodi:nodetypes="cc"
+       class="svg-path"
+       portB="transitionin"
+       modelB="movingdown"
+       portA="transitionout"
+       modelA="topposition"
+       type="link" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#marker1434)"
+       d="M 164.48016,125.27002 91.656553,50.123697"
+       id="Link7"
+       sodipodi:nodetypes="cc"
+       class="svg-path"
+       portB="transitionin"
+       modelB="movingup"
+       portA="transitionout"
+       modelA="bottomposition"
+       type="link" />
+    <path
+       sodipodi:nodetypes="cc"
+       style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#marker1378)"
+       d="m 103.4298,139.25179 h 52.23674"
+       id="Link8"
+       class="svg-path"
+       portB="transitionin"
+       modelB="bottomposition"
+       portA="transitionout"
+       modelA="movingdown"
+       type="link" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#marker1255)"
+       d="M -15.274383,81.705327 H 0.84189573 V 14.522406 H 174.90117 v 5.400828"
+       id="input_readerlink1"
+       inkscape:label="input_readerlink1"
+       class="svg-path"
+       portB="transitionin"
+       modelB="topposition"
+       portA="out"
+       modelA="input_reader"
+       type="link" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#marker1343)"
+       d="M -14.426491,84.742892 H 3.3141386 V 26.136828 H 75.708294"
+       id="input_readerlink2"
+       inkscape:label="input_readerlink2"
+       class="svg-path"
+       portB="transitionin"
+       modelB="movingup"
+       portA="out"
+       modelA="input_reader"
+       type="link" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.265;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none;marker-end:url(#marker1027)"
+       d="M -14.202365,87.368971 17.92144,87.129867"
+       id="input_readerlink3"
+       inkscape:label="input_readerlink3"
+       class="svg-path"
+       portB="transitionin"
+       modelB="idle"
+       portA="out"
+       modelA="input_reader"
+       type="link" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#marker1097)"
+       d="M -14.395093,89.805419 H 3.2410262 V 149.73504 H 77.033301"
+       id="input_readerlink4"
+       inkscape:label="input_readerlink4"
+       class="svg-path"
+       portB="transitionin"
+       modelB="movingdown"
+       portA="out"
+       modelA="input_reader"
+       type="link" />
+    <path
+       id="input_readerlink5"
+       d="M -15.305857,92.582972 H 0.81042223 V 159.76589 H 174.8697 v -5.40083"
+       style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#marker1173)"
+       inkscape:label="input_readerlink5"
+       class="svg-path"
+       portB="transitionin"
+       modelB="bottomposition"
+       portA="out"
+       modelA="input_reader"
+       type="link" />
+  </g>
+</svg>

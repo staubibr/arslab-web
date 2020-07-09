@@ -28,22 +28,24 @@ export default class SimulationDEVS extends Simulation {
 		
 		this.diagram = diagram || null;
 		
-		this.state = new StateDEVS(models);
+		this.state = new StateDEVS(this.Models);
 	}
 	
 	static FromFiles(files) {
 		var s = files.simulation;
-		var t = files.transitions;
 		var d = files.diagram;
 		
 		var simulation = new SimulationDEVS(s.name, s.simulator, s.type, s.models, null, d);
 		
 		// build frames from flat transitions list		
-		for (var i = 0; i < t.length; i++) {
-			var m = t[i];
-			var f = simulation.Index(m.time) || simulation.AddFrame(new FrameDEVS(m.time));
+		for (var i = 0; i < files.transitions.length; i++) {
+			var t = files.transitions[i];
 			
-			var add = new TransitionDEVS(m.type, m.model, m.port, m.value, m.destination);
+			simulation.Model(t.model);
+
+			var f = simulation.Index(t.time) || simulation.AddFrame(new FrameDEVS(t.time));
+			
+			var add = new TransitionDEVS(t.type, t.model, t.port, t.value, t.destination);
 			
 			f.AddTransition(add);
 		}

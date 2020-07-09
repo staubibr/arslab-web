@@ -1,0 +1,171 @@
+{
+    "name": "ElevatorLOG",
+    "simulator": "Cadmium",
+    "type": "DEVS",
+    "models": [{
+            "name": "idle",
+            "svg": ["#idleCirc", "#Label_idle"],
+            "type": "atomic",
+            "submodels": [],
+            "ports": [{
+                    "svg": ["#idle_pIn1", "#idle_pIn2"],
+                    "name": "transitionin",
+                    "type": "input"
+                }, {
+                    "svg": ["#idle_pOut1", "#idle_pOut2"],
+                    "name": "transitionout",
+                    "type": "output"
+                }
+            ],
+            "links": [{
+                    "svg": ["#Link1", "#path1570"],
+                    "portB": "transitionin",
+                    "modelB": "movingup",
+                    "portA": "transitionout"
+                }, {
+                    "svg": ["#Link4", "#path1518"],
+                    "portB": "transitionin",
+                    "modelB": "movingdown",
+                    "portA": "transitionout"
+                }
+            ]
+        }, {
+            "name": "movingup",
+            "svg": ["#movingupCirc", "#Label_movingup"],
+            "type": "atomic",
+            "submodels": [],
+            "ports": [{
+                    "svg": ["#movingup_pIn1", "#movingup_pIn2"],
+                    "name": "transitionin",
+                    "type": "input"
+                }, {
+                    "svg": ["#movingup_pOut1", "#movingup_pOut2"],
+                    "name": "transitionout",
+                    "type": "output"
+                }
+            ],
+            "links": [{
+                    "svg": ["#Link2", "#path1472"],
+                    "portB": "transitionin",
+                    "modelB": "idle",
+                    "portA": "transitionout"
+                }, {
+                    "svg": ["#Link5", "#path1103"],
+                    "portB": "transitionin",
+                    "modelB": "topposition",
+                    "portA": "transitionout"
+                }
+            ]
+        }, {
+            "name": "movingdown",
+            "svg": ["#movingdownCirc", "#Label_movingdown"],
+            "type": "atomic",
+            "submodels": [],
+            "ports": [{
+                    "svg": ["#movingdown_pIn1", "#movingdown_pIn2"],
+                    "name": "transitionin",
+                    "type": "input"
+                }, {
+                    "svg": ["#movingdown_pOut1", "#movingdown_pOut2"],
+                    "name": "transitionout",
+                    "type": "output"
+                }
+            ],
+            "links": [{
+                    "svg": ["#Link3", "#path1628"],
+                    "portB": "transitionin",
+                    "modelB": "idle",
+                    "portA": "transitionout"
+                }, {
+                    "svg": ["#Link8", "#path1376"],
+                    "portB": "transitionin",
+                    "modelB": "bottomposition",
+                    "portA": "transitionout"
+                }
+            ]
+        }, {
+            "name": "topposition",
+            "svg": ["#toppositionCirc", "#Label_topposition"],
+            "type": "atomic",
+            "submodels": [],
+            "ports": [{
+                    "svg": ["#topposition_pIn"],
+                    "name": "transitionin",
+                    "type": "input"
+                }, {
+                    "svg": ["#topposition_pOut"],
+                    "name": "transitionout",
+                    "type": "output"
+                }
+            ],
+            "links": [{
+                    "svg": ["#Link6", "#path1398"],
+                    "portB": "transitionin",
+                    "modelB": "movingdown",
+                    "portA": "transitionout"
+                }
+            ]
+        }, {
+            "name": "bottomposition",
+            "svg": ["#bottompositionCirc", "#Label_bottomposition"],
+            "type": "atomic",
+            "submodels": [],
+            "ports": [{
+                    "svg": ["#bottomposition_pIn"],
+                    "name": "transitionin",
+                    "type": "input"
+                }, {
+                    "svg": ["#bottomposition_pOut"],
+                    "name": "transitionout",
+                    "type": "output"
+                }
+            ],
+            "links": [{
+                    "svg": ["#Link7", "#path1432"],
+                    "portB": "transitionin",
+                    "modelB": "movingup",
+                    "portA": "transitionout"
+                }
+            ]
+        }, {
+            "name": "input_reader",
+            "svg": ["#input_readercirc", "#Label_input_reader"],
+            "type": "atomic",
+            "submodels": [],
+            "ports": [{
+                    "svg": ["#input_readerport"],
+                    "name": "out",
+                    "type": "output"
+                }
+            ],
+            "links": [{
+                    "svg": ["#input_readerlink2", "#path1341"],
+                    "portB": "transitionin",
+                    "modelB": "movingup",
+                    "portA": "out"
+                }, {
+                    "svg": ["#input_readerlink4", "#path1095"],
+                    "portB": "transitionin",
+                    "modelB": "movingdown",
+                    "portA": "out"
+                }, {
+                    "svg": ["#input_readerlink1", "#path1253"],
+                    "portB": "transitionin",
+                    "modelB": "topposition",
+                    "portA": "out"
+                }, {
+                    "svg": ["#input_readerlink5", "#path1171"],
+                    "portB": "transitionin",
+                    "modelB": "bottomposition",
+                    "portA": "out"
+                }, {
+                    "svg": ["#input_readerlink3", "#path1025"],
+                    "portB": "transitionin",
+                    "modelB": "idle",
+                    "portA": "out"
+                }
+            ]
+        }
+    ],
+    "size": 7
+}

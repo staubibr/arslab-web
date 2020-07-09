@@ -351,18 +351,40 @@ table tr:nth-child(even) td:not(:last-child) {
     height: 100%;
 }
 
-.diagram-container text.highlighted {
-    font-weight: bold !important;
-}
-
-.diagram-container .highlighted:not(text) {
-    stroke: #1e94c3  !important;
+.diagram-container path {
+	pointer-events:none;
 }
 
 .diagram-container marker path.highlighted,
 .diagram-container text.highlighted {
-    fill: #1e94c3  !important;
+    fill: #1e94c3 !important;
 }
+
+.diagram-container marker path.highlighted.origin,
+.diagram-container text.highlighted.origin {
+    fill: #b36402 !important;
+}
+
+.diagram-container path.highlighted {
+    stroke: #1e94c3 !important;
+}
+
+.diagram-container path.highlighted.origin) {
+    stroke: #b36402 !important;
+}
+
+.diagram-container .highlighted:not(text):not(path) {
+    stroke: #1e94c3 !important;
+    fill: #d6f2fd !important;
+}
+
+.diagram-container .highlighted.origin:not(text):not(path) {
+    stroke: #b36402 !important;
+    fill: #f9e5c1 !important;
+}
+
+
+
 .diagram-container .selected:not(text) {
     stroke: red  !important;
 }

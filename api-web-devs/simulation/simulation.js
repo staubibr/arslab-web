@@ -3,6 +3,7 @@
 import Evented from '../components/evented.js';
 import Cache from './cache.js';
 import Frame from './frame.js';
+import Model from './model.js';
 
 export default class Simulation extends Evented { 
 	
@@ -17,18 +18,45 @@ export default class Simulation extends Evented {
 		throw new Error("get Ratio must be defined in child simulation class.");
 	}
 
+	get Models() {
+		return this.models;
+	}
+
+	get ModelNames() {
+		return this.Models.map(m => m.name);
+	}
+
+	get AtomicModels() {
+		return this.Models.filter(m => m.Type == "atomic");
+	}
+
+	get CoupledModels() {
+		return this.Models.filter(m => m.Type == "coupled");
+	}
+
 	constructor(name, simulator, type, models, frames) {
 		super();
 
 		this.name = name || null;
 		this.simulator = simulator || null;
 		this.type = type || null;
-		this.models = models || null;
+		this.models = models || [];
 		this.frames = frames || [];
-		
 		this.index = {};
 		this.selected = [];
 		this.cache = new Cache();
+
+		this.models = this.models.map(m => new Model(m.name, m.type, m.submodels, m.ports, m.links,m.svg));
+
+		this.models.forEach(m => {
+			m.submodels = m.submodels.map(name => this.Model(name));
+			
+			m.links.forEach(l => {
+				l.modelB = this.Model(l.modelB);
+				l.portB = this.Port(l.modelB.name, l.portB);
+				l.portA = this.Port(m.name, l.portA);				
+			});
+		});
 	}
 	
 	Initialize(nCache) {
@@ -59,6 +87,16 @@ export default class Simulation extends Evented {
 	
 	CurrentFrame() {
 		return this.frames[this.state.i];
+	}
+
+	Model(name) {
+		return this.Models.find(m => name == m.name) || null;
+	}
+	
+	Port(mName, pName) {
+		var model = this.Model(mName);
+		
+		return model && model.Port(pName) || null;
 	}
 	
 	AddFrame(frame) {		

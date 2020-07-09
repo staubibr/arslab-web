@@ -3,49 +3,47 @@
 import Core from '../../tools/core.js';
 import Dom from '../../tools/dom.js';
 import Templated from '../../components/templated.js';
-import DiagramData from './diagramData.js';
 
 export default Core.Templatable("Widgets.Diagram", class Diagram extends Templated { 
 
 	constructor(node) {
 		super(node);
 	}
-	
-	SetDiagram(svg) {
-		this.Elem('diagram').innerHTML = svg;
+
+	GetNodes(root, items) {
+		var selector = model.svg.map(s => `#{s}`);
+		
+		return root.querySelectorAll(selector);
+	}
+
+	SetDiagram(Simulation) {
+
+		this.Elem('diagram').innerHTML = Simulation.diagram;
 		
 		this.Node('diagram').Elem("svg").setAttribute("preserveAspectRatio", "none");
 		
-		var models = this.Node('diagram').Elems("[type='atomic'],[type='coupled']");
+		this.Simulation = Simulation;
+		
+		this.Simulation.models.forEach(model => {
+			var nodes = this.Elem('diagram').querySelectorAll(model.svg);
 
-		models.forEach((model) => {			
-			model.addEventListener("mousemove", this.onSvgMouseMove_Handler.bind(this));
-			model.addEventListener("click", this.onSvgClick_Handler.bind(this));
-			model.addEventListener("mouseout", this.onSvgMouseOut_Handler.bind(this));
+			nodes.forEach(n => {	
+				n.addEventListener("mousemove", this.onSvgMouseMove_Handler.bind(this, model));
+				n.addEventListener("click", this.onSvgClick_Handler.bind(this, model));
+				n.addEventListener("mouseout", this.onSvgMouseOut_Handler.bind(this, model));
+			});
 		});
-		
-		this.data = new DiagramData(this.Elem('diagram').firstElementChild);
 	}
 	
-	SetCss() {
-		var models = this.Node('diagram').Elems("[type='atomic'],[type='coupled']");
+	onSvgMouseMove_Handler(model, ev) {
+		this.Emit("MouseMove", { x:ev.pageX, y:ev.pageY , model:model, svg:ev.target });
+	}
 		
-		models.forEach(m => this.AddModelCss(m, ["model"]));
+	onSvgMouseOut_Handler(model, ev) {
+		this.Emit("MouseOut", { x:ev.pageX, y:ev.pageY, model:model, svg:ev.target });
 	}
 	
-	onSvgMouseMove_Handler(ev) {
-		var model = ev.target.getAttribute('name').toLowerCase();
-		
-		this.Emit("MouseMove", { x:ev.pageX, y:ev.pageY , model:model });
-	}
-		
-	onSvgMouseOut_Handler(ev) {
-		this.Emit("MouseOut", { x:ev.pageX, y:ev.pageY });
-	}
-	
-	onSvgClick_Handler(ev) {
-		var model = ev.target.getAttribute('name');
-		
+	onSvgClick_Handler(model, ev) {				
 		this.Emit("Click", { x:ev.pageX, y:ev.pageY , model:model, svg:ev.target });
 	}
 		
@@ -70,51 +68,47 @@ export default Core.Templatable("Widgets.Diagram", class Diagram extends Templat
 		transitions.forEach((t) => {
 			if (t.type == "Y") this.DrawYTransition(t);
 			
-			else if (t.type == "X") this.DrawXTransition(t);
+			// else if (t.type == "X") this.DrawXTransition(t);
 		});
 	}
-
-	DrawXTransition(t) {		
-		var m = this.data.Model(t.destination);
+	
+	DrawYTransition(t) {  
+		var m = this.Simulation.Model(t.Id);
+		var p = m.Port(t.port);
+				
+		this.AddModelCss(m.OutputPath(t.port), ["highlighted"]);
 		
-		if (m) this.AddModelCss(m.node, ["highlighted", t.type]);
+		var origin = []
 		
-		var p = this.data.Port(t.destination, t.port);
+		if (m) origin = origin.concat(m.svg);
+		if (p) origin = origin.concat(p.svg);
 		
-		if (p) this.AddModelCss(p.node, ["highlighted", t.type]);
-		
-		var l = this.data.Link(t.destination, t.port, t.type);
-		
-		if (l) this.AddModelCss(l.node, ["highlighted", t.type]);	
-		
-		if (l && l.marker) this.AddModelCss(l.marker, ["highlighted", t.type]);	
+		this.AddModelCss(origin, ["origin"]);
 	}
 
-	DrawYTransition(t) {
-		var m = this.data.Model(t.Id);
-		
-		if (m) this.AddModelCss(m.node, ["highlighted", t.type]);
-		
-		var p = this.data.Port(t.Id, t.port);
-		
-		if (p) this.AddModelCss(p.node, ["highlighted", t.type]);
-		
-		var l = this.data.Link(t.Id, t.port, t.type);
-		
-		if (l) this.AddModelCss(l.node, ["highlighted", t.type]);
-		
-		if (l && l.marker) this.AddModelCss(l.marker, ["highlighted", t.type]);	
-	}
-
-	AddModelCss(model, css) {
-		css.forEach(c => model.classList.add(c));
+	AddModelCss(models, css) {		
+		this.Elem("diagram").querySelectorAll(models).forEach(node => {
+			css.forEach(c => node.classList.add(c));
+		});
 	}
 	
-	RemoveModelCss(model, css) {
-		css.forEach(c => model.classList.remove(c));
+	RemoveModelCss(models, css) {
+		this.Elem("diagram").querySelectorAll(models).forEach(node => {
+			css.forEach(c => node.classList.remove(c));
+		});
 	}
 	
 	Reset() {
-		this.data.Nodes().forEach(n => { this.RemoveModelCss(n, ["highlighted", "X", "Y"]); })
+		// Collect all nodes then clean them
+		var selector = [];
+		
+		this.Simulation.Models.forEach(m => {
+			selector = selector.concat(m.svg);
+			
+			m.ports.forEach(p => selector = selector.concat(p.svg));
+			m.links.forEach(l => selector = selector.concat(l.svg));
+		});
+		
+		this.RemoveModelCss(selector, ["highlighted", "origin"]);
 	}
 });

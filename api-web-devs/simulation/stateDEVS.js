@@ -5,11 +5,7 @@ import State from "./state.js";
 export default class StateDEVS extends State { 
 
 	constructor(models) {
-		super();
-		
-		this.models = models;
-		
-		this.Reset();
+		super(models.length, models);
 	}
 	
 	Clone() {
@@ -41,7 +37,7 @@ export default class StateDEVS extends State {
 			this.data[m.name] = {};
 			
 			m.ports.forEach(p => {
-				if (p.type == "output") this.data[m.name][p.name] = 0;
+				if (p.type == "output") this.data[m.name][p] = 0;
 			}) 
 		});
 	}

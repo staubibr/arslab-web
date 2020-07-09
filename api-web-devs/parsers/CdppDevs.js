@@ -23,32 +23,43 @@ export default class CDppDEVS extends Parser {
 		}
 		
 		var name = log.name.substr(0, log.name.length - 4);
-	
-		this.Read(ma, this.ParseMaFile.bind(this)).then((ma) => {
-			var p1 = this.Read(svg, this.ParseSVGFile.bind(this));
-			var p2 = this.ReadByChunk(log, this.ParseLogChunk.bind(this, ma));
+		
+		// var p1 = this.Read(ma, this.ParseMaFile.bind(this));
+		// var p2 = this.Read( hunk(log, this.ParseLogChunk.bind(this));
+
+		// var defs = [p1, p2, p3];
+		
+		//-----------------------------------------------------------------
+		this.Read(ma, this.ParseMaFile.bind(this)).then((ma) => {
+			// var simulation = new Simulation(name, "CDpp", "DEVS", ma.models, ma.size);
+			this.simulation = new Simulation(name, "CDpp", "DEVS", ma.models, ma.size);
 			
+			var p1 = this.Read(svg, this.ParseSVGFile.bind(this));
+			var p2 = this.ReadByChunk(log, this.ParseLogChunk.bind(this));
 			var defs = [p1, p2];
-	
+		
+
 			Promise.all(defs).then((data) => {
-				var svg = data[0];
-				var log = data[1];
-				
-				if (!ma) return d.Reject(new Error("Unable to parse the model (.ma) file."));
-				
+				var svg = data [0];
+				var log = data [1];
+				if (!svg) return d.Reject(new Error("Unable to parse the model (.svg) file."));
 				if (!log) return d.Reject(new Error("Unable to parse the log (.log) file or it contained no X and Y messages."));
+
+				// if (!data[0]) return d.Reject(new Error("Unable to parse the model (.ma) file."));
+				// if (!data[2]) return d.Reject(new Error("Unable to parse the log (.log) file or it contained no X and Y messages."));
 				
-				var simulation = new Simulation(name, "CDpp", "DEVS", data[0].models, data[0].size);
-				var transitions = new TransitionsDEVS(data[2]);
-				var diagram = new Diagram(data[1]);
+				var transitions = new TransitionsDEVS(log);
+				var diagram = new Diagram(svg);
 				var options = new Options(Settings.Default());
 				
-				var files = new Files(simulation, transitions, diagram, options);
+				// var files = new Files(simulation, transitions, diagram, options);
+				var files = new Files(this.simulation, transitions, diagram, options);
 
 				d.Resolve(files);
-			}, (error) => { d.Reject(error); });
-			
-		}, (error) => { d.Reject(error); });
+			}, (error) => {
+				d.Reject(error);
+			});
+		});
 
 		return d.promise;
 	}
@@ -124,9 +135,7 @@ export default class CDppDEVS extends Parser {
 		return file;
 	}
 	
-	ParseLogChunk(ma, parsed, chunk) {	
-		debugger;
-	
+	ParseLogChunk(parsed, chunk) {		
 		function IndexOf(chunk, text, start) {
 			var idx = chunk.indexOf(text, start);
 			
@@ -159,6 +168,16 @@ export default class CDppDEVS extends Parser {
 			// NOTE : Don't use regex, it's super slow.
 			var t = split[1].trim();			// time
 			var m = tmp1[0];					// model name
+			// const found = this.simulation.atomics.find(element => element.name == m);
+			// if (!found) continue;
+			const found = this.simulation.content.models.find(element => element.name == m);
+			
+			if (!found) continue;
+			
+			if (found.type!="atomic") continue;
+			
+			if (type=="X") continue;
+			
 			var c = tmp1[1].slice(0, -1);		// id / coordinate
 			var p = split[3].trim();			// port
 			var v = parseFloat(split[4]);		// value

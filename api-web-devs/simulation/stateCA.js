@@ -5,14 +5,7 @@ import State from "./state.js";
 export default class StateCA extends State { 
 
 	constructor(size, models) {
-		super();
-		
-		this.size = size;
-		this.models = models;
-		
-		if (!this.models) return;
-		
-		this.Reset();
+		super(size, models);
 	}
 	
 	Clone() {
@@ -20,7 +13,7 @@ export default class StateCA extends State {
 		
 		clone.i = this.i;
 		clone.size = JSON.parse(JSON.stringify(this.size));
-		clone.models = JSON.parse(JSON.stringify(this.models));
+		clone.models = JSON.parse(JSON.stringify(this.models));		
 		clone.data = JSON.parse(JSON.stringify(this.data));
 		
 		return clone;
@@ -50,7 +43,7 @@ export default class StateCA extends State {
 					var ports = {};
 					
 					m.ports.forEach(p => {
-						if (p.type == "output") ports[p.name] = 0;
+						if (p.type == "output") ports[p] = 0;
 					}) 
 					
 					this.data[x][y][z] = ports;

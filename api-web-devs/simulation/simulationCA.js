@@ -28,7 +28,7 @@ export default class SimulationCA extends Simulation {
 
 		this.size = size || null;
 		
-		this.state = new StateCA(size, models);
+		this.state = new StateCA(size, this.Models);
 	}
 	
 	get Ports() {

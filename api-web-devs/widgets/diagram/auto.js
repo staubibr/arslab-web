@@ -12,7 +12,7 @@ export default Core.Templatable("Auto.Diagram", class AutoDiagram extends Automa
 		
 		super(diagram, simulation);
 		
-		this.Widget.SetDiagram(this.Simulation.diagram);
+		this.Widget.SetDiagram(this.Simulation);
 		
 		this.Widget.Draw(this.Simulation.CurrentFrame().transitions);
 		
@@ -69,16 +69,9 @@ export default Core.Templatable("Auto.Diagram", class AutoDiagram extends Automa
 		
 		Dom.Empty(this.tooltip.Elem("content"));
 		
-		var tX = f.transitions.filter(t => t.Type == "X" && t.Destination == ev.model);
-		var tY = f.transitions.filter(t => t.Type == "Y" && t.Model == ev.model);
+		var tY = f.transitions.filter(t => t.Type == "Y" && t.Model == ev.model.name);
 		
-		if (tX.length == 0 && tY.length == 0) return;
-			
-		tX.forEach(t => {
-			var html = Core.Nls("Diagram_Tooltip_X", [t.Destination, t.Value, t.Model, t.Port]);
-			
-			Dom.Create("div", { className:"tooltip-label", innerHTML:html }, this.tooltip.Elem("content"));
-		});
+		if (tY.length == 0) return;
 		
 		tY.forEach(t => {
 			var html = Core.Nls("Diagram_Tooltip_Y", [t.Model, t.Value, t.Destination, t.Port]);
