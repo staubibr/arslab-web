@@ -87,15 +87,11 @@ export default class Main extends Templated {
 		
 		this.files = files;
 		
-		var content = files.Content();
+		this.settings = files.Options ? oSettings.FromJson(files.Options) : new oSettings();
 		
-		this.settings = oSettings.FromJson(content.options);
+		var clss = (files.Simulation.type == "DEVS") ? SimulationDEVS : SimulationCA;
 		
-		if (content.options) this.settings.json = content.options;
-		
-		var clss = (content.simulation.type == "DEVS") ? SimulationDEVS : SimulationCA;
-		
-		this.simulation = clss.FromFiles(content);
+		this.simulation = clss.FromFiles(files.Content);
 		
 		this.simulation.Initialize(this.settings.Get("playback", "cache"));
 		
@@ -130,12 +126,14 @@ export default class Main extends Templated {
 		this.Widget("settings").Show();
 	}
 	
-	OnButtonDownload_Click(ev) {	
+	OnButtonDownload_Click(ev) {
 		var files = []
 		
 		files.push(this.files.simulation.ToFile());
 		files.push(this.files.transitions.ToFile());
 		files.push(this.settings.ToFile());
+				
+		if (this.files.diagram) files.push(this.files.diagram.ToFile());
 				
 		try {
 			// This is an async call, Fire and forget, pew! 

@@ -145,21 +145,29 @@ export class TransitionCA extends Transition {
 }
 
 export class Files { 
-	constructor(simulation, transitions, diagram, options) {
-		this.name = simulation.content.name;
-		this.simulation = simulation;
-		this.transitions = transitions;
-		this.diagram = diagram;
-		this.options = options;
-	}
+	get Options() { return this.options.content; }
 	
-	Content() {
+	get Transitions() { return this.transitions.content; }
+	
+	get Diagram() { return this.diagram.content; }
+	
+	get Simulation() { return this.simulation.content; }
+	
+	get Content() {
 		return {
 			simulation : this.simulation.content,
 			transitions : this.transitions.content,
 			diagram : this.diagram.content,
 			options : this.options.content,
 		}
+	}
+
+	constructor(simulation, transitions, diagram, options) {
+		this.name = simulation.content.name;
+		this.simulation = simulation;
+		this.transitions = transitions;
+		this.diagram = diagram;
+		this.options = options;
 	}
 	
 	static FromContent(simulation, transitions, diagram, options) {		

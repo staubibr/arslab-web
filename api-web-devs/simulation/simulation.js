@@ -34,29 +34,19 @@ export default class Simulation extends Evented {
 		return this.Models.filter(m => m.Type == "coupled");
 	}
 
-	constructor(name, simulator, type, models, frames) {
+	constructor(name, simulator, type, models, transitions) {
 		super();
+		
+		this.frames = [];
 
 		this.name = name || null;
 		this.simulator = simulator || null;
 		this.type = type || null;
 		this.models = models || [];
-		this.frames = frames || [];
+		this.transitions = transitions || [];
 		this.index = {};
 		this.selected = [];
 		this.cache = new Cache();
-
-		this.models = this.models.map(m => new Model(m.name, m.type, m.submodels, m.ports, m.links,m.svg));
-
-		this.models.forEach(m => {
-			m.submodels = m.submodels.map(name => this.Model(name));
-			
-			m.links.forEach(l => {
-				l.modelB = this.Model(l.modelB);
-				l.portB = this.Port(l.modelB.name, l.portB);
-				l.portA = this.Port(m.name, l.portA);				
-			});
-		});
 	}
 	
 	Initialize(nCache) {

@@ -23,15 +23,8 @@ export default class CDppDEVS extends Parser {
 		}
 		
 		var name = log.name.substr(0, log.name.length - 4);
-		
-		// var p1 = this.Read(ma, this.ParseMaFile.bind(this));
-		// var p2 = this.Read( hunk(log, this.ParseLogChunk.bind(this));
 
-		// var defs = [p1, p2, p3];
-		
-		//-----------------------------------------------------------------
 		this.Read(ma, this.ParseMaFile.bind(this)).then((ma) => {
-			// var simulation = new Simulation(name, "CDpp", "DEVS", ma.models, ma.size);
 			this.simulation = new Simulation(name, "CDpp", "DEVS", ma.models, ma.size);
 			
 			var p1 = this.Read(svg, this.ParseSVGFile.bind(this));
@@ -40,19 +33,15 @@ export default class CDppDEVS extends Parser {
 		
 
 			Promise.all(defs).then((data) => {
-				var svg = data [0];
-				var log = data [1];
+				var svg = data[0];
+				var log = data[1];
 				if (!svg) return d.Reject(new Error("Unable to parse the model (.svg) file."));
 				if (!log) return d.Reject(new Error("Unable to parse the log (.log) file or it contained no X and Y messages."));
 
-				// if (!data[0]) return d.Reject(new Error("Unable to parse the model (.ma) file."));
-				// if (!data[2]) return d.Reject(new Error("Unable to parse the log (.log) file or it contained no X and Y messages."));
-				
 				var transitions = new TransitionsDEVS(log);
 				var diagram = new Diagram(svg);
 				var options = new Options(Settings.Default());
 				
-				// var files = new Files(simulation, transitions, diagram, options);
 				var files = new Files(this.simulation, transitions, diagram, options);
 
 				d.Resolve(files);
@@ -70,7 +59,7 @@ export default class CDppDEVS extends Parser {
 		
 		// This is messy but due to the structure of ma files
 		var models = blocks.map(b => {		
-			var model = { name:null, type:null, submodels:[], ports:[], links:[] }
+			var model = { name:null, type:null, submodels:[], ports:[], links:[], svg:[] }
 		
 			b.trim().split("\n").forEach((l, i) => {
 				l = l.trim().toLowerCase();
@@ -81,25 +70,19 @@ export default class CDppDEVS extends Parser {
 					model.submodels.push(l.split(/\s|@/)[2]);
 				}
 				
-				//else if (l.startsWith("out")) {
-				//	l.split(/\s/).slice(2).forEach(p => model.ports.push({ name:p, type:"output" }));
-				//}
-				
-				//else if (l.startsWith("in")) {
-				//	l.split(/\s/).slice(2).forEach(p => model.ports.push({ name:p, type:"input" }));
-				//}
-				
 				else if (l.startsWith("link")) {
 					var ports = l.split(/\s/).slice(2);
-					var output = ports[0].split(/@/);
-					var input = ports[1].split(/@/);
+					var left = ports[0].split(/@/);
+					var right = ports[1].split(/@/);
 					
+					var modelA = left[1] || model.name;
+										
 					links.push({
-						portA : output[0],
-						modelA : output[1] || model.name,
-						portB : input[0],
-						modelB : input[1] || model.name
-					})
+						modelA : left[1] || model.name,
+						portA : left[0],
+						portB : right[0],
+						modelB : right[1] || model.name
+					});
 				}
 			});
 			
@@ -110,19 +93,17 @@ export default class CDppDEVS extends Parser {
 		
 		links.forEach(l => {
 			var mA = models.find(m => m.name == l.modelA);
+			var pA = mA.ports.find(p => p.name == l.portA);
+			
+			if (!pA) mA.ports.push({ name:l.portA, type:"output", svg:[] });
+			
 			var mB = models.find(m => m.name == l.modelB);
+			var pB = mB.ports.find(p => p.name == l.portB);
 			
-			if (!mA.ports.find(p => p.name == l.portA)) {
-				mA.ports.push({ name:l.portA, type:"output" });
-			}
+			if (!pB) mB.ports.push({ name:l.portB, type:"input", svg:[] });
 			
-			if (!mB.ports.find(p => p.name == l.portB)) {
-				mB.ports.push({ name:l.portB, type:"input" });
-			}
-			
-			mA.links.push(l);
-			mB.links.push(l);
-		})
+			mA.links.push({ portA:l.portA, portB:l.portB, modelB:l.modelB, svg:[] });
+		});
 		
 		return {
 			size : models.length,

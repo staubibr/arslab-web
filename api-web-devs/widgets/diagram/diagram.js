@@ -10,24 +10,17 @@ export default Core.Templatable("Widgets.Diagram", class Diagram extends Templat
 		super(node);
 	}
 
-	GetNodes(root, items) {
-		var selector = model.svg.map(s => `#{s}`);
+	SetDiagram(simulation) {
+		Dom.Empty(this.Elem('diagram'));
 		
-		return root.querySelectorAll(selector);
-	}
-
-	SetDiagram(Simulation) {
-
-		this.Elem('diagram').innerHTML = Simulation.diagram;
+		this.Elem('diagram').appendChild(simulation.Diagram);
 		
 		this.Node('diagram').Elem("svg").setAttribute("preserveAspectRatio", "none");
 		
-		this.Simulation = Simulation;
+		this.Simulation = simulation;
 		
 		this.Simulation.models.forEach(model => {
-			var nodes = this.Elem('diagram').querySelectorAll(model.svg);
-
-			nodes.forEach(n => {	
+			model.svg.forEach(n => {	
 				n.addEventListener("mousemove", this.onSvgMouseMove_Handler.bind(this, model));
 				n.addEventListener("click", this.onSvgClick_Handler.bind(this, model));
 				n.addEventListener("mouseout", this.onSvgMouseOut_Handler.bind(this, model));
@@ -67,33 +60,32 @@ export default Core.Templatable("Widgets.Diagram", class Diagram extends Templat
 		
 		transitions.forEach((t) => {
 			if (t.type == "Y") this.DrawYTransition(t);
-			
-			// else if (t.type == "X") this.DrawXTransition(t);
 		});
 	}
 	
 	DrawYTransition(t) {  
 		var m = this.Simulation.Model(t.Id);
 		var p = m.Port(t.port);
+		
+		if (m) {
+			this.AddCss(m.OutputPath(t.port), ["highlighted"]);
+			
+			this.AddCss(m.svg, ["origin"]);
+		}
+		
+		if (p) this.AddCss(p.svg, ["origin"]);
 				
-		this.AddModelCss(m.OutputPath(t.port), ["highlighted"]);
-		
-		var origin = []
-		
-		if (m) origin = origin.concat(m.svg);
-		if (p) origin = origin.concat(p.svg);
-		
-		this.AddModelCss(origin, ["origin"]);
+		m.PortLinks(p.name).forEach(l => this.AddCss(l.svg, ["origin"]));
 	}
 
-	AddModelCss(models, css) {		
-		this.Elem("diagram").querySelectorAll(models).forEach(node => {
+	AddCss(nodes, css) {		
+		nodes.forEach(node => {
 			css.forEach(c => node.classList.add(c));
 		});
 	}
 	
-	RemoveModelCss(models, css) {
-		this.Elem("diagram").querySelectorAll(models).forEach(node => {
+	RemoveCss(nodes, css) {
+		nodes.forEach(node => {
 			css.forEach(c => node.classList.remove(c));
 		});
 	}
@@ -103,12 +95,10 @@ export default Core.Templatable("Widgets.Diagram", class Diagram extends Templat
 		var selector = [];
 		
 		this.Simulation.Models.forEach(m => {
-			selector = selector.concat(m.svg);
-			
-			m.ports.forEach(p => selector = selector.concat(p.svg));
-			m.links.forEach(l => selector = selector.concat(l.svg));
+			this.RemoveCss(m.svg, ["highlighted", "origin"]);
+						
+			m.ports.forEach(p => this.RemoveCss(p.svg, ["highlighted", "origin"]));
+			m.links.forEach(l => this.RemoveCss(l.svg, ["highlighted", "origin"]));
 		});
-		
-		this.RemoveModelCss(selector, ["highlighted", "origin"]);
 	}
 });

@@ -34,4 +34,8 @@ export default class TransitionCA extends Transition {
 		
 		return t;
 	}
+	
+	static FromCsv(csv) {
+		return new TransitionCA(csv.type, csv.model, csv.coord, csv.port, csv.value, csv.destination);
+	}
 }

@@ -355,12 +355,20 @@ table tr:nth-child(even) td:not(:last-child) {
 	pointer-events:none;
 }
 
-.diagram-container marker path.highlighted,
+.diagram-container marker.highlighted path {
+    fill: #1e94c3 !important;
+    stroke: #1e94c3 !important;
+}
+
+.diagram-container marker.highlighted.origin path {
+    fill: #b36402 !important;
+    stroke: #b36402 !important;
+}
+
 .diagram-container text.highlighted {
     fill: #1e94c3 !important;
 }
 
-.diagram-container marker path.highlighted.origin,
 .diagram-container text.highlighted.origin {
     fill: #b36402 !important;
 }
@@ -369,7 +377,7 @@ table tr:nth-child(even) td:not(:last-child) {
     stroke: #1e94c3 !important;
 }
 
-.diagram-container path.highlighted.origin) {
+.diagram-container path.highlighted.origin {
     stroke: #b36402 !important;
 }
 

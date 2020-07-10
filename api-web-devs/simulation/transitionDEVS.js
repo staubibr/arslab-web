@@ -20,4 +20,8 @@ export default class TransitionDEVS extends Transition {
 		
 		return t;
 	}
+	
+	static FromCsv(csv) {
+		return new TransitionDEVS(csv.type, csv.model, csv.port, csv.value, csv.destination);
+	}
 }
