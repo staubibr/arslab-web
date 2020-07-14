@@ -1,108 +1,214 @@
 {
 	"Playback_FastBackward" : {
-		"en" : "Go to first frame"
+		"en" : "Go to first frame",
+		"sp" : "Ir al inicio"
 	},
 	"Playback_StepBack" : {
-		"en" : "Step back"
+		"en" : "Step back",
+		"sp" : "Un paso hacia atrás"
 	},
 	"Playback_Backwards" : {
-		"en" : "Play backwards"
+		"en" : "Play backwards",
+		"sp" : "Reproducir hacia atrás"
 	},
 	"Playback_Play" : {
-		"en" : "Play forward"
+		"en" : "Play forward",
+		"sp" : "Reproducir hacia adelante"
 	},
 	"Playback_StepForward" : {
-		"en" : "Step forward"
+		"en" : "Step forward",
+		"sp" : "Un paso hacia adelante"
 	},
 	"Playback_FastForward" : {
-		"en" : "Go to last frame"
+		"en" : "Go to last frame",
+		"sp" : "Ir al final"
 	},
 	"Playback_Seek" : {
-		"en" : "Slide to seek frame"
+		"en" : "Slide to seek frame",
+		"sp" : "Desplazar para buscar evento"
 	},
 	"Playback_Record" : {
-		"en" : "Record simulation to .webm"
-	},
-	"Playback_Settings" : {
-		"en" : "Modify simulation playback settings"
+		"en" : "Record simulation to .webm",
+		"sp" : "Grabar simulación en formato .webm"
 	},
 	"Settings_Title" : {
-		"en" : "Settings"
+		"en" : "Settings",
+		"sp" : "Configuraciones"
 	},
 	"Settings_Diagram_Options" : {
-		"en" : "DEVS diagram options"
+		"en" : "Diagram options",
+		"sp" : "Opciones de diagrama"
 	},	
 	"Settings_Diagram_Height" : {
-		"en" : "Height:"
+		"en" : "Height:",
+		"sp" : "Alto"
 	},
 	"Settings_Diagram_Width" : {
-		"en" : "Width:"
+		"en" : "Width:",
+		"sp" : "Ancho"
 	},
 	"Settings_Diagram_Aspect" : {
-		"en" : "Simulation aspect ratio:"
+		"en" : "Simulation aspect ratio:",
+		"sp" : "Relación de aspecto"
 	},
 	"Settings_Grid_Options" : {
-		"en" : "Grid widget options"
+		"en" : "Grid options",
+		"sp" : "Opciones de cuadrícula"
 	},	
 	"Settings_Grid_ShowGrid" : {
-		"en" : "Show grid:"
+		"en" : "Show grid:",
+		"sp" : "Mostrar cuadrícula"
 	},
 	"Settings_Grid_Columns" : {
-		"en" : "Columns:"
+		"en" : "Columns:",
+		"sp" : "Columnas"
 	},
 	"Settings_Grid_Width" : {
-		"en" : "Width:"
+		"en" : "Width:",
+		"sp" : "Ancho"
 	},
 	"Settings_Grid_Height" : {
-		"en" : "Height:"
+		"en" : "Height:",
+		"sp" : "Alto"
 	},
 	"Settings_Grid_Aspect" : {
-		"en" : "Simulation aspect ratio:"
+		"en" : "Simulation aspect ratio:",
+		"sp" : "Relación de aspecto"
 	},
 	"Settings_Grid_Spacing" : {
-		"en" : "Spacing:"
+		"en" : "Spacing:",
+		"sp" : "Espaciado"
 	},
 	"Settings_Playback_Options" : {
-		"en" : "Playback options"
+		"en" : "Playback options",
+		"sp" : "Opciones de reproducción"
 	},	
 	"Settings_Playback_Speed" : {
-		"en" : "Playback speed:"
+		"en" : "Playback speed:",
+		"sp" : "Velocidad de reproducción"
 	},
 	"Settings_Playback_Loop" : {
-		"en" : "Loop:"
+		"en" : "Loop:",
+		"sp" : "Bucle"
 	},
 	"Settings_Playback_Cache" : {
-		"en" : "Cache step:"
+		"en" : "Cache step:",
+		"sp" : "Paso de caché"
 	},
 	"Settings_Save" : {
-		"en" : "Save"
+		"en" : "Save",
+		"sp" : "Guardar"
+	},
+	"Settings_Layers" : {
+		"en" : "Modify grids",
+		"sp" : "Modificar cuadrículas"
+	},
+	"Settings_Styles" : {
+		"en" : "Modify style no.",
+		"sp" : "Modificar estilo n° "
+	},
+	"Settings_Layers_Z" : {
+		"en" : "Z",
+		"sp" : "Z"
+	},
+	"Settings_Layers_Ports" : {
+		"en" : "Ports",
+		"sp" : "Puertos"
+	},
+	"Settings_Layers_Styles" : {
+		"en" : "Style",
+		"sp" : "Estilo"
+	},
+	"Settings_Layers_Style" : {
+		"en" : "Style",
+		"sp" : "Estilo"
+	},
+	"Settings_Layers_Style_Title" : {
+		"en" : "Modify the style for grid",
+		"sp" : "Modificar el estilo para cuadrícula"
+	},
+	"Settings_Layers_Delete_Title" : {
+		"en" : "Remove grid no from visualization",
+		"sp" : "Quitar n° de cuadrícula de la visualización"
+	},
+	"Settings_Layers_Add_Title" : {
+		"en" : "Add another grid to the visualization",
+		"sp" : "Añadir cuadrícula a la visualización"
+	},
+	"Settings_Layers_Cancel" : {
+		"en" : "Close",
+		"sp" : "Cerrar"
+	},
+	"Settings_Layers_Apply" : {
+		"en" : "Apply",
+		"sp" : "Aplicar"
+	},
+	"Settings_Class_Add_Title" : {
+		"en" : "Add a color classification to the visualization",
+		"sp" : "Añadir una clasificación de colores a la visualización"
+	},
+	"Settings_Class_Delete_Title" : {
+		"en" : "Remove color classification from visualization",
+		"sp" : "Quitar una clasificación de colores de la visualización"
+	},
+	"Settings_Styles_Add_New" : {
+		"en" : "Add new style...",
+		"sp" : "Añadir nuevo estilo..."
+	},
+	"Settings_Style_Start" : {
+		"en" : "Start",
+		"sp" : "Inicio"
+	},
+	"Settings_Style_End" : {
+		"en" : "End",
+		"sp" : "Fin"
+	},
+	"Settings_Style_Color" : {
+		"en" : "Color",
+		"sp" : "Color"
+	},
+	"Settings_Layers_Add_Style_Title" : {
+		"en" : "Add a new style to the visualization",
+		"sp" : "Añadir nuevo estilo a la visualización"
+	},
+	"Settings_Layers_Del_Style_Title" : {
+		"en" : "Remove this style from the visualization",
+		"sp" : "Quitar este estilo de la visualización"
 	},
 	"Converter_Parse" : {
-		"en" : "Parse files"
+		"en" : "Parse files",
+		"sp" : "Procesar archivos"
 	},
 	"Diagram_Tooltip_X" : {
-		"en" : "<b>{0}</b> received an input (<b>{1}</b>) from <b>{2}</b> through port <b>{3}</b>"		
+		"en" : "<b>{0}</b> received an input (<b>{1}</b>) from <b>{2}</b> through port <b>{3}</b>",
+		"sp" : "<b>{0}</b> recibió una entrada (<b>{1}</b>) desde <b>{2}</b> a través del puerto <b>{3}</b>"		
 	},
 	"Diagram_Tooltip_Y" : {
-		"en" : "<b>{0}</b> emitted an output (<b>{1}</b>) to <b>{2}</b> through port <b>{3}</b>"		
+		"en" : "<b>{0}</b> emitted an output (<b>{1}</b>) to <b>{2}</b> through port <b>{3}</b>",
+		"sp" : "<b>{0}</b> emitió una salida (<b>{1}</b>) hacia <b>{2}</b> a través del puerto <b>{3}</b>"		
 	},
 	"Grid_Tooltip_Title" : {
-		"en" : "The state of cell <b>({0}, {1}, {2})</b> on port <b>{4}</b> is <b>{3}</b>."		
+		"en" : "The state of cell <b>({0}, {1}, {2})</b> on port <b>{4}</b> is <b>{3}</b>."	,
+		"sp" : "El estado de la celda <b>({0}, {1}, {2})</b> en el puerto <b>{4}</b> es <b>{3}</b>."		
 	},
     "Typeahead_Title": {
         "en": "A Filtered list of items will appear after 3 characters are entered.",
-        "fr": "Une liste filtrée d'objets apparaîtra lorsque 3 caractères auront été entrés."
+        "fr": "Une liste filtrée d'objets apparaîtra lorsque 3 caractères auront été entrés.",
+        "sp": "Una lista filtrada de ítems aparecerá luego de que se ingresen 3 caracteres."
     },
     "Popup_Close": {
         "en": "Close",
-        "fr": "Fermer"
+		"fr": "Fermer",
+		"sp": "Cerrar"
     },
     "Dropzone_Upload_Label": {
         "en": "DRAG AND DROP<BR> FILES HERE",
-        "fr": "GLISSER ET DÉPOSER<BR> LES FICHIERS ICI"
+		"fr": "GLISSER ET DÉPOSER<BR> LES FICHIERS ICI",
+		"sp": "ARRASTRAR Y SOLTAR <BR> LOS ARCHIVOS AQUÍ"
     },
     "Dropzone_Upload_Files": {
         "en": "FILES LOADED:<br>{0}",
-        "fr": "FICHIERS CHARGÉS:<br>{0}"
+        "fr": "FICHIERS CHARGÉS:<br>{0}",
+        "sp": "ARCHIVOS CARGADOS:<br>{0}"
     }
 }
