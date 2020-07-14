@@ -94,11 +94,13 @@ export default Core.Templatable("Widget.MultiView", class MultiView extends Temp
 	}
 	
 	OnSettings_Change(ev) {
-		if (["height", "width", "columns", "spacing", "aspect"].indexOf(ev.property) == -1) return;
+		if (["height", "width", "columns", "spacing", "aspect", "layers"].indexOf(ev.property) == -1) return;
 		
 		this.Widget("grid").columns = this.settings.Get("grid", "columns");
 		this.Widget("grid").spacing = this.settings.Get("grid", "spacing");
-		
+		this.Widget("grid").layers = this.settings.Get("grid", "layers");
+		this.Widget("grid").styler = this.settings.styler;
+
 		this.Resize();
 		this.Redraw();
 	}
