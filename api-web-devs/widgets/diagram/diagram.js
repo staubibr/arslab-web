@@ -3,9 +3,6 @@
 import Core from '../../tools/core.js';
 import Dom from '../../tools/dom.js';
 import Templated from '../../components/templated.js';
-import DiagramData from './diagramData.js';
-
-
 
 export default Core.Templatable("Widgets.Diagram", class Diagram extends Templated { 
 
@@ -13,56 +10,33 @@ export default Core.Templatable("Widgets.Diagram", class Diagram extends Templat
 		super(node);
 	}
 
-	// SetDiagram(svg,models_sim,simulation) {
-	SetDiagram(Simulation) {
-
-		this.Elem('diagram').innerHTML = Simulation.diagram;
+	SetDiagram(simulation) {
+		Dom.Empty(this.Elem('diagram'));
+		
+		this.Elem('diagram').appendChild(simulation.Diagram);
 		
 		this.Node('diagram').Elem("svg").setAttribute("preserveAspectRatio", "none");
 		
-		Simulation.setDependencyNodes(this.Elem('diagram').firstElementChild,Simulation.dependenceTreeMap);
-
-		this.Simulation = Simulation;
-
-		this.models = []
-
-		this.Simulation.models.forEach( model => {
-			if (model.svg){
-				var str = '[id='+model.svg+']';
-				var m = this.Elem('diagram').firstElementChild.querySelector(str);	
-				this.models.push(m);
-			}
+		this.Simulation = simulation;
+		
+		this.Simulation.models.forEach(model => {
+			model.svg.forEach(n => {	
+				n.addEventListener("mousemove", this.onSvgMouseMove_Handler.bind(this, model));
+				n.addEventListener("click", this.onSvgClick_Handler.bind(this, model));
+				n.addEventListener("mouseout", this.onSvgMouseOut_Handler.bind(this, model));
+			});
 		});
-
-		this.models.forEach((model) => {			
-			model.addEventListener("mousemove", this.onSvgMouseMove_Handler.bind(this));
-			model.addEventListener("click", this.onSvgClick_Handler.bind(this));
-			model.addEventListener("mouseout", this.onSvgMouseOut_Handler.bind(this));
-		});
-		
-		// this.data = new DiagramData(this.Elem('diagram').firstElementChild,models_sim);
 	}
 	
-	SetCss() {
-		var models = this.Node('diagram').Elems("[type='atomic'],[type='coupled']");
+	onSvgMouseMove_Handler(model, ev) {
+		this.Emit("MouseMove", { x:ev.pageX, y:ev.pageY , model:model, svg:ev.target });
+	}
 		
-		models.forEach(m => this.AddModelCss(m, ["model"]));
+	onSvgMouseOut_Handler(model, ev) {
+		this.Emit("MouseOut", { x:ev.pageX, y:ev.pageY, model:model, svg:ev.target });
 	}
 	
-	onSvgMouseMove_Handler(ev) {
-		// var model = ev.target.getAttribute('name').toLowerCase();
-		var model = ev.target.getAttribute('id').toLowerCase();
-		this.Emit("MouseMove", { x:ev.pageX, y:ev.pageY , model:model });
-		// this.Emit("MouseMove", { x:ev.pageX, y:ev.pageY, model:ev.target.getAttribute('id') });
-	}
-		
-	onSvgMouseOut_Handler(ev) {
-		this.Emit("MouseOut", { x:ev.pageX, y:ev.pageY });
-	}
-	
-	onSvgClick_Handler(ev) {
-		var model = ev.target.getAttribute('name');
-		
+	onSvgClick_Handler(model, ev) {				
 		this.Emit("Click", { x:ev.pageX, y:ev.pageY , model:model, svg:ev.target });
 	}
 		
@@ -85,81 +59,46 @@ export default Core.Templatable("Widgets.Diagram", class Diagram extends Templat
 		this.Reset();
 		
 		transitions.forEach((t) => {
-			if (t.type == "Y") this.DrawYTransition(t);
-			
-			else if (t.type == "X") this.DrawXTransition(t);
+			this.DrawYTransition(t);
 		});
 	}
-
-	DrawXTransition(t) {		
-		var m = this.data.Model(t.destination);
-		
-		if (m) this.AddModelCss(m.node, ["highlighted", t.type]);
-		
-		var p = this.data.Port(t.destination, t.port);
-		
-		if (p) this.AddModelCss(p.node, ["highlighted", t.type]);
-		
-		var l = this.data.Link(t.destination, t.port, t.type);
-		
-		if (l) this.AddModelCss(l.node, ["highlighted", t.type]);	
-		
-		if (l && l.marker) this.AddModelCss(l.marker, ["highlighted", t.type]);	
-	}
-
+	
 	DrawYTransition(t) {  
-		
-		//Search for dependence tree.		//Added
-		// var map = this.dependenceTreeMap.get(t.Id + t.port);
-		var tree = this.Simulation.dependenceTreeMap.get(t.Id + t.port);
-		if (tree){
-			this.AddModelCss(tree.modelNode, ["highlighted", "Y"]);
+		var m = this.Simulation.Model(t.Id);
+		var p = m.Port(t.port);
+		if (!p) return;
+		if (m) {
+			this.AddCss(m.OutputPath(t.port), ["highlighted"]);
 			
-			// this.AddModelCss(tree.portNode, ["highlighted", "Y"]);
-			if (Array.isArray(tree.portNode)){
-				tree.portNode.forEach(p => {
-					this.AddModelCss(p, ["highlighted", "Y"]);
-				});
-			}
-			else
-			{
-				this.AddModelCss(tree.portNode, ["highlighted", "Y"]);
-			}
-			
-			tree.nodes.forEach(node => {
-				if (node) this.AddModelCss(node, ["highlighted", "X"]);
-			 } );
+			this.AddCss(m.svg, ["origin"]);
 		}
-
+		
+		if (p) this.AddCss(p.svg, ["origin"]);
+				
+		m.PortLinks(p.name).forEach(l => this.AddCss(l.svg, ["origin"]));
 	}
 
-
-
-	AddModelCss(model, css) {
-		css.forEach(c => model.classList.add(c));
+	AddCss(nodes, css) {		
+		nodes.forEach(node => {
+			css.forEach(c => node.classList.add(c));
+		});
 	}
 	
-	RemoveModelCss(model, css) {
-		css.forEach(c => model.classList.remove(c));
+	RemoveCss(nodes, css) {
+		nodes.forEach(node => {
+			css.forEach(c => node.classList.remove(c));
+		});
 	}
 	
 	Reset() {
-		// this.data.Nodes().forEach(n => { this.RemoveModelCss(n, ["highlighted", "X", "Y"]); })
-		this.Simulation.dependenceTreeMap.forEach(tree => { 
-			this.RemoveModelCss(tree.modelNode, ["highlighted", "X", "Y"]); 
-			// this.RemoveModelCss(tree.portNode, ["highlighted", "X", "Y"]); 
-			if (Array.isArray(tree.portNode)){
-				tree.portNode.forEach(p2=> {
-					this.RemoveModelCss(p2, ["highlighted", "X", "Y"]); 
-				});	
-			}else{
-				this.RemoveModelCss(tree.portNode, ["highlighted", "X", "Y"]); 
-			}
-			
-			tree.nodes.forEach(br => { 
-				this.RemoveModelCss(br, ["highlighted", "X", "Y"]); 
-			})		
-
-		})
+		// Collect all nodes then clean them
+		var selector = [];
+		
+		this.Simulation.Models.forEach(m => {
+			this.RemoveCss(m.svg, ["highlighted", "origin"]);
+						
+			m.ports.forEach(p => this.RemoveCss(p.svg, ["highlighted", "origin"]));
+			m.links.forEach(l => this.RemoveCss(l.svg, ["highlighted", "origin"]));
+		});
 	}
 });
