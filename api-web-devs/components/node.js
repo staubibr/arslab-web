@@ -15,6 +15,10 @@ export default class Node {
 		this.elem.addEventListener(type, handler);
 	}
 	
+	Off(type, handler) {
+		this.elem.removeEventListener(type, handler);
+	}
+	
 	Elem(selector) {
 		var elem = this.elem.querySelector(selector);
 		

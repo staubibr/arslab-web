@@ -7,13 +7,15 @@ export default class Settings extends Evented {
 
 	set json(value) {
 		this._json = value;
-		
+
 		this.styler = Styler.FromJson(value.grid.styles);
 	}
 	
 	get json() { return this._json; }
 
 	set layers (values) { this.json.grid.layers = value; }
+	
+	get layers () { return this.json.grid.layers; }
 
 	constructor() {
 		super();
@@ -69,6 +71,12 @@ export default class Settings extends Evented {
 		return JSON.stringify(this.json);
 	}
 	
+	ToFile() {
+		var content = this.ToString();
+		
+		return new File([content], "options.json", { type:"application/json", endings:'native' });
+	}
+	
 	static FromJson(json) {
 		var settings = new Settings();
 		
@@ -112,7 +120,7 @@ export default class Settings extends Evented {
 				options.grid.layers.push({
 					z : i,
 					ports : [p.name],
-					style : p.style || k
+					style : (p.style != undefined) ? p.style : k
 				})
 			});
 		}

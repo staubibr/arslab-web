@@ -41,7 +41,7 @@ export default class ChunkReader extends Evented {
 				
 		this.PromiseRead(file).then(function(result) {			
 			d.Resolve(delegate(result));
-		});
+		}, (error) => { d.Reject(error); });
 
 		return d.promise;
 	}
