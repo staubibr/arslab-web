@@ -2,9 +2,22 @@
 
 export default class State { 
 
-	constructor() {
+	constructor(size, models) {
 		this.i = -1;
 		this.data = null;
+		this.models = [];
+		this.size = size;
+		
+		if (!models) return;
+		
+		this.models = models.map(m => {
+			return {
+				name : m.name,
+				ports : m.ports.map(p => p.name)
+			}
+		});
+		
+		this.Reset();
 	}
 	
 	Clone(){

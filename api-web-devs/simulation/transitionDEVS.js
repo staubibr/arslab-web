@@ -4,8 +4,8 @@ import Transition from './transition.js';
 
 export default class TransitionDEVS extends Transition { 
 			
-	constructor(type, model, port, value, destination) {
-		super(type, model, port, value, destination);
+	constructor(model, port, value) {
+		super(model, port, value);
 	}
 	
 	get Id() {
@@ -13,11 +13,15 @@ export default class TransitionDEVS extends Transition {
 	}
 
 	Reverse() {
-		return new TransitionDEVS(this.type, this.model, this.port, this.value - this.diff, this.destination);
+		return new TransitionDEVS(this.model, this.port, this.value - this.diff);
 		
 		// Not sure about this
 		t.diff = this.diff;
 		
 		return t;
+	}
+	
+	static FromCsv(csv) {
+		return new TransitionDEVS(csv.model, csv.port, csv.value);
 	}
 }

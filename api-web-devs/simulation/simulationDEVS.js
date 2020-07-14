@@ -1,12 +1,11 @@
 'use strict';
 
+import Dom from '../tools/dom.js';
 import Simulation from './simulation.js';
 import FrameDEVS from './frameDEVS.js';
 import TransitionDEVS from './transitionDEVS.js';
 import StateDEVS from './stateDEVS.js';
-import DependenceTree from '../widgets/diagram/diagramData.js';
-import Diagram from '../widgets/diagram/diagram.js';
-import DiagramData from '../widgets/diagram/diagramData.js';
+import Model from './model.js';
 
 export default class SimulationDEVS extends Simulation { 
 	
@@ -14,8 +13,8 @@ export default class SimulationDEVS extends Simulation {
 		return this.diagram;
 	}
 	
-	get Ratio() { 
-		var vb = this.diagram.match(/viewBox="(.*?)"/);
+	get Ratio() { 	
+		var vb = this.Diagram.getAttribute("viewBox")
 		
 		if (!vb) throw new Error("The viewBox attribute must be specified on the svg element.");
 
@@ -26,71 +25,68 @@ export default class SimulationDEVS extends Simulation {
 	
 	get SVG() { return this.svg; }
 	
-	constructor(name, simulator, type, models, frames, diagram) {
-		super(name, simulator, type, models, frames);
+	constructor(name, simulator, type, models, diagram) {
+		super(name, simulator, type, models);
+				
+		this.BuildModels();
+				
+		if (diagram) this.LoadSVG(diagram);
 		
-		this.diagram = diagram || null;
+		this.state = new StateDEVS(this.Models);
+	}
+	
+	AddTransition(time, transition) {		
+		var f = this.Index(time) || this.AddFrame(new FrameDEVS(time));	
 		
-		// this.setDependencyNodes(this.diagram,this.dependenceTreeMap);
-
-		this.state = new StateDEVS(models);
+		f.AddTransition(transition);
+	}
+	
+	BuildModels() {
+		this.models.forEach(m => {
+			m.submodels = m.submodels.map(name => this.Model(name));
+			
+			m.links.forEach(l => {
+				l.modelB = this.Model(l.modelB);
+				l.portB = this.Port(l.modelB.name, l.portB);
+				l.portA = this.Port(m.name, l.portA);				
+			});
+		});
+	}
+	
+	LoadSVG(svg) {		
+		var root = Dom.Create("div", { innerHTML:svg });
+		
+		this.Models.forEach(model => {	
+			model.svg = model.svg.map(s => root.querySelector(s)).filter(s => s != null);		
+			
+			model.ports.forEach(port => {
+				port.svg = port.svg.map(s => root.querySelector(s)).filter(s => s != null);
+			});
+			
+			model.links.forEach(link => {
+				link.svg = link.svg.map(s => root.querySelector(s)).filter(s => s != null);
+			});
+		});
+		
+		this.diagram = root.children[0];
+	}
+	
+	ToFiles() {
+		
 	}
 	
 	static FromFiles(files) {
-		var s = files.simulation;
-		var t = files.transitions;
-		var d = files.diagram;
+		var s = files.simulation;		
+		var models = s.models.map(m => Model.FromJson(m));
+		var simulation = new SimulationDEVS(s.name, s.simulator, s.type, models, files.diagram);
 		
-		var simulation = new SimulationDEVS(s.name, s.simulator, s.type, s.models, null, d);
-		
-		// build frames from flat transitions list		
-		for (var i = 0; i < t.length; i++) {
-			var m = t[i];
-			const found = simulation.atomics.find(element => element.name == m.model);
-			if (!found) continue;
-			if (m.type != "Y") continue;
-			var f = simulation.Index(m.time) || simulation.AddFrame(new FrameDEVS(m.time));
+		// Add frames from flat transitions list		
+		for (var i = 0; i < files.transitions.length; i++) {
+			var time = files.transitions[i].time;
 			
-			var add = new TransitionDEVS(m.type, m.model, m.port, m.value, m.destination);
-			
-			f.AddTransition(add);
+			simulation.AddTransition(time, TransitionDEVS.FromCsv(files.transitions[i]));
 		}
 		
 		return simulation;
-	}
-
-	setDependencyNodes(diagram,map){
-		
-		map.forEach(tree =>{
-			
-			tree.modelNode = diagram.querySelector('[id='+tree.modelSvg+']');	
-			
-			// tree.portNode = diagram.querySelector('[id='+tree.portSvg+']');	
-			if (Array.isArray(tree.portSvg)){
-				tree.portSvg.forEach(p => {
-					tree.portNode.push(diagram.querySelector('[id='+p+']')	);
-				});
-			}
-			else
-			{
-				tree.portNode = diagram.querySelector('[id='+tree.portSvg+']');	
-			}
-			
-			tree.branch_nodes.forEach(br => {
-			
-				var str = '[id='+br+']';
-				var node = diagram.querySelector(str);	
-			
-				if (node) {
-			
-					tree.nodes.push(node);
-
-					var markerEnd = node.style["marker-end"];
-					var marker = markerEnd ? diagram.querySelector(`${markerEnd.slice(5, -2)} > *`) : null;
-					if (marker) tree.nodes.push(marker);
-				}	
-			
-			});
-		});
 	}
 }
