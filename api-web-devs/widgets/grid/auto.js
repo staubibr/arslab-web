@@ -39,7 +39,7 @@ export default Core.Templatable("Auto.Grid", class AutoGrid extends Automator {
 		
 		this.Handle(h);
 	}
-		
+	
 	BuildTooltip() {
 		this.tooltip = new Tooltip();
 		
@@ -53,7 +53,7 @@ export default Core.Templatable("Auto.Grid", class AutoGrid extends Automator {
 		
 		this.Widget.DrawState(s.state, s);
 	}
-
+	
 	onSimulationMove_Handler(ev) {		
 		var s = this.Simulation;
 		
