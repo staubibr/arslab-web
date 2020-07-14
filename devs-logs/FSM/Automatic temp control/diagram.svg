@@ -1,0 +1,986 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   sodipodi:docname="diagram.svg"
+   inkscape:version="1.0 (4035a4fb49, 2020-05-01)"
+   id="svg162"
+   version="1.1"
+   viewBox="0 0 307.67316 153.87432"
+   height="153.87433mm"
+   width="307.67316mm">
+  <style
+     id="style2">.svg-arrow { stroke:#000000; } .svg-label { font-style: italic; font-size: 3.5px; font-family: sans-serif; } .svg-marker { overflow:visible; } .svg-path { fill:none; stroke:#000000; stroke-width:0.2px; stroke-linecap:butt; stroke-linejoin:miter; stroke-opacity:1; } .svg-model { fill:none;stroke:#000000; stroke-width:0.24; stroke-miterlimit:4; stroke-opacity:1 } .svg-model.svg-coupled { stroke-dasharray: 2, 1; stroke-dashoffset:0; } .svg-label.large { font-style:normal; font-size:4.9px; }</style>
+  <defs
+     id="defs156">
+    <marker
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="marker1523"
+       refX="0"
+       refY="0"
+       orient="auto"
+       class="svg-marker"
+       inkscape:stockid="Arrow1Lend">
+      <path
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path1521" />
+    </marker>
+    <marker
+       inkscape:collect="always"
+       inkscape:stockid="Arrow1Lend"
+       class="svg-marker"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker1397"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         id="path1395"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:collect="always"
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="marker1253"
+       refX="0"
+       refY="0"
+       orient="auto"
+       class="svg-marker"
+       inkscape:stockid="Arrow1Lend">
+      <path
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path1251" />
+    </marker>
+    <marker
+       inkscape:collect="always"
+       inkscape:stockid="Arrow1Lend"
+       class="svg-marker"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker1117"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         id="path1115"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       class="svg-marker"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker1107"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         id="path1105"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       class="svg-marker"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker1097"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         id="path1095"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       class="svg-marker"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker1087"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         id="path1085"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:collect="always"
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="marker1706"
+       refX="0"
+       refY="0"
+       orient="auto"
+       class="svg-marker"
+       inkscape:stockid="Arrow1Lend">
+      <path
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path1704" />
+    </marker>
+    <marker
+       inkscape:collect="always"
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker1974"
+       style="overflow:visible"
+       class="svg-marker"
+       inkscape:isstock="true">
+      <path
+         id="path1972"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="marker1832"
+       refX="0"
+       refY="0"
+       orient="auto"
+       class="svg-marker"
+       inkscape:stockid="Arrow1Lend">
+      <path
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path1830" />
+    </marker>
+    <marker
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="marker1812"
+       refX="0"
+       refY="0"
+       orient="auto"
+       class="svg-marker"
+       inkscape:stockid="Arrow1Lend">
+      <path
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path1810" />
+    </marker>
+    <marker
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="marker1802"
+       refX="0"
+       refY="0"
+       orient="auto"
+       class="svg-marker"
+       inkscape:stockid="Arrow1Lend">
+      <path
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path1800" />
+    </marker>
+    <marker
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="marker1792"
+       refX="0"
+       refY="0"
+       orient="auto"
+       class="svg-marker"
+       inkscape:stockid="Arrow1Lend">
+      <path
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path1790" />
+    </marker>
+    <marker
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="marker1782"
+       refX="0"
+       refY="0"
+       orient="auto"
+       class="svg-marker"
+       inkscape:stockid="Arrow1Lend">
+      <path
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path1780" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker1712"
+       style="overflow:visible"
+       class="svg-marker"
+       inkscape:isstock="true">
+      <path
+         id="path1710"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker1642"
+       style="overflow:visible"
+       class="svg-marker"
+       inkscape:isstock="true">
+      <path
+         id="path1640"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)" />
+    </marker>
+    <marker
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="marker1528"
+       refX="0"
+       refY="0"
+       orient="auto"
+       class="svg-marker"
+       inkscape:stockid="Arrow1Lend">
+      <path
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path1526" />
+    </marker>
+    <marker
+       inkscape:isstock="true"
+       style="overflow:visible"
+       id="marker1506"
+       refX="0"
+       refY="0"
+       orient="auto"
+       class="svg-marker"
+       inkscape:stockid="Arrow1Lend">
+      <path
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
+         d="M 0,0 5,-5 -12.5,0 5,5 Z"
+         id="path1504" />
+    </marker>
+    <rect
+       id="rect187"
+       height="28.726191"
+       width="50.270832"
+       y="146.65475"
+       x="72.949402" />
+  </defs>
+  <sodipodi:namedview
+     showguides="false"
+     inkscape:object-paths="false"
+     inkscape:snap-midpoints="true"
+     inkscape:snap-smooth-nodes="false"
+     inkscape:snap-intersection-paths="true"
+     inkscape:window-maximized="1"
+     inkscape:window-y="-9"
+     inkscape:window-x="2391"
+     inkscape:window-height="1046"
+     inkscape:window-width="1800"
+     inkscape:bbox-paths="false"
+     inkscape:bbox-nodes="false"
+     inkscape:snap-bbox-edge-midpoints="true"
+     inkscape:snap-bbox-midpoints="true"
+     inkscape:snap-bbox="true"
+     showgrid="false"
+     inkscape:document-rotation="0"
+     inkscape:current-layer="layer1"
+     inkscape:document-units="mm"
+     inkscape:cy="103.84349"
+     inkscape:cx="921.72903"
+     inkscape:zoom="0.98994949"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     borderopacity="1.0"
+     bordercolor="#666666"
+     pagecolor="#ffffff"
+     id="base"
+     inkscape:guide-bbox="true"
+     inkscape:snap-nodes="true" />
+  <metadata
+     id="metadata159">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     transform="translate(46.548092,-36.00222)"
+     id="layer1"
+     inkscape:groupmode="layer"
+     inkscape:label="Layer 1">
+    <rect
+       type="atomic"
+       name="tempset"
+       class="svg-model"
+       y="36.134724"
+       x="69.606926"
+       height="16.252975"
+       width="51.782734"
+       id="rect_Label_tempset"
+       style="fill:none;stroke:#000000;stroke-width:0.264999" />
+    <text
+       x="87.430176"
+       y="45.204571"
+       class="svg-label"
+       id="Label_tempset">TempSet</text>
+    <text
+       transform="translate(-34.356604,-89.842531)"
+       xml:space="preserve"
+       style="font-size:3.52777px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;white-space:pre;inline-size:31.5951;stroke-width:0.264583"
+       x="134.69659"
+       y="139.00145"
+       type="oPort"
+       name="transitionout"
+       model="tempset"
+       class="svg-label"
+       id="tempset_pOut1"><tspan
+         x="134.69659"
+         y="139.00145"><tspan>
+</tspan></tspan><tspan
+         x="134.69659"
+         y="143.41116"><tspan>
+</tspan></tspan><tspan
+         x="134.69659"
+         y="147.82088"><tspan>  </tspan><tspan>transitionout</tspan><tspan>
+</tspan></tspan><tspan
+         x="134.69659"
+         y="152.23059"><tspan>
+</tspan></tspan></text>
+    <text
+       transform="translate(-98.945913,-32.919074)"
+       id="tempset_pIn1"
+       y="72.949409"
+       x="223.00594"
+       style="font-size:3.52777px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;white-space:pre;inline-size:31.6606;stroke-width:0.264583"
+       type="iPort"
+       name="transitionin"
+       model="tempset"
+       class="svg-label"
+       xml:space="preserve"><tspan
+         x="223.00594"
+         y="72.949409"><tspan>
+</tspan></tspan><tspan
+         x="223.00594"
+         y="77.359124"><tspan>
+</tspan></tspan><tspan
+         x="223.00594"
+         y="81.768838"><tspan>  </tspan><tspan>transitionin</tspan><tspan>
+</tspan></tspan><tspan
+         x="223.00594"
+         y="86.178552"><tspan>
+</tspan></tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:3.52777px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;white-space:pre;inline-size:31.6606;stroke-width:0.264583"
+       x="223.00594"
+       y="72.949409"
+       id="tempset_pIn2"
+       type="iPort"
+       name="transitionin"
+       model="tempset"
+       class="svg-label"
+       transform="translate(-178.96626,-28.143248)"><tspan
+         x="223.00594"
+         y="72.949409"><tspan>
+</tspan></tspan><tspan
+         x="223.00594"
+         y="77.359124"><tspan>
+</tspan></tspan><tspan
+         x="223.00594"
+         y="81.768838"><tspan>  </tspan><tspan> transitionin</tspan><tspan>
+</tspan></tspan><tspan
+         x="223.00594"
+         y="86.178552"><tspan>  </tspan><tspan>
+</tspan></tspan><tspan
+         x="223.00594"
+         y="90.588265"><tspan>  </tspan><tspan>
+</tspan></tspan><tspan
+         x="223.00594"
+         y="94.997979"><tspan>
+</tspan></tspan></text>
+    <rect
+       style="fill:none;stroke:#000000;stroke-width:0.264999"
+       type="atomic"
+       name="aircondon"
+       class="svg-model"
+       id="rect_aircondon"
+       width="51.782734"
+       height="16.252975"
+       x="195.28467"
+       y="36.13472" />
+    <text
+       id="Label_aircondon"
+       class="svg-label"
+       y="45.564308"
+       x="211.95607">AirCondOn</text>
+    <text
+       id="aircondon_pOut1"
+       y="139.00145"
+       x="134.69659"
+       style="font-size:3.52777px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;white-space:pre;inline-size:31.5951;stroke-width:0.264583"
+       xml:space="preserve"
+       type="oPort"
+       name="transitionout"
+       model="aircondon"
+       class="svg-label"
+       transform="translate(34.69744,-99.087221)"><tspan
+         x="134.69659"
+         y="139.00145"><tspan>
+</tspan></tspan><tspan
+         x="134.69659"
+         y="143.41116"><tspan>
+</tspan></tspan><tspan
+         x="134.69659"
+         y="147.82088"><tspan>  </tspan><tspan>transitionout</tspan><tspan>
+</tspan></tspan><tspan
+         x="134.69659"
+         y="152.23059"><tspan>
+</tspan></tspan></text>
+    <text
+       transform="translate(3.3454222,-25.186855)"
+       id="aircondon_pIn1"
+       y="72.949409"
+       x="223.00594"
+       type="iPort"
+       name="transitionin"
+       model="aircondon"
+       class="svg-label"
+       style="font-size:3.52777px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;white-space:pre;inline-size:31.6606;stroke-width:0.264583"
+       xml:space="preserve"><tspan
+         x="223.00594"
+         y="72.949409"><tspan>
+</tspan></tspan><tspan
+         x="223.00594"
+         y="77.359124"><tspan>
+</tspan></tspan><tspan
+         x="223.00594"
+         y="81.768838"><tspan>  </tspan><tspan>transitionin</tspan><tspan>
+</tspan></tspan><tspan
+         x="223.00594"
+         y="86.178552"><tspan>
+</tspan></tspan></text>
+    <rect
+       style="fill:none;stroke:#000000;stroke-width:0.264999"
+       type="atomic"
+       name="tempsense"
+       class="svg-model"
+       id="rect_tempsense"
+       width="51.782734"
+       height="16.252975"
+       x="195.2847"
+       y="82.388641" />
+    <text
+       id="Label_tempsense"
+       class="svg-label"
+       y="91.561058"
+       x="209.74471"
+       style="font-size:3.88056px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;stroke-width:0.264583"
+       xml:space="preserve">TempSense</text>
+    <text
+       transform="translate(86.927647,-67.06434)"
+       xml:space="preserve"
+       style="font-size:3.52777px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;white-space:pre;inline-size:31.5951;stroke-width:0.264583"
+       x="134.69659"
+       y="139.00145"
+       type="oPort"
+       name="transitionout"
+       model="tempsense"
+       class="svg-label"
+       id="tempsense_pOut1"><tspan
+         x="134.69659"
+         y="139.00145"><tspan>
+</tspan></tspan><tspan
+         x="134.69659"
+         y="143.41116"><tspan>
+</tspan></tspan><tspan
+         x="134.69659"
+         y="147.82088"><tspan>  </tspan><tspan>transitionout</tspan><tspan>
+</tspan></tspan><tspan
+         x="134.69659"
+         y="152.23059"><tspan>
+</tspan></tspan></text>
+    <text
+       id="tempsense_pOut2"
+       y="139.00145"
+       x="134.69659"
+       style="font-size:3.52777px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;white-space:pre;inline-size:31.5951;stroke-width:0.264583"
+       xml:space="preserve"
+       type="oPort"
+       name="transitionout"
+       model="tempsense"
+       class="svg-label"
+       transform="translate(86.431553,-45.514557)"><tspan
+         x="134.69659"
+         y="139.00145"><tspan>
+</tspan></tspan><tspan
+         x="134.69659"
+         y="143.41116"><tspan>
+</tspan></tspan><tspan
+         x="134.69659"
+         y="147.82088"><tspan>  </tspan><tspan>transitionout</tspan><tspan>
+</tspan></tspan><tspan
+         x="134.69659"
+         y="152.23059"><tspan>
+</tspan></tspan></text>
+    <text
+       transform="translate(-52.886094,1.9261599)"
+       id="tempsense_pIn1"
+       y="72.949409"
+       x="223.00594"
+       type="iPort"
+       name="transitionin"
+       model="tempsense"
+       class="svg-label"
+       style="font-size:3.52777px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;white-space:pre;inline-size:31.6606;stroke-width:0.264583"
+       xml:space="preserve"><tspan
+         x="223.00594"
+         y="72.949409"><tspan>
+</tspan></tspan><tspan
+         x="223.00594"
+         y="77.359124"><tspan>
+</tspan></tspan><tspan
+         x="223.00594"
+         y="81.768838"><tspan>  </tspan><tspan>transitionin</tspan><tspan>
+</tspan></tspan><tspan
+         x="223.00594"
+         y="86.178552"><tspan>
+</tspan></tspan></text>
+    <rect
+       style="fill:none;stroke:#000000;stroke-width:0.264999"
+       type="atomic"
+       name="heateron"
+       class="svg-model"
+       id="rect_Heater_ON"
+       width="51.782734"
+       height="16.252975"
+       x="195.2847"
+       y="123.96603" />
+    <text
+       id="Label_Heater_ON"
+       class="svg-label"
+       y="133.50319"
+       x="210.97824"
+       xml:space="preserve">
+HeaterON
+</text>
+    <text
+       id="Heater_ON_pOut1"
+       y="139.00145"
+       x="134.69659"
+       type="oPort"
+       name="transitionout"
+       model="heateron"
+       class="svg-label"
+       style="font-size:3.52777px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;white-space:pre;inline-size:31.5951;stroke-width:0.264583"
+       xml:space="preserve"
+       transform="translate(33.11435,-18.03493)"><tspan
+         x="134.69659"
+         y="139.00145"><tspan>
+</tspan></tspan><tspan
+         x="134.69659"
+         y="143.41116"><tspan>
+</tspan></tspan><tspan
+         x="134.69659"
+         y="147.82088"><tspan>  </tspan><tspan>transitionout</tspan><tspan>
+</tspan></tspan><tspan
+         x="134.69659"
+         y="152.23059"><tspan>
+</tspan></tspan></text>
+    <text
+       transform="translate(88.093426,-1.3184354)"
+       xml:space="preserve"
+       style="font-size:3.52777px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;white-space:pre;inline-size:31.5951;stroke-width:0.264583"
+       x="134.69659"
+       y="139.00145"
+       type="oPort"
+       name="transitionout"
+       model="heateron"
+       class="svg-label"
+       id="Heater_ON_pOut2"><tspan
+         x="134.69659"
+         y="139.00145"><tspan>
+</tspan></tspan><tspan
+         x="134.69659"
+         y="143.41116"><tspan>
+</tspan></tspan><tspan
+         x="134.69659"
+         y="147.82088"><tspan>  </tspan><tspan>transitionout</tspan><tspan>
+</tspan></tspan><tspan
+         x="134.69659"
+         y="152.23059"><tspan>
+</tspan></tspan></text>
+    <text
+       transform="translate(0.80036629,40.502998)"
+       id="Heater_ON_pIn1"
+       y="72.949409"
+       x="223.00594"
+       type="iPort"
+       name="transitionin"
+       model="heateron"
+       class="svg-label"
+       style="font-size:3.52777px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;white-space:pre;inline-size:31.6606;stroke-width:0.264583"
+       xml:space="preserve"><tspan
+         x="223.00594"
+         y="72.949409"><tspan>
+</tspan></tspan><tspan
+         x="223.00594"
+         y="77.359124"><tspan>
+</tspan></tspan><tspan
+         x="223.00594"
+         y="81.768838"><tspan>  </tspan><tspan>  transitionin</tspan><tspan>
+</tspan></tspan><tspan
+         x="223.00594"
+         y="86.178552"><tspan>
+</tspan></tspan></text>
+    <rect
+       style="fill:none;stroke:#000000;stroke-width:0.264999"
+       type="atomic"
+       name="codetectalarm"
+       class="svg-model"
+       id="rect_codetectalarm"
+       width="51.782734"
+       height="16.252975"
+       x="195.2847"
+       y="166.77063" />
+    <text
+       id="Label_codetectalarm"
+       class="svg-label"
+       y="176.3419"
+       x="202.87793"
+       style="font-size:3.88056px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;stroke-width:0.264583"
+       xml:space="preserve">
+CODetectAlarm
+</text>
+    <text
+       id="codetectalarm_pOut1"
+       y="139.00145"
+       x="134.69659"
+       style="font-size:3.52777px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;white-space:pre;inline-size:31.5951;stroke-width:0.264583"
+       xml:space="preserve"
+       type="oPort"
+       name="transitionout"
+       model="codetectalarm"
+       class="svg-label"
+       transform="translate(32.117991,22.614829)"><tspan
+         x="134.69659"
+         y="139.00145"><tspan>
+</tspan></tspan><tspan
+         x="134.69659"
+         y="143.41116"><tspan>
+</tspan></tspan><tspan
+         x="134.69659"
+         y="147.82088"><tspan>  </tspan><tspan>transitionout</tspan><tspan>
+</tspan></tspan><tspan
+         x="134.69659"
+         y="152.23059"><tspan>
+</tspan></tspan></text>
+    <text
+       transform="translate(2.1042885,82.837573)"
+       id="codetectalarm_pIn1"
+       y="72.949409"
+       x="223.00594"
+       type="iPort"
+       name="transitionin"
+       model="codetectalarm"
+       class="svg-label"
+       style="font-size:3.52777px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;white-space:pre;inline-size:31.6606;stroke-width:0.264583"
+       xml:space="preserve"><tspan
+         x="223.00594"
+         y="72.949409"><tspan>
+</tspan></tspan><tspan
+         x="223.00594"
+         y="77.359124"><tspan>
+</tspan></tspan><tspan
+         x="223.00594"
+         y="81.768838"><tspan>  </tspan><tspan>transitionin</tspan><tspan>
+</tspan></tspan><tspan
+         x="223.00594"
+         y="86.178552"><tspan>
+</tspan></tspan></text>
+    <rect
+       style="fill:none;stroke:#000000;stroke-width:0.264999"
+       type="atomic"
+       name="codetectok"
+       class="svg-model"
+       id="rect_codetectok"
+       width="51.782734"
+       height="16.252975"
+       x="73.749435"
+       y="123.96603" />
+    <text
+       id="Label_codetectok"
+       class="svg-label"
+       y="133.36485"
+       x="88.492241"
+       xml:space="preserve">CODetectOK</text>
+    <text
+       id="codetectok_pOut1"
+       y="139.00145"
+       x="134.69659"
+       style="font-size:3.52777px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;white-space:pre;inline-size:31.5951;stroke-width:0.264583"
+       xml:space="preserve"
+       type="oPort"
+       name="transitionout"
+       model="codetectok"
+       class="svg-label"
+       transform="translate(-88.20245,-18.054693)"><tspan
+         x="134.69659"
+         y="139.00145"><tspan>
+</tspan></tspan><tspan
+         x="134.69659"
+         y="143.41116"><tspan>
+</tspan></tspan><tspan
+         x="134.69659"
+         y="147.82088"><tspan>  </tspan><tspan>transitionout</tspan><tspan>
+</tspan></tspan><tspan
+         x="134.69659"
+         y="152.23059"><tspan>
+</tspan></tspan></text>
+    <text
+       transform="translate(-94.208393,56.689497)"
+       id="codetectok_pIn1"
+       y="72.949409"
+       x="223.00594"
+       type="iPort"
+       name="transitionin"
+       model="codetectok"
+       class="svg-label"
+       style="font-size:3.52777px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;white-space:pre;inline-size:31.6606;stroke-width:0.264583"
+       xml:space="preserve"><tspan
+         x="223.00594"
+         y="72.949409"><tspan>
+</tspan></tspan><tspan
+         x="223.00594"
+         y="77.359124"><tspan>
+</tspan></tspan><tspan
+         x="223.00594"
+         y="81.768838"><tspan>  </tspan><tspan>transitionin</tspan><tspan>
+</tspan></tspan><tspan
+         x="223.00594"
+         y="86.178552"><tspan>
+</tspan></tspan></text>
+    <rect
+       style="fill:none;stroke:#000000;stroke-width:0.264999;stroke-miterlimit:4;stroke-opacity:1"
+       id="rect_input_reader"
+       width="51.782738"
+       height="16.252975"
+       x="-46.415592"
+       y="113.21387"
+       class="svg-model"
+       name="input_reader"
+       type="atomic" />
+    <text
+       id="Label_input_reader"
+       class="svg-label large"
+       y="122.42419"
+       x="-33.446793"
+       style="font-style:italic;font-size:3.88056px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;stroke-width:0.264583">
+Input Reader
+</text>
+    <text
+       xml:space="preserve"
+       class="svg-label"
+       model="input_reader"
+       name="out"
+       type="oPort"
+       style="font-style:italic;font-size:3.52777px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;white-space:pre;inline-size:31.6606;stroke-width:0.264583"
+       x="223.00594"
+       y="72.949409"
+       id="port_input_reader"
+       transform="translate(-216.89964,35.721343)"><tspan
+         x="223.00594"
+         y="72.949409"><tspan>
+</tspan></tspan><tspan
+         x="223.00594"
+         y="77.359124"><tspan>
+</tspan></tspan><tspan
+         x="223.00594"
+         y="81.768838"><tspan>  </tspan><tspan>out</tspan><tspan>
+</tspan></tspan><tspan
+         x="223.00594"
+         y="86.178552"><tspan>
+</tspan></tspan></text>
+    <path
+       type="link"
+       modelA="codetectalarm"
+       portA="transitionout"
+       modelB="tempset"
+       portB="transitionin"
+       class="svg-path"
+       sodipodi:nodetypes="cccc"
+       style="fill:none;stroke:#000000;stroke-width:0.252261px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#marker1802)"
+       d="m 195.27841,174.90742 -155.008201,0 V 44.356657 l 29.336717,-0.09545"
+       id="Link1" />
+    <path
+       type="link"
+       modelA="codetectok"
+       portA="transitionout"
+       modelB="tempset"
+       portB="transitionin"
+       class="svg-path"
+       id="Link2"
+       d="M 73.749434,132.09251 H 44.506697 V 46.68006 h 25.100229"
+       style="fill:none;stroke:#000000;stroke-width:0.265;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker1706)" />
+    <path
+       type="link"
+       modelA="aircondon"
+       portA="transitionout"
+       modelB="tempset"
+       portB="transitionin"
+       class="svg-path"
+       style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#marker1974)"
+       d="m 195.79832,44.261211 -73.89501,-5e-6"
+       id="Link3" />
+    <path
+       type="link"
+       modelA="tempset"
+       portA="transitionout"
+       modelB="tempsense"
+       portB="transitionin"
+       class="svg-path"
+       style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#marker1832)"
+       d="m 95.49829,52.3877 -0.0831,38.216668 h 99.8695"
+       id="Link4" />
+    <path
+       type="link"
+       modelA="tempsense"
+       portA="transitionout"
+       modelB="aircondon"
+       portB="transitionin"
+       class="svg-path"
+       style="fill:none;stroke:#000000;stroke-width:0.265;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker1712)"
+       d="m 221.17606,82.38864 -2e-5,-30.000945"
+       id="Link5" />
+    <path
+       type="link"
+       modelA="tempsense"
+       portA="transitionout"
+       modelB="heateron"
+       portB="transitionin"
+       class="svg-path"
+       style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#marker1782)"
+       d="M 221.17606,98.641616 V 123.96602"
+       id="Link6" />
+    <path
+       type="link"
+       modelA="heateron"
+       portA="transitionout"
+       modelB="codetectok"
+       portB="transitionin"
+       class="svg-path"
+       style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#marker1812)"
+       d="M 195.28469,132.09251 H 125.53218"
+       id="Link7" />
+    <path
+       type="link"
+       modelA="heateron"
+       portA="transitionout"
+       modelB="codetectalarm"
+       portB="transitionin"
+       class="svg-path"
+       style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#marker1792)"
+       d="m 221.17606,139.70535 v 26.55163"
+       id="Link8" />
+    <path
+       type="link"
+       modelA="input_reader"
+       portA="out"
+       modelB="tempset"
+       portB="transitionin"
+       class="svg-path"
+       sodipodi:nodetypes="cccc"
+       id="path1385"
+       d="M 5.3671455,121.34035 H 36.615924 V 40.915911 h 32.991002"
+       style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#marker1253)" />
+    <path
+       type="link"
+       modelA="input_reader"
+       portA="out"
+       modelB="codetectalarm"
+       portB="transitionin"
+       class="svg-path"
+       id="path1077"
+       d="m 36.615925,121.34035 v 68.4037 H 260.99256 v -29.29316 h -39.8165"
+       style="fill:none;stroke:#000000;stroke-width:0.265;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker1117)" />
+    <path
+       type="link"
+       modelA="input_reader"
+       portA="out"
+       modelB="heateron"
+       portB="transitionin"
+       class="svg-path"
+       id="path1079"
+       d="m 260.99256,160.45089 v -40.31324 -2.93996 h -39.8165"
+       style="fill:none;stroke:#000000;stroke-width:0.265;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker1107)" />
+    <path
+       type="link"
+       modelA="input_reader"
+       portA="out"
+       modelB="tempsense"
+       portB="transitionin"
+       class="svg-path"
+       id="path1083"
+       d="M 36.615925,85.793518 H 195.2847"
+       style="fill:none;stroke:#000000;stroke-width:0.265;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#marker1087)" />
+    <path
+       type="link"
+       modelA="input_reader"
+       portA="out"
+       modelB="codetectok"
+       portB="transitionin"
+       class="svg-path"
+       id="path1393"
+       d="M 36.615924,121.34035 H 140.47452 v 7.67167 h -14.94235"
+       style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#marker1397)" />
+    <path
+       type="link"
+       modelA="input_reader"
+       portA="out"
+       modelB="aircondon"
+       portB="transitionin"
+       class="svg-path"
+       id="path1519"
+       d="M 260.99256,117.19769 V 59.254669 h -39.81652"
+       style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#marker1523)" />
+  </g>
+</svg>

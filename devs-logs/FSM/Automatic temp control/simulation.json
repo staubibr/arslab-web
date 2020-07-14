@@ -1,0 +1,242 @@
+
+{
+    "name": "AutoTempControlLOG",
+    "simulator": "Cadmium",
+    "type": "DEVS",
+    "models": [
+        {
+            "name": "tempset",
+            "svg": ["#rect_Label_tempset","#Label_tempset"],
+            "type": "atomic",
+            "submodels": [],
+            "ports": [
+                {
+                    "svg":["#tempset_pIn1","#tempset_pIn2"],
+                    "name": "transitionin",
+                    "type": "input"
+                },
+                {
+                    "svg": ["#tempset_pOut1"],
+                    "name": "transitionout",
+                    "type": "output"
+                }
+            ],
+            "links": [
+                {
+                    "svg": ["#Link4","#marker1832"],
+                    "portB": "transitionin",
+                    "modelB": "tempsense",
+                    "portA": "transitionout",
+                    "modelA": "tempset"
+                }
+            ]
+        },
+        {
+            "name": "aircondon",
+            "svg": ["#rect_aircondon","#Label_aircondon"],
+            "type": "atomic",
+            "submodels": [],
+            "ports": [
+                {
+                    "svg": ["#aircondon_pIn1"],
+                    "name": "transitionin",
+                    "type": "input"
+                },
+                {   
+                    "svg": ["#aircondon_pOut1"],
+                    "name": "transitionout",
+                    "type": "output"
+                }
+            ],
+            "links": [
+                {
+                    "svg": ["#Link3","#marker1974"],
+                    "portB": "transitionin",
+                    "modelB": "tempset",
+                    "portA": "transitionout",
+                    "modelA": "aircondon"
+                }
+            ]
+        },
+        {
+            "name": "tempsense",
+            "svg": ["#rect_tempsense","#Label_tempsense"],
+            "type": "atomic",
+            "submodels": [],
+            "ports": [
+                {
+                    "svg": ["#tempsense_pIn1"],
+                    "name": "transitionin",
+                    "type": "input"
+                },
+                {
+                    "svg": ["#tempsense_pOut1","#tempsense_pOut2"],
+                    "name": "transitionout",
+                    "type": "output"
+                }
+            ],
+            "links": [
+                {
+                    "svg": ["#Link5","#marker1712"],
+                    "portB": "transitionin",
+                    "modelB": "aircondon",
+                    "portA": "transitionout",
+                    "modelA": "tempsense"
+                },
+                {
+                    "svg": ["#Link6","#marker1782"],
+                    "portB": "transitionin",
+                    "modelB": "heateron",
+                    "portA": "transitionout",
+                    "modelA": "tempsense"
+                }
+            ]
+        },
+        {
+            "name": "heateron",
+            "svg": ["#rect_Heater_ON","#Label_Heater_ON"],
+            "type": "atomic",
+            "submodels": [],
+            "ports": [
+                {
+                    "svg": ["#Heater_ON_pIn1"],
+                    "name": "transitionin",
+                    "type": "input"
+                },
+                {
+                    "svg": ["#Heater_ON_pOut1","#Heater_ON_pOut2"],
+                    "name": "transitionout",
+                    "type": "output"
+                }
+            ],
+            "links": [
+                {
+                    "svg": ["#Link7","#marker1812"],
+                    "portB": "transitionin",
+                    "modelB": "codetectok",
+                    "portA": "transitionout",
+                    "modelA": "heateron"
+                },
+                {
+                    "svg": ["#Link8","#marker1792"],
+                    "portB": "transitionin",
+                    "modelB": "codetectalarm",
+                    "portA": "transitionout",
+                    "modelA": "heateron"
+                }
+            ]
+        },
+        {
+            "name": "codetectalarm",
+            "svg": ["#rect_codetectalarm","#Label_codetectalarm"],
+            "type": "atomic",
+            "submodels": [],
+            "ports": [
+                {
+                    "svg": ["#codetectalarm_pIn1"],
+                    "name": "transitionin",
+                    "type": "input"
+                },
+                {
+                    "svg": ["#codetectalarm_pOut1"],
+                    "name": "transitionout",
+                    "type": "output"
+                }
+            ],
+            "links": [
+                {
+                    "svg": ["#Link1","#marker1802"],
+                    "portB": "transitionin",
+                    "modelB": "tempset",
+                    "portA": "transitionout",
+                    "modelA": "codetectalarm"
+                }
+            ]
+        },
+        {
+            "name": "codetectok",
+            "svg": ["#rect_codetectok","#Label_codetectok"],
+            "type": "atomic",
+            "submodels": [],
+            "ports": [
+                {
+                    "svg": ["#codetectok_pIn1"],
+                    "name": "transitionin",
+                    "type": "input"
+                },
+                {
+                    "svg": ["#codetectok_pOut1"],
+                    "name": "transitionout",
+                    "type": "output"
+                }
+            ],
+            "links": [
+                {
+                    "svg": ["#Link2","#marker1706"],
+                    "portB": "transitionin",
+                    "modelB": "tempset",
+                    "portA": "transitionout",
+                    "modelA": "codetectok"
+                }
+            ]
+        },
+        {
+            "name": "input_reader",
+            "svg": ["#rect_input_reader","#Label_input_reader"],
+            "type": "atomic",
+            "submodels": [],
+            "ports": [
+                {
+                    "svg": ["#port_input_reader"],
+                    "name": "out",
+                    "type": "output"
+                }
+            ],
+            "links": [
+                {
+                    "svg": ["#path1385","#marker1253"],
+                    "portB": "transitionin",
+                    "modelB": "tempset",
+                    "portA": "out",
+                    "modelA": "input_reader"
+                },
+                {
+                    "svg": ["#path1393","#marker1397"],
+                    "portB": "transitionin",
+                    "modelB": "codetectok",
+                    "portA": "out",
+                    "modelA": "input_reader"
+                },
+                {
+                    "svg": ["#path1077","#marker1117"],
+                    "portB": "transitionin",
+                    "modelB": "codetectalarm",
+                    "portA": "out",
+                    "modelA": "input_reader"
+                },
+                {
+                    "svg": ["#path1083","#marker1087"],
+                    "portB": "transitionin",
+                    "modelB": "tempsense",
+                    "portA": "out",
+                    "modelA": "input_reader"
+                },
+                {
+                    "svg": ["#path1079","#marker1107"],
+                    "portB": "transitionin",
+                    "modelB": "heateron",
+                    "portA": "out",
+                    "modelA": "input_reader"
+                },
+                {
+                    "svg": ["#path1519","#marker1523"],
+                    "portB": "transitionin",
+                    "modelB": "aircondon",
+                    "portA": "out",
+                    "modelA": "input_reader"
+                }
+            ]
+        }
+    ],
+    "size": 7
+}

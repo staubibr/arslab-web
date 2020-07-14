@@ -1,0 +1,262 @@
+{
+  "name": "VendingMachinLeOG",
+  "simulator": "Cadmium",
+  "type": "DEVS",
+  "models": [
+    {
+      "name": "zero",
+      "svg": ["#CircZero","#LabelZero"],
+      "type": "atomic",
+      "submodels": [],
+      "ports": [
+        {
+        	"svg": ["#Zero-iPort1","#Zero-iPort2"],
+          "name": "transitionin",
+          "type": "input"
+        },
+        {
+        	"svg": ["#Zero-oPort1","#Zero-oPort2"],
+          "name": "transitionout",
+          "type": "output"
+        }
+      ],
+      "links": [
+        {
+        	"svg": ["#Link1","#marker1845"],
+          "portA": "transitionout",
+          "modelA": "zero",
+          "portB": "transitionin",
+          "modelB": "one"
+        },
+        {
+        	"svg": ["#Link2","#marker1865"],
+          "portA": "transitionout",
+          "modelA": "zero",
+          "portB": "transitionin",
+          "modelB": "two"
+        }
+      ]
+    },
+    {
+      "name": "one",
+      "svg": ["#Circone","#Labelone"],
+      "type": "atomic",
+      "submodels": [],
+      "ports": [
+        {
+        	"svg": ["#One-iPort1"],
+          "name": "transitionin",
+          "type": "input"
+        },
+        {
+        	"svg":  ["#One-oPort1","#One-oPort2"],
+          "name": "transitionout",
+          "type": "output"
+        }
+      ],
+      "links": [
+        {
+        	"svg": ["#Link3","#marker1855"],
+          "portA": "transitionout",
+          "modelA": "one",
+          "portB": "transitionin",
+          "modelB": "two"
+        },
+        {
+        	"svg": ["#Link4","#marker1885"],
+          "portA": "transitionout",
+          "modelA": "one",
+          "portB": "transitionin",
+          "modelB": "three"
+        }
+      ]
+    },
+    {
+      "name": "two",
+      "svg": ["#Circtwo","#Labeltwo"],
+      "type": "atomic",
+      "submodels": [],
+      "ports": [
+        {
+        	"svg": ["#Two-iPort1"],
+          "name": "transitionin",
+          "type": "input"
+        },
+        {
+        	"svg": ["#Two-oPort1"],
+          "name": "transitionout",
+          "type": "output"
+        }
+      ],
+      "links": [
+        {
+        	"svg": ["#Link5","#marker1875"],
+          "portA": "transitionout",
+          "modelA": "two",
+          "portB": "transitionin",
+          "modelB": "three"
+        },
+        {
+        	"svg": ["#Link6","#marker1895"],
+          "portA": "transitionout",
+          "modelA": "two",
+          "portB": "transitionin",
+          "modelB": "four"
+        }
+      ]
+    },
+    {
+      "name": "three",
+      "svg": ["#Circthree","#Labelthree"],
+      "type": "atomic",
+      "submodels": [],
+      "ports": [
+        {
+        	"svg": ["#Three-iPort1"],
+          "name": "transitionin",
+          "type": "input"
+        },
+        {
+        	"svg": ["#Three-oPort1","Three-oPort2"],
+          "name": "transitionout",
+          "type": "output"
+        }
+      ],
+      "links": [
+        {
+        	"svg": ["#Link7","#marker1905"],
+          "portA": "transitionout",
+          "modelA": "three",
+          "portB": "transitionin",
+          "modelB": "four"
+        },
+        {
+        	"svg": ["#Link8","#marker1925"],
+          "portA": "transitionout",
+          "modelA": "three",
+          "portB": "transitionin",
+          "modelB": "five"
+        },
+        {
+        	"svg": ["#Link10","#marker1945"],
+          "portA": "transitionout",
+          "modelA": "three",
+          "portB": "transitionin",
+          "modelB": "zero"
+        }
+      ]
+    },
+    {
+      "name": "four",
+      "svg": ["#Circfour","#Labelfour"],
+      "type": "atomic",
+      "submodels": [],
+      "ports": [
+        {
+        	"svg": ["#Four-iPort1","#Four-iPort2"],
+          "name": "transitionin",
+          "type": "input"
+        },
+        {
+        	"svg": ["#Four-oPort1"],
+          "name": "transitionout",
+          "type": "output"
+        }
+      ],
+      "links": [
+        {
+        	"svg": ["#Link9","#marker1915"],
+          "portA": "transitionout",
+          "modelA": "four",
+          "portB": "transitionin",
+          "modelB": "five"
+        }
+      ]
+    },
+    {
+      "name": "five",
+      "svg": ["#Circfive","#Labelfive"],
+      "type": "atomic",
+      "submodels": [],
+      "ports": [
+        {
+        	"svg": ["#Five-iPort1"],
+          "name": "transitionin",
+          "type": "input"
+        },
+        {
+        	"svg": ["#Five-oPort1"],
+          "name": "transitionout",
+          "type": "output"
+        }
+      ],
+      "links": [
+        {
+        	"svg": ["#Link11","#marker1935"],
+          "portA": "transitionout",
+          "modelA": "five",
+          "portB": "transitionin",
+          "modelB": "zero"
+        }
+      ]
+    },
+    {
+      "name": "input_reader",
+      "svg": ["#Circ_input_reader","#Labelinput_reader"],
+      "type": "atomic",
+      "submodels": [],
+      "ports": [
+        {
+        	"svg": ["#input_reader-oPort1"],
+          "name": "out",
+          "type": "output"
+        }
+      ],
+      "links": [
+        {
+        	"svg": ["#path1009","#marker1053"],
+          "portA": "out",
+          "modelA": "input_reader",
+          "portB": "transitionin",
+          "modelB": "zero"
+        },
+        {
+        	"svg": ["#path1011","#marker1063"],
+          "portA": "out",
+          "modelA": "input_reader",
+          "portB": "transitionin",
+          "modelB": "one"
+        },
+        {
+        	"svg": ["#path1011-1","#marker1073"],
+          "portA": "out",
+          "modelA": "input_reader",
+          "portB": "transitionin",
+          "modelB": "two"
+        },
+        {
+        	"svg": ["#path1028","#marker1083"],
+          "portA": "out",
+          "modelA": "input_reader",
+          "portB": "transitionin",
+          "modelB": "three"
+        },
+        {
+        	"svg": ["#path1028-7","#marker1093"],
+          "portA": "out",
+          "modelA": "input_reader",
+          "portB": "transitionin",
+          "modelB": "four"
+        },
+        {
+        	"svg": ["#path1049","#marker1103"],
+          "portA": "out",
+          "modelA": "input_reader",
+          "portB": "transitionin",
+          "modelB": "five"
+        }
+      ]
+    }
+  ],
+  "size": 7
+}

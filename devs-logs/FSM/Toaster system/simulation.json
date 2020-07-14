@@ -1,0 +1,136 @@
+{
+    "name": "ToasterLOG",
+    "simulator": "CDpp",
+    "type": "DEVS",
+    "models": [{
+            "name": "idle",
+            "svg": ["#Circidle","#Labelidle"],
+            "type": "atomic",
+            "ports": [{
+        			"svg": ["#iPortidle"],
+                    "name": "transitionin",
+                    "type": "input"
+                },{
+                	"svg": ["#oPortidle"],
+                    "name": "transitionout",
+                    "type": "output"
+                }],
+            "links": [
+                {
+                    "svg": ["#path1615","#marker1905"],
+                    "portB": "transitionin",
+                    "modelB": "setregulator",
+                    "portA": "transitionout",
+                    "modelA": "idle"
+                }
+            ]
+        },{
+            "name": "setregulator",
+            "svg": ["#Circsetregulator","#Labelsetregulator"],
+            "type": "atomic",
+            "ports": [{
+            		"svg": ["#iPortsetregulator"],
+                    "name": "transitionin",
+                    "type": "input"
+                },{
+            		"svg": ["#oPortsetregulator"],
+                    "name": "transitionout",
+                    "type": "output"
+                }],
+            "links": [
+                {
+                    "svg": ["#path1617","#marker1895"],
+                    "portB": "transitionin",
+                    "modelB": "toasting",
+                    "portA": "transitionout",
+                    "modelA": "setregulator"
+                }
+            ]
+        },{
+            "name": "toasting",
+            "svg": ["#Circtoasting","#Labeltoasting"],
+            "type": "atomic",
+            "ports": [{
+            		"svg": ["#iPorttoasting"],
+                    "name": "transitionin",
+                    "type": "input"
+                },{
+                	"svg": ["#oPorttoasting"],
+                    "name": "transitionout",
+                    "type": "output"
+                }],
+            "links": [
+                {
+                    "svg": ["#path1619","#marker1925"],
+                    "portB": "transitionin",
+                    "modelB": "thermostatoff",
+                    "portA": "transitionout",
+                    "modelA": "toasting"
+                }
+            ]
+        },{
+            "name": "thermostatoff",
+            "svg": ["#Circthermostatoff","#Labelthermostatoff"],
+            "type": "atomic",
+            "ports": [{
+            		"svg": ["#iPortThermo"],
+                    "name": "transitionin",
+                    "type": "input"
+                },{
+                	"svg": ["#oPortThermo"],
+                    "name": "transitionout",
+                    "type": "output"
+                }],
+            "links": [
+                {
+                    "svg": ["#Link4","#marker1915"],
+                    "portB": "transitionin",
+                    "modelB": "idle",
+                    "portA": "transitionout",
+                    "modelA": "thermostatoff"
+                }
+            ]
+        },{
+            "name": "input_reader",
+            "svg": ["#Circ_input_reader","#Labelinputreader"],
+            "type": "atomic",
+            "ports": [
+            	{
+                	"svg": ["#oPort_input_reader"],
+                    "name": "out",
+                    "type": "output"
+                }],
+            "links": [
+                {
+                    "svg": ["#path933","#marker952"],
+                    "portB": "transitionin",
+                    "modelB": "setregulator",
+                    "portA": "out",
+                    "modelA": "input_reader"
+                },
+                {
+                    "svg": ["#path933-4","#marker962"],
+                    "portB": "transitionin",
+                    "modelB": "idle",
+                    "portA": "out",
+                    "modelA": "input_reader"
+                },
+                {
+                    "svg": ["#path1018","#marker1047"],
+                    "portB": "transitionin",
+                    "modelB": "toasting",
+                    "portA": "out",
+                    "modelA": "input_reader"
+                },
+                {
+                    "svg": ["#path1018-7","#marker1037"],
+                    "portB": "transitionin",
+                    "modelB": "thermostatoff",
+                    "portA": "out",
+                    "modelA": "input_reader"
+                }
+            ]
+        }
+    ],
+    "size": 7
+}

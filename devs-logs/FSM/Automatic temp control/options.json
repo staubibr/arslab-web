@@ -1,0 +1,22 @@
+{
+  "diagram": {
+    "width": 600,
+    "height": 400,
+    "aspect": true
+  },
+  "grid": {
+    "columns": 1,
+    "width": 400,
+    "height": 400,
+    "spacing": 10,
+    "showGrid": false,
+    "aspect": true,
+    "layers": [],
+    "styles": []
+  },
+  "playback": {
+    "speed": 1,
+    "loop": false,
+    "cache": 10
+  }
+}

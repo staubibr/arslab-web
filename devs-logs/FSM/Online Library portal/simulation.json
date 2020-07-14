@@ -1,0 +1,216 @@
+
+{
+    "name": "OnlineLibraryLOG",
+    "simulator": "Cadmium",
+    "type": "DEVS",
+    "models": [
+        {
+            "name": "enteronlinelibrary",
+            "svg": ["#Circenteronlinelibrary","#Labelenteronlinelibrary"],
+            "type": "atomic",
+            "submodels": [],
+            "ports": [
+                {
+                    "svg": ["#iPortenteronlinelibrary1","#iPortenteronlinelibrary2","#iPortenteronlinelibrary3"],
+                    "name": "transitionin",
+                    "type": "input"
+                },
+                {
+                    "svg": ["#oPortenteronlinelibrary"],
+                    "name": "transitionout",
+                    "type": "output"
+                }
+            ],
+            "links": [
+                {
+                    "svg": ["#Link6","#marker2023"],
+                    "portB": "transitionin",
+                    "modelB": "searching",
+                    "portA": "transitionout",
+                    "modelA": "enteronlinelibrary"
+                }
+            ]
+        },
+        {
+            "name": "libraryaddr",
+            "svg": ["#libraryaddrCirc","#Labellibraryaddress"],
+            "type": "atomic",
+            "submodels": [],
+            "ports": [
+                {
+                    "svg": ["#iPortlibraryaddress","#iPortlibraryaddress2"],
+                    "name": "transitionin",
+                    "type": "input"
+                },
+                {
+                    "svg": ["#oPortlibraryaddress"],
+                    "name": "transitionout",
+                    "type": "output"
+                }
+            ],
+            "links": [
+                {
+                    "svg": ["#Link8","#marker2133"],
+                    "portB": "transitionin",
+                    "modelB": "enteronlinelibrary",
+                    "portA": "transitionout",
+                    "modelA": "libraryaddr"
+                }
+            ]
+        },
+        {
+            "name": "searching",
+            "svg": ["#Circsearching","#Labelsearching"],
+            "type": "atomic",
+            "submodels": [],
+            "ports": [
+                {
+                    "svg": ["#iPortsearching1"],
+                    "name": "transitionin",
+                    "type": "input"
+                },
+                {
+                    "svg": ["#oPortsearching1","#oPortsearching2"],
+                    "name": "transitionout",
+                    "type": "output"
+                }
+            ],
+            "links": [
+                {
+                    "svg": ["#Link5","#marker1977"],
+                    "portB": "transitionin",
+                    "modelB": "login",
+                    "portA": "transitionout",
+                    "modelA": "searching"
+                },
+                {
+                    "svg": ["#Link7","#marker2075"],
+                    "portB": "transitionin",
+                    "modelB": "libraryaddr",
+                    "portA": "transitionout",
+                    "modelA": "searching"
+                }
+            ]
+        },
+        {
+            "name": "login",
+            "svg": ["#Circlogin","#Labellogin"],
+            "type": "atomic",
+            "submodels": [],
+            "ports": [
+                {
+                    "svg": ["#iPortlogin"],
+                    "name": "transitionin",
+                    "type": "input"
+                },
+                {
+                    "svg": ["#oPortlogin1","#oPortlogin2"],
+                    "name": "transitionout",
+                    "type": "output"
+                }
+            ],
+            "links": [
+                {
+                    "svg": ["#link1","#marker1937"],
+                    "portB": "transitionin",
+                    "modelB": "enteronlinelibrary",
+                    "portA": "transitionout",
+                    "modelA": "login"
+                },
+                {
+                    "svg": ["#Link4","#marker2267"],
+                    "portB": "transitionin",
+                    "modelB": "login",
+                    "portA": "transitionout",
+                    "modelA": "login"
+                },
+                {
+                    "svg": ["#link3","#marker2197"],
+                    "portB": "transitionin",
+                    "modelB": "download",
+                    "portA": "transitionout",
+                    "modelA": "login"
+                }
+
+            ]
+        },
+        {
+            "name": "download",
+            "svg": ["#Circdownload","#Labeldownload"],
+            "type": "atomic",
+            "submodels": [],
+            "ports": [
+                {
+                    "svg": ["#iPortdownload"],
+                    "name": "transitionin",
+                    "type": "input"
+                },
+                {
+                    "svg": ["#oPortdownload"],
+                    "name": "transitionout",
+                    "type": "output"
+                }
+            ],
+            "links": [
+                {
+                    "svg": ["#link2","#Arrow1Lend"],
+                    "portB": "transitionin",
+                    "modelB": "enteronlinelibrary",
+                    "portA": "transitionout",
+                    "modelA": "download"
+                }
+            ]
+        },
+        {
+            "name": "input_reader",
+            "svg": ["#Circ_input_reader","#Label_input_reader"],
+            "type": "atomic",
+            "submodels": [],
+            "ports": [
+                {
+                    "svg": ["#oPort_input_reader"],
+                    "name": "out",
+                    "type": "output"
+                }
+            ],
+            "links": [
+                {
+                    "svg": ["#path1001","#marker1033"],
+                    "portB": "transitionin",
+                    "modelB": "enteronlinelibrary",
+                    "portA": "out",
+                    "modelA": "input_reader"
+                },
+                {
+                    "svg": ["#path1009","#marker1053"],
+                    "portB": "transitionin",
+                    "modelB": "download",
+                    "portA": "out",
+                    "modelA": "input_reader"
+                },
+                {
+                    "svg": ["#path1007","#marker1013"],
+                    "portB": "transitionin",
+                    "modelB": "login",
+                    "portA": "out",
+                    "modelA": "input_reader"
+                },
+                {
+                    "svg": ["#path1003","#marker1023"],
+                    "portB": "transitionin",
+                    "modelB": "searching",
+                    "portA": "out",
+                    "modelA": "input_reader"
+                },
+                {
+                    "svg": ["#path1005","#marker1043"],
+                    "portB": "transitionin",
+                    "modelB": "libraryaddr",
+                    "portA": "out",
+                    "modelA": "input_reader"
+                }
+            ]
+        }
+    ],
+    "size": 7
+}
