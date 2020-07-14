@@ -80,30 +80,30 @@
 	</defs>
 
 	<g transform="translate(-7,-64.999998)">
-		<text y="69.568993" x="79.0177" class="svg-label large">Network</text>
 		<rect id="m-01" type="coupled" name="Network" y="71.120132" x="79.620369" height="69.759735" width="79.759285" class="svg-model svg-coupled" />
+		<text id="t-01" y="69.568993" x="79.0177" class="svg-label large">Network</text>
 		<text id="p-05" type="iPort" name="in1" model="Network" y="88.065826" x="80.404175" class="svg-label">in1</text>
 		<text id="p-06" type="oPort" name="out1" model="Network" y="88.057213" x="150.82365" class="svg-label">out1</text>
 		<text id="p-03" type="iPort" name="in2" model="Network" y="120.79014" x="153.01817" class="svg-label">in2</text>
 		<text id="p-04" type="oPort" name="out2" model="Network" y="120.73674" x="80.048416" class="svg-label">out2</text>
 
-		<text y="91.401741" x="109.66323" class="svg-label large">subnet1</text>
 		<rect id="m-02" type="atomic" name="subnet1" y="77.201508" x="97.138603" height="24.722824" width="44.722824" class="svg-model" />
+		<text id="t-02" y="91.401741" x="109.66323" class="svg-label large">subnet1</text>
 		<text id="p-01" type="iPort" name="in" model="subnet1" y="88.065826" x="93.003319" class="svg-label">in</text>
 		<text id="p-02" type="oPort" name="out" model="subnet1" y="87.960754" x="142.4899" class="svg-label">out</text>
 
-		<text y="124.27589" x="109.56071" class="svg-label large">subnet2</text>
 		<rect id="m-03" type="atomic" name="subnet2" y="110.07567" x="97.138603" height="24.722824" width="44.722824" class="svg-model" />
+		<text id="t-03" y="124.27589" x="109.56071" class="svg-label large">subnet2</text>
 		<text id="p-07" type="iPort" name="in" model="subnet2" y="120.79014" x="142.84567" class="svg-label">in</text>
 		<text id="p-08" type="oPort" name="out" model="subnet2" y="120.73674" x="90.083603" class="svg-label">out    </text>
 
-		<text y="107.77612" x="178.71284" class="svg-label large">Receiver</text>
 		<rect id="m-04" type="atomic" name="receiver" width="24.798115" height="79.798111" x="177.10072" y="66.100945" class="svg-model" />
+		<text id="t-04" y="107.77612" x="178.71284" class="svg-label large">Receiver</text>
 		<text id="p-09" type="iPort" name="in" model="receiver" class="svg-label" x="173.0536" y="88.019005">in</text>
 		<text id="p-10" type="oPort" name="out" model="receiver" class="svg-label" x="170.13388" y="120.73674">out</text>
 
-		<text class="svg-label large" x="40.543453" y="107.83882">Sender</text>
 		<rect id="m-05" type="atomic" name="sender" width="24.798115" height="79.798111" x="37.100956" y="66.100945" class="svg-model" />
+		<text id="t-05" class="svg-label large" x="40.543453" y="107.83882">Sender</text>
 		<text id="p-12" type="oPort" name="dataOut" model="sender" class="svg-label" x="62.636574" y="88.164009">dataOut</text>
 		<text id="p-13" type="oPort" name="packetSent" model="sender" class="svg-label" x="15.948819" y="103.18488">packetSent</text>
 		<text id="p-14" type="oPort" name="ackReceived" model="sender" class="svg-label" x="15.948819" y="123.018488">ackReceived</text>
