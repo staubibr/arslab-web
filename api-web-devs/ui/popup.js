@@ -8,19 +8,21 @@ export default class Popup extends Templated {
 		this.Elem("title").innerHTML = value;
 	}
 	
-	set Widget(widget) {
+	set Content(content) {
 		this.Empty();
 		
-		this.widget = widget;
+		this.content = content;
 		
-		widget.Place(this.Elem("body"));
+		content.Place(this.Elem("body"));
 	}
 	
-	get Widget() { return this.widget; }
+	get Content() { return this.content; }
 	
 	constructor(container) {	
 		super(container || document.body);
-				
+		
+		this.defer = null;
+		
 		this.onBody_KeyUp_Bound = this.onBody_KeyUp.bind(this);
 		
 		this.h = null;
@@ -44,7 +46,9 @@ export default class Popup extends Templated {
 		Dom.Empty(this.Elem("body"));
 	}
 	
-	Show() {		
+	Show() {	
+		this.defer = Core.Defer();
+	
 		this.h = document.body.addEventListener("keyup", this.onBody_KeyUp_Bound);
 		
 		this.SetStyle(1, "visible");
@@ -52,6 +56,8 @@ export default class Popup extends Templated {
 		this.Emit("Show", { popup:this });
 		
 		this.Elem("close").focus();
+		
+		return this.defer.promise;
 	}
 	
 	Hide() {		
@@ -60,6 +66,8 @@ export default class Popup extends Templated {
 		this.SetStyle(0, "hidden");
 		
 		this.Emit("Hide", { popup:this });
+		
+		this.defer.Resolve();
 	}
 	
 	onBody_KeyUp(ev) {
@@ -71,6 +79,8 @@ export default class Popup extends Templated {
 	}
 	
 	onBtnClose_Click(ev) {
+		this.Emit("Close", { popup:this });
+		
 		this.Hide();
 	}
 	
@@ -80,8 +90,8 @@ export default class Popup extends Templated {
 					  "<h2 class='popup-title' handle='title'></h2>" +
 					  "<button class='close' handle='close' title='nls(Popup_Close)'>×</button>" +
 				  "</div>" +
-					
 				  "<div class='popup-body' handle='body'></div>" +
+				  "<div class='popup-footer' handle='footer'></div>" +
 			   "</div>";
 	}
 }
