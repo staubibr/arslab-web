@@ -26,6 +26,12 @@
 	"Dropzone_Viz" : {
 		"en":"Visualize simulation"
 	},
+	"Download_Files" : {
+		"en" : "Download normalized simulation files"
+	},
+	"Playback_Settings" : {
+		"en" : "Modify simulation playback settings"
+	},
 	"Popup_Rise_Title" : {
 		"en":"Load from RISE"
 	},

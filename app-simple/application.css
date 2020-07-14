@@ -6,6 +6,10 @@ html, body, .popup {
 	background : #f9f9f9;
 }
 
+*:focus {
+	outline:none;
+}
+
 .popup {
 	background-color: #fff;
 }
@@ -33,7 +37,7 @@ main {
 	}
 }
 
-h1, h2, h3, .popup .popup-title {
+h1, h2, h3, table, input, select .popup .popup-title {
 	font-family: 'Varela Round', sans-serif;
 }
 
@@ -97,6 +101,14 @@ button:disabled {
 button:not(:disabled):hover {
   background: #0051A3;
   transition: all .2s ease;
+}
+
+select, input[type=text], input[type=number] {
+	cursor: pointer;
+    height: 30px;
+    border-radius: 4px;
+    border: solid thin silver;
+    font-size: 11pt;
 }
 
 .centered-row {
@@ -196,11 +208,6 @@ button:not(:disabled):hover {
 
 .popup.popup-rise {
 	max-height : 350px;
-}
-
-.popup.popup-settings {
-    max-height: 535px;
-    min-width: 375px;
 }
 
 main .dropzone-container {
