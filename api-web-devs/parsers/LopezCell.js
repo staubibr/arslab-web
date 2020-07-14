@@ -92,11 +92,12 @@ export default class LopezCell extends Parser {
 		ma.models[0].ports = ma.models[0].ports.map(p => { 
 			return {
 				name : "out_" + p,
-				type : "output"
+				type : "output",
+				style : 0
 			} 
 		});
 		
-		ma.models[0].ports.unshift({ name:"out", type:"output" });
+		ma.models[0].ports.unshift({ name:"out", type:"output", style:0 });
 		
 		return ma;
 	}
@@ -138,7 +139,7 @@ export default class LopezCell extends Parser {
 			
 			var d = tmp.trim().split(/\s|\(/g)[0];	// destination
 			
-			parsed.push(new TransitionCA("Y", t, m, c, p, d, v));
+			parsed.push(new TransitionCA(t, m, c, p, v));
 			
 			var start = chunk.indexOf('0 / L / Y', start + length);
 		};

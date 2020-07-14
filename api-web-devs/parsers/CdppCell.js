@@ -104,7 +104,7 @@ export default class CDpp extends Parser {
 		});
 		
 		ma.models = ma.models.map(m => {  
-			return { name:m, ports:[{ name:"out", type:"output" }] }
+			return { name:m, ports:[{ name:"out", type:"output", style:0 }] }
 		});
 		
 		return ma;
@@ -127,7 +127,7 @@ export default class CDpp extends Parser {
 
 			var value = parseFloat(line.substr(vI + 1));
 			
-			data.push(new TransitionCA("Y", "00:00:00:000", null, c, "out", null, value));
+			data.push(new TransitionCA("00:00:00:000", null, c, "out",  value));
 		}.bind(this));
 		
 		return data;
@@ -167,7 +167,7 @@ export default class CDpp extends Parser {
 			var v = parseFloat(tmp2[0]);							// value
 			var d = tmp2[2];										// destination
 			
-			parsed.push(new TransitionCA("Y", t, m, c, p, d, v));
+			parsed.push(new TransitionCA(t, m, c, p,v));
 			
 			var start = chunk.indexOf(pattern, start + length);
 		};
@@ -261,7 +261,7 @@ export default class CDpp extends Parser {
 		for (var x = 0; x < size[0]; x++) {
 			for (var y = 0; y < size[1]; y++) {
 				for (var z = 0; z < size[2]; z++) {					
-					f.push(new TransitionCA("Y", "00:00:00:000", null, [x, y, z], "out", null, value));
+					f.push(new TransitionCA("00:00:00:000", null, [x, y, z], "out",value));
 				}
 			}
 		}
@@ -275,7 +275,7 @@ export default class CDpp extends Parser {
 		var rows = [];
 		
 		for (var y = 0; y < values.length; y++) {
-			rows.push(new TransitionCA("Y", "00:00:00:000", null, [d[0], y], "out", null, +values[y]));
+			rows.push(new TransitionCA("00:00:00:000", null, [d[0], y], "out",  +values[y]));
 		}
 		
 		return rows;

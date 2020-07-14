@@ -35,6 +35,8 @@ export class Diagram {
 	}
 	
 	ToFile() {
+		if (!this.content) return null;
+		
 		return new File([this.content], "diagram.svg", { type:"image/svg+xml" })
 	}
 }
@@ -94,37 +96,40 @@ export class TransitionsCA extends Transitions {
 }
 
 export class Transition { 
-	constructor(type, time, model, port, destination, value) {
-		this.type = type;
+	// constructor(type, time, model, port, destination, value) {
+	constructor( time, model, port,  value) {
+		// this.type = type;
 		this.time = time;
 		this.model = model && model;
 		this.port = port && port;
-		this.destination = destination && destination;
+		// this.destination = destination && destination;
 		this.value = value;
 	}
 }
 
 export class TransitionDEVS extends Transition {
-	constructor(type, time, model, port, destination, value) {
+	// constructor(type, time, model, port, destination, value) {
+	constructor(time, model, port, value) {
 		model = model.toLowerCase();
 		port = port.toLowerCase();
-		destination = destination.toLowerCase();
+		// destination = destination.toLowerCase();
 		
-		super(type, time, model, port, destination, value);
+		// super(type, time, model, port, destination, value);
+		super(time, model, port, value);
 	}
 	
 	ToCSV() {
-		return [this.type, this.time, this.model, this.port, this.destination, this.value].join(",");
+		return [this.time, this.model, this.port, this.value].join(",");
 	}
 	
 	static FromCSV(csv) {
-		return new TransitionDEVS(csv[0], csv[1], csv[2], csv[3], csv[4], csv[5]);
+		return new TransitionDEVS(csv[1], csv[2], csv[3], csv[4], csv[5]);
 	}
 }
 
 export class TransitionCA extends Transition {
-	constructor(type, time, model, coord, port, destination, value) {
-		super(type, time, model, port, destination, value);
+	constructor(time, model, coord, port, value) {
+		super(time, model, port,  value);
 		
 		if (coord.length == 2) coord.push(0);
 		
@@ -132,32 +137,40 @@ export class TransitionCA extends Transition {
 	}
 	
 	ToCSV() {
-		return [this.type, this.time, this.model, this.coord.join("-"), this.port, this.destination, this.value].join(",");
+		return [this.time, this.model, this.coord.join("-"), this.port, this.value].join(",");
 	}
 	
 	static FromCSV(csv) {
 		var coord = csv[3].split("-").map(c => +c);
 		
-		return new TransitionCA(csv[0], csv[1], csv[2], coord, csv[4], csv[5], +csv[6]);
+		return new TransitionCA(csv[1], csv[2], coord, csv[4], +csv[6]);
 	}
 }
 
 export class Files { 
-	constructor(simulation, transitions, diagram, options) {
-		this.name = simulation.content.name;
-		this.simulation = simulation;
-		this.transitions = transitions;
-		this.diagram = diagram;
-		this.options = options;
-	}
+	get Options() { return this.options.content; }
 	
-	Content() {
+	get Transitions() { return this.transitions.content; }
+	
+	get Diagram() { return this.diagram.content; }
+	
+	get Simulation() { return this.simulation.content; }
+	
+	get Content() {
 		return {
 			simulation : this.simulation.content,
 			transitions : this.transitions.content,
 			diagram : this.diagram.content,
 			options : this.options.content,
 		}
+	}
+
+	constructor(simulation, transitions, diagram, options) {
+		this.name = simulation.content.name;
+		this.simulation = simulation;
+		this.transitions = transitions;
+		this.diagram = diagram;
+		this.options = options;
 	}
 	
 	static FromContent(simulation, transitions, diagram, options) {		
@@ -187,7 +200,7 @@ export class Files {
 		files.push(this.simulation.ToFile(t.size));
 		files.push(t);
 		
-		if (this.diagram) files.push(this.diagram.ToFile());
+		if (this.diagram && this.diagram.content) files.push(this.diagram.ToFile());
 		
 		files.push(this.options.ToFile());
 		
