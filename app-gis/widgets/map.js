@@ -6,7 +6,13 @@ import Templated from '../../api-web-devs/components/templated.js';
 export default Core.Templatable("Widget.Map", class Map extends Templated { 
 
 	constructor(container) {
-		super(container);		
+		super(container);	
+
+		this.GetScale();
+	}
+	
+	GetScale() {
+		alert("getScale");
 	}
 	
 	Template() {

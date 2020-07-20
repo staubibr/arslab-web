@@ -15,14 +15,15 @@ export default class Main extends Templated {
 		super(node);
 		
 		this.simulation = null;
+		
+		this.Widget("map").GetScale();
 	}
 	
 	Template() {
 		return	"<main handle='main'>" +
 					"<div handle='header' widget='Widget.Header' class='header'></div>" +
 					"<div handle='box' widget='Widget.Box-Input-Files' class='box'></div>" +
-					"<div handle='header' widget='Widget.Map' class='map'></div>" +
-					
+					"<div handle='map' widget='Widget.Map' class='map'></div>" +
 				"</main>";
 	}
 }
