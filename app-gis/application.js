@@ -11,9 +11,10 @@ import Box from '../api-web-devs/ui/box-input-files.js';
 
 export default class Main extends Templated { 
 
-	constructor(node, config) {		
+	constructor(node, data) {		
 		super(node);
 		
+		this.data = data;
 		this.simulation = null;
 		
 		this.Widget("map").GetScale();
