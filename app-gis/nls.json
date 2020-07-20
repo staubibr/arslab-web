@@ -1,0 +1,20 @@
+{
+	"App_Title" : {
+		"en" : "GIS-Based DEVS Simulation Viewer"
+	},
+    "Header_Lab": {
+        "en": "ARSLab"
+    },
+    "Header_App": {
+        "en": "DEVS Web Viewer"
+    },
+    "Header_Tutorial": {
+        "en": "&#128304; tutorials"
+    },
+    "Header_Sample": {
+        "en": "&#9733; samples"
+    },
+    "Header_Problem": {
+        "en": "&#9749; report a problem"
+    }
+}
