@@ -4,8 +4,8 @@ import Transition from './transition.js';
 
 export default class TransitionCA extends Transition { 
 	
-	constructor(type, model, coord, port, value, destination) {
-		super(type, model, port, value, destination);
+	constructor(model, coord, port, value) {
+		super(model, port, value);
 		
 		this.coord = coord;
 	}
@@ -27,7 +27,7 @@ export default class TransitionCA extends Transition {
 	}
 	
 	Reverse() {
-		return new TransitionCA(this.type, this.model, this.coord, this.port, this.value - this.diff, this.destination);
+		return new TransitionCA(this.model, this.coord, this.port, this.value - this.diff);
 		
 		// Not sure about this
 		t.diff = this.diff;
@@ -36,6 +36,6 @@ export default class TransitionCA extends Transition {
 	}
 	
 	static FromCsv(csv) {
-		return new TransitionCA(csv.type, csv.model, csv.coord, csv.port, csv.value, csv.destination);
+		return new TransitionCA(csv.model, csv.coord, csv.port, csv.value);
 	}
 }

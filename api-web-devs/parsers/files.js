@@ -96,37 +96,34 @@ export class TransitionsCA extends Transitions {
 }
 
 export class Transition { 
-	constructor(type, time, model, port, destination, value) {
-		this.type = type;
+	constructor(time, model, port, value) {
 		this.time = time;
 		this.model = model && model;
 		this.port = port && port;
-		this.destination = destination && destination;
 		this.value = value;
 	}
 }
 
 export class TransitionDEVS extends Transition {
-	constructor(type, time, model, port, destination, value) {
+	constructor(time, model, port, value) {
 		model = model.toLowerCase();
 		port = port.toLowerCase();
-		destination = destination.toLowerCase();
 		
-		super(type, time, model, port, destination, value);
+		super(time, model, port, value);
 	}
 	
 	ToCSV() {
-		return [this.type, this.time, this.model, this.port, this.destination, this.value].join(",");
+		return [this.time, this.model, this.port, this.value].join(",");
 	}
 	
 	static FromCSV(csv) {
-		return new TransitionDEVS(csv[0], csv[1], csv[2], csv[3], csv[4], csv[5]);
+		return new TransitionDEVS(csv[0], csv[1], csv[2], csv[3]);
 	}
 }
 
 export class TransitionCA extends Transition {
-	constructor(type, time, model, coord, port, destination, value) {
-		super(type, time, model, port, destination, value);
+	constructor(time, model, coord, port, value) {
+		super(time, model, port, value);
 		
 		if (coord.length == 2) coord.push(0);
 		
@@ -134,13 +131,13 @@ export class TransitionCA extends Transition {
 	}
 	
 	ToCSV() {
-		return [this.type, this.time, this.model, this.coord.join("-"), this.port, this.destination, this.value].join(",");
+		return [this.time, this.model, this.coord.join("-"), this.port, this.value].join(",");
 	}
 	
 	static FromCSV(csv) {
-		var coord = csv[3].split("-").map(c => +c);
+		var coord = csv[2].split("-").map(c => +c);
 		
-		return new TransitionCA(csv[0], csv[1], csv[2], coord, csv[4], csv[5], +csv[6]);
+		return new TransitionCA(csv[0], csv[1], coord, csv[3], +csv[4]);
 	}
 }
 

@@ -15,7 +15,7 @@ main {
 	min-width: 900px;
 }
 
-h1, h2, h3, .popup .popup-title {
+h1, h2, h3 {
 	font-family: 'Varela Round', sans-serif;
 }
 
@@ -87,10 +87,11 @@ button:not(:disabled):hover {
 	display: inline-block;
 }
 
-.body {
-	margin: 20px 0px;
+/* Style for body of application */
+.playback {
+	text-align:center; 
 }
 
-.body > * {
-	display:inline-block;
+.playback .controls button:not(:last-child) {
+    border-right-color: #eee;
 }

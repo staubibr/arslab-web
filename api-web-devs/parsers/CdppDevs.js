@@ -116,60 +116,45 @@ export default class CDppDEVS extends Parser {
 		return file;
 	}
 	
-	ParseLogChunk(parsed, chunk) {		
-		function IndexOf(chunk, text, start) {
-			var idx = chunk.indexOf(text, start);
-			
-			return idx > -1 ? idx : Infinity;
-		}
+	ParseLogChunk(parsed, chunk) {	
+		var pattern = 'Mensaje Y';
+		var start = chunk.indexOf(pattern, 0);	
 		
-		var yStart = IndexOf(chunk, 'Mensaje Y', 0);
-		var xStart = IndexOf(chunk, 'Mensaje X', 0);
-		
-		while (xStart < Infinity || yStart < Infinity) {
-			var type = (xStart < yStart) ? 'X' : 'Y';
-			
-			var start = (type == 'X') ? xStart : yStart;
+		while (start > -1) {
+			start = start + pattern.length;
 			
 			var end = chunk.indexOf('\n', start);
 			
 			if (end == -1) end = chunk.length + 1;
 			
 			var length = end - start;
-			
-			if (type == 'X') xStart = IndexOf(chunk, 'Mensaje X', start + length);
-			if (type == 'Y') yStart = IndexOf(chunk, 'Mensaje Y', start + length);
-			
+						
 			var split = chunk.substr(start, length).split('/');
-			
+			var start = chunk.indexOf('Mensaje Y', start + length);
+
 			// Parse coordinates, state value & frame timestamp
+			// NOTE : Don't use regex, it's super slow.
 			var tmp1 = split[2].trim().split("(");
 			var tmp2 = split[4].trim().split(" ");
 			
-			// NOTE : Don't use regex, it's super slow.
-			var t = split[1].trim();			// time
 			var m = tmp1[0];					// model name
-			// const found = this.simulation.atomics.find(element => element.name == m);
-			// if (!found) continue;
-			const found = this.simulation.content.models.find(element => element.name == m);
 			
-			if (!found) continue;
+			if (this.ModelType(m) == 'coupled') continue;
 			
-			if (found.type!="atomic") continue;
-			
-			if (type=="X") continue;
-			
+			var t = split[1].trim();			// time
 			var c = tmp1[1].slice(0, -1);		// id / coordinate
 			var p = split[3].trim();			// port
 			var v = parseFloat(split[4]);		// value
-			var d = tmp2[2].split("(")[0];		// destination
-
-			// NOTE: Here we replace model id by name because name is also unique (are we sure?) but more intuitive. 
-			// We do this to allow users to use names when drawing SVG diagrams. This way, names in SVG will match
-			// with names in transitions.
-			parsed.push(new TransitionDEVS(type, t, m, p, d, v));
+			
+			parsed.push(new TransitionDEVS(t, m, p, v));
 		}
 		
 		return parsed;
+	}
+	
+	ModelType(model) {
+		var m = this.simulation.content.models.find(m => m.name == model);
+		
+		return model.type;
 	}
 }

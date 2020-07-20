@@ -69,12 +69,12 @@ export default Core.Templatable("Auto.Diagram", class AutoDiagram extends Automa
 		
 		Dom.Empty(this.tooltip.Elem("content"));
 		
-		var tY = f.transitions.filter(t => t.Type == "Y" && t.Model == ev.model.name);
+		var tY = f.transitions.filter(t => t.Model == ev.model.name);
 		
 		if (tY.length == 0) return;
 		
 		tY.forEach(t => {
-			var html = Core.Nls("Diagram_Tooltip_Y", [t.Model, t.Value, t.Destination, t.Port]);
+			var html = Core.Nls("Diagram_Tooltip_Y", [t.Model, t.Value, t.Port]);
 			
 			Dom.Create("div", { className:"tooltip-label", innerHTML:html }, this.tooltip.Elem("content"));
 		});

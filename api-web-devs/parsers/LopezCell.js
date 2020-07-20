@@ -114,7 +114,7 @@ export default class LopezCell extends Parser {
 		var pattern = '0 / L / Y /';
 		var start = chunk.indexOf(pattern, 0);		
 		
-		while (start > -1) {		
+		while (start > -1) {
 			start = start + pattern.length;
 		
 			var end = chunk.indexOf('\n', start);
@@ -122,26 +122,25 @@ export default class LopezCell extends Parser {
 			if (end == -1) end = chunk.length + 1;
 			
 			var length = end - start;
+			
 			var split = chunk.substr(start, length).split("/");
+			var start = chunk.indexOf(pattern, start + length);
 			
 			// Parse coordinates, state value & frame timestamp
+			// NOTE : Don't use regex, it's super slow.
 			var tmp1 = split[1].trim().split("(")
 			var tmp2 = split[3].trim().split(/\s|\(/g);
 			
-			// NOTE : Don't use regex, it's super slow.
+			var m = tmp1[0];					// model name
 			var t = split[0].trim();								// time
-			var m = tmp1[0];										// model name
 			var c = tmp1[1].slice(0, -1).split(",").map(d => +d);	// id / coordinate
 			var p = split[2].trim();								// port
 			var v = parseFloat(split[3]);							// value
 			
 			var tmp = split.length == 5 ? split[4] : split[5]	// Weird case, there seems to be two formats, one of them as an extra / (see life 1 and life 2)
+						
+			parsed.push(new TransitionCA(t, m, c, p, v));
 			
-			var d = tmp.trim().split(/\s|\(/g)[0];	// destination
-			
-			parsed.push(new TransitionCA("Y", t, m, c, p, d, v));
-			
-			var start = chunk.indexOf('0 / L / Y', start + length);
 		};
 		
 		return parsed;

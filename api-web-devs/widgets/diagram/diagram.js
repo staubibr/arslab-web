@@ -59,7 +59,7 @@ export default Core.Templatable("Widgets.Diagram", class Diagram extends Templat
 		this.Reset();
 		
 		transitions.forEach((t) => {
-			if (t.type == "Y") this.DrawYTransition(t);
+			this.DrawYTransition(t);
 		});
 	}
 	

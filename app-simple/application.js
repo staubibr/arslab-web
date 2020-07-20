@@ -133,7 +133,7 @@ export default class Main extends Templated {
 		files.push(this.files.transitions.ToFile());
 		files.push(this.settings.ToFile());
 				
-		if (this.files.diagram) files.push(this.files.diagram.ToFile());
+		if (this.files.Diagram) files.push(this.files.diagram.ToFile());
 				
 		try {
 			// This is an async call, Fire and forget, pew! 

@@ -98,7 +98,7 @@ export default class CadmiumDEVS extends Parser {
 					var v = tokens3[1].substr(0,tokens3[1].indexOf("}"))
 
 					if (v!= "" & v!= "{"){
-						parsed.push(new TransitionDEVS("Y", this.time, m, p, "DestinationModel", v));
+						parsed.push(new TransitionDEVS(this.time, m, p, v));
 					}
 				}
 			}

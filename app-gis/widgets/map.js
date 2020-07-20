@@ -9,15 +9,7 @@ export default Core.Templatable("Widget.Map", class Map extends Templated {
 		super(container);		
 	}
 	
-	HideLayer() {
-		alert("Layer is not hidden");
-	}
-	
-	GetScale() {
-		alert("Scale is whatever");
-	}
-	
 	Template() {
-		return "<div handle='map'>fsgbdfghndfghdfghgfd</div>";
+		return "<div handle='map'>POTATO</div>";
 	}
 });

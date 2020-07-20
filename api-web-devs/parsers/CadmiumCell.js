@@ -115,7 +115,7 @@ export default class CadmiumCell extends Parser {
 					if (v > this.max[p]) this.max[p] = v;
 					if (v < this.min[p]) this.min[p] = v;
 				
-					parsed.push(new TransitionCA("Y", this.time, m, c, p, m, v));
+					parsed.push(new TransitionCA(this.time, m, c, p, v));
 				}
 			}
 			else this.time = line;
