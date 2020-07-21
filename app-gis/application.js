@@ -10,7 +10,7 @@ import Header from './widgets/header.js';
 import Map from './widgets/map.js';
 import Box from '../api-web-devs/ui/box-input-files.js';
 
-export default class Main extends Templated { 
+export default class Application extends Templated { 
 
 	constructor(node, data) {		
 		super(node);
@@ -18,15 +18,15 @@ export default class Main extends Templated {
 		this.data = data;
 		this.simulation = null;
 		
-		this.Widget("map");
+		this.Widget("map").Initialize();
+		// this.Widget("map");
 	}
 	
 	Template() {
 		return	"<main handle='main'>" +
 					"<div handle='header' widget='Widget.Header' class='header'></div>" +
-					"<div handle='box' widget='Widget.Box-Input-Files' class='box'></div>" +
 					"<div id='map' handle='map' widget='Widget.Map' class='map'></div>" +
-					
+					"<div handle='box' widget='Widget.Box-Input-Files' class='box'></div>" +
 				"</main>";
 	}
 }

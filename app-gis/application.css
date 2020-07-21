@@ -95,3 +95,7 @@ button:not(:disabled):hover {
 .playback .controls button:not(:last-child) {
     border-right-color: #eee;
 }
+
+.map-container {
+	width:100%;
+}
