@@ -18,8 +18,7 @@ export default class Application extends Templated {
 		this.data = data;
 		this.simulation = null;
 		
-		this.Widget("map").Initialize();
-		// this.Widget("map");
+		this.Widget("map").InitTileLayer();
 	}
 	
 	Template() {
@@ -27,6 +26,7 @@ export default class Application extends Templated {
 					"<div handle='header' widget='Widget.Header' class='header'></div>" +
 					"<div id='map' handle='map' widget='Widget.Map' class='map'></div>" +
 					"<div handle='box' widget='Widget.Box-Input-Files' class='box'></div>" +
+					
 				"</main>";
 	}
 }

@@ -1,4 +1,3 @@
-// import { scaleQuantize, scaleLinear, range } from "d3";
 export const getScale = () => {
   // https://d3-legend.susielu.com/
   // https://github.com/susielu/d3-legend

@@ -20,14 +20,14 @@ export default class BaseMap {
       return this._map;
     }
     
-    constructor(layer) {
+    constructor(layer, target) {
       /* 
       This will display the basemap
       See : https://openlayers.org/en/latest/apidoc/module-ol_Map-Map.html
       */
       this._map = new ol.Map({
         renderer: "canvas",
-        target: 'map',
+        target: target,
         layers: [layer],
         view: new ol.View({
           center: ol.proj.transform(
