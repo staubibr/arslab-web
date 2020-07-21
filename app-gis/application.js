@@ -1,3 +1,4 @@
+
 'use strict';
 
 import Core from '../api-web-devs/tools/core.js';
@@ -17,14 +18,15 @@ export default class Main extends Templated {
 		this.data = data;
 		this.simulation = null;
 		
-		this.Widget("map").GetScale();
+		this.Widget("map");
 	}
 	
 	Template() {
 		return	"<main handle='main'>" +
 					"<div handle='header' widget='Widget.Header' class='header'></div>" +
 					"<div handle='box' widget='Widget.Box-Input-Files' class='box'></div>" +
-					"<div handle='map' widget='Widget.Map' class='map'></div>" +
+					"<div id='map' handle='map' widget='Widget.Map' class='map'></div>" +
+					
 				"</main>";
 	}
 }

@@ -5,7 +5,7 @@ import Application from "./application.js";
 
 var p1 = Net.JSON(`../api-web-devs/nls.json`);
 var p2 = Net.JSON(`./nls.json`);
-var p3 = Net.JSON(`./data/canada.geojson`);
+var p3 = Net.JSON(`./data/Ontario.geojson`);
 var p4 = Core.WaitForDocument();
 
 Promise.all([p1, p2, p3, p4]).then(Start, Fail);
@@ -16,7 +16,7 @@ function Start(responses) {
 	Core.nls = Core.Mixin(responses[0], responses[1]);
 	
 	var data = {
-		canada : responses[2]
+		Ontario : responses[2]
 	}
 	
 	var app = new Application(document.body, data);
