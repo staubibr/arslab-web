@@ -1,15 +1,18 @@
 import VectorLayer from "./vectorLayer.js";
 import { mapOnClick } from "./mapOnClick.js";
-export const render = (map, scale, data, dataCycle) => {
-  const jsonFILE = new VectorLayer(
-    "./data/Ontario.geojson",
-    "Ontario",
-    scale,
-    data,
-    dataCycle
-  );
-  map.addLayer(jsonFILE.OL);
-  mapOnClick(data, map);
+export default class RenderVector {
+  get LAYER() {
+    return this._vo;
+  }
 
-  return jsonFILE;
-};
+  constructor(map, data, dataCycle) {
+    this._vo = new VectorLayer(
+      "./data/Ontario.geojson",
+      "Ontario",
+      data,
+      dataCycle
+    );
+    map.addLayer(this._vo.OL);
+    mapOnClick(data, map);
+  }
+}

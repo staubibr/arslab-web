@@ -1,10 +1,12 @@
-// import { select, format, legendColor } from "d3";
+import  GetScale  from "./getScale.js";
 export default class VectorLayer {
   get OL() {
     return this._layer;
   }
 
-  constructor(url, title, scale, data, dataCycle) {
+  constructor(url, title, data, dataCycle) {
+    let scale = new GetScale();
+    let s = scale.GS;
     this._layer = new ol.layer.Vector({
       source: new ol.source.Vector({
         url: url,
@@ -25,15 +27,15 @@ export default class VectorLayer {
             width: 1.2,
           }),
           fill: new ol.style.Fill({
-            // Can only add opacity if RGB
-            color: scale(x),
+            color: s(x),
           }),
         });
       },
     });
   }
 
-  GetLegend(scale, title, translate) {
+  GetLegend(title, translate) {
+    let scale = new GetScale();
     const svg = d3.select("svg");
     svg.append("g").attr("class", title).attr("transform", translate);
     svg
@@ -41,7 +43,10 @@ export default class VectorLayer {
       .text("Proportion of the DAUID Population with Infection")
       .attr("transform", "translate(20,25)");
 
-    var colorLegend = d3.legendColor().labelFormat(d3.format(".2f")).scale(scale);
+    var colorLegend = d3
+      .legendColor()
+      .labelFormat(d3.format(".2f"))
+      .scale(scale.GS);
 
     svg.select("." + title).call(colorLegend);
   }

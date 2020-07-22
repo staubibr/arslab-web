@@ -2,11 +2,10 @@
 
 import Core from "../../api-web-devs/tools/core.js";
 import Templated from "../../api-web-devs/components/templated.js";
-import HideLayer from "./hideLayer.js";
-import { getScale } from "./getScale.js";
-import { render } from "./render.js";
-import { sort } from "./sort.js";
 import BaseMap from "./basemap.js";
+import RenderVector from "./render.js";
+import HideLayer from "./hideLayer.js";
+import { sort } from "./sort.js";
 
 export default Core.Templatable(
   "Widget.Map",
@@ -39,21 +38,16 @@ export default Core.Templatable(
       var DataForMapping = async function () {
         let dauidSimulationCycleData = await sort();
 
-        const jsonFILE = render(
-          map.OL,
-          getScale(),
-          dauidSimulationCycleData,
-          0
-        );
+        let jsonVector = new RenderVector(map.OL, dauidSimulationCycleData, 0);
 
         var title = "Legend";
         var translate = "translate(20,30)";
 
-        jsonFILE.GetLegend(getScale(), title, translate);
+        jsonVector.LAYER.GetLegend(title, translate);
 
         cycle.addEventListener("input", function () {
           output.textContent = cycle.value;
-          render(map.OL, getScale(), dauidSimulationCycleData, cycle.value);
+          new RenderVector(map.OL, dauidSimulationCycleData, cycle.value);
         });
       };
 

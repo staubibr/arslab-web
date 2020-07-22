@@ -1,32 +1,32 @@
+"use strict";
 
-'use strict';
+import Core from "../api-web-devs/tools/core.js";
+import Dom from "../api-web-devs/tools/dom.js";
+import Net from "../api-web-devs/tools/net.js";
+import Templated from "../api-web-devs/components/templated.js";
+import Playback from "../api-web-devs/widgets/playback.js";
+import Header from "./widgets/header.js";
+import Map from "./widgets/map.js";
+import Box from "../api-web-devs/ui/box-input-files.js";
 
-import Core from '../api-web-devs/tools/core.js';
-import Dom from '../api-web-devs/tools/dom.js';
-import Net from '../api-web-devs/tools/net.js';
-import Templated from '../api-web-devs/components/templated.js';
-import Playback from '../api-web-devs/widgets/playback.js';
-import Header from './widgets/header.js';
-import Map from './widgets/map.js';
-import Box from '../api-web-devs/ui/box-input-files.js';
+export default class Application extends Templated {
+  constructor(node, data) {
+    super(node);
 
-export default class Application extends Templated { 
+    this.data = data;
+    this.simulation = null;
 
-	constructor(node, data) {		
-		super(node);
-		
-		this.data = data;
-		this.simulation = null;
-		
-		this.Widget("map").InitTileLayer();
-	}
-	
-	Template() {
-		return	"<main handle='main'>" +
-					"<div handle='header' widget='Widget.Header' class='header'></div>" +
-					"<div id='map' handle='map' widget='Widget.Map' class='map'></div>" +
-					"<div handle='box' widget='Widget.Box-Input-Files' class='box'></div>" +
-					
-				"</main>";
-	}
+    this.Widget("map").InitTileLayer();
+  }
+
+  Template() {
+    return (
+      "<main handle='main'>" +
+      "<div handle='header' widget='Widget.Header' class='header'></div>" +
+      "<div id='map' handle='map' widget='Widget.Map' class='map'></div>" +
+      "<div handle='box' widget='Widget.Box-Input-Files' class='box'></div>" +
+      "<div><button>Submit</button></div>" +
+      "</main>"
+    );
+  }
 }
