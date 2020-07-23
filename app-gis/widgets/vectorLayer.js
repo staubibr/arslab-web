@@ -4,7 +4,7 @@ export default class VectorLayer {
     return this._layer;
   }
 
-  constructor(url, title, data, dataCycle) {
+  constructor(url, title, data) {
     let scale = new GetScale();
     let s = scale.GS;
     this._layer = new ol.layer.Vector({
@@ -16,8 +16,8 @@ export default class VectorLayer {
       title: title,
       style: function (feature, resolution) {
         let x;
-        if (data[parseFloat(feature.N.dauid)] != undefined) {
-          x = data[parseFloat(feature.N.dauid)][dataCycle];
+        if (data[feature.N.dauid] != undefined) {
+          x = data[feature.N.dauid];
         } else {
           x = 0;
         }
@@ -32,22 +32,5 @@ export default class VectorLayer {
         });
       },
     });
-  }
-
-  GetLegend(title, translate) {
-    let scale = new GetScale();
-    const svg = d3.select("svg");
-    svg.append("g").attr("class", title).attr("transform", translate);
-    svg
-      .append("text")
-      .text("Proportion of the DAUID Population with Infection")
-      .attr("transform", "translate(20,25)");
-
-    var colorLegend = d3
-      .legendColor()
-      .labelFormat(d3.format(".2f"))
-      .scale(scale.GS);
-
-    svg.select("." + title).call(colorLegend);
   }
 }

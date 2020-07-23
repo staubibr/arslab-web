@@ -2,6 +2,9 @@
 	"App_Title" : {
 		"en" : "GIS Simulation Explorer"
 	},
+	"App_Legend_Title" : {
+		"en" : "Legend"
+	},
     "Header_Lab": {
         "en": "ARSLab"
     },

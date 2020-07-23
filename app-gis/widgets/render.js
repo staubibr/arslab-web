@@ -1,18 +1,23 @@
 import VectorLayer from "./vectorLayer.js";
 import { mapOnClick } from "./mapOnClick.js";
-export default class RenderVector {
+
+// TODO : We should maybe move away from wrapping OL objects. It might be too much
+// complexity for a first app.
+export default  class RenderVector {
   get LAYER() {
     return this._vo;
   }
 
-  constructor(map, data, dataCycle) {
+	// NOTE : This class is impossible to reuse because ontario.geojson is hardcoded.
+  constructor(map, data) {
     this._vo = new VectorLayer(
       "./data/Ontario.geojson",
       "Ontario",
-      data,
-      dataCycle
+      data
     );
-    map.addLayer(this._vo.OL);
-    mapOnClick(data, map);
+	
+    map.AddLayer(this._vo);
+    
+	mapOnClick(data, map);
   }
 }

@@ -3,15 +3,21 @@
 import Core from "../../api-web-devs/tools/core.js";
 import Templated from "../../api-web-devs/components/templated.js";
 import BaseMap from "./basemap.js";
-import RenderVector from "./render.js";
 import HideLayer from "./hideLayer.js";
-import { sort } from "./sort.js";
+import SimulationDEVS from "../../api-web-devs/simulation/simulationDEVS.js";
+import Model from "../../api-web-devs/simulation/model.js";
+import FrameDEVS from "../../api-web-devs/simulation/frameDEVS.js";
+import TransitionDEVS from "../../api-web-devs/simulation/transitionDEVS.js";
 
-export default Core.Templatable(
-  "Widget.Map",
-  class Map extends Templated {
-    constructor(container) {
-      super(container);
+export default Core.Templatable("Widget.Map", class Map extends Templated {
+    get Map() {
+		return this.map;
+	}
+	
+	constructor(container) {
+		super(container);
+
+		this.layers = {};
     }
 
     InitTileLayer() {
@@ -22,41 +28,34 @@ export default Core.Templatable(
         title: "OSMStandard",
       });
 
-      this.m = new BaseMap(layer, this.Elem("map-container"));
+		// NOTE : Terminology, a basemap is not a map
+      this.map = new BaseMap(layer, this.Elem("map-container"));
 
+		// NOTE : Naming, HideLayer is a function name, it shouldn't be a 
+		// class to instantiate
       this.ToggleTileLayer = new HideLayer(layer);
-
-      this.GetVectorLayer(this.m);
+	  
+	  return this.map;
     }
 
-    GetVectorLayer(map) {
-      const cycle = document.querySelector("#cycle");
-      const output = document.querySelector(".cycle-output");
+	Layer(id) {
+		return this.layers[id];
+	}
 
-      output.textContent = cycle.value;
-
-      var DataForMapping = async function () {
-        let dauidSimulationCycleData = await sort();
-
-        let jsonVector = new RenderVector(map.OL, dauidSimulationCycleData, 0);
-
-        var title = "Legend";
-        var translate = "translate(20,30)";
-
-        jsonVector.LAYER.GetLegend(title, translate);
-
-        cycle.addEventListener("input", function () {
-          output.textContent = cycle.value;
-          new RenderVector(map.OL, dauidSimulationCycleData, cycle.value);
-        });
-      };
-
-      DataForMapping();
-    }
+	AddLayer(id, layer) {
+		this.layers[id] = layer;
+		
+		this.map.OL.addLayer(layer.OL);
+	}
+	
+	RemoveLayer(id) {
+		// TODO : Implement
+	}
+	
     // Reorganize the templated pattern later
     Template() {
       return (
-        "<div handle='map-container' class='map-container'> <label for='price'>Simulation Cycle Selector:</label><input type='range' name='cycle' id='cycle' min='0' max='50' step='1' value='0'><output class='cycle-output' for='cycle'></output> </div>" +
+        "<div handle='map-container' class='map-container'></div>" +
         "<div style='display: flex;flex-direction: row; text-align: center'><input type='checkbox' id='checkbox' checked> Show World Map</input></div>" +
         "<div class='overlay-container'><span class='overlay-text' id='feature-name'></span><br><span class='overlay-text' id='feature-assets'></span><br></div>" +
         "<svg width = '960' height = '100'></svg>"

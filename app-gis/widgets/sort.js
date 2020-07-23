@@ -1,3 +1,4 @@
+// NOTE : This probably shouldn't be in its own module
 export const sort = () => {
   /* 
     State for model pandemic_hoya_Country1 is <1,0,16,16,0.7,0.3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0>
@@ -12,33 +13,39 @@ export const sort = () => {
     Next 16 numbers: The portion of the population in each stage of recovery (there's no really "recovered" population- 
     if someone is in a recovery phase thy cant infected, but after the last stage of recovery they can get infected again)
     */
-  return new Promise(function (resolve, reject) {
-    fetch("./data/pandemic_hoya_state.txt")
-      .then((response) => response.text())
-      .then((data) => {
-        let x = [];
-        let text = data.split("\n").map((line) => line.split(/\s+/));
-        text.forEach((d) => {
-          // Dont need cycle yet
-          if (d.length == 6) {
-            var obj = {};
-            let y = d[5].split(",");
-            let infectPop = y.splice(5, 20);
-            let sumInfected = infectPop.reduce(function (a, b) {
-              return a + b;
-            }, 0);
-            obj[d[3].substring(1)] = [parseFloat(sumInfected)];
-            x.push(obj);
-          }
-        });
-        // Group by ID next
-        var merged = x.reduce((accum, obj) => {
-          for (var key in obj) {
-            accum[key] = accum[key] ? [...accum[key], obj[key]] : obj[key];
-          }
-          return accum;
-        }, {});
-        resolve(merged);
-      });
-  });
+	return new Promise(function (resolve, reject) {
+		fetch("./data/pandemic_hoya_state.txt")
+		.then(response => response.text())
+		.then(data => { 			
+			let lines = data.split("\n").map(line => line.split(/\s+/));
+			let parsed = [];
+			
+			var current = null;
+			
+			// NOTE: for var... is faster than foreach
+			for (var i = 0; i < lines.length; i++) {
+				var l = lines[i];
+				
+				// TIME FRAME
+				if (l.length == 1) {
+					current = { time: l[0], messages : {} }
+					
+					parsed.push(current);
+				}
+				else {					
+					let model = l[3].substring(1);
+					let infected = l[5].split(",").splice(5, 20).reduce((a, b) => (+a) + (+b), 0);
+					
+					// A single message, add all properties you may want 
+					// to put on the map here
+					current.messages[model] = infected;
+				}
+			}			
+			// Remove first item from array, seems like it's the initial state. I think we may
+			// need to keep it but for now, it works.
+			parsed.shift();
+			
+			resolve(parsed);
+		});
+	});
 };
