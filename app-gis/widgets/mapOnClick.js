@@ -34,7 +34,7 @@ export const mapOnClick = (data, map) => {
           this on("click") will only work for the current title
         */
         layerFilter: function (layerCandidate) {
-          return layerCandidate.get("title") === "Ontario";
+          return layerCandidate.get("title") === "ontario";
         },
       }
     );

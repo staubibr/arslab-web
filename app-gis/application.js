@@ -10,7 +10,7 @@ import Map from "./widgets/map.js";
 import Box from "../api-web-devs/ui/box-input-files.js";
 
 import { sort } from "./widgets/sort.js";
-import RenderVector from "./widgets/render.js";
+import { mapOnClick } from "./widgets/mapOnClick.js";
 import VectorLayer from "./widgets/vectorLayer.js";
 import GetScale  from "./widgets/getScale.js";
 
@@ -30,8 +30,6 @@ export default class Application extends Templated {
 		this.Node("cycle").On("change", this.OnCycle_Change.bind(this));
 		
 		this.Widget("map").InitTileLayer();
-
-		// let jsonVector = new RenderVector(this.map, data[0]);
 			
 		sort().then(this.DataLoaded_Handler.bind(this));
 	}
@@ -39,13 +37,17 @@ export default class Application extends Templated {
 	DataLoaded_Handler(data) {	
 		this.data = data;
 		
-		this.Elem("cycle").setAttribute("max", this.data.length);
+		this.Elem("cycle").setAttribute("max", this.data.length-1);
 		
 		let layer = new VectorLayer("./data/Ontario.geojson", "Ontario", data[0].messages);
 		
 		layer.OL.getSource().once("change", this.OnLayerChange_Handler.bind(this));
 		
 		this.Widget("map").AddLayer("ontario", layer);
+
+		
+		//mapOnClick(data, map);
+
 	}
 	
 	CreateLegend(title, translate) {		
@@ -70,13 +72,22 @@ export default class Application extends Templated {
 
 	OnCycle_Change(ev) {
 		this.Elem("output").textContent = ev.target.value;
-		
+		// Need to reduce the length by one
 		let data =  this.data[ev.target.value].messages;
+
+		
+
 		let layer = new VectorLayer("./data/Ontario.geojson", "Ontario", data);
+		//this.Widget("map").RemoveLayer(1, layer);
 		
 		layer.OL.getSource().once("change", this.OnLayerChange_Handler.bind(this));
 		
 		this.Widget("map").AddLayer("ontario", layer);
+		//this.Widget("map").RemoveLayer("ontarioCycle", layer);
+
+		//mapOnClick(data, map);
+
+		debugger;
 	}
 	
 	OnLayerChange_Handler(ev) {
@@ -119,9 +130,9 @@ export default class Application extends Templated {
     return (
       "<main handle='main'>" +
       "<div handle='header' widget='Widget.Header' class='header'></div>" +
-      "<div id='map' handle='map' widget='Widget.Map' class='map'></div>" +
+	  "<div id='map' handle='map' widget='Widget.Map' class='map'></div>" +
 	  "<label>Simulation Cycle Selector:" +
-		  "<input handle='cycle' type='range' name='cycle' id='cycle' min='0' max='50' step='1' value='0' \>" + 
+		  "<input handle='cycle' type='range' name='cycle' id='cycle' min='0' step='1' value='0' \>" + 
 		  "<output handle='output' class='cycle-output' for='cycle'></output>" +
 	  "</label>" +
       "<div handle='box' widget='Widget.Box-Input-Files' class='box'></div>" +
