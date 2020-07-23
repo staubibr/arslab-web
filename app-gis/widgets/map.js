@@ -2,7 +2,7 @@
 
 import Core from "../../api-web-devs/tools/core.js";
 import Templated from "../../api-web-devs/components/templated.js";
-import InitialLayer from "./InitialLayer.js";
+import InitialLayer from "../classes/InitialLayer.js";
 
 export default Core.Templatable(
   "Widget.Map",
@@ -25,7 +25,6 @@ export default Core.Templatable(
         title: "OSMStandard",
       });
 
-      // NOTE : Terminology, a basemap is not a map
       // new ol.Map equivalent to addLayer
       this.map = new InitialLayer(layer, this.Elem("map-container"));
 
@@ -50,11 +49,15 @@ export default Core.Templatable(
       this.map.OL.addLayer(layer.OL);
     }
 
-    RemoveLayer(id, layer) {
-      // TODO : Implement
-      // https://openlayers.org/en/latest/apidoc/module-ol_Map-Map.html
-      this.layer[id] = layer;
-      this.map.OL.removeLayer(layer.OL)
+    // https://openlayers.org/en/latest/apidoc/module-ol_Map-Map.html
+    AddLayer(id, layer, layerObjects) {
+      this.layers[id] = layer;
+      for(var l in layerObjects){
+        if(id == l){
+          this.map.OL.removeLayer(layer.OL);
+        }
+      }
+      this.map.OL.addLayer(layer.OL);
     }
 
     // Reorganize the templated pattern later
@@ -62,10 +65,11 @@ export default Core.Templatable(
     // "<div class='overlay-container'><span class='overlay-text' id='feature-name'></span><br><span class='overlay-text' id='feature-assets'></span><br></div>" +
     Template() {
       return (
-        "<div handle='map-container' class='map-container'></div>" +
-        "<div style='display: flex;flex-direction: row; text-align: center'><input type='checkbox' id='checkbox' checked> Show World Map</input></div>" +
+        "<div style='display: flex;flex-direction: row; text-align: center'>" + 
+        "<input type='checkbox' id='checkbox' checked> Show World Map</input>" +
+        "</div>" +
+        "<div handle='map-container' class='map-container'></div>" 
         
-        "<svg width = '960' height = '100'></svg>"
       );
     }
   }

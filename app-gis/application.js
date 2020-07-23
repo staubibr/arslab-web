@@ -11,8 +11,8 @@ import Box from "../api-web-devs/ui/box-input-files.js";
 
 import { sort } from "./widgets/sort.js";
 import { mapOnClick } from "./widgets/mapOnClick.js";
-import VectorLayer from "./widgets/vectorLayer.js";
-import GetScale  from "./widgets/getScale.js";
+import VectorLayer from "./classes/vectorLayer.js";
+import GetScale  from "./classes/getScale.js";
 
 import SimulationDEVS from "../api-web-devs/simulation/simulationDEVS.js";
 import Model from "../api-web-devs/simulation/model.js";
@@ -21,17 +21,16 @@ import TransitionDEVS from "../api-web-devs/simulation/transitionDEVS.js";
 
 
 export default class Application extends Templated {
-	// NOTE : Removed data because unused
 	constructor(node) {
 		super(node);
 
 		this.CreateLegend(Core.Nls("App_Legend_Title"), "translate(20,30)");
 		
-		this.Node("cycle").On("change", this.OnCycle_Change.bind(this));
-		
 		this.Widget("map").InitTileLayer();
 			
 		sort().then(this.DataLoaded_Handler.bind(this));
+
+		this.Node("cycle").On("change", this.OnCycle_Change.bind(this));
 	}
 	
 	DataLoaded_Handler(data) {	
@@ -45,9 +44,7 @@ export default class Application extends Templated {
 		
 		this.Widget("map").AddLayer("ontario", layer);
 
-		
 		//mapOnClick(data, map);
-
 	}
 	
 	CreateLegend(title, translate) {		
@@ -60,7 +57,7 @@ export default class Application extends Templated {
 		svg
 		  .append("text")
 		  .text("Proportion of the DAUID Population with Infection")
-		  .attr("transform", "translate(20,25)");
+		  .attr("transform", "translate(1,25)");
 
 		var colorLegend = d3
 		  .legendColor()
@@ -72,27 +69,22 @@ export default class Application extends Templated {
 
 	OnCycle_Change(ev) {
 		this.Elem("output").textContent = ev.target.value;
-		// Need to reduce the length by one
+
 		let data =  this.data[ev.target.value].messages;
 
-		
-
 		let layer = new VectorLayer("./data/Ontario.geojson", "Ontario", data);
-		//this.Widget("map").RemoveLayer(1, layer);
 		
 		layer.OL.getSource().once("change", this.OnLayerChange_Handler.bind(this));
+
+		let layerObjects = this.Widget("map").layers;
 		
-		this.Widget("map").AddLayer("ontario", layer);
-		//this.Widget("map").RemoveLayer("ontarioCycle", layer);
+		this.Widget("map").AddLayer("ontario", layer, layerObjects);
 
 		//mapOnClick(data, map);
-
-		//debugger;
 	}
 	
 	OnLayerChange_Handler(ev) {
 		var features = ev.target.getFeatures();
-		// var layer = this.Widget("map").Layer("ontario");
 		this.CreateSimulation(features, this.data);
 	}
 	
@@ -132,9 +124,10 @@ export default class Application extends Templated {
       "<div handle='header' widget='Widget.Header' class='header'></div>" +
 	  "<div id='map' handle='map' widget='Widget.Map' class='map'></div>" +
 	  "<label>Simulation Cycle Selector:" +
-		  "<input handle='cycle' type='range' name='cycle' id='cycle' min='0' step='1' value='0' \>" + 
+		  "<input handle='cycle' type='range' name='cycle' id='cycle' min='0' max = '0' step='1' value='0' \>" + 
 		  "<output handle='output' class='cycle-output' for='cycle'></output>" +
 	  "</label>" +
+	  "<svg width = '960' height = '100'></svg>"+
       "<div handle='box' widget='Widget.Box-Input-Files' class='box'></div>" +
       "<div><button>Submit</button></div>" +
       "</main>"
