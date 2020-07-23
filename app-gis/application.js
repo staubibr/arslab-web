@@ -87,7 +87,7 @@ export default class Application extends Templated {
 
 		//mapOnClick(data, map);
 
-		debugger;
+		//debugger;
 	}
 	
 	OnLayerChange_Handler(ev) {
