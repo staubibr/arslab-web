@@ -52,24 +52,20 @@ export default Core.Templatable(
     // https://openlayers.org/en/latest/apidoc/module-ol_Map-Map.html
     AddLayer(id, layer, layerObjects) {
       this.layers[id] = layer;
-      for(var l in layerObjects){
-        if(id == l){
-          this.map.OL.removeLayer(layer.OL);
+      for (var l in layerObjects) {
+        if (id == l) {
+          this.map.OL.removeLayer(this.layers[id].OL);
         }
       }
       this.map.OL.addLayer(layer.OL);
     }
 
-    // Reorganize the templated pattern later
-    // For on click
-    // "<div class='overlay-container'><span class='overlay-text' id='feature-name'></span><br><span class='overlay-text' id='feature-assets'></span><br></div>" +
     Template() {
       return (
-        "<div style='display: flex;flex-direction: row; text-align: center'>" + 
+        "<div style='display: flex;flex-direction: row; text-align: center'>" +
         "<input type='checkbox' id='checkbox' checked> Show World Map</input>" +
         "</div>" +
-        "<div handle='map-container' class='map-container'></div>" 
-        
+        "<div handle='map-container' class='map-container'></div>"
       );
     }
   }

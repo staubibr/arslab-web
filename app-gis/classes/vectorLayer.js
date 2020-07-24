@@ -1,12 +1,9 @@
-import  GetScale  from "./getScale.js";
 export default class VectorLayer {
   get OL() {
     return this._layer;
   }
 
-  constructor(url, title, data) {
-    let scale = new GetScale();
-    let s = scale.GS;
+  constructor(url, title, data, scale) {
     this._layer = new ol.layer.Vector({
       source: new ol.source.Vector({
         url: url,
@@ -27,7 +24,7 @@ export default class VectorLayer {
             width: 1.2,
           }),
           fill: new ol.style.Fill({
-            color: s(x),
+            color: scale(x),
           }),
         });
       },

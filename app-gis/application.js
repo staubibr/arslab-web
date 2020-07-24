@@ -37,14 +37,18 @@ export default class Application extends Templated {
 		this.data = data;
 		
 		this.Elem("cycle").setAttribute("max", this.data.length-1);
+
+		let title = "ontario";
+
+		let scale = new GetScale();
 		
-		let layer = new VectorLayer("./data/Ontario.geojson", "Ontario", data[0].messages);
+		let layer = new VectorLayer("./data/Ontario.geojson", title, data[0].messages, scale.GS);
 		
 		layer.OL.getSource().once("change", this.OnLayerChange_Handler.bind(this));
 		
 		this.Widget("map").AddLayer("ontario", layer);
 
-		//mapOnClick(data, map);
+		mapOnClick(data[0].messages, this.Widget("map").map._map, title);
 	}
 	
 	CreateLegend(title, translate) {		
@@ -72,7 +76,12 @@ export default class Application extends Templated {
 
 		let data =  this.data[ev.target.value].messages;
 
-		let layer = new VectorLayer("./data/Ontario.geojson", "Ontario", data);
+		let title = "ontario";
+
+		let scale = new GetScale();
+		
+		// need lower case ontario for mapOnClick to work
+		let layer = new VectorLayer("./data/Ontario.geojson", title, data, scale.GS);
 		
 		layer.OL.getSource().once("change", this.OnLayerChange_Handler.bind(this));
 
@@ -80,7 +89,8 @@ export default class Application extends Templated {
 		
 		this.Widget("map").AddLayer("ontario", layer, layerObjects);
 
-		//mapOnClick(data, map);
+		mapOnClick(data, this.Widget("map").map._map, title);
+
 	}
 	
 	OnLayerChange_Handler(ev) {
@@ -123,6 +133,9 @@ export default class Application extends Templated {
       "<main handle='main'>" +
       "<div handle='header' widget='Widget.Header' class='header'></div>" +
 	  "<div id='map' handle='map' widget='Widget.Map' class='map'></div>" +
+	  "<div class='overlay-container'><span class='overlay-text' id='feature-name'>" + 
+	  	"</span><br><span class='overlay-text' id='feature-assets'></span><br>" + 
+	  "</div>" +
 	  "<label>Simulation Cycle Selector:" +
 		  "<input handle='cycle' type='range' name='cycle' id='cycle' min='0' max = '0' step='1' value='0' \>" + 
 		  "<output handle='output' class='cycle-output' for='cycle'></output>" +

@@ -1,15 +1,11 @@
-export const mapOnClick = (data, map) => {
+export const mapOnClick = (data, map, title) => {
   const overlayContainerElement = document.querySelector(".overlay-container");
   const overlayLayer = new ol.Overlay({
     element: overlayContainerElement,
   });
   map.addOverlay(overlayLayer);
-  // For Province
   const overlayFeatureName = document.getElementById("feature-name");
-  // For any other info we want to display below Province
   const overlayFeatureAssets = document.getElementById("feature-assets");
-  // Vector Layer to be added on top of the base layer
-
   map.on("click", function (e) {
     // Clicking outside vector layer
     overlayLayer.setPosition(undefined);
@@ -21,12 +17,12 @@ export const mapOnClick = (data, map) => {
         let clickedValue;
         overlayLayer.setPosition(clickedCoordinate);
         if (data[parseFloat(feature.N.dauid)] != undefined) {
-          clickedValue = data[parseFloat(feature.N.dauid)][10];
+          clickedValue = data[parseFloat(feature.N.dauid)];
         } else {
           clickedValue = "N/A";
         }
         overlayFeatureName.innerHTML = "DAUID: " + clickedDauid;
-        overlayFeatureAssets.innerHTML = "Proportion Infected: " + clickedValue;
+        overlayFeatureAssets.innerHTML = "Proportion Infected: " + clickedValue.toFixed(3);
       },
       {
         /*         
@@ -34,7 +30,7 @@ export const mapOnClick = (data, map) => {
           this on("click") will only work for the current title
         */
         layerFilter: function (layerCandidate) {
-          return layerCandidate.get("title") === "ontario";
+          return layerCandidate.get("title") === title;
         },
       }
     );
