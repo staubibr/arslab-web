@@ -13,10 +13,12 @@ export default Core.Templatable(
 
     constructor(container) {
       super(container);
-
+      // For storing layer objects and accessing them
+      // Required for Layer() and AddLayer()
       this.layers = {};
     }
 
+    // Create the initial layer (a world map from openstreetmaps in this case)
     InitTileLayer() {
       var layer = new ol.layer.Tile({
         source: new ol.source.OSM(),
@@ -25,9 +27,10 @@ export default Core.Templatable(
         title: "OSMStandard",
       });
 
-      // new ol.Map equivalent to addLayer
+      // This will display the world map onto the website
       this.map = new InitialLayer(layer, this.Elem("map-container"));
-
+      
+      // Lets you hide the world map
       var checkbox = document.querySelector("#checkbox");
       checkbox.addEventListener("change", function () {
         var checked = this.checked;
@@ -42,14 +45,18 @@ export default Core.Templatable(
     Layer(id) {
       return this.layers[id];
     }
-
+    
+    // Add a vector layer onto of the world map
+    // If another vector layer is below the new vector layer,
+    // the new vector layer will appear on top of the bottom one
+    // This is why a different color for each vector layer may be useful
     AddLayer(id, layer) {
       this.layers[id] = layer;
-
       this.map.OL.addLayer(layer.OL);
     }
 
     // https://openlayers.org/en/latest/apidoc/module-ol_Map-Map.html
+    // The code below is so we don't have the same vector layer on the world map multiple times
     AddLayer(id, layer, layerObjects) {
       this.layers[id] = layer;
       for (var l in layerObjects) {

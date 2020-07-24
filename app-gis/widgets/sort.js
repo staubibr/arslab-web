@@ -2,7 +2,6 @@
 export const sort = () => {
   /* 
     State for model pandemic_hoya_Country1 is <1,0,16,16,0.7,0.3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0>
-    // Infected: index 5 to 20 
     The numbers have the following meaning:
     First number (1): population density
     Next number (0): The phase of the lockdown
@@ -13,7 +12,10 @@ export const sort = () => {
     Next 16 numbers: The portion of the population in each stage of recovery (there's no really "recovered" population- 
     if someone is in a recovery phase thy cant infected, but after the last stage of recovery they can get infected again)
     */
+   // NOTE: Infected: index 5 to 20 
 	return new Promise(function (resolve, reject) {
+		// TODO: let users upload their text file to run simulation
+		// Need to avoid hardcoding this
 		fetch("./data/pandemic_hoya_state.txt")
 		.then(response => response.text())
 		.then(data => { 			

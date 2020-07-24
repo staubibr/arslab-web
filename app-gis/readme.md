@@ -28,12 +28,13 @@ Running the local server:
 Development:
 - In `./app-gis/`,...
 
-##TODO:
+## TODO:
 
 - Make an instructional video for users
 - Allow users to run their uploaded `.geojson` and `.txt` 
 - Run multiple simulations, each with their own simulation cycler
 - Let users change scale/legend colours
+- Let users decide where the center of the map is or maybe setup a "go-to x location" 
 - Let users download simulation log 
 - Add video recording
 
@@ -48,3 +49,5 @@ Development:
 [D3 Scale](https://github.com/d3/d3-scale)
 
 [ol.layer.Vector](https://openlayers.org/en/latest/apidoc/module-ol_layer_Vector-VectorLayer.html)
+
+[ol.OverLay](https://openlayers.org/en/latest/apidoc/module-ol_Overlay-Overlay.html)

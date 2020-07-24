@@ -3,12 +3,17 @@ export const mapOnClick = (data, map, title) => {
   const overlayLayer = new ol.Overlay({
     element: overlayContainerElement,
   });
+  // See: https://openlayers.org/en/latest/apidoc/module-ol_Overlay-Overlay.html
+  // Allows us to display elements over the map
+  // Such elements are attached to specific map locations
+  // Tied to geographic coordiantes
   map.addOverlay(overlayLayer);
   const overlayFeatureName = document.getElementById("feature-name");
   const overlayFeatureAssets = document.getElementById("feature-assets");
   map.on("click", function (e) {
     // Clicking outside vector layer
     overlayLayer.setPosition(undefined);
+    // Finds where the user clicks on the map and matches it to the correct feature
     map.forEachFeatureAtPixel(
       e.pixel,
       function (feature, layer) {
@@ -16,6 +21,7 @@ export const mapOnClick = (data, map, title) => {
         let clickedDauid = parseFloat(feature.N.dauid);
         let clickedValue;
         overlayLayer.setPosition(clickedCoordinate);
+        // Check if the census subdivision has an infected population
         if (data[parseFloat(feature.N.dauid)] != undefined) {
           clickedValue = data[parseFloat(feature.N.dauid)];
         } else {
