@@ -154,10 +154,14 @@ export default class Application extends Templated {
         frame.AddTransition(transition);
       }
     }
-
-    simulation.Initialize(10);
+	
+	simulation.Initialize(10);
+	debugger;
   }
 
+  // Removed file uploading for now 
+  // "<div handle='box' widget='Widget.Box-Input-Files' class='box'></div>" +
+  // "<div><button>Submit</button></div>" +
   Template() {
     return (
       "<main handle='main'>" +
@@ -171,8 +175,7 @@ export default class Application extends Templated {
       "<output handle='output' class='cycle-output' for='cycle'></output>" +
       "</label>" +
       "<svg width = '960' height = '100'></svg>" +
-      "<div handle='box' widget='Widget.Box-Input-Files' class='box'></div>" +
-      "<div><button>Submit</button></div>" +
+
       "</main>"
     );
   }
