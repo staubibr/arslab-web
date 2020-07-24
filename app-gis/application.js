@@ -156,7 +156,6 @@ export default class Application extends Templated {
     }
 	
 	simulation.Initialize(10);
-	debugger;
   }
 
   // Removed file uploading for now 
