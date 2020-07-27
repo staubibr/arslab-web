@@ -9,7 +9,6 @@ import Header from "./widgets/header.js";
 import Map from "./widgets/map.js";
 import Box from "../api-web-devs/ui/box-input-files.js";
 
-import { sort } from "./widgets/sort.js";
 import { mapOnClick } from "./widgets/mapOnClick.js";
 import VectorLayer from "./classes/vectorLayer.js";
 import GetScale from "./classes/getScale.js";
@@ -29,11 +28,79 @@ export default class Application extends Templated {
     // The world map prior to any vector layers being added overtop
     this.Widget("map").InitTileLayer();
 
+    //this.GetFiles();
+
     //Creates a vector layer, by default it starts at the 0th simulation cycle
-    sort().then(this.DataLoaded_Handler.bind(this));
+    this.sort().then(this.DataLoaded_Handler.bind(this));
 
     // Modifies the vector layer above depending on the simulation cycle selector's current value
     this.Node("cycle").On("change", this.OnCycle_Change.bind(this));
+  }
+
+  sort() {
+    /* 
+    State for model pandemic_hoya_Country1 is <1,0,16,16,0.7,0.3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0>
+    The numbers have the following meaning:
+    First number (1): population density
+    Next number (0): The phase of the lockdown
+    Next number (16): Number of infected states
+    Next number (16): Number of recovered states
+    Next Number(0.7): The susceptible population
+    Next 16 numbers: The portion of the population in each stage of infection (the sum of which is the infected population)
+    Next 16 numbers: The portion of the population in each stage of recovery (there's no really "recovered" population- 
+    if someone is in a recovery phase thy cant infected, but after the last stage of recovery they can get infected again)
+    */
+    // NOTE: Infected: index 5 to 20
+    const input = document.querySelector("input[name='simResults']");
+    return new Promise(function (resolve, reject) {
+      input.addEventListener(
+        "change",
+        function (event) {
+          let fileInput = event.target;
+          let files = fileInput.files;
+          let f = files[0];
+          let firstFileReader = new FileReader();
+
+          firstFileReader.onload = function (event) {
+            let fileContent = event.target.result;
+            let lines = fileContent
+              .split("\n")
+              .map((line) => line.split(/\s+/));
+            let parsed = [];
+
+            var current = null;
+
+            for (var i = 0; i < lines.length; i++) {
+              var l = lines[i];
+
+              // TIME FRAME
+              if (l.length == 1) {
+                current = { time: l[0], messages: {} };
+
+                parsed.push(current);
+              } else {
+                let model = l[3].substring(1);
+                let infected = l[5]
+                  .split(",")
+                  .splice(5, 20)
+                  .reduce((a, b) => +a + +b, 0);
+
+                // A single message, add all properties you may want
+                // to put on the map here
+                current.messages[model] = infected;
+              }
+            }
+            // Remove first item from array, seems like it's the initial state. I think we may
+            // need to keep it but for now, it works.
+            parsed.shift();
+
+            resolve(parsed);
+          };
+          firstFileReader.readAsText(f);
+        },
+        false
+      );
+    });
   }
 
   DataLoaded_Handler(data) {
@@ -41,32 +108,51 @@ export default class Application extends Templated {
 
     this.Elem("cycle").setAttribute("max", this.data.length - 1);
 
-    // We'll need this for mapOnClick
-    let title = "ontario";
+    const input = document.querySelector("input[name='vectorLayer']");
+    var self = this;
+    input.addEventListener(
+      "change",
+      function (event) {
+        let fileInput = event.target;
+        let files = fileInput.files;
+        let f = files[0];
+        let firstFileReader = new FileReader();
+        firstFileReader.onload = function (event) {
+          let fileContent = event.target.result;
+          // We'll need this for mapOnClick
+          let title = "ontario";
 
-    let scale = new GetScale();
+          let scale = new GetScale();
 
-    /* Create the vector layer: 
-		 - Read Ontario's coordinates 
-		 - Add a title 
-		 - Match simulation data to Ontarios census subdivisions
-		 - Color in each census subdivision based on its infeced proportion value
-		*/
-    let layer = new VectorLayer(
-      "./data/Ontario.geojson",
-      title,
-      data[0].messages,
-      scale.GS
+          /* Create the vector layer: 
+          - Read Ontario's coordinates 
+          - Add a title 
+          - Match simulation data to Ontarios census subdivisions
+          - Color in each census subdivision based on its infeced proportion value
+          */
+          let layer = new VectorLayer(
+            fileContent,
+            title,
+            data[0].messages,
+            scale.GS
+          );
+
+          // add vector layer onto world map
+          self.Widget("map").AddLayer("ontario", layer);
+
+          // make the vector layers attributes visible through clicking census subdivisions
+          mapOnClick(data[0].messages, self.Widget("map").map._map, title);
+
+          // If the simulation cycle changes, updates the simulaiton object
+          layer.OL.getSource().once(
+            "change",
+            self.OnLayerChange_Handler.bind(self)
+          );
+        };
+        firstFileReader.readAsDataURL(f);
+      },
+      false
     );
-
-    // add vector layer onto world map
-    this.Widget("map").AddLayer("ontario", layer);
-
-    // make the vector layers attributes visible through clicking census subdivisions
-    mapOnClick(data[0].messages, this.Widget("map").map._map, title);
-
-    // If the simulation cycle changes, updates the simulaiton object
-    layer.OL.getSource().once("change", this.OnLayerChange_Handler.bind(this));
   }
 
   CreateLegend(title, translate) {
@@ -83,8 +169,8 @@ export default class Application extends Templated {
 
     var colorLegend = d3
       .legendColor()
-	  .labelFormat(d3.format(".2f"))
-	  // To actually color the legend based on our chosen colors
+      .labelFormat(d3.format(".2f"))
+      // To actually color the legend based on our chosen colors
       .scale(scale.GS);
 
     svg.select("." + title).call(colorLegend);
@@ -93,8 +179,21 @@ export default class Application extends Templated {
   OnCycle_Change(ev) {
     this.Elem("output").textContent = ev.target.value;
 
-	// Access a new simulation cycle based on users choice from the simulation cycle selector
+    // Access a new simulation cycle based on users choice from the simulation cycle selector
     let data = this.data[ev.target.value].messages;
+
+    // const input = document.querySelector("input[name='vectorLayer']");
+    // var self = this;
+    
+    // // Event references
+    // // https://developer.mozilla.org/en-US/docs/Web/Events
+    // input.removeEventListener('change', function(event) {
+    //   let fileInput = event.target;
+    //   let files = fileInput.files;
+    //   let f = files[0];
+    //   console.log(f);
+    // }, false)
+
 
     let title = "ontario";
 
@@ -106,16 +205,16 @@ export default class Application extends Templated {
       title,
       data,
       scale.GS
-	);
-	
-	let layerObjects = this.Widget("map").layers;
+    );
 
-	// This will overwrite the previous simulation cycle vector object and add the new one
+    let layerObjects = this.Widget("map").layers;
+
+    // This will overwrite the previous simulation cycle vector object and add the new one
     this.Widget("map").AddLayer("ontario", layer, layerObjects);
 
     mapOnClick(data, this.Widget("map").map._map, title);
-	
-	// if the simulation cycle changes, updates the simulation object again
+
+    // if the simulation cycle changes, updates the simulation object again
     layer.OL.getSource().once("change", this.OnLayerChange_Handler.bind(this));
   }
 
@@ -154,13 +253,22 @@ export default class Application extends Templated {
         frame.AddTransition(transition);
       }
     }
-	
-	simulation.Initialize(10);
+    simulation.Initialize(10);
   }
 
-  // Removed file uploading for now 
+  // Removed file uploading for now
   // "<div handle='box' widget='Widget.Box-Input-Files' class='box'></div>" +
   // "<div><button>Submit</button></div>" +
+
+  /* For getting multiple files
+        "<input type='file' id='file-selector' name='files[]' multiple accept='.txt, .geojson'>" +
+      "<script> const fileSelector = document.getElementById('file-selector');" +
+      "fileSelector.addEventListener('change', (event) => {" +
+      "const fileList = event.target.files;" +
+      "console.log(fileList);" +
+      "});" +
+      "</script>" +
+  */
   Template() {
     return (
       "<main handle='main'>" +
@@ -169,11 +277,32 @@ export default class Application extends Templated {
       "<div class='overlay-container'><span class='overlay-text' id='feature-name'>" +
       "</span><br><span class='overlay-text' id='feature-assets'></span><br>" +
       "</div>" +
-      "<label>Simulation Cycle Selector:" +
+      "<label>Simulation Cycle Selector: " +
       "<input handle='cycle' type='range' name='cycle' id='cycle' min='0' max = '0' step='1' value='0' >" +
       "<output handle='output' class='cycle-output' for='cycle'></output>" +
       "</label>" +
       "<svg width = '960' height = '100'></svg>" +
+      "<div>" +
+      "<label>Select your simulation results txt: " +
+      "<input type='file' id='file-selector' name='simResults' accept='.txt'>" +
+      "<script> const fileSelector = document.getElementById('file-selector');" +
+      "fileSelector.addEventListener('change', (event) => {" +
+      "const fileList = event.target.files;" +
+      "console.log(fileList);" +
+      "});" +
+      "</script>" +
+      "</div>" +
+      "<div>" +
+      "<label>Select your vector layer geojson: " +
+      "<input type='file' id='file-selector' name='vectorLayer' accept='.geojson'>" +
+      "<script> const fileSelector = document.getElementById('file-selector');" +
+      "fileSelector.addEventListener('change', (event) => {" +
+      "const fileList = event.target.files;" +
+      "console.log(fileList);" +
+      "});" +
+      "</script>" +
+      "</div>" +
+      // <div><button>Submit</button></div>" +
 
       "</main>"
     );
