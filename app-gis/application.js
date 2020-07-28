@@ -28,18 +28,16 @@ export default class Application extends Templated {
     // The world map prior to any vector layers being added overtop
     this.Widget("map").InitTileLayer();
 
-    //this.GetFiles();
-
     //Creates a vector layer, by default it starts at the 0th simulation cycle
-    this.sort().then(this.DataLoaded_Handler.bind(this));
+    this.sortSimulationResults().then(this.DataLoaded_Handler.bind(this));
 
     // Modifies the vector layer above depending on the simulation cycle selector's current value
     this.Node("cycle").On("change", this.OnCycle_Change.bind(this));
   }
 
-  sort() {
+  sortSimulationResults() {
     /* 
-    State for model pandemic_hoya_Country1 is <1,0,16,16,0.7,0.3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0>
+    State for model _DAUID is <1,0,16,16,0.7,0.3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0>
     The numbers have the following meaning:
     First number (1): population density
     Next number (0): The phase of the lockdown
@@ -56,12 +54,11 @@ export default class Application extends Templated {
       input.addEventListener(
         "change",
         function (event) {
-          let fileInput = event.target;
-          let files = fileInput.files;
+          let files = event.target.files;
           let f = files[0];
-          let firstFileReader = new FileReader();
+          let fileReader = new FileReader();
 
-          firstFileReader.onload = function (event) {
+          fileReader.onload = function (event) {
             let fileContent = event.target.result;
             let lines = fileContent
               .split("\n")
@@ -96,29 +93,35 @@ export default class Application extends Templated {
 
             resolve(parsed);
           };
-          firstFileReader.readAsText(f);
+          fileReader.readAsText(f);
         },
         false
       );
     });
   }
 
+ LayerFile(file) {
+    this.userLayerFile = file;
+  }
+
   DataLoaded_Handler(data) {
     this.data = data;
 
-    this.Elem("cycle").setAttribute("max", this.data.length - 1);
+    this.Elem("cycle").setAttribute("max", this.data.length - 2);
 
     const input = document.querySelector("input[name='vectorLayer']");
+
     var self = this;
     input.addEventListener(
       "change",
       function (event) {
-        let fileInput = event.target;
-        let files = fileInput.files;
+        let files = event.target.files;
         let f = files[0];
-        let firstFileReader = new FileReader();
-        firstFileReader.onload = function (event) {
+        let fileReader = new FileReader();
+        fileReader.onload = function (event) {
           let fileContent = event.target.result;
+          // so we can use the content for OnCycleChange
+          self.LayerFile(fileContent);
           // We'll need this for mapOnClick
           let title = "ontario";
 
@@ -144,12 +147,9 @@ export default class Application extends Templated {
           mapOnClick(data[0].messages, self.Widget("map").map._map, title);
 
           // If the simulation cycle changes, updates the simulaiton object
-          layer.OL.getSource().once(
-            "change",
-            self.OnLayerChange_Handler.bind(self)
-          );
+          // layer.OL.getSource().once("change", self.OnLayerChange_Handler.bind(self));
         };
-        firstFileReader.readAsDataURL(f);
+        fileReader.readAsDataURL(f);
       },
       false
     );
@@ -182,30 +182,14 @@ export default class Application extends Templated {
     // Access a new simulation cycle based on users choice from the simulation cycle selector
     let data = this.data[ev.target.value].messages;
 
-    // const input = document.querySelector("input[name='vectorLayer']");
-    // var self = this;
-    
-    // // Event references
-    // // https://developer.mozilla.org/en-US/docs/Web/Events
-    // input.removeEventListener('change', function(event) {
-    //   let fileInput = event.target;
-    //   let files = fileInput.files;
-    //   let f = files[0];
-    //   console.log(f);
-    // }, false)
-
+    let file = this.userLayerFile;
 
     let title = "ontario";
 
     let scale = new GetScale();
 
     // New vector layer object that'll overwrite the vector layer object from the previous simulation cycle
-    let layer = new VectorLayer(
-      "./data/Ontario.geojson",
-      title,
-      data,
-      scale.GS
-    );
+    let layer = new VectorLayer(file, title, data, scale.GS);
 
     let layerObjects = this.Widget("map").layers;
 
@@ -215,7 +199,7 @@ export default class Application extends Templated {
     mapOnClick(data, this.Widget("map").map._map, title);
 
     // if the simulation cycle changes, updates the simulation object again
-    layer.OL.getSource().once("change", this.OnLayerChange_Handler.bind(this));
+    //layer.OL.getSource().once("change", this.OnLayerChange_Handler.bind(this));
   }
 
   OnLayerChange_Handler(ev) {
@@ -283,7 +267,7 @@ export default class Application extends Templated {
       "</label>" +
       "<svg width = '960' height = '100'></svg>" +
       "<div>" +
-      "<label>Select your simulation results txt: " +
+      "<label>Select your simulation results: " +
       "<input type='file' id='file-selector' name='simResults' accept='.txt'>" +
       "<script> const fileSelector = document.getElementById('file-selector');" +
       "fileSelector.addEventListener('change', (event) => {" +
@@ -293,16 +277,15 @@ export default class Application extends Templated {
       "</script>" +
       "</div>" +
       "<div>" +
-      "<label>Select your vector layer geojson: " +
-      "<input type='file' id='file-selector' name='vectorLayer' accept='.geojson'>" +
-      "<script> const fileSelector = document.getElementById('file-selector');" +
+      "<label>Select your GeoJSON layer: " +
+      "<input type='file' id='file-selectorOne' name='vectorLayer' handle='vectorLayer' accept='.geojson'>" +
+      "<script> const fileSelector = document.getElementById('file-selectorOne');" +
       "fileSelector.addEventListener('change', (event) => {" +
       "const fileList = event.target.files;" +
       "console.log(fileList);" +
       "});" +
       "</script>" +
       "</div>" +
-      // <div><button>Submit</button></div>" +
 
       "</main>"
     );

@@ -3,7 +3,6 @@ export const mapOnClick = (data, map, title) => {
   const overlayLayer = new ol.Overlay({
     element: overlayContainerElement,
   });
-  // See: https://openlayers.org/en/latest/apidoc/module-ol_Overlay-Overlay.html
   // Allows us to display elements over the map
   // Such elements are attached to specific map locations
   // Tied to geographic coordiantes

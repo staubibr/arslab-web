@@ -1,12 +1,12 @@
 # GIS Simulation Explorer
 
-**NOTE:** This simulator does not accept user file uploading yet. Currently, the simulator only uses data that is retrieved from `./app-gis/data/` (developers) or GitHub (users).
-
 ## Getting Started (Users):
+[![Demo CountPages alpha](/app-gis/demo.gif)](https://youtu.be/liGqAIcnNUo)
 - Open the [GIS Simulation Explorer](https://staubibr.github.io/arslab-dev/app-gis/index.html) in Chrome 
-- Wait for OpenStreetMap to load the world map
-- Wait for Ontario's vector layer to load onto the world map
-- Once everything appears to be loaded, you may cycle through different timestamps of the SIR simulation 
+- OpenStreetMap will automatically load the world map
+- Insert your simulation results (txt)
+- Insert your GeoJSON layer to the map 
+- Once everything appears to be loaded, you may cycle through different timestamps of the SIR simulation and view attributes by clicking census subdivisions
 
 
 ## Getting Started (Developers):
@@ -26,17 +26,22 @@ Running the local server:
 ![Web Server.](/app-gis/webserver.png "Web Server image.")
 
 Development:
-- In `./app-gis/`,...
+- In `./app-gis/`, there are many folders and files to choose from
+  - Folder `./app-gis/classes` contains class level functions
+  - Folder `./app-gis/widgets` contains code for UI operations
+  - Folder `./app-gis/data` has sample data 
+  - Folder `./app-gis/ol` contains OpenLayers packages. 
+    - OpenLayers can be easily bundled with gis applications through Rollup, Webpack, etc. 
+  - File `app-gis/application.js` contains a bulk of the work needed to run the gis application
 
 ## TODO:
 
-- Make an instructional video for users
-- Allow users to run their uploaded `.geojson` and `.txt` 
-- Run multiple simulations, each with their own simulation cycler
+- Allow users to upload their `.geojson` and `.txt` files at once instead of one at a time
+  - Run multiple simulations, each with their own simulation cycler and legends
 - Let users change scale/legend colours
 - Let users decide where the center of the map is or maybe setup a "go-to x location" 
 - Let users download simulation log 
-- Add video recording
+- Let users video record the simulation
 
 ## Resources:
 
@@ -51,3 +56,5 @@ Development:
 [ol.layer.Vector](https://openlayers.org/en/latest/apidoc/module-ol_layer_Vector-VectorLayer.html)
 
 [ol.OverLay](https://openlayers.org/en/latest/apidoc/module-ol_Overlay-Overlay.html)
+
+[Event References](https://developer.mozilla.org/en-US/docs/Web/Events)

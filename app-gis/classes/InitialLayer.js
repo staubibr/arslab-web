@@ -26,7 +26,7 @@ export default class InitialLayer {
           "EPSG:3857"
         ),
         // Higher number means more close up
-        zoom: 4,
+        zoom: 5,
       }),
   
     });
