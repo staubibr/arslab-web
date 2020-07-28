@@ -100,8 +100,9 @@ export default class Application extends Templated {
     });
   }
 
- LayerFile(file) {
+  LayerFile(file, title) {
     this.userLayerFile = file;
+    this.userLayerTitle = title;
   }
 
   DataLoaded_Handler(data) {
@@ -120,12 +121,13 @@ export default class Application extends Templated {
         let fileReader = new FileReader();
         fileReader.onload = function (event) {
           let fileContent = event.target.result;
+          let title = f.name;
           // so we can use the content for OnCycleChange
-          self.LayerFile(fileContent);
+          self.LayerFile(fileContent, title);
           // We'll need this for mapOnClick
-          let title = "ontario";
 
-          let scale = new GetScale();
+          self.currentColorScale(new GetScale(["red", "white"]));
+          let scale = self.currentScale;
 
           /* Create the vector layer: 
           - Read Ontario's coordinates 
@@ -155,8 +157,40 @@ export default class Application extends Templated {
     );
   }
 
+  currentColorScale(scale) {
+    this.currentScale = scale;
+  }
+
   CreateLegend(title, translate) {
-    let scale = new GetScale();
+    let self = this;
+    let scale;
+    if (this.currentScale == undefined) {
+      self.currentColorScale(new GetScale(["red", "white"]));
+      scale = self.currentScale;
+    }
+
+    d3.select("#scale-select").on("change", function () {
+      var val = d3.select(this).node().value;
+      self.currentColorScale(new GetScale(val.split(" ")));
+      scale = self.currentScale;
+
+      const svg = d3.select("svg");
+      svg.selectAll("*").remove();
+
+      svg.append("g").attr("class", title).attr("transform", translate);
+
+      svg
+        .append("text")
+        .text("Proportion of the DAUID Population with Infection")
+        .attr("transform", "translate(1,25)");
+      var colorLegend = d3
+        .legendColor()
+        .labelFormat(d3.format(".2f"))
+        // To actually color the legend based on our chosen colors
+        .scale(scale.GS);
+
+      svg.select("." + title).call(colorLegend);
+    });
 
     const svg = d3.select("svg");
 
@@ -182,24 +216,25 @@ export default class Application extends Templated {
     // Access a new simulation cycle based on users choice from the simulation cycle selector
     let data = this.data[ev.target.value].messages;
 
-    let file = this.userLayerFile;
-
-    let title = "ontario";
-
-    let scale = new GetScale();
+    let scale = this.currentScale;
 
     // New vector layer object that'll overwrite the vector layer object from the previous simulation cycle
-    let layer = new VectorLayer(file, title, data, scale.GS);
+    let layer = new VectorLayer(
+      this.userLayerFile,
+      this.userLayerTitle,
+      data,
+      scale.GS
+    );
 
     let layerObjects = this.Widget("map").layers;
 
     // This will overwrite the previous simulation cycle vector object and add the new one
     this.Widget("map").AddLayer("ontario", layer, layerObjects);
 
-    mapOnClick(data, this.Widget("map").map._map, title);
+    mapOnClick(data, this.Widget("map").map._map, this.userLayerTitle);
 
     // if the simulation cycle changes, updates the simulation object again
-    //layer.OL.getSource().once("change", this.OnLayerChange_Handler.bind(this));
+    // layer.OL.getSource().once("change", this.OnLayerChange_Handler.bind(this));
   }
 
   OnLayerChange_Handler(ev) {
@@ -265,7 +300,16 @@ export default class Application extends Templated {
       "<input handle='cycle' type='range' name='cycle' id='cycle' min='0' max = '0' step='1' value='0' >" +
       "<output handle='output' class='cycle-output' for='cycle'></output>" +
       "</label>" +
-      "<svg width = '960' height = '100'></svg>" +
+      "<div id='controls'>" +
+      "<label for='scale-select'>Select Colour Scale: </label>" +
+      "<select id='scale-select'>" +
+      "<option value='red white'>red-white</option>" +
+      "<option value='orange white'>orange-white</option>" +
+      "<option value='cyan white'>cyan-white</option>" +
+      "<option value='green white'>green-white</option>" +
+      "</select>" +
+      "</div>" +
+      "<svg handle='svg' width = '960' height = '100'></svg>" +
       "<div>" +
       "<label>Select your simulation results: " +
       "<input type='file' id='file-selector' name='simResults' accept='.txt'>" +
@@ -286,7 +330,6 @@ export default class Application extends Templated {
       "});" +
       "</script>" +
       "</div>" +
-
       "</main>"
     );
   }
