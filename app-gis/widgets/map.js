@@ -49,13 +49,7 @@ export default Core.Templatable(
     // Add a vector layer onto of the world map
     // If another vector layer is below the new vector layer,
     // the new vector layer will appear on top of the bottom one
-    // This is why a different color for each vector layer may be useful
-    AddLayer(id, layer) {
-      this.layers[id] = layer;
-      this.map.OL.addLayer(layer.OL);
-    }
-
-    // https://openlayers.org/en/latest/apidoc/module-ol_Map-Map.html
+    // ** This is why a different color for each vector layer may be useful **
     // The code below is so we don't have the same vector layer on the world map multiple times
     AddLayer(id, layer, layerObjects) {
       this.layers[id] = layer;

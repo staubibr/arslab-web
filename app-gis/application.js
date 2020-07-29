@@ -22,16 +22,16 @@ export default class Application extends Templated {
   constructor(node) {
     super(node);
 
-    // Default legend. Currently hardcoded.
+    // By default the legend will be red-white unless otherwise specified by the user
     this.CreateLegend(Core.Nls("App_Legend_Title"), "translate(20,30)");
 
     // The world map prior to any vector layers being added overtop
     this.Widget("map").InitTileLayer();
 
-    //Creates a vector layer, by default it starts at the 0th simulation cycle
+    //Creates a vector layer, by default it starts at the 0th simulation cycle (time frame)
     this.sortSimulationResults().then(this.DataLoaded_Handler.bind(this));
 
-    // Modifies the vector layer above depending on the simulation cycle selector's current value
+    // Modifies an existing vector layer depending on the simulation cycle selector's current value
     this.Node("cycle").On("change", this.OnCycle_Change.bind(this));
   }
 
@@ -101,10 +101,12 @@ export default class Application extends Templated {
   }
 
   LayerFile(file, title) {
-    this.userLayerFile = file;
+    this.userLayerData = null;
+    this.userLayerGeoJSON = file;
     this.userLayerTitle = title;
   }
 
+  // Why doesnt the layer appear if txt is entered after
   DataLoaded_Handler(data) {
     this.data = data;
 
@@ -112,6 +114,10 @@ export default class Application extends Templated {
 
     const input = document.querySelector("input[name='vectorLayer']");
 
+    this.CheckForGeoJSON(input);
+  }
+
+  CheckForGeoJSON(input) {
     var self = this;
     input.addEventListener(
       "change",
@@ -126,8 +132,13 @@ export default class Application extends Templated {
           self.LayerFile(fileContent, title);
           // We'll need this for mapOnClick
 
-          self.currentColorScale(new GetScale(["red", "white"]));
-          let scale = self.currentScale;
+          let scale;
+          if (self.currentScale == undefined) {
+            self.currentColorScale(new GetScale(["red", "white"]));
+            scale = self.currentScale;
+          } else {
+            scale = self.currentScale;
+          }
 
           /* Create the vector layer: 
           - Read Ontario's coordinates 
@@ -138,15 +149,15 @@ export default class Application extends Templated {
           let layer = new VectorLayer(
             fileContent,
             title,
-            data[0].messages,
+            self.data[0].messages,
             scale.GS
           );
 
           // add vector layer onto world map
-          self.Widget("map").AddLayer("ontario", layer);
+          self.Widget("map").AddLayer(title, layer);
 
           // make the vector layers attributes visible through clicking census subdivisions
-          mapOnClick(data[0].messages, self.Widget("map").map._map, title);
+          mapOnClick(self.data[0].messages, self.Widget("map").map._map, title);
 
           // If the simulation cycle changes, updates the simulaiton object
           // layer.OL.getSource().once("change", self.OnLayerChange_Handler.bind(self));
@@ -169,6 +180,7 @@ export default class Application extends Templated {
       scale = self.currentScale;
     }
 
+    // Recreate the legend if a color change is issued
     d3.select("#scale-select").on("change", function () {
       var val = d3.select(this).node().value;
       self.currentColorScale(new GetScale(val.split(" ")));
@@ -190,6 +202,23 @@ export default class Application extends Templated {
         .scale(scale.GS);
 
       svg.select("." + title).call(colorLegend);
+
+      if(self.userLayerGeoJSON != undefined){
+        let index = self.curCycle || 0;
+        let layer = new VectorLayer(
+          self.userLayerGeoJSON,
+          self.userLayerTitle,
+          self.data[index].messages,
+          scale.GS
+        );
+
+        // add vector layer onto world map
+        self.Widget("map").AddLayer(self.userLayerTitle, layer);
+
+        // make the vector layers attributes visible through clicking census subdivisions
+        mapOnClick(self.data[index].messages, self.Widget("map").map._map, self.userLayerTitle);
+      }
+
     });
 
     const svg = d3.select("svg");
@@ -210,8 +239,13 @@ export default class Application extends Templated {
     svg.select("." + title).call(colorLegend);
   }
 
+  CurrentCycle(cycle){
+    this.curCycle = cycle;
+  }
+
   OnCycle_Change(ev) {
     this.Elem("output").textContent = ev.target.value;
+    this.CurrentCycle(ev.target.value);
 
     // Access a new simulation cycle based on users choice from the simulation cycle selector
     let data = this.data[ev.target.value].messages;
@@ -220,7 +254,7 @@ export default class Application extends Templated {
 
     // New vector layer object that'll overwrite the vector layer object from the previous simulation cycle
     let layer = new VectorLayer(
-      this.userLayerFile,
+      this.userLayerGeoJSON,
       this.userLayerTitle,
       data,
       scale.GS
@@ -229,7 +263,7 @@ export default class Application extends Templated {
     let layerObjects = this.Widget("map").layers;
 
     // This will overwrite the previous simulation cycle vector object and add the new one
-    this.Widget("map").AddLayer("ontario", layer, layerObjects);
+    this.Widget("map").AddLayer(this.userLayerTitle, layer, layerObjects);
 
     mapOnClick(data, this.Widget("map").map._map, this.userLayerTitle);
 
@@ -275,19 +309,9 @@ export default class Application extends Templated {
     simulation.Initialize(10);
   }
 
-  // Removed file uploading for now
+  // Removed drop box for now
   // "<div handle='box' widget='Widget.Box-Input-Files' class='box'></div>" +
   // "<div><button>Submit</button></div>" +
-
-  /* For getting multiple files
-        "<input type='file' id='file-selector' name='files[]' multiple accept='.txt, .geojson'>" +
-      "<script> const fileSelector = document.getElementById('file-selector');" +
-      "fileSelector.addEventListener('change', (event) => {" +
-      "const fileList = event.target.files;" +
-      "console.log(fileList);" +
-      "});" +
-      "</script>" +
-  */
   Template() {
     return (
       "<main handle='main'>" +
@@ -296,40 +320,28 @@ export default class Application extends Templated {
       "<div class='overlay-container'><span class='overlay-text' id='feature-name'>" +
       "</span><br><span class='overlay-text' id='feature-assets'></span><br>" +
       "</div>" +
-      "<label>Simulation Cycle Selector: " +
-      "<input handle='cycle' type='range' name='cycle' id='cycle' min='0' max = '0' step='1' value='0' >" +
-      "<output handle='output' class='cycle-output' for='cycle'></output>" +
-      "</label>" +
-      "<div id='controls'>" +
-      "<label for='scale-select'>Select Colour Scale: </label>" +
-      "<select id='scale-select'>" +
-      "<option value='red white'>red-white</option>" +
-      "<option value='orange white'>orange-white</option>" +
-      "<option value='cyan white'>cyan-white</option>" +
-      "<option value='green white'>green-white</option>" +
-      "</select>" +
-      "</div>" +
+
+      "<label>Simulation Cycle Selector: <input handle='cycle' type='range' name='cycle' id='cycle' min='0' max = '0' step='1' value='0' >" +
+      "<output handle='output' class='cycle-output' for='cycle'></output></label>" +
+
+      "<div id='controls'><label for='scale-select'>Select Colour Scale: </label><select id='scale-select'>" +
+      "<option value='red white'>red-white</option><option value='orange white'>orange-white</option>" +
+      "<option value='cyan white'>cyan-white</option><option value='green white'>green-white</option>" +
+      "</select></div>" +
+      
       "<svg handle='svg' width = '960' height = '100'></svg>" +
-      "<div>" +
-      "<label>Select your simulation results: " +
-      "<input type='file' id='file-selector' name='simResults' accept='.txt'>" +
-      "<script> const fileSelector = document.getElementById('file-selector');" +
-      "fileSelector.addEventListener('change', (event) => {" +
-      "const fileList = event.target.files;" +
-      "console.log(fileList);" +
-      "});" +
-      "</script>" +
-      "</div>" +
-      "<div>" +
-      "<label>Select your GeoJSON layer: " +
-      "<input type='file' id='file-selectorOne' name='vectorLayer' handle='vectorLayer' accept='.geojson'>" +
-      "<script> const fileSelector = document.getElementById('file-selectorOne');" +
-      "fileSelector.addEventListener('change', (event) => {" +
-      "const fileList = event.target.files;" +
-      "console.log(fileList);" +
-      "});" +
-      "</script>" +
-      "</div>" +
+
+      "<p>" +
+        "<div><label>Load Simulation</label></div>" +
+
+        "</div><label>First, select your simulation results: " +
+        "<br><input type='file' name='simResults' accept='.txt'></br></div>" +
+
+        "<div><label>Second, select your GeoJSON layer: " +
+        "<br><input type='file' name='vectorLayer' handle='vectorLayer' accept='.geojson'></br></div>" +
+
+      "</p>" +
+
       "</main>"
     );
   }

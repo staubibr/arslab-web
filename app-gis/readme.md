@@ -38,7 +38,7 @@ Development:
 
 - Allow users to upload their `.geojson` and `.txt` files at once instead of one at a time
   - Run multiple simulations, each with their own simulation cycler and legends
-- Let users change scale/legend colours
+- Let users change scale/legend colours (maybe introduce a color wheel?)
 - Let users decide where the center of the map is or maybe setup a "go-to x location" 
 - Let users download simulation log 
 - Let users video record the simulation
