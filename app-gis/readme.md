@@ -4,10 +4,11 @@
 [![Demo CountPages alpha](/app-gis/demo.gif)](https://youtu.be/liGqAIcnNUo)
 - Open the [GIS Simulation Explorer](https://staubibr.github.io/arslab-dev/app-gis/index.html) in Chrome 
 - OpenStreetMap will automatically load the world map
-- Insert your simulation results (txt)
-- Insert your GeoJSON layer to the map 
-- Once everything appears to be loaded, you may cycle through different timestamps of the SIR simulation and view attributes by clicking census subdivisions
-
+- Load Simulation
+  1. Insert your simulation results (txt)
+  2. Insert your GeoJSON layer 
+- Once everything appears to be loaded, you may cycle through different timestamps of the SIR simulation, change layer/legend coloring, and view attributes by clicking census subdivisions
+  
 
 ## Getting Started (Developers):
 Essentials:
@@ -36,6 +37,7 @@ Development:
 
 ## TODO:
 
+- Read files larger than 1GB
 - Allow users to upload their `.geojson` and `.txt` files at once instead of one at a time
   - Run multiple simulations, each with their own simulation cycler and legends
 - Let users change scale/legend colours (maybe introduce a color wheel?)
@@ -45,16 +47,27 @@ Development:
 
 ## Resources:
 
-[Spatial references](https://spatialreference.org/ref/epsg/)
-
-[ol.Map](https://openlayers.org/en/latest/apidoc/module-ol_Map-Map.html)  
+#### D3JS
 
 [D3 Legend](https://github.com/susielu/d3-legend)  
 
 [D3 Scale](https://github.com/d3/d3-scale)
 
+[D3 Full Video Tutorial](https://www.youtube.com/watch?v=_8V5o2UHG0E)
+
+#### GIS
+
+[Spatial references](https://spatialreference.org/ref/epsg/)
+
+#### OpenLayers
+
+[ol.Map](https://openlayers.org/en/latest/apidoc/module-ol_Map-Map.html)  
+
 [ol.layer.Vector](https://openlayers.org/en/latest/apidoc/module-ol_layer_Vector-VectorLayer.html)
 
 [ol.OverLay](https://openlayers.org/en/latest/apidoc/module-ol_Overlay-Overlay.html)
 
+#### Web Development
+
 [Event References](https://developer.mozilla.org/en-US/docs/Web/Events)
+

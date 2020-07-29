@@ -35,6 +35,17 @@ export default class Application extends Templated {
     this.Node("cycle").On("change", this.OnCycle_Change.bind(this));
   }
 
+  // We may find these useful to access throughout building the application
+  LayerFile(file, title) {
+    this.userLayerGeoJSON = file;
+    this.userLayerTitle = title;
+  }
+
+  currentColorScale(scale) { this.currentScale = scale; }
+
+  CurrentSimulationCycle(cycle){ this.curCycle = cycle; }
+
+  // ****** NEED TO SOLVE HOW TO HANDLE FILES > 1GB ******
   sortSimulationResults() {
     /* 
     State for model _DAUID is <1,0,16,16,0.7,0.3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0>
@@ -51,125 +62,96 @@ export default class Application extends Templated {
     // NOTE: Infected: index 5 to 20
     const input = document.querySelector("input[name='simResults']");
     return new Promise(function (resolve, reject) {
-      input.addEventListener(
-        "change",
-        function (event) {
-          let files = event.target.files;
-          let f = files[0];
-          let fileReader = new FileReader();
+      input.addEventListener("change", function (event) {
+        let file = event.target.files[0];
+        let fileReader = new FileReader();
 
-          fileReader.onload = function (event) {
-            let fileContent = event.target.result;
-            let lines = fileContent
-              .split("\n")
-              .map((line) => line.split(/\s+/));
-            let parsed = [];
+        fileReader.onload = function (event) {
+          let fileContent = event.target.result;
+          let lines = fileContent
+            .split("\n")
+            .map((line) => line.split(/\s+/));
+          let parsed = [];
 
-            var current = null;
+          var current = null;
 
-            for (var i = 0; i < lines.length; i++) {
-              var l = lines[i];
+          for (var i = 0; i < lines.length; i++) {
+            var l = lines[i];
 
-              // TIME FRAME
-              if (l.length == 1) {
-                current = { time: l[0], messages: {} };
+            // TIME FRAME
+            if (l.length == 1) {
+              current = { time: l[0], messages: {} };
+              parsed.push(current);
+            } else {
+              let model = l[3].substring(1);
+              let infected = l[5]
+                .split(",")
+                .splice(5, 20)
+                .reduce((a, b) => +a + +b, 0);
 
-                parsed.push(current);
-              } else {
-                let model = l[3].substring(1);
-                let infected = l[5]
-                  .split(",")
-                  .splice(5, 20)
-                  .reduce((a, b) => +a + +b, 0);
-
-                // A single message, add all properties you may want
-                // to put on the map here
-                current.messages[model] = infected;
-              }
+              // A single message, add all properties you may want
+              // to put on the map here
+              current.messages[model] = infected;
             }
-            // Remove first item from array, seems like it's the initial state. I think we may
-            // need to keep it but for now, it works.
-            parsed.shift();
+          }
+          // Remove first item from array, seems like it's the initial state. I think we may
+          // need to keep it but for now, it works.
+          parsed.shift();
 
-            resolve(parsed);
-          };
-          fileReader.readAsText(f);
-        },
-        false
-      );
+          resolve(parsed);
+        };
+        fileReader.readAsText(file);
+        }, false);
     });
   }
 
-  LayerFile(file, title) {
-    this.userLayerData = null;
-    this.userLayerGeoJSON = file;
-    this.userLayerTitle = title;
-  }
-
-  // Why doesnt the layer appear if txt is entered after
   DataLoaded_Handler(data) {
     this.data = data;
 
     this.Elem("cycle").setAttribute("max", this.data.length - 2);
 
-    const input = document.querySelector("input[name='vectorLayer']");
-
-    this.CheckForGeoJSON(input);
+    this.CheckForGeoJSON(document.querySelector("input[name='vectorLayer']"));
   }
 
   CheckForGeoJSON(input) {
     var self = this;
-    input.addEventListener(
-      "change",
-      function (event) {
-        let files = event.target.files;
-        let f = files[0];
-        let fileReader = new FileReader();
-        fileReader.onload = function (event) {
-          let fileContent = event.target.result;
-          let title = f.name;
-          // so we can use the content for OnCycleChange
-          self.LayerFile(fileContent, title);
-          // We'll need this for mapOnClick
+    input.addEventListener("change", function (event) {
+      let files = event.target.files;
+      let f = files[0];
+      let fileReader = new FileReader();
+      fileReader.onload = function (event) {
+        let fileContent = event.target.result;
+        let title = f.name;
+        // so we can use the content for OnCycleChange and RecolorLayer
+        self.LayerFile(fileContent, title);
 
-          let scale;
-          if (self.currentScale == undefined) {
-            self.currentColorScale(new GetScale(["red", "white"]));
-            scale = self.currentScale;
-          } else {
-            scale = self.currentScale;
-          }
+        let scale = (self.currentScale == undefined) ? self.currentColorScale(new GetScale(["red", "white"])) : self.currentScale;
 
-          /* Create the vector layer: 
-          - Read Ontario's coordinates 
-          - Add a title 
-          - Match simulation data to Ontarios census subdivisions
-          - Color in each census subdivision based on its infeced proportion value
-          */
-          let layer = new VectorLayer(
-            fileContent,
-            title,
-            self.data[0].messages,
-            scale.GS
-          );
-
-          // add vector layer onto world map
-          self.Widget("map").AddLayer(title, layer);
-
-          // make the vector layers attributes visible through clicking census subdivisions
-          mapOnClick(self.data[0].messages, self.Widget("map").map._map, title);
-
-          // If the simulation cycle changes, updates the simulaiton object
-          // layer.OL.getSource().once("change", self.OnLayerChange_Handler.bind(self));
-        };
-        fileReader.readAsDataURL(f);
-      },
-      false
-    );
+        self.LayerOntoMap(fileContent, title, self.data[0].messages, scale.GS);
+      };
+      fileReader.readAsDataURL(f);
+      }, false);
   }
 
-  currentColorScale(scale) {
-    this.currentScale = scale;
+  /* Create the vector layer: 
+  - Read layer coordinates 
+  - Add a title 
+  - Match simulation data to census subdivisions
+  - Color in each census subdivision based on its infeced proportion value
+  */
+  LayerOntoMap(fileContent, title, data, scale){
+    let layer = new VectorLayer(fileContent, title, data, scale);
+
+    let layerObjects = this.Widget("map").layers;
+
+    // add vector layer onto world map
+    this.Widget("map").AddLayer(title, layer, layerObjects);
+
+    // make the vector layers attributes visible through clicking census subdivisions
+    mapOnClick(data, this.Widget("map").map._map, title);
+
+    // if the simulation cycle changes, updates the simulation object again
+    // layer.OL.getSource().once("change", this.OnLayerChange_Handler.bind(this));
   }
 
   CreateLegend(title, translate) {
@@ -187,14 +169,13 @@ export default class Application extends Templated {
       scale = self.currentScale;
 
       const svg = d3.select("svg");
+
       svg.selectAll("*").remove();
 
       svg.append("g").attr("class", title).attr("transform", translate);
 
-      svg
-        .append("text")
-        .text("Proportion of the DAUID Population with Infection")
-        .attr("transform", "translate(1,25)");
+      svg.append("text").text("Proportion of the DAUID Population with Infection").attr("transform", "translate(1,25)");
+      
       var colorLegend = d3
         .legendColor()
         .labelFormat(d3.format(".2f"))
@@ -203,32 +184,14 @@ export default class Application extends Templated {
 
       svg.select("." + title).call(colorLegend);
 
-      if(self.userLayerGeoJSON != undefined){
-        let index = self.curCycle || 0;
-        let layer = new VectorLayer(
-          self.userLayerGeoJSON,
-          self.userLayerTitle,
-          self.data[index].messages,
-          scale.GS
-        );
-
-        // add vector layer onto world map
-        self.Widget("map").AddLayer(self.userLayerTitle, layer);
-
-        // make the vector layers attributes visible through clicking census subdivisions
-        mapOnClick(self.data[index].messages, self.Widget("map").map._map, self.userLayerTitle);
-      }
-
-    });
+      self.RecolorLayer(scale);
+    }, false);
 
     const svg = d3.select("svg");
 
     svg.append("g").attr("class", title).attr("transform", translate);
 
-    svg
-      .append("text")
-      .text("Proportion of the DAUID Population with Infection")
-      .attr("transform", "translate(1,25)");
+    svg.append("text").text("Proportion of the DAUID Population with Infection").attr("transform", "translate(1,25)");
 
     var colorLegend = d3
       .legendColor()
@@ -239,36 +202,26 @@ export default class Application extends Templated {
     svg.select("." + title).call(colorLegend);
   }
 
-  CurrentCycle(cycle){
-    this.curCycle = cycle;
+  RecolorLayer(scale){
+    if(this.userLayerGeoJSON != undefined){
+      let index = (this.curCycle != undefined) ? this.curCycle : 0;
+      this.LayerOntoMap(this.userLayerGeoJSON, this.userLayerTitle, this.data[index].messages, scale.GS);
+    }
   }
 
   OnCycle_Change(ev) {
+    // Let the user know what cycle theyre on
     this.Elem("output").textContent = ev.target.value;
-    this.CurrentCycle(ev.target.value);
 
-    // Access a new simulation cycle based on users choice from the simulation cycle selector
+    // Update the current cycle
+    this.CurrentSimulationCycle(ev.target.value);
+
+    // Access the data in the new simulation cycle
     let data = this.data[ev.target.value].messages;
 
-    let scale = this.currentScale;
-
     // New vector layer object that'll overwrite the vector layer object from the previous simulation cycle
-    let layer = new VectorLayer(
-      this.userLayerGeoJSON,
-      this.userLayerTitle,
-      data,
-      scale.GS
-    );
-
-    let layerObjects = this.Widget("map").layers;
-
     // This will overwrite the previous simulation cycle vector object and add the new one
-    this.Widget("map").AddLayer(this.userLayerTitle, layer, layerObjects);
-
-    mapOnClick(data, this.Widget("map").map._map, this.userLayerTitle);
-
-    // if the simulation cycle changes, updates the simulation object again
-    // layer.OL.getSource().once("change", this.OnLayerChange_Handler.bind(this));
+    this.LayerOntoMap(this.userLayerGeoJSON, this.userLayerTitle, data, this.currentScale.GS);
   }
 
   OnLayerChange_Handler(ev) {
@@ -297,12 +250,7 @@ export default class Application extends Templated {
       simulation.AddFrame(frame);
 
       for (var id in data[i].messages) {
-        var transition = new TransitionDEVS(
-          id,
-          "infected",
-          data[i].messages[id]
-        );
-
+        var transition = new TransitionDEVS(id, "infected", data[i].messages[id]);
         frame.AddTransition(transition);
       }
     }
@@ -323,23 +271,21 @@ export default class Application extends Templated {
 
       "<label>Simulation Cycle Selector: <input handle='cycle' type='range' name='cycle' id='cycle' min='0' max = '0' step='1' value='0' >" +
       "<output handle='output' class='cycle-output' for='cycle'></output></label>" +
-
+      
+      // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/color
       "<div id='controls'><label for='scale-select'>Select Colour Scale: </label><select id='scale-select'>" +
       "<option value='red white'>red-white</option><option value='orange white'>orange-white</option>" +
-      "<option value='cyan white'>cyan-white</option><option value='green white'>green-white</option>" +
+      "<option value='blue white'>blue-white</option><option value='green white'>green-white</option>" +
       "</select></div>" +
       
       "<svg handle='svg' width = '960' height = '100'></svg>" +
 
       "<p>" +
         "<div><label>Load Simulation</label></div>" +
-
         "</div><label>First, select your simulation results: " +
         "<br><input type='file' name='simResults' accept='.txt'></br></div>" +
-
         "<div><label>Second, select your GeoJSON layer: " +
         "<br><input type='file' name='vectorLayer' handle='vectorLayer' accept='.geojson'></br></div>" +
-
       "</p>" +
 
       "</main>"
