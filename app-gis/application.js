@@ -29,7 +29,7 @@ export default class Application extends Templated {
     this.Widget("map").InitTileLayer();
 
     //Creates a vector layer, by default it starts at the 0th simulation cycle (time frame)
-    this.sortSimulationResults().then(this.DataLoaded_Handler.bind(this));
+    this.ChunkSimulationResults().then(this.DataLoaded_Handler.bind(this));
 
     // Modifies an existing vector layer depending on the simulation cycle selector's current value
     this.Node("cycle").On("change", this.OnCycle_Change.bind(this));
@@ -45,8 +45,12 @@ export default class Application extends Templated {
 
   CurrentSimulationCycle(cycle){ this.curCycle = cycle; }
 
+  simResultsPromise(parsed){
+    this.temp += parsed;
+  }
+
   // ****** NEED TO SOLVE HOW TO HANDLE FILES > 1GB ******
-  sortSimulationResults() {
+  ChunkSimulationResults() {
     /* 
     State for model _DAUID is <1,0,16,16,0.7,0.3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0>
     The numbers have the following meaning:
@@ -65,6 +69,48 @@ export default class Application extends Templated {
       input.addEventListener("change", function (event) {
         let file = event.target.files[0];
         let fileReader = new FileReader();
+
+        // // new line = 0x0a
+        // // Max blob size is 500MiB in Chrome
+        // var chunkSize = 1024 //* 300000; // 307.2 mb chunks
+        // var chunks = Math.ceil(file.size/chunkSize,chunkSize);
+        // var chunk = 0;
+        // let chunkedData = [];
+        // // 0 to 114 okay == 114 bytes
+        // // 114 to 228 okay == 114 bytes
+        // // 228 , 342 okay == 114 bytes
+        // // 342 to 456 okay == 114 bytes
+        // // 456 to 570 okay == 114 bytes
+        // // 570 to 684 okay == 113 bytes
+        // let customBlob = new Blob([file.slice(570,684)], {type : "text/plain"})
+        // fileReader.addEventListener("loadend", function(e){
+        //   let fileContent = e.srcElement.result;
+        //   console.log(fileContent);
+        // })
+        // fileReader.readAsText(customBlob)
+
+        // // while (chunk < chunks) {
+        // //   var offset = chunk*chunkSize;
+        // //   let customBlob = new Blob([file.slice(offset,offset+chunkSize)], {type : "text/plain"})
+        // //   var myReader = new FileReader();
+        // //   var p = new Promise(function (resolve, reject) {
+        // //     myReader.addEventListener("loadend", function(e){
+        // //       let fileContent = e.srcElement.result;
+        // //       let text = fileContent.split("\n").map((line) => line.split(/\s+/));
+        // //       let x = []
+        // //       text.forEach((d) => {
+        // //         if((d.length == 6) || (d[0].length == 1 && d.length == 1)){ x.push(d) }
+        // //       });
+        // //       resolve(x)
+        // //     });
+        // //   })
+        // //   // Start the reading process.
+        // //   myReader.readAsText(customBlob);
+        // //   chunkedData.push((p))
+        // //   chunk++;
+        // // }
+        
+        // resolve(chunkedData);
 
         fileReader.onload = function (event) {
           let fileContent = event.target.result;
@@ -107,6 +153,7 @@ export default class Application extends Templated {
 
   DataLoaded_Handler(data) {
     this.data = data;
+    console.log(data)
 
     this.Elem("cycle").setAttribute("max", this.data.length - 2);
 
