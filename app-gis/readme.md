@@ -5,17 +5,17 @@
 - Open the [GIS Simulation Explorer](https://staubibr.github.io/arslab-dev/app-gis/index.html) in Chrome 
 - OpenStreetMap will automatically load the world map
 - Load Simulation
-  1. Insert your simulation results (txt)
+  1. Insert your simulation results (txt) and wait until the program alerts you that you may now move to step 2
   2. Insert your GeoJSON layer 
 - Once everything appears to be loaded, you may cycle through different timestamps of the SIR simulation, change layer/legend coloring, and view attributes by clicking census subdivisions
   
 
 ## Getting Started (Developers):
-Essentials:
+##### Essentials:
 - Download [Web Server for Chrome](https://chrome.google.com/webstore/detail/web-server-for-chrome/ofhbbkphhbklhfoeikjpcbhemlocgigb)
 - Open [app-gis](https://github.com/staubibr/arslab-dev/tree/master/app-gis) in your preferred text editor 
 
-Running the local server:
+##### Running the local server:
 > Open Chrome and go to Apps
 
 >> Click Web Server
@@ -26,7 +26,7 @@ Running the local server:
 
 ![Web Server.](/app-gis/webserver.png "Web Server image.")
 
-Development:
+##### Development:
 - In `./app-gis/`, there are many folders and files to choose from
   - Folder `./app-gis/classes` contains class level functions
   - Folder `./app-gis/widgets` contains code for UI operations
@@ -35,9 +35,30 @@ Development:
     - OpenLayers can be easily bundled with gis applications through Rollup, Webpack, etc. 
   - File `app-gis/application.js` contains a bulk of the work needed to run the gis application
 
-## TODO:
+##### Structure of Simulation Results Text File:
+    State for model _DAUID is <1,0,16,16,0.7,0.3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0>
+    
+    The numbers have the following meaning:
 
-- Read files larger than 1GB
+      First number (1): population density
+      
+      Next number (0): The phase of the lockdown
+      
+      Next number (16): Number of infected states
+      
+      Next number (16): Number of recovered states
+      
+      Next Number(0.7): The susceptible population
+      
+      Next 16 numbers: The portion of the population in each stage of infection (the  
+      sum of which is the infected population)
+      
+      Next 16 numbers: The portion of the population in each stage of recovery (there's no really "recovered" population
+      if someone is in a recovery phase thy cant infected, but after the last stage of recovery they can get infected again)
+    
+    Example of how you'd access specific data: Infected are indexes 5 to 20
+
+## TODO:
 - Allow users to upload their `.geojson` and `.txt` files at once instead of one at a time
   - Run multiple simulations, each with their own simulation cycler and legends
 - Let users change scale/legend colours (maybe introduce a color wheel?)

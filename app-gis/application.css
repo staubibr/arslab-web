@@ -99,3 +99,8 @@ button:not(:disabled):hover {
 .map-container {
 	width:100%;
 }
+
+ /* Style for slider */ 
+input[type="range"] {
+    width:400px;
+  }

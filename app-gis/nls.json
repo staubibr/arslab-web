@@ -19,5 +19,8 @@
     },
     "Header_Problem": {
         "en": "&#9749; report a problem"
-    }
+    },
+    "Download_Files" : {
+		"en" : "Download normalized simulation files"
+	}
 }
