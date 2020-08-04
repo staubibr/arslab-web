@@ -104,3 +104,8 @@ button:not(:disabled):hover {
 input[type="range"] {
     width:400px;
   }
+
+/*Adding a background color makes the map look funky until we get our layer on the map */
+.overlay-container {
+    color: #131212;
+}

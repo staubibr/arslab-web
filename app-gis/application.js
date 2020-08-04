@@ -19,6 +19,7 @@ import FrameDEVS from "../api-web-devs/simulation/frameDEVS.js";
 import TransitionDEVS from "../api-web-devs/simulation/transitionDEVS.js";
 import CustomParser from "./parsers/customParser.js";
 
+
 export default class Application extends Templated {
   constructor(node) {
     super(node);
@@ -35,7 +36,7 @@ export default class Application extends Templated {
     // Modifies an existing vector layer depending on the simulation cycle selector's current value
     this.Node("cycle").On("change", this.OnCycle_Change.bind(this));
 
-    // this.Node("btnDownload").On("click", this.OnButtonDownload_Click.bind(this));
+    this.Node("btnDownload").On("click", this.OnButtonDownload_Click.bind(this));
   }
 
   // We may find these useful to access throughout building the application
@@ -107,7 +108,7 @@ export default class Application extends Templated {
         // so we can use the content for OnCycleChange and RecolorLayer
         self.LayerFile(fileContent, title);
 
-        let scale = (self.currentScale == undefined) ? self.currentColorScale(new GetScale(["red", "white"])) : self.currentScale;
+        let scale = (self.currentScale == undefined) ? self.currentColorScale(new GetScale("red")) : self.currentScale;
 
         self.LayerOntoMap(fileContent, title, self.data[0].messages, scale.GS, true);
 
@@ -143,14 +144,14 @@ export default class Application extends Templated {
     let self = this;
     let scale;
     if (this.currentScale == undefined) {
-      self.currentColorScale(new GetScale(["red", "white"]));
+      self.currentColorScale(new GetScale("red"));
       scale = self.currentScale;
     }
 
     // Recreate the legend if a color change is issued
-    d3.select("#scale-select").on("change", function () {
+    d3.select("#colorOne").on("change", function () {
       var val = d3.select(this).node().value;
-      self.currentColorScale(new GetScale(val.split(" ")));
+      self.currentColorScale(new GetScale(val));
       scale = self.currentScale;
 
       const svg = d3.select("svg");
@@ -215,9 +216,8 @@ export default class Application extends Templated {
   }
 
   CreateSimulation(features, data) {
-    // NOTE : This is crazy messy but it would create a Simulation object.
-    // The way the code is currently structured makes this difficult to achieve
-    // and probably not worth it. This is something I would usually do as a preload
+    // NOTE : Creates a Simulation object.
+    // This is something I would usually do as a preload
     // step. You load all your data, build your simulation, then initialize the app.
     // As it is now, different pieces of data are loaded in various places so it's
     // difficult to have everything you need in one place. In addition, there is no
@@ -240,64 +240,93 @@ export default class Application extends Templated {
       }
     }
     simulation.Initialize(10);
-
+    /*
+    SimulationDEVS {cache, frames, index, listeners, models, name, selected, simulator, state, transitions, type}
+    - SimulationDEVS.frames prints [FrameDEVS, FrameDEVS,..., FrameDEVS]
+      - FrameDEVS prints {time: "x", transitions: Array(y)}
+        - transitions: TransitionDEVS prints {model: "x", port: "y", value: z, diff: z}
+    */
+    let t = [];
+    for (let i = 0; i < simulation.frames.length; i++) {
+      const element = simulation.frames[i];
+      for (let j = 0; j < element.transitions.length; j++) {
+        const e = element.transitions[j];
+        t.push({time: element.time, model: e.model, port: e.port, value: e.value})
+      }
+    }
+    this.transitions = t
+    
     // Let the download button be clickable
     this.Elem("btnDownload").disabled = false;
-  
-    //  line 55 to 64 of the CDppCell parser
+
   }
 
-  // OnButtonDownload_Click(ev) {
-  //   var files = []
-  //   console.log(ev)
-		
-	// 	files.push(this.files.simulation.ToFile());
-	// 	files.push(this.files.transitions.ToFile());
-	// 	files.push(this.settings.ToFile());
-				
-	// 	if (this.files.Diagram) files.push(this.files.diagram.ToFile());
-				
-	// 	try {
-	// 		// This is an async call, Fire and forget, pew! 
-	// 		Zip.SaveZipStream(this.files.name, files);
-	// 	}
-	// 	catch (error) {
-	// 		this.OnWidget_Error({ error:error });
-	// 	}
-	// }
+  OnButtonDownload_Click(ev) {
+    var file = this.ToFile(this.transitions)
 
-  // Removed drop box for now
-  // "<div handle='box' widget='Widget.Box-Input-Files' class='box'></div>" +
-  // "<div><button>Submit</button></div>" +
+    var blob = new Blob([file], { type: 'text/csv;charset=utf-8;' });
+
+    var link = document.createElement("a");
+
+    var url = URL.createObjectURL(blob);
+
+    link.setAttribute("href", url);
+
+    link.setAttribute("download", file.name);
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  ToFile(data) {
+		var content = data.map(c => this.ToCSV(c));
+		
+		content = content.join("\r\n") + "\r\n";
+		
+		return new File([content], "transitions.csv", { type:"text/plain",endings:'native' });
+  }
+  
+  ToCSV(c) { return [c.time, c.model, c.port, c.value].join(","); }
+  
   Template() {
     return (
       "<main handle='main'>" +
+
       "<div handle='header' widget='Widget.Header' class='header'></div>" +
       "<div id='map' handle='map' widget='Widget.Map' class='map'></div>" +
+
       "<div class='overlay-container'><span class='overlay-text' id='feature-name'>" +
-      "</span><br><span class='overlay-text' id='feature-assets'></span><br>" +
+      "</span><br><span class='overlay-text' id='feature-infected'></span><br>" +
+      "</span><span class='overlay-text' id='feature-susceptible'></span><br>" +
+      "</span><span class='overlay-text' id='feature-recovered'></span>" +
+      
       "</div>" +
 
       "<label>Simulation Cycle Selector: <input handle='cycle' type='range' name='cycle' id='cycle' min='0' max = '0' step='1' value='0' >" +
-      "<output handle='output' class='cycle-output' for='cycle'></output></label>" +
+      "<output handle='output' class='cycle-output' for='cycle'></output></label><br><br>" +
       
-      // https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/color
-      "<div id='controls'><label for='scale-select'>Select Colour Scale: </label><select id='scale-select'>" +
-      "<option value='red white'>red-white</option><option value='orange white'>orange-white</option>" +
-      "<option value='blue white'>blue-white</option><option value='green white'>green-white</option>" +
-      "</select></div>" +
+      "<div>" +
+        "<label for='favcolor'>Change colour scale: </label>" +
+        "<input type='color' id='colorOne' name='favcolor' value='#ff0000'><br>" +
+      "</div>" +
       
       "<svg handle='svg' width = '960' height = '100'></svg>" +
 
       "<p>" +
         "<div><label>Load Simulation</label></div>" +
+
+        "<p></p>" +
         "</div><label>Select your simulation results (and then wait for further instruction from the program): " +
         "<br><input type='file' name='simResults' accept='.txt'></br></div>" +
+        
+        "<p></p>" +
         "<div><label>After being alerted, select your GeoJSON layer: " +
         "<br><input type='file' name='vectorLayer' handle='vectorLayer' accept='.geojson'></br></div>" +
       "</p>" +
 
       "<div class='button-column'>" + 
+        "<label>Download data as csv </label>" + 
         "<button handle='btnDownload' title='nls(Download_Files)' class='fas fa-download' disabled></button>" +
       "</div>" +
 

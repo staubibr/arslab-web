@@ -7,7 +7,7 @@
 - Load Simulation
   1. Insert your simulation results (txt) and wait until the program alerts you that you may now move to step 2
   2. Insert your GeoJSON layer 
-- Once everything appears to be loaded, you may cycle through different timestamps of the SIR simulation, change layer/legend coloring, and view attributes by clicking census subdivisions
+- Once everything appears to be loaded, you may download the simulation object as a csv file, cycle through different timestamps of the SIR simulation, change layer/legend coloring, and view attributes by clicking census subdivisions
   
 
 ## Getting Started (Developers):
@@ -61,10 +61,12 @@
 ## TODO:
 - Allow users to upload their `.geojson` and `.txt` files at once instead of one at a time
   - Run multiple simulations, each with their own simulation cycler and legends
-- Let users change scale/legend colours (maybe introduce a color wheel?)
+- Let users change the number of classes in the scale (currently 4 classes split in quarters)
 - Let users decide where the center of the map is or maybe setup a "go-to x location" 
-- Let users download simulation log 
 - Let users video record the simulation
+- Fix mapOnClick to be more visually friendly
+- Place the legend onto the OpenLayer map
+- Clean up UI
 
 ## Resources:
 

@@ -8,7 +8,9 @@ export const mapOnClick = (data, map, title) => {
   // Tied to geographic coordiantes
   map.addOverlay(overlayLayer);
   const overlayFeatureName = document.getElementById("feature-name");
-  const overlayFeatureAssets = document.getElementById("feature-assets");
+  const overlayFeatureInfected = document.getElementById("feature-infected");
+  const overlayFeatureSusceptible = document.getElementById("feature-susceptible");
+  const overlayFeatureRecovered = document.getElementById("feature-recovered");
   map.on("click", function (e) {
     // Clicking outside vector layer
     overlayLayer.setPosition(undefined);
@@ -27,7 +29,9 @@ export const mapOnClick = (data, map, title) => {
           clickedValue = "N/A";
         }
         overlayFeatureName.innerHTML = "DAUID: " + clickedDauid;
-        overlayFeatureAssets.innerHTML = "Proportion Infected: " + clickedValue.toFixed(3);
+        overlayFeatureInfected.innerHTML = "Proportion Infected: " + clickedValue.toFixed(3);
+        overlayFeatureSusceptible.innerHTML = "Proportion Susceptible: TODO";
+        overlayFeatureRecovered.innerHTML = "Proportion Recovered: TODO";
       },
       {
         /*         

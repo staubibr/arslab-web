@@ -4,9 +4,7 @@ export default class GetScale {
   }
 
   constructor(val) {
-    // TODO:
-    // Create a color wheel for users
-    var indexToColor = d3.scaleLinear().domain([0, 5]).range([val[1], val[0]]);
+    var indexToColor = d3.scaleLinear().domain([0, 5]).range(["white", val]);
     // Break up the scale into 4 quartered categories
     this._getscale = d3
       .scaleQuantize()
