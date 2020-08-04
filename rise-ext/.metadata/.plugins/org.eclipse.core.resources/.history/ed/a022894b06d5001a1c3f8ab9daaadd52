@@ -1,0 +1,11 @@
+package components;
+
+import java.io.BufferedReader;
+
+import org.springframework.web.multipart.MultipartFile
+
+public class utilities {
+	static BufferedReader GetBufferedReader(MultipartFile file) {
+		
+	}
+}

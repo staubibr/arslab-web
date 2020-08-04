@@ -1,0 +1,38 @@
+package models;
+
+import java.io.InputStream;
+import java.util.ArrayList;
+
+import parsers.common.MA;
+
+public class Simulation {
+	
+	String name;
+	String type;
+	String simulator;
+	ArrayList<Model> models;
+	
+	public String getName() {
+		return this.name;
+	}
+
+	public String getType() {
+		return this.type;
+	}
+
+	public String getSimulator() {
+		return this.simulator;
+	}
+
+	public ArrayList<Model> getModels() {
+		return this.models;
+	}
+	
+    public Model(String name, String type, ArrayList<String> submodels, ArrayList<Link> links, ArrayList<Port> ports) {
+        this.name = name;
+        this.type = type;
+        this.submodels = submodels;
+        this.links = links;
+        this.ports = ports;
+    }
+}

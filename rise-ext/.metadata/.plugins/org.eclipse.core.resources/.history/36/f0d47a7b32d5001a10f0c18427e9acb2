@@ -1,0 +1,40 @@
+package palette;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+
+import components.LineProcessor;
+import components.Utilities;
+import models.PaletteBucket;
+
+public class TypeA {
+
+	public static ArrayList<PaletteBucket> Parse(InputStream pal) throws IOException {
+		// Type A: [rangeBegin;rangeEnd] R G B
+		ArrayList<PaletteBucket> palette = new ArrayList<PaletteBucket>();
+		
+		LineProcessor<ArrayList<PaletteBucket>> lp = (ArrayList<PaletteBucket>  c, String l) -> {			
+			if (l.isBlank()) return;
+
+			if (!l.startsWith("[")) throw new RuntimeException("File format does not correspond to a type A palette.");
+			
+			String[] split = l.split(", | |,");
+
+			int r = Integer.parseInt(split[1]);
+			int g = Integer.parseInt(split[2]);
+			int b = Integer.parseInt(split[3]);
+			
+			String[] bucket = split[0].substring(1, split[0].length() - 1).split(";");
+			
+			float start = Float.parseFloat(bucket[0]);
+			float end = Float.parseFloat(bucket[1]);
+						
+			palette.add(new PaletteBucket(start, end, new int[] { r,g,b }));			
+		};
+		
+		Utilities.ReadFile(pal, palette, lp);
+		
+		return palette;
+	}
+}

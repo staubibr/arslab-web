@@ -1,0 +1,12 @@
+package models;
+
+public class Test {
+	
+	String value;
+	
+    public Test(String value) {
+
+        this.value = value;
+
+    }
+}

@@ -1,0 +1,25 @@
+package models;
+
+import java.io.Serializable;
+import java.util.List;
+
+public class InitialRowValues implements Serializable {
+
+	private static final long serialVersionUID = 4L;
+
+	public int row;
+	public List<Integer> values;
+
+    public int getRow() {
+        return row;
+    }
+
+    public List<Integer> getValues() {
+        return values;
+    }
+    
+    public InitialRowValues(int row, List<Integer> values) {    	
+        this.row = row;
+        this.values = values;
+    }
+}

@@ -1,0 +1,7 @@
+package models;
+
+public class Model {
+
+	ArrayList<Link> links;
+	ArrayList<Port> ports;
+}
