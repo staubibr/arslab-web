@@ -1,13 +1,24 @@
 package components;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVPrinter;
+
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import models.Message;
 import models.MessageCA;
 
 public class Utilities {
@@ -42,5 +53,25 @@ public class Utilities {
 		});
 		
 		return one;
+	}
+
+	public static byte[] JsonToByte(Object object) throws JsonProcessingException {
+	   	ObjectMapper mapper = new ObjectMapper();
+	   	
+	   	mapper.setSerializationInclusion(Include.NON_EMPTY); 
+	   	
+	   	return mapper.writeValueAsBytes(object);
+	}
+	
+	public static byte[] MessagesToByte(List<? extends Message> messages) throws IOException{
+		ByteArrayOutputStream output = new ByteArrayOutputStream();
+		OutputStreamWriter osw = new OutputStreamWriter(output, StandardCharsets.UTF_8);
+		CSVPrinter printer = new CSVPrinter(osw, CSVFormat.DEFAULT);
+			
+		for (Message m : messages) printer.printRecord(m.toArray());
+		
+		printer.close();
+		
+		return output.toByteArray();
 	}
 }

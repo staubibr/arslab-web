@@ -1,6 +1,7 @@
 package models;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class MessageCA extends Message {
@@ -27,5 +28,19 @@ public class MessageCA extends Message {
     
     public MessageCA() {
     	this("","",null,"","");
+    }
+
+    public List<String> toArray() {
+        String[] result = new String[7];
+        
+        result[0] = this.time;
+        result[1] = this.model;
+        result[2] = String.valueOf(this.coord[0]);
+        result[3] = String.valueOf(this.coord[1]);
+        result[4] = String.valueOf(this.coord[2]);
+        result[5] = this.port;
+        result[6] = this.value;
+
+        return Arrays.asList(result);
     }
 }

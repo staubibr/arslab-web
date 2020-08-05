@@ -1,0 +1,23 @@
+package components;
+
+import java.io.ByteArrayOutputStream;
+import java.util.zip.ZipOutputStream;
+
+public class ZipFile {
+	
+	private ZipOutputStream zos;
+	private ByteArrayOutputStream baos;
+	
+	public ZipFile() {
+		
+	}
+	
+	public void Open() {
+	    this.baos = new ByteArrayOutputStream();
+		this.zos = new ZipOutputStream(baos);
+	}
+	
+	public void AddFile(String name, byte[] buffer) {
+		
+	}
+}

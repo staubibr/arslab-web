@@ -1,6 +1,8 @@
 package models;
 
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.List;
 
 public class Message implements Serializable {
 
@@ -36,5 +38,16 @@ public class Message implements Serializable {
     
     public Message() {
     	this("","","","");
+    }
+    
+    public List<String> toArray() {
+        String[] result = new String[4];
+        
+        result[0] = this.time;
+        result[1] = this.model;
+        result[2] = this.port;
+        result[3] = this.value;
+        
+        return Arrays.asList(result);
     }
 }
