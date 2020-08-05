@@ -61,6 +61,7 @@
 ## TODO:
 - Allow users to upload their `.geojson` and `.txt` files at once instead of one at a time
   - Run multiple simulations, each with their own simulation cycler and legends
+    - Let users toggle through multiple simulations
 - Let users change the number of classes in the scale (currently 4 classes split in quarters)
 - Let users decide where the center of the map is or maybe setup a "go-to x location" 
 - Let users video record the simulation

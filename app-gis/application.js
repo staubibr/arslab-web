@@ -8,16 +8,20 @@ import Playback from "../api-web-devs/widgets/playback.js";
 import Header from "./widgets/header.js";
 import Map from "./widgets/map.js";
 import Box from "../api-web-devs/ui/box-input-files.js";
-
-import { mapOnClick } from "./widgets/mapOnClick.js";
 import VectorLayer from "./classes/vectorLayer.js";
 import GetScale from "./classes/getScale.js";
-
 import SimulationDEVS from "../api-web-devs/simulation/simulationDEVS.js";
 import Model from "../api-web-devs/simulation/model.js";
 import FrameDEVS from "../api-web-devs/simulation/frameDEVS.js";
 import TransitionDEVS from "../api-web-devs/simulation/transitionDEVS.js";
 import CustomParser from "./parsers/customParser.js";
+import CreateCsvFile from "./classes/CreateCsvFile.js";
+
+import { mapOnClick } from "./widgets/mapOnClick.js";
+import { createTransitionFromSimulation } from "../app-gis/functions/simToTransition.js";
+
+// Use geocoding
+// HOW-TO Change center? use this.Widget("map").map._map.getView().setCenter(ol.proj.transform([0, 0], 'EPSG:4326', 'EPSG:3857'))
 
 
 export default class Application extends Templated {
@@ -50,7 +54,6 @@ export default class Application extends Templated {
   CurrentSimulationCycle(cycle){ this.curCycle = cycle; }
 
   ChunkSimulationResults() {
-    
     const input = document.querySelector("input[name='simResults']");
     return new Promise(function (resolve, reject) {
       input.addEventListener("change", function (event) {
@@ -62,6 +65,7 @@ export default class Application extends Templated {
   }
 
   DataLoaded_Handler(data) {
+
     // See the readme for how the simulationr results are structured
     let lines = data.map((line) => line.split(/\s+/));
     let parsed = [];
@@ -86,10 +90,11 @@ export default class Application extends Templated {
         current.messages[model] = infected;
       }
     }
-    // Remove first item from array, seems like it's the initial state. I think we may
-    // need to keep it but for now, it works.
+    // Remove first item from array since it's the initial state. 
     parsed.shift();
+
     alert("Simulation results loaded! You may now insert your GeoJSON Layer")
+    
     this.data = parsed
 
     this.Elem("cycle").setAttribute("max", this.data.length - 1);
@@ -122,6 +127,7 @@ export default class Application extends Templated {
   - Add a title 
   - Match simulation data to census subdivisions
   - Color in each census subdivision based on its infeced proportion value
+  - Create simulation object based on data
   */
   LayerOntoMap(fileContent, title, data, scale, CreateSimulationObject){
     let layer = new VectorLayer(fileContent, title, data, scale);
@@ -134,20 +140,42 @@ export default class Application extends Templated {
     // make the vector layers attributes visible through clicking census subdivisions
     mapOnClick(data, this.Widget("map").map._map, title);
 
-    if(CreateSimulationObject == true){
-      layer.OL.getSource().once("change", this.OnLayerChange_Handler.bind(this));
-    }
-    
+    // Creates the simulaiton object only once state.txt and geojson are loaded. This step does not occur twice.
+    if(CreateSimulationObject == true){ layer.OL.getSource().once("change", this.OnLayerChange_Handler.bind(this)); }
   }
 
   CreateLegend(title, translate) {
-    let self = this;
+    // Create initial legend
+    this.InitialLegend(title, translate);
+
+    // Recreate legend if user changes the color
+    this.RecreateLegend(title, translate);
+  }
+
+  InitialLegend(title, translate){
     let scale;
     if (this.currentScale == undefined) {
-      self.currentColorScale(new GetScale("red"));
-      scale = self.currentScale;
+      this.currentColorScale(new GetScale("red"));
+      scale = this.currentScale;
     }
+    const svg = d3.select("svg");
 
+    svg.append("g").attr("class", title).attr("transform", translate);
+
+    svg.append("text").text("Proportion of the DAUID Population with Infection").attr("transform", "translate(1,25)");
+
+    var colorLegend = d3
+      .legendColor()
+      .labelFormat(d3.format(".2f"))
+      // To actually color the legend based on our chosen colors
+      .scale(scale.GS);
+
+    svg.select("." + title).call(colorLegend);
+  }
+
+  RecreateLegend(title, translate){
+    let self = this;
+    let scale;
     // Recreate the legend if a color change is issued
     d3.select("#colorOne").on("change", function () {
       var val = d3.select(this).node().value;
@@ -172,20 +200,6 @@ export default class Application extends Templated {
 
       self.RecolorLayer(scale);
     }, false);
-
-    const svg = d3.select("svg");
-
-    svg.append("g").attr("class", title).attr("transform", translate);
-
-    svg.append("text").text("Proportion of the DAUID Population with Infection").attr("transform", "translate(1,25)");
-
-    var colorLegend = d3
-      .legendColor()
-      .labelFormat(d3.format(".2f"))
-      // To actually color the legend based on our chosen colors
-      .scale(scale.GS);
-
-    svg.select("." + title).call(colorLegend);
   }
 
   RecolorLayer(scale){
@@ -240,21 +254,8 @@ export default class Application extends Templated {
       }
     }
     simulation.Initialize(10);
-    /*
-    SimulationDEVS {cache, frames, index, listeners, models, name, selected, simulator, state, transitions, type}
-    - SimulationDEVS.frames prints [FrameDEVS, FrameDEVS,..., FrameDEVS]
-      - FrameDEVS prints {time: "x", transitions: Array(y)}
-        - transitions: TransitionDEVS prints {model: "x", port: "y", value: z, diff: z}
-    */
-    let t = [];
-    for (let i = 0; i < simulation.frames.length; i++) {
-      const element = simulation.frames[i];
-      for (let j = 0; j < element.transitions.length; j++) {
-        const e = element.transitions[j];
-        t.push({time: element.time, model: e.model, port: e.port, value: e.value})
-      }
-    }
-    this.transitions = t
+
+    this.transitions = createTransitionFromSimulation(simulation.frames)
     
     // Let the download button be clickable
     this.Elem("btnDownload").disabled = false;
@@ -262,9 +263,9 @@ export default class Application extends Templated {
   }
 
   OnButtonDownload_Click(ev) {
-    var file = this.ToFile(this.transitions)
+    var file = new CreateCsvFile(this.transitions);
 
-    var blob = new Blob([file], { type: 'text/csv;charset=utf-8;' });
+    var blob = new Blob([file.CSV], { type: 'text/csv;charset=utf-8;' });
 
     var link = document.createElement("a");
 
@@ -272,29 +273,22 @@ export default class Application extends Templated {
 
     link.setAttribute("href", url);
 
-    link.setAttribute("download", file.name);
+    link.setAttribute("download", file.CSV.name);
 
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
   }
-
-  ToFile(data) {
-		var content = data.map(c => this.ToCSV(c));
-		
-		content = content.join("\r\n") + "\r\n";
-		
-		return new File([content], "transitions.csv", { type:"text/plain",endings:'native' });
-  }
-  
-  ToCSV(c) { return [c.time, c.model, c.port, c.value].join(","); }
   
   Template() {
     return (
       "<main handle='main'>" +
 
       "<div handle='header' widget='Widget.Header' class='header'></div>" +
-      "<div id='map' handle='map' widget='Widget.Map' class='map'></div>" +
+      "<div id='map' handle='map' widget='Widget.Map' class='map'>" +
+        "<div id='floating-panel'><input id='address' type='textbox' value='Ottawa, ON'/>" +
+        "<input id='submit' type='button' value='Center' /></div>" +
+      "</div>" +
 
       "<div class='overlay-container'><span class='overlay-text' id='feature-name'>" +
       "</span><br><span class='overlay-text' id='feature-infected'></span><br>" +

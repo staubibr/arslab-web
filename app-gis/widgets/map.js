@@ -20,13 +20,7 @@ export default Core.Templatable(
 
     // Create the initial layer (a world map from openstreetmaps in this case)
     InitTileLayer() {
-      var layer = new ol.layer.Tile({
-        source: new ol.source.OSM(),
-        noWrap: true,
-        wrapX: false,
-        title: "OSMStandard",
-      });
-
+      var layer = this.LayerForMap();
       // This will display the world map onto the website
       this.map = new InitialLayer(layer, this.Elem("map-container"));
       
@@ -40,6 +34,16 @@ export default Core.Templatable(
       });
 
       return this.map;
+    }
+
+    LayerForMap(){
+      let layer = new ol.layer.Tile({
+        source: new ol.source.OSM(),
+        noWrap: true,
+        wrapX: false,
+        title: "OSMStandard",
+      });
+      return layer;
     }
 
     Layer(id) {
