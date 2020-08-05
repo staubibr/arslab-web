@@ -35,6 +35,12 @@
     - OpenLayers can be easily bundled with gis applications through Rollup, Webpack, etc. 
   - File `app-gis/application.js` contains a bulk of the work needed to run the gis application
 
+##### API Key for changing the current map location
+- 2500 Requests per day
+  - Please use your own key when developing so we can avoid reaching daily limit
+- Sign up free at [OpenCage GeoCoder](https://opencagedata.com/)
+- The code in `./app-gis/` uses forward Geocoding (Location string to long/lat coordinates)
+
 ##### Structure of Simulation Results Text File:
     State for model _DAUID is <1,0,16,16,0.7,0.3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0>
     

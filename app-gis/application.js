@@ -20,10 +20,6 @@ import CreateCsvFile from "./classes/CreateCsvFile.js";
 import { mapOnClick } from "./widgets/mapOnClick.js";
 import { createTransitionFromSimulation } from "../app-gis/functions/simToTransition.js";
 
-// Use geocoding
-// HOW-TO Change center? use this.Widget("map").map._map.getView().setCenter(ol.proj.transform([0, 0], 'EPSG:4326', 'EPSG:3857'))
-
-
 export default class Application extends Templated {
   constructor(node) {
     super(node);
@@ -41,6 +37,8 @@ export default class Application extends Templated {
     this.Node("cycle").On("change", this.OnCycle_Change.bind(this));
 
     this.Node("btnDownload").On("click", this.OnButtonDownload_Click.bind(this));
+
+    this.Node("address").On("change", this.OnCenterChange.bind(this));
   }
 
   // We may find these useful to access throughout building the application
@@ -98,7 +96,7 @@ export default class Application extends Templated {
     this.data = parsed
 
     this.Elem("cycle").setAttribute("max", this.data.length - 1);
-
+    
     this.CheckForGeoJSON(document.querySelector("input[name='vectorLayer']"));
   }
 
@@ -279,6 +277,55 @@ export default class Application extends Templated {
     link.click();
     document.body.removeChild(link);
   }
+
+  OnCenterChange(ev){
+    var apikey = 'b339619380954a4fbe94451d66690365';
+    var city = ev.target.value;
+    
+    var api_url = 'https://api.opencagedata.com/geocode/v1/json'
+    
+    var request_url = api_url
+      + '?'
+      + 'key=' + apikey
+      // (latitude + ',' + longitude)
+      + '&q=' + encodeURIComponent(city)
+      + '&pretty=1'
+      + '&no_annotations=1';
+    
+    // see full list of required and optional parameters:
+    // https://opencagedata.com/api#forward
+    
+    var request = new XMLHttpRequest();
+    request.open('GET', request_url, true);
+    let self = this;
+    request.onload = function() {
+      // see full list of possible response codes:
+      // https://opencagedata.com/api#codes
+    
+      if (request.status == 200){ 
+      // Success!
+      var data = JSON.parse(request.responseText);
+      let lat = data.results[0].bounds.northeast.lat;
+      let long = data.results[0].bounds.northeast.lng
+      self.Widget("map").map._map.getView().setCenter(ol.proj.transform([long, lat], 'EPSG:4326', 'EPSG:3857'))
+    
+      } else if (request.status <= 500){ 
+      // We reached our target server, but it returned an error				 
+      console.log("unable to geocode! Response code: " + request.status);
+      var data = JSON.parse(request.responseText);
+      console.log(data.status.message);
+      } else {
+      console.log("server error");
+      }
+    };
+    
+    request.onerror = function() {
+      // There was a connection error of some sort
+      console.log("unable to connect to server");        
+    };
+    
+    request.send();  // make the request
+  }
   
   Template() {
     return (
@@ -286,8 +333,8 @@ export default class Application extends Templated {
 
       "<div handle='header' widget='Widget.Header' class='header'></div>" +
       "<div id='map' handle='map' widget='Widget.Map' class='map'>" +
-        "<div id='floating-panel'><input id='address' type='textbox' value='Ottawa, ON'/>" +
-        "<input id='submit' type='button' value='Center' /></div>" +
+      "<label>Type a city into the field and then press enter to change the center </label>" +
+      "<input handle = 'address' id='address' type='textbox' value=''/>" +
       "</div>" +
 
       "<div class='overlay-container'><span class='overlay-text' id='feature-name'>" +
