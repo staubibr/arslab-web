@@ -1,0 +1,22 @@
+package models;
+
+import java.io.Serializable;
+
+public interface iMessage {
+
+	public String time;
+	public String model;
+	public String port;
+	public String value;
+
+    public Message(String time, String model, String port, String value) {
+        this.time = time;
+        this.model = model;
+        this.port = port;
+        this.value = value;
+    }
+    
+    public Message() {
+    	this("","","","");
+    }
+}

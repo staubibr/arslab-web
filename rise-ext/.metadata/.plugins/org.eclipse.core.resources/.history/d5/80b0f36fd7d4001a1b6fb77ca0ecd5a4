@@ -1,0 +1,17 @@
+package models;
+
+import java.io.Serializable;
+
+public class Test implements Serializable {
+	
+	String value;
+
+    public String getValue() {
+        return value;
+    }
+    
+    public Test(String value) {
+
+        this.value = value;
+    }
+}

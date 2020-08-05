@@ -1,0 +1,14 @@
+package models;
+
+public class MessageCA extends Message {
+
+    public Message(String time, String model, int[] coord, String port, String value) {
+        super(time, model, port, value);
+        
+        
+    }
+    
+    public Message() {
+    	this("","","","");
+    }
+}

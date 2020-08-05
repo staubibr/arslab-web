@@ -1,0 +1,18 @@
+package models;
+
+import java.util.List;
+
+public class Parsed {
+	public Simulation simulation;
+	public List<Message> messages;
+	
+	public Parsed(Simulation simulation, List<Message> messages) {
+		this.simulation = simulation;
+		this.messages = messages;
+	}
+
+	public Parsed(Simulation sim, List<MessageCA> messages2) {
+		this.simulation = simulation;
+		this.messages = messages;
+	}
+}

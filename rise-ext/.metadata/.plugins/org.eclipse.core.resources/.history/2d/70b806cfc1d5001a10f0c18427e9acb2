@@ -1,0 +1,27 @@
+package models;
+
+import java.util.List;
+
+public class ModelCdpp extends Model {
+
+
+	public float initialValue;
+	public List<Integer> initialrowvalue;
+	
+    public float getInitialValue() {
+        return links;
+    }
+
+    public List<Port> getPorts() {
+        return ports;
+    }
+    
+    public ModelCdpp(String name, List<String> submodels, List<Link> links, List<Port> ports) {
+    	super(name, submodels, links, ports);
+    	
+        this.name = name;
+        this.submodels = submodels;
+        this.links = links;
+        this.ports = ports;
+    }
+}

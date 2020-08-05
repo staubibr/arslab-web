@@ -1,0 +1,79 @@
+package models;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+
+public class ModelCdpp extends Model {
+
+	private static final long serialVersionUID = 4L;
+
+	public String initialValue;
+	public List<InitialRowValues> initialRowValues;
+	public int[] size;
+	
+    public String getInitialValue() {
+        return initialValue;
+    }
+
+    public List<InitialRowValues> getInitialRowValues() {
+        return initialRowValues;
+    }
+
+    public int[] getSize() {
+        return size;
+    }
+    
+    public ModelCdpp(String name, List<String> submodels, List<Link> links, List<Port> ports) {
+    	super(name, submodels, links, ports);
+    	
+        this.initialRowValues = new ArrayList<InitialRowValues>();
+        this.initialValue = null;
+        this.size = null;
+    }
+    
+    public ModelCdpp(String name) {
+        this(name,new ArrayList<String>(),new ArrayList<Link>(),new ArrayList<Port>());
+    }
+    
+    public ModelCdpp() {
+        this("",new ArrayList<String>(),new ArrayList<Link>(),new ArrayList<Port>());
+    }
+    
+	public List<MessageCA> RowFrame(ModelCdpp model) {
+		List<MessageCA> messages = new ArrayList<MessageCA>();
+		
+		if (model.getInitialRowValues().size() == 0) return messages;
+		
+		model.getInitialRowValues().forEach(rv -> {
+			for (int y = 0; y < rv.values.size(); y++) {
+				int[] coord = new int[] { rv.getRow(), y, 0 };
+				String value = rv.getValues().get(y);
+				
+				messages.add(new MessageCA("00:00:00:000", model.name, coord, "out", value));
+			}
+		});
+		
+		return messages;
+	}
+	
+	private static List<MessageCA> Merge(List<MessageCA> one, List<MessageCA> two) {
+		// Man Java sucks (in javascript: var index = {})
+		HashMap<String, MessageCA> index = new HashMap<String, MessageCA>();
+		
+		one.forEach(m -> index.put(m.getId(), m));
+
+		two.forEach(m -> {
+			String id = m.getId();
+
+			// frame 1 has message id from frame 2, supercede value of 1 by value of 2
+			if (index.containsKey(id))  {
+				index.get(id).value = m.getValue();
+			}
+			
+			// frame 1 doesn't have message id from frame 2, add it
+			else index.put(m.getId(), m);
+		});
+	}
+}

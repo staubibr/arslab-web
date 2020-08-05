@@ -1,0 +1,22 @@
+package components;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+
+
+public class Utilities {
+
+	public static <T> void ReadFile(InputStream file, T content, LineProcessor<T> delegate) throws IOException {
+		Reader reader = new InputStreamReader(file);
+		BufferedReader br = new BufferedReader(reader);
+
+		String line = null;
+		
+        while ((line = br.readLine()) != null) {
+        	delegate.process(content, line);
+        }
+	}
+}
