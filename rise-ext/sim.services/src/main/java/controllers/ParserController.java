@@ -80,6 +80,23 @@ public class ParserController {
 		}
 	}
 	   
+	@PostMapping("/parser/cdpp/devs")
+	public ResponseEntity<byte[]> parserCdppDevs(@RequestParam("ma") MultipartFile ma, @RequestParam("log") MultipartFile log)
+	{    	        
+		try {
+			int idx = ma.getOriginalFilename().indexOf(".");
+			
+			String name = ma.getOriginalFilename().substring(0, idx);
+			
+			Parsed result = parsers.cdpp.Devs.Parse(name, ma.getInputStream(), log.getInputStream());
+		  	
+			return ByteArrayResponse(result.simulation.name, result.toZipByteArray());
+		} 
+		catch (Exception e) {
+		  	throw new CustomException(HttpStatus.BAD_REQUEST, e.getMessage());
+		}
+	}
+	   
 	@PostMapping("/parser/cdpp/lopez")
 	public ResponseEntity<byte[]> parserLopezCellDevs(@RequestParam("ma") MultipartFile ma, @RequestParam("log") MultipartFile log)
 	{    	        

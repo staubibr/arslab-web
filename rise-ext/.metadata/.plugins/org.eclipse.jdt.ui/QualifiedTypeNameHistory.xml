@@ -35,7 +35,6 @@
     <fullyQualifiedTypeName name="models.Palette"/>
     <fullyQualifiedTypeName name="com.sun.tools.javac.util.List"/>
     <fullyQualifiedTypeName name="models.PaletteBucket"/>
-    <fullyQualifiedTypeName name="models.Message"/>
     <fullyQualifiedTypeName name="java.io.ByteArrayOutputStream"/>
     <fullyQualifiedTypeName name="org.apache.commons.csv.CSVPrinter"/>
     <fullyQualifiedTypeName name="java.io.OutputStreamWriter"/>
@@ -49,4 +48,6 @@
     <fullyQualifiedTypeName name="java.util.List"/>
     <fullyQualifiedTypeName name="java.util.ArrayList"/>
     <fullyQualifiedTypeName name="java.util.Arrays"/>
+    <fullyQualifiedTypeName name="models.Message"/>
+    <fullyQualifiedTypeName name="models.Port"/>
 </qualifiedTypeNameHistroy>

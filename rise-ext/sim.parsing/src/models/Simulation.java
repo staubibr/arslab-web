@@ -11,7 +11,7 @@ public class Simulation implements Serializable {
 	public String name;
 	public String type;
 	public String simulator;
-	public List<Model> models;
+	public List<? extends Model> models;
 	
 	public String getName() {
 		return this.name;
@@ -25,11 +25,11 @@ public class Simulation implements Serializable {
 		return this.simulator;
 	}
 
-	public List<Model> getModels() {
+	public List<? extends Model> getModels() {
 		return this.models;
 	}
 	
-    public Simulation(String name, String type, String simulator, List<Model> models) {
+    public Simulation(String name, String type, String simulator, List<? extends Model> models) {
         this.name = name;
         this.type = type;
         this.simulator = simulator;
