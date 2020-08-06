@@ -97,6 +97,8 @@
 
 [ol.OverLay](https://openlayers.org/en/latest/apidoc/module-ol_Overlay-Overlay.html)
 
+[ol.layerswitcher](https://github.com/walkermatt/ol-layerswitcher)
+
 #### Web Development
 
 [Event References](https://developer.mozilla.org/en-US/docs/Web/Events)

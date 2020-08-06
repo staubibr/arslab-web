@@ -24,14 +24,9 @@ export default Core.Templatable(
       // This will display the world map onto the website
       this.map = new InitialLayer(layer, this.Elem("map-container"));
       
-      // Lets you hide the world map
-      var checkbox = document.querySelector("#checkbox");
-      checkbox.addEventListener("change", function () {
-        var checked = this.checked;
-        if (checked !== layer.getVisible()) {
-          layer.setVisible(checked);
-        }
-      });
+      // // Lets you hide the world map
+      // Every time we add a GeoJSON, it gets added to the layer switcher as well
+      this.map._map.addControl(new ol.control.LayerSwitcher({groupSelectStyle: 'group'}));
 
       return this.map;
     }
@@ -55,20 +50,31 @@ export default Core.Templatable(
     // the new vector layer will appear on top of the bottom one
     // ** This is why a different color for each vector layer may be useful **
     // The code below is so we don't have the same vector layer on the world map multiple times
-    AddLayer(id, layer, layerObjects) {
+    AddLayer(id, layer) {
       this.layers[id] = layer;
-      for (var l in layerObjects) {
-        if (id == l) {
-          this.map.OL.removeLayer(this.layers[id].OL);
+
+      let self = this;
+      this.map.OL.getLayers().forEach(function (l) {
+        if(l != undefined){
+          let title = l.N.title;
+          title = title = title.substring(0, title.indexOf(" "))
+          if(id == title){
+            self.map.OL.removeLayer(l);
+          }
         }
-      }
+      })
+
       this.map.OL.addLayer(layer.OL);
+      
+    }
+
+    Layers(){
+      return this.layers;
     }
 
     Template() {
       return (
         "<div style='display: flex;flex-direction: row; text-align: center'>" +
-        "<input type='checkbox' id='checkbox' checked> Show World Map</input>" +
         "</div>" +
         "<div handle='map-container' class='map-container'></div>"
       );
