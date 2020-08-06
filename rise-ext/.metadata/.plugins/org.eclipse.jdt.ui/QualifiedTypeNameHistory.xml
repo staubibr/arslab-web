@@ -10,7 +10,6 @@
     <fullyQualifiedTypeName name="java.io.IOException"/>
     <fullyQualifiedTypeName name="org.apache.tomcat.util.http.fileupload.FileUtils"/>
     <fullyQualifiedTypeName name="java.io.File"/>
-    <fullyQualifiedTypeName name="java.util.Arrays"/>
     <fullyQualifiedTypeName name="org.springframework.http.HttpStatus"/>
     <fullyQualifiedTypeName name="org.springframework.web.bind.annotation.ControllerAdvice"/>
     <fullyQualifiedTypeName name="org.springframework.web.bind.annotation.ExceptionHandler"/>
@@ -33,10 +32,21 @@
     <fullyQualifiedTypeName name="java.util.function.Consumer"/>
     <fullyQualifiedTypeName name="java.util.function.BiConsumer"/>
     <fullyQualifiedTypeName name="components.LineProcessor"/>
-    <fullyQualifiedTypeName name="components.Utilities"/>
     <fullyQualifiedTypeName name="models.Palette"/>
     <fullyQualifiedTypeName name="com.sun.tools.javac.util.List"/>
+    <fullyQualifiedTypeName name="models.PaletteBucket"/>
+    <fullyQualifiedTypeName name="models.Message"/>
+    <fullyQualifiedTypeName name="java.io.ByteArrayOutputStream"/>
+    <fullyQualifiedTypeName name="org.apache.commons.csv.CSVPrinter"/>
+    <fullyQualifiedTypeName name="java.io.OutputStreamWriter"/>
+    <fullyQualifiedTypeName name="org.apache.commons.csv.CSVFormat"/>
+    <fullyQualifiedTypeName name="java.nio.charset.StandardCharsets"/>
+    <fullyQualifiedTypeName name="java.util.zip.ZipOutputStream"/>
+    <fullyQualifiedTypeName name="java.util.zip.ZipEntry"/>
+    <fullyQualifiedTypeName name="components.Utilities"/>
+    <fullyQualifiedTypeName name="java.util.zip.ZipFile"/>
+    <fullyQualifiedTypeName name="components.ZipFile"/>
     <fullyQualifiedTypeName name="java.util.List"/>
     <fullyQualifiedTypeName name="java.util.ArrayList"/>
-    <fullyQualifiedTypeName name="models.PaletteBucket"/>
+    <fullyQualifiedTypeName name="java.util.Arrays"/>
 </qualifiedTypeNameHistroy>

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<item key="filters_last_used" value="filter_imports;"/>
+	<item key="org.eclipse.jdt.ui.lastextjar" value="/home/staubibr/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.11.1"/>
 	<section name="org.eclipse.jdt.internal.ui.packageview.PackageExplorerPart">
 		<item key="group_libraries" value="true"/>
 		<item key="layout" value="2"/>
@@ -30,7 +31,7 @@
 		<item key="updateSimilarElementsMatchStrategy" value="1"/>
 	</section>
 	<section name="BuildPathsPropertyPage">
-		<item key="pageIndex" value="1"/>
+		<item key="pageIndex" value="3"/>
 	</section>
 	<section name="OptionalMessageDialog.hide.">
 		<item key="org.eclipse.jdt.ui.typecomment.deprecated" value="true"/>
@@ -63,5 +64,7 @@
 		<item key="expanded0" value="true"/>
 		<item key="expanded1" value="false"/>
 		<item key="expanded2" value="false"/>
+	</section>
+	<section name="RenameInformationPopup">
 	</section>
 </section>

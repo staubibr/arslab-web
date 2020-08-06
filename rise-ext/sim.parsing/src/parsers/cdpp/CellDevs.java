@@ -54,9 +54,14 @@ public class CellDevs {
 			
 			String t = split[1]; 														// time
 			String m = tmp1[0];															// model name;					
-			int[] c = Arrays.stream(tmp2).mapToInt(i -> Integer.parseInt(i)).toArray();	// coords
 			String p = split[3];														// port
 			String v = split[4].split("\\s+")[0];
+			
+			int[] c = new int[3];
+
+			c[0] = Integer.parseInt(tmp2[0]);
+			c[1] = Integer.parseInt(tmp2[1]);
+			c[2] = (tmp2.length == 2) ? 0 : Integer.parseInt(tmp2[2]);
 			
 			// Magic
 			BigDecimal number = new BigDecimal(v);  

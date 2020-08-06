@@ -70,9 +70,11 @@ public class Ma {
 				
 				String[] dim = tmp.substring(1, tmp.length() - 1).split(",|, ");
 				
-				current.size = Arrays.stream(dim).mapToInt(i -> Integer.parseInt(i)).toArray();
-				
-				if (current.size.length == 2) current.size[2] = 1;
+				current.size = new int[3];
+
+				current.size[0] = Integer.parseInt(dim[0]);
+				current.size[1] = Integer.parseInt(dim[1]);
+				current.size[2] = (dim.length == 2) ? 1 : Integer.parseInt(dim[2]);
 			}
 			
 			else if (left.equals("height")) current.size[0] = Integer.parseInt(right);
