@@ -1,0 +1,58 @@
+package parsers.cdpp;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+
+import components.Utilities;
+import models.Message;
+import models.MessageCA;
+import models.Model;
+import models.Parsed;
+import models.Simulation;
+import shared.Ma;
+
+public class Devs {
+
+	private static List<Message> messages;
+		
+	public static Parsed Parse(String name, InputStream ma, InputStream log)  throws IOException {		
+		List<? extends Model> models = Ma.Parse(ma);
+		
+		Simulation sim = new Simulation(name, "Cell-DEVS", "CDpp", models);
+		
+		messages = ParseLog(models, log);
+		
+		return new Parsed(sim, messages);
+	}
+		
+	private static List<Message> ParseLog(List<? extends Model> models, InputStream log) throws IOException {
+		messages = new ArrayList<Message>();
+		
+		Utilities.ReadFile(log, (String l) -> {
+			// Mensaje Y / 00:00:20:000 / top(01) / packetsent /      1.00000 para Root(00)
+			 String[] split = Arrays.stream(l.split("/")).map(s -> s.trim()).toArray(String[]::new);
+			
+			 String[] tmp1 = split[2].split("\\("); 
+			 String[] tmp2 = split[4].trim().split(" ");
+
+			 String m = tmp1[0];										// model name
+			 
+			 Model model = models.stream().map(Model::cast).filter(md -> md.getName().equals(m)).findFirst();
+			 
+			 // if (this.ModelType(m) == 'coupled') continue;
+				
+			 String t = split[1];										// time
+			 String p = split[3];										// port
+			 String v = tmp2[0];										// value
+			 
+			 messages.add(new Message(t, m, p, v));
+		});
+		
+		return messages;
+	}
+}

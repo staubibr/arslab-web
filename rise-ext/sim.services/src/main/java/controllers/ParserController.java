@@ -21,11 +21,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import components.CustomException;
 import models.PaletteBucket;
 import models.Parsed;
-import parsers.cdpp.CellDevs;
 import shared.Palette;
  
 @RestController
 public class ParserController {
+    
+	private ResponseEntity<byte[]> ByteArrayResponse(String filename, byte[] buffer) throws JsonProcessingException {	
+	   	return ResponseEntity.ok()
+	   	        .contentLength(buffer.length)
+	   	        .header("Content-Disposition", "attachment; filename=" + filename + ".zip")
+	   	        .contentType(MediaType.APPLICATION_OCTET_STREAM)
+	   	        .body(buffer);
+	}
     
 	private ResponseEntity<InputStreamResource> FileResponse(byte[] buffer) throws JsonProcessingException {	
 	   	return ResponseEntity.ok()
@@ -59,22 +66,44 @@ public class ParserController {
 		
 		return this.JsonFileResponse(palette);
 	}
-   
+	   
 	@PostMapping("/parser/cdpp/celldevs")
 	public ResponseEntity<byte[]> parserCdppCellDevs(@RequestParam("ma") MultipartFile ma, @RequestParam("val") MultipartFile val, @RequestParam("log") MultipartFile log)
 	{    	        
 		try {
-			Parsed result = CellDevs.Parse(ma.getInputStream(), val.getInputStream(), log.getInputStream());
+			Parsed result = parsers.cdpp.CellDevs.Parse(ma.getInputStream(), val.getInputStream(), log.getInputStream());
 		  	
-			byte[] buf = result.toZipByteArray();
-
-			// return FileResponse(buf);
+			return ByteArrayResponse(result.simulation.name, result.toZipByteArray());
+		} 
+		catch (Exception e) {
+		  	throw new CustomException(HttpStatus.BAD_REQUEST, e.getMessage());
+		}
+	}
+	   
+	@PostMapping("/parser/cdpp/devs")
+	public ResponseEntity<byte[]> parserCdppDevs(@RequestParam("ma") MultipartFile ma, @RequestParam("log") MultipartFile log)
+	{    	        
+		try {
+			int idx = ma.getOriginalFilename().indexOf(".");
 			
-		   	return ResponseEntity.ok()
-		   	        .contentLength(buf.length)
-		   	        .header("Content-Disposition", "attachment; filename=" + result.simulation.name + ".zip")
-		   	        .contentType(MediaType.APPLICATION_OCTET_STREAM)
-		   	        .body(buf);
+			String name = ma.getOriginalFilename().substring(0, idx);
+			
+			Parsed result = parsers.cdpp.Devs.Parse(name, ma.getInputStream(), log.getInputStream());
+		  	
+			return ByteArrayResponse(result.simulation.name, result.toZipByteArray());
+		} 
+		catch (Exception e) {
+		  	throw new CustomException(HttpStatus.BAD_REQUEST, e.getMessage());
+		}
+	}
+	   
+	@PostMapping("/parser/cdpp/lopez")
+	public ResponseEntity<byte[]> parserLopezCellDevs(@RequestParam("ma") MultipartFile ma, @RequestParam("log") MultipartFile log)
+	{    	        
+		try {
+			Parsed result = parsers.lopez.CellDevs.Parse(ma.getInputStream(), log.getInputStream());
+		  	
+			return ByteArrayResponse(result.simulation.name, result.toZipByteArray());
 		} 
 		catch (Exception e) {
 		  	throw new CustomException(HttpStatus.BAD_REQUEST, e.getMessage());
