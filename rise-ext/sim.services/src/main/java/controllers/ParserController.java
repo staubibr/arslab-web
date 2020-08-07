@@ -21,7 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import components.CustomException;
 import models.PaletteBucket;
 import models.Parsed;
-import shared.Palette;
+import parsers.shared.Palette;
  
 @RestController
 public class ParserController {

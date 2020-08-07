@@ -1,4 +1,4 @@
-package shared;
+package parsers.shared;
 
 import java.io.IOException;
 import java.io.InputStream;

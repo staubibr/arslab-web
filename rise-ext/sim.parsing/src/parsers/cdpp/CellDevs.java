@@ -13,8 +13,8 @@ import models.Model;
 import models.ModelCdpp;
 import models.Parsed;
 import models.Simulation;
-import shared.Ma;
-import shared.Val;
+import parsers.shared.Ma;
+import parsers.shared.Val;
 
 public class CellDevs {
 
