@@ -14,7 +14,7 @@ import models.ModelCdpp;
 import models.Parsed;
 import models.Port;
 import models.Simulation;
-import shared.Ma;
+import parsers.shared.Ma;
 
 // TODO: This is very similar to CDpp Cell-DEVS, maybe they could be combined
 public class CellDevs {

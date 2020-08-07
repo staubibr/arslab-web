@@ -14,7 +14,7 @@ import models.Message;
 import models.Model;
 import models.Parsed;
 import models.Simulation;
-import shared.Ma;
+import parsers.shared.Ma;
 
 public class Devs {
 

@@ -1,4 +1,4 @@
-package shared;
+package parsers.shared;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,80 +34,85 @@ public class Ma {
 				current = new ModelCdpp(name);
 				
 				models.add(current);
+				
+				return;
 			}
 			
-			else {
-				String right = line.split(":")[1].trim();
+			if (!l.contains(":")) return;
+			
+			String left = l.split(":")[0].trim();
+			String right = l.split(":")[1].trim();
 
-				ReadModelLine(right);
-			}
-
-			else if (l.startsWith("components")) {
+			if (left.equals("components")) {
 				// components : sender@Sender
-				current.submodels.add(l.split("\\s|@")[2]);
+				current.submodels.add(right.split("@")[0]);
 			}
 
-			else if (l.startsWith("link")) {
+			else if (left.equals("link")) {
 				// Link : dataOut@sender in1@Network
-				String[] ports = l.split("\\s");
-				String[] left = ports[2].split("@");
-				String[] right = ports[3].split("@");
+				String[] ports = right.split("\\s+");
+				String[] lPort = ports[0].split("@");
+				String[] rPort = ports[1].split("@");
 				
 				Link link = new Link();
 				
-				link.modelA = left.length == 1 ? current.name : left[1];
-				link.portA = left[0];
-				link.portB = right[0];
-				link.modelB = right.length == 1 ? current.name : right[1];
+				link.modelA = lPort.length == 1 ? current.name : lPort[1];
+				link.portA = lPort[0];
+				link.portB = rPort[0];
+				link.modelB = rPort.length == 1 ? current.name : rPort[1];
 				
 				links.add(link);
 			}
 			
-			else if (l.startsWith("dim")) {
-				String[] split = l.replaceAll("\\s+", "").split(":");
-				String[] dim = split[1].substring(1, split[1].length() - 1).split(",");
+			else if (left.equals("dim")) {
+				// dim : (30, 30)
+				String tmp = right.replaceAll(" ", "");
 				
-				current.size = Arrays.stream(dim).mapToInt(i -> Integer.parseInt(i)).toArray();
+				String[] dim = tmp.substring(1, tmp.length() - 1).split(",|, ");
 				
-				if (current.size.length == 2) current.size[2] = 1;
+				current.size = new int[3];
+
+				current.size[0] = Integer.parseInt(dim[0]);
+				current.size[1] = Integer.parseInt(dim[1]);
+				current.size[2] = (dim.length == 2) ? 1 : Integer.parseInt(dim[2]);
 			}
 			
-			else if (l.startsWith("height")) current.size[0] = +d[1];
+			else if (left.equals("height")) current.size[0] = Integer.parseInt(right);
 			
-			else if (l.startsWith("width")) current.size[1] = +d[1];
+			else if (left.equals("width")) current.size[1] = Integer.parseInt(right);
 			
-			else if (l.startsWith("neighborports")) {
-				List<String> ports = Arrays.asList(l.split(" "));
+			else if (left.equals("neighborports")) {
+				// NeighborPorts: scenario1 scenario2 scenario3 scenario4
+				current.ports = Arrays.stream(right.split(" "))
+									  .map(p -> new Port(p, "output"))
+									  .collect(Collectors.toList());
+			}
+			
+			else if (left.equals("initialvalue")) {
+				// initialvalue : 0
+				current.initialValue = right;
+			}
+			
+			else if (left.equals("initialrowvalue")) {
+				// initialrowvalue :  1      00111011100011100200
+				String[] split = right.split("\\s+");
 				
-				current.ports = ports.stream()
-									 .map(p -> new Port(p, "output"))
-									 .collect(Collectors.toList());
-			}
-			
-			else if (l.startsWith("initialvalue")) {
-				current.initialValue = Float.parseFloat(l.split(" ")[2]);
-			}
-			
-			else if (l.startsWith("initialrowvalue")) {
 				InitialRowValues rv = new InitialRowValues();
 				
-				String[] split = l.split("\\s+");
+				rv.row = Integer.parseInt(split[0]);
 				
-				rv.row = Integer.parseInt(split[2]);
-				
-				List<Integer> values = new ArrayList<Integer>();
-				
-				for (int i = 0; i < split[3].length(); i++){
-				    char c = split[3].charAt(i);        
+				for (int i = 0; i < split[1].length(); i++) {
+				    char c = split[1].charAt(i);        
 
-					rv.values.add(Character.getNumericValue(c));
+					rv.values.add(String.valueOf(c));
 				}
 				
 				current.initialRowValues.add(rv);								
 			}
 			
-			else if (l.startsWith("localtransition") || l.startsWith("zone")) {
-				ignore.add(l.split("\\s")[2]);
+			else if (left.equals("localtransition") || left.equals("zone")) {
+				// localtransition : RegionBehavior
+				ignore.add(right);
 			}
 		});
 		
@@ -141,9 +146,5 @@ public class Ma {
 		});
 		
 		return models;
-	}
-	
-	private static void ReadModelLine(String right) {
-		
 	}
 }
