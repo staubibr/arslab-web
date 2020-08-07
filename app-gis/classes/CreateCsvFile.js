@@ -1,10 +1,24 @@
-export default class CreateCsvFile {
+export default class CreateCsvFileForDownload {
     get CSV() {
       return this._file;
     }
   
     constructor(transitions) {
       this._file = this.ToFile(transitions)
+
+      var blob = new Blob([this._file], { type: 'text/csv;charset=utf-8;' });
+
+      var link = document.createElement("a");
+  
+      var url = URL.createObjectURL(blob);
+  
+      link.setAttribute("href", url);
+  
+      link.setAttribute("download", this._file.name);
+  
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
 
     }
 

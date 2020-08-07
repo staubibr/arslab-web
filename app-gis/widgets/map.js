@@ -14,17 +14,18 @@ export default Core.Templatable(
     constructor(container) {
       super(container);
       // For storing layer objects and accessing them
-      // Required for Layer() and AddLayer()
+      // Required for Layer() , Layers(), and AddLayer()
       this.layers = {};
     }
 
     // Create the initial layer (a world map from openstreetmaps in this case)
     InitTileLayer() {
       var layer = this.LayerForMap();
+
       // This will display the world map onto the website
       this.map = new InitialLayer(layer, this.Elem("map-container"));
       
-      // // Lets you hide the world map
+      // Lets you hide the world map
       // Every time we add a GeoJSON, it gets added to the layer switcher as well
       this.map._map.addControl(new ol.control.LayerSwitcher({groupSelectStyle: 'group'}));
 
@@ -52,20 +53,14 @@ export default Core.Templatable(
     // The code below is so we don't have the same vector layer on the world map multiple times
     AddLayer(id, layer) {
       this.layers[id] = layer;
-
       let self = this;
       this.map.OL.getLayers().forEach(function (l) {
-        if(l != undefined){
-          let title = l.N.title;
-          title = title = title.substring(0, title.indexOf(" "))
-          if(id == title){
-            self.map.OL.removeLayer(l);
-          }
+        if (l != undefined) {
+          let title = l.N.title.substring(0, l.N.title.indexOf(" "));
+          if (id == title) { self.map.OL.removeLayer(l); }
         }
       })
-
       this.map.OL.addLayer(layer.OL);
-      
     }
 
     Layers(){

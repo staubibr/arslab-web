@@ -15,10 +15,11 @@ import Model from "../api-web-devs/simulation/model.js";
 import FrameDEVS from "../api-web-devs/simulation/frameDEVS.js";
 import TransitionDEVS from "../api-web-devs/simulation/transitionDEVS.js";
 import CustomParser from "./parsers/customParser.js";
-import CreateCsvFile from "./classes/CreateCsvFile.js";
+import CreateCsvFileForDownload from "./classes/CreateCsvFile.js";
 
 import { mapOnClick } from "./widgets/mapOnClick.js";
 import { createTransitionFromSimulation } from "../app-gis/functions/simToTransition.js";
+import { openCageChangeMapCenter } from "./widgets/changeMapCenter.js";
 
 export default class Application extends Templated {
   constructor(node) {
@@ -31,94 +32,103 @@ export default class Application extends Templated {
     this.Widget("map").InitTileLayer();
 
     //Creates a vector layer, by default it starts at the 0th simulation cycle (time frame)
-    this.ChunkSimulationResults().then(this.DataLoaded_Handler.bind(this));
+    this.Node('simResults').On("change", this.ChunkSimulationResults.bind(this))
+    //this.ChunkSimulationResults() //.then(this.DataLoaded_Handler.bind(this));
 
     // Modifies an existing vector layer depending on the simulation cycle selector's current value
     this.Node("cycle").On("change", this.OnCycle_Change.bind(this));
 
+    // For downloading data after all necessary files are inserted by user
     this.Node("btnDownload").On("click", this.OnButtonDownload_Click.bind(this));
 
+    // For changing the map's center locaiton
     this.Node("address").On("change", this.OnCenterChange.bind(this));
   }
 
   // We may find these useful to access throughout building the application
-  LayerFile(file, title) {
+  UserLayers(file, title) {
+    // if (this.userLayerGeoJSON == undefined) {
+    //   this.userLayerGeoJSON = new Array;
+    // }
+    // if (this.userLayerTitle == undefined) {
+    //   this.userLayerTitle = new Array;
+    // }
+    // this.userLayerGeoJSON.push(file);
+    // this.userLayerTitle.push(title);
+
     this.userLayerGeoJSON = file;
     this.userLayerTitle = title;
   }
 
   currentColorScale(scale) { this.currentScale = scale; }
 
-  CurrentSimulationCycle(cycle){ this.curCycle = cycle; }
+  CurrentSimulationCycle(cycle) { this.curCycle = cycle; }
 
-  ChunkSimulationResults() {
-    const input = document.querySelector("input[name='simResults']");
-    return new Promise(function (resolve, reject) {
-      input.addEventListener("change", function (event) {
-        let file = event.target.files[0];
-        let parser = new CustomParser()
-        parser.Parse(file).then(function(data){ resolve(data); })
-        }, false);
-    });
+  simFiles(data){
+    if(this.DataFromFiles == undefined){
+      this.DataFromFiles = new Array;
+    }
+    this.DataFromFiles.push(data);
   }
 
+  ChunkSimulationResults(event) {
+    let self = this,
+      file = event.target.files[0], parser = new CustomParser()
+    parser.Parse(file).then(function (data) { self.DataLoaded_Handler(data); })
+  }
+
+  // Takes chunked simulation results and formats it accordingly 
   DataLoaded_Handler(data) {
+    this.data = sortData(data);
+    this.simFiles(this.data)
+    console.log(this.DataFromFiles)
 
-    // See the readme for how the simulationr results are structured
-    let lines = data.map((line) => line.split(/\s+/));
-    let parsed = [];
-    let current = null;
-
-    for (var i = 0; i < lines.length; i++) {
-      var l = lines[i];
-
-      // TIME FRAME
-      if (l.length == 1 && l != "") {
-        current = { time: l[0], messages: {} };
-        parsed.push(current);
-      } 
-      if(l.length == 6) {
-        let model = l[3].substring(1);
-        let infected = l[5]
-          .split(",")
-          .splice(5, 20)
-          .reduce((a, b) => +a + +b, 0);
-        // A single message, add all properties you may want
-        // to put on the map here
-        current.messages[model] = infected;
-      }
-    }
-    // Remove first item from array since it's the initial state. 
-    parsed.shift();
-
-    alert("Simulation results loaded! You may now insert your GeoJSON Layer")
-    
-    this.data = parsed
-
+    // Set the simulaton cycle selector max value
     this.Elem("cycle").setAttribute("max", this.data.length - 1);
-    
+
+    // Let the choose file button be clickable
+    this.Elem("vectorLayer").disabled = false;
+
+    // Check if user selected a geojson file
     this.CheckForGeoJSON(document.querySelector("input[name='vectorLayer']"));
+
   }
 
   CheckForGeoJSON(input) {
-    var self = this;
+    let self = this;
+
     input.addEventListener("change", function (event) {
-      let f = event.target.files[0];
-      let fileReader = new FileReader();
+
+      let f = event.target.files[0], 
+        fileReader = new FileReader();
+
       fileReader.onload = function (event) {
-        let fileContent = event.target.result;
-        let title = f.name;
-        title = title.substring(0, title.indexOf("."))
+        let fileContent = event.target.result, 
+          title = f.name.substring(0, f.name.indexOf("."));
+
+        var elem = document.createElement('option')
+        //elem.setAttribute("value", 5);
+        let simNum = self.DataFromFiles.length
+        var elemText = document.createTextNode(title + " simulation" + simNum + " with " + self.data.length + " cycles")
+        elem.appendChild(elemText)
+        var foo = document.getElementById("scale-select")
+        foo.appendChild(elem)
+
         // so we can use the content for OnCycleChange and RecolorLayer
-        self.LayerFile(fileContent, title);
+        self.UserLayers(fileContent, title);
 
         let scale = (self.currentScale == undefined) ? self.currentColorScale(new GetScale("red")) : self.currentScale;
 
-        self.LayerOntoMap(fileContent, title, self.data[0].messages, scale.GS, true);
-
+        self.LayerOntoMap(fileContent, title+simNum, self.data[0].messages, scale.GS, true);
       };
-      fileReader.readAsDataURL(f);
-      }, false);
+      if(f != undefined){
+        fileReader.readAsDataURL(f);
+      }
+      // Dont need file anymore
+      document.querySelector('input[name="simResults"]').value= null;
+      document.querySelector("input[name='vectorLayer']").value = null;
+      self.Elem("vectorLayer").disabled = true;
+    }, false);
   }
 
   /* Create the vector layer: 
@@ -128,22 +138,21 @@ export default class Application extends Templated {
   - Color in each census subdivision based on its infeced proportion value
   - Create simulation object based on data
   */
-  LayerOntoMap(fileContent, title, data, scale, CreateSimulationObject){
+  LayerOntoMap(fileContent, title, data, scale, CreateSimulationObject) {
     let layer;
-    if(this.curCycle == undefined){
-      layer = new VectorLayer(fileContent, title + " Cycle0", data, scale);
-    } else {
-      layer = new VectorLayer(fileContent, title + " Cycle" + this.curCycle, data, scale);
-    }
+
+    //Title the vector layer based on what cycle it is on, might not be necessary, but keep it this code for now
+    if (this.curCycle == undefined) { layer = new VectorLayer(fileContent, title + " Cycle0", data, scale); }
+    else { layer = new VectorLayer(fileContent, title + " Cycle" + this.curCycle, data, scale); }
 
     // add vector layer onto world map
     this.Widget("map").AddLayer(title, layer);
-    
+
     // make the vector layers attributes visible through clicking census subdivisions
     mapOnClick(data, this.Widget("map").map._map, title);
 
     // Creates the simulaiton object only once state.txt and geojson are loaded. This step does not occur twice.
-    if(CreateSimulationObject == true){ layer.OL.getSource().once("change", this.OnLayerChange_Handler.bind(this)); }
+    if (CreateSimulationObject == true) { layer.OL.getSource().once("change", this.OnLayerChange_Handler.bind(this)); }
   }
 
   CreateLegend(title, translate) {
@@ -154,7 +163,7 @@ export default class Application extends Templated {
     this.RecreateLegend(title, translate);
   }
 
-  InitialLegend(title, translate){
+  InitialLegend(title, translate) {
     let scale;
     if (this.currentScale == undefined) {
       this.currentColorScale(new GetScale("red"));
@@ -175,7 +184,7 @@ export default class Application extends Templated {
     svg.select("." + title).call(colorLegend);
   }
 
-  RecreateLegend(title, translate){
+  RecreateLegend(title, translate) {
     let self = this;
     let scale;
     // Recreate the legend if a color change is issued
@@ -191,7 +200,7 @@ export default class Application extends Templated {
       svg.append("g").attr("class", title).attr("transform", translate);
 
       svg.append("text").text("Proportion of the DAUID Population with Infection").attr("transform", "translate(1,25)");
-      
+
       var colorLegend = d3
         .legendColor()
         .labelFormat(d3.format(".2f"))
@@ -204,8 +213,8 @@ export default class Application extends Templated {
     }, false);
   }
 
-  RecolorLayer(scale){
-    if(this.userLayerGeoJSON != undefined){
+  RecolorLayer(scale) {
+    if (this.userLayerGeoJSON != undefined) {
       let index = (this.curCycle != undefined) ? this.curCycle : 0;
       this.LayerOntoMap(this.userLayerGeoJSON, this.userLayerTitle, this.data[index].messages, scale.GS);
     }
@@ -258,126 +267,97 @@ export default class Application extends Templated {
     simulation.Initialize(10);
 
     this.transitions = createTransitionFromSimulation(simulation.frames)
-    
+
     // Let the download button be clickable
     this.Elem("btnDownload").disabled = false;
 
   }
 
   OnButtonDownload_Click(ev) {
-    var file = new CreateCsvFile(this.transitions);
-
-    var blob = new Blob([file.CSV], { type: 'text/csv;charset=utf-8;' });
-
-    var link = document.createElement("a");
-
-    var url = URL.createObjectURL(blob);
-
-    link.setAttribute("href", url);
-
-    link.setAttribute("download", file.CSV.name);
-
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    new CreateCsvFileForDownload(this.transitions);
   }
 
-  OnCenterChange(ev){
-    var apikey = 'b339619380954a4fbe94451d66690365';
-    var city = ev.target.value;
-    
-    var api_url = 'https://api.opencagedata.com/geocode/v1/json'
-    
-    var request_url = api_url
-      + '?'
-      + 'key=' + apikey
-      // (latitude + ',' + longitude)
-      + '&q=' + encodeURIComponent(city)
-      + '&pretty=1'
-      + '&no_annotations=1';
-    
-    // see full list of required and optional parameters:
-    // https://opencagedata.com/api#forward
-    
-    var request = new XMLHttpRequest();
-    request.open('GET', request_url, true);
-    let self = this;
-    request.onload = function() {
-      // see full list of possible response codes:
-      // https://opencagedata.com/api#codes
-    
-      if (request.status == 200){ 
-      // Success!
-      var data = JSON.parse(request.responseText);
-      let lat = data.results[0].bounds.northeast.lat;
-      let long = data.results[0].bounds.northeast.lng
-      self.Widget("map").map._map.getView().setCenter(ol.proj.transform([long, lat], 'EPSG:4326', 'EPSG:3857'))
-    
-      } else if (request.status <= 500){ 
-      // We reached our target server, but it returned an error				 
-      console.log("unable to geocode! Response code: " + request.status);
-      var data = JSON.parse(request.responseText);
-      console.log(data.status.message);
-      } else {
-      console.log("server error");
-      }
-    };
-    
-    request.onerror = function() {
-      // There was a connection error of some sort
-      console.log("unable to connect to server");        
-    };
-    
-    request.send();  // make the request
+  OnCenterChange(ev) {
+    // openCageChangeMapCenter(city, OSM map)
+    openCageChangeMapCenter(ev.target.value, this.Widget("map").map._map)
   }
 
-
-  
   Template() {
     return (
       "<main handle='main'>" +
 
       "<div handle='header' widget='Widget.Header' class='header'></div>" +
+
       "<div id='map' handle='map' widget='Widget.Map' class='map'>" +
-      "<label>Type a city into the field and then press enter to change the center </label>" +
-      "<input handle = 'address' id='address' type='textbox' value=''/>" +
+      "<label>Type a location and press enter to change the center of the map </label>" +
+      "<input handle = 'address' id='address' type='textbox' value=''/></div>" +
+
+      "<div id='controls'>" +
+      "<label for='scale-select'>Select Simulation to manipulate: </label>" +
+      "<select handle = cycleOptions id='scale-select'>" +
+      "</select>" +
       "</div>" +
 
       "<div class='overlay-container'><span class='overlay-text' id='feature-name'>" +
-      "</span><br><span class='overlay-text' id='feature-infected'></span><br>" +
+      "</span><span class='overlay-text' id='feature-infected'></span><br>" +
       "</span><span class='overlay-text' id='feature-susceptible'></span><br>" +
-      "</span><span class='overlay-text' id='feature-recovered'></span>" +
-      
-      "</div>" +
+      "</span><span class='overlay-text' id='feature-recovered'></span></div>" +
 
       "<label>Simulation Cycle Selector: <input handle='cycle' type='range' name='cycle' id='cycle' min='0' max = '0' step='1' value='0' >" +
       "<output handle='output' class='cycle-output' for='cycle'></output></label><br><br>" +
-      
-      "<div>" +
-        "<label for='favcolor'>Change colour scale: </label>" +
-        "<input type='color' id='colorOne' name='favcolor' value='#ff0000'><br>" +
-      "</div>" +
-      
+
+
+
+      "<div><label for='favcolor'>Change colour scale: </label>" +
+      "<input type='color' id='colorOne' name='favcolor' value='#ff0000'><br></div>" +
+
       "<svg handle='svg' width = '960' height = '100'></svg>" +
 
       "<p>" +
-        "<div><label>Load Simulation</label></div>" +
+      "<div><label>Load Simulation</label></div>" +
 
-        "<p></p>" +
-        "</div><label>Select your simulation results (and then wait for further instruction from the program): " +
-        "<br><input type='file' name='simResults' accept='.txt'></br></div>" +
-        
-        "<p></p>" +
-        "<div><label>After being alerted, select your GeoJSON layer: " +
-        "<br><input type='file' name='vectorLayer' handle='vectorLayer' accept='.geojson'></br></div>" +
+      "<p></p>" +
+      "</div><label>Select your simulation results: " +
+      "<br><input type='file' handle = 'simResults' name='simResults' accept='.txt'></br></div>" +
+
+      "<p></p>" +
+      "<div><label>After simulationr results are loaded, you may select your GeoJSON layer: " +
+      "<br><input type='file' name='vectorLayer' handle='vectorLayer' accept='.geojson' disabled></br></div>" +
       "</p>" +
 
-      "<div class='button-column'>" + 
-        "<label>Download data as csv </label>" + 
-        "<button handle='btnDownload' title='nls(Download_Files)' class='fas fa-download' disabled></button>" +
-      "</div>" +
+      "<div class='button-column'><label>Download data as csv </label>" +
+      "<button handle='btnDownload' title='nls(Download_Files)' class='fas fa-download' disabled></button></div>" +
 
       "</main>"
     );
   }
+}
+
+function sortData(data) {
+  let lines = data.map((line) => line.split(/\s+/));
+  let parsed = [];
+  let current = null;
+
+  for (var i = 0; i < lines.length; i++) {
+    var l = lines[i];
+
+    // TIME FRAME
+    if (l.length == 1 && l != "") {
+      current = { time: l[0], messages: {} };
+      parsed.push(current);
+    }
+    if (l.length == 6) {
+      let model = l[3].substring(1);
+      let infected = l[5]
+        .split(",")
+        .splice(5, 20)
+        .reduce((a, b) => +a + +b, 0);
+      // A single message, add all properties you may want
+      // to put on the map here
+      current.messages[model] = infected;
+    }
+  }
+  // Remove first item from array since it's the initial state. 
+  parsed.shift()
+  return parsed;
 }
