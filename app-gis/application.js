@@ -108,6 +108,7 @@ export default class Application extends Templated {
       fileReader.onload = function (event) {
         let fileContent = event.target.result;
         let title = f.name;
+        title = title.substring(0, title.indexOf("."))
         // so we can use the content for OnCycleChange and RecolorLayer
         self.LayerFile(fileContent, title);
 
@@ -128,13 +129,16 @@ export default class Application extends Templated {
   - Create simulation object based on data
   */
   LayerOntoMap(fileContent, title, data, scale, CreateSimulationObject){
-    let layer = new VectorLayer(fileContent, title, data, scale);
-
-    let layerObjects = this.Widget("map").layers;
+    let layer;
+    if(this.curCycle == undefined){
+      layer = new VectorLayer(fileContent, title + " Cycle0", data, scale);
+    } else {
+      layer = new VectorLayer(fileContent, title + " Cycle" + this.curCycle, data, scale);
+    }
 
     // add vector layer onto world map
-    this.Widget("map").AddLayer(title, layer, layerObjects);
-
+    this.Widget("map").AddLayer(title, layer);
+    
     // make the vector layers attributes visible through clicking census subdivisions
     mapOnClick(data, this.Widget("map").map._map, title);
 
@@ -326,6 +330,8 @@ export default class Application extends Templated {
     
     request.send();  // make the request
   }
+
+
   
   Template() {
     return (

@@ -16,7 +16,8 @@ export default class InitialLayer {
       renderer: "canvas",
       // The target is an HTML component 
       target: target,
-      layers: [layer],
+      // In case we want to add more base maps later
+      layers: [new ol.layer.Group({title: 'Base map', layers: [layer]})],
       view: new ol.View({
         center: ol.proj.transform(
           // TODO: Let users change the center or a "go-to x location"

@@ -33,15 +33,17 @@ export const mapOnClick = (data, map, title) => {
         overlayFeatureSusceptible.innerHTML = "Proportion Susceptible: TODO";
         overlayFeatureRecovered.innerHTML = "Proportion Recovered: TODO";
       },
-      {
-        /*         
-          Layer filter function, this ensures that if we have other vector layers, 
-          this on("click") will only work for the current title
-        */
-        layerFilter: function (layerCandidate) {
-          return layerCandidate.get("title") === title;
-        },
-      }
+      // Commented out the line below for now
+      
+      // {
+      //   /*         
+      //     Layer filter function, this ensures that if we have other vector layers, 
+      //     this on("click") will only work for the current title
+      //   */
+      //   layerFilter: function (layerCandidate) {
+      //     return layerCandidate.get("title") === title;
+      //   },
+      // }
     );
   });
 };
