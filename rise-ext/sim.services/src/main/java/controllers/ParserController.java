@@ -2,6 +2,7 @@ package controllers;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 import org.springframework.core.io.InputStreamResource;
@@ -68,10 +69,12 @@ public class ParserController {
 	}
 	   
 	@PostMapping("/parser/cdpp/celldevs")
-	public ResponseEntity<byte[]> parserCdppCellDevs(@RequestParam("ma") MultipartFile ma, @RequestParam("val") MultipartFile val, @RequestParam("log") MultipartFile log)
+	public ResponseEntity<byte[]> parserCdppCellDevs(@RequestParam("ma") MultipartFile ma, @RequestParam(value = "val", required = false) MultipartFile val, @RequestParam("log") MultipartFile log)
 	{    	        
 		try {
-			Parsed result = parsers.cdpp.CellDevs.Parse(ma.getInputStream(), val.getInputStream(), log.getInputStream());
+			InputStream iptVal = val == null ? null : val.getInputStream();
+			
+			Parsed result = parsers.cdpp.CellDevs.Parse(ma.getInputStream(), iptVal, log.getInputStream());
 		  	
 			return ByteArrayResponse(result.simulation.name, result.toZipByteArray());
 		} 
@@ -97,7 +100,7 @@ public class ParserController {
 		}
 	}
 	   
-	@PostMapping("/parser/cdpp/lopez")
+	@PostMapping("/parser/lopez/celldevs")
 	public ResponseEntity<byte[]> parserLopezCellDevs(@RequestParam("ma") MultipartFile ma, @RequestParam("log") MultipartFile log)
 	{    	        
 		try {

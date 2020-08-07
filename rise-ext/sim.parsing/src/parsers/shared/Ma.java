@@ -38,10 +38,12 @@ public class Ma {
 				return;
 			}
 			
-			if (!l.contains(":")) return;
+			String[] lr = l.split(":");
 			
-			String left = l.split(":")[0].trim();
-			String right = l.split(":")[1].trim();
+			if (lr.length < 2) return;
+			
+			String left = lr[0].trim();
+			String right = lr[1].trim();
 
 			if (left.equals("components")) {
 				// components : sender@Sender
@@ -70,8 +72,6 @@ public class Ma {
 				
 				String[] dim = tmp.substring(1, tmp.length() - 1).split(",|, ");
 				
-				current.size = new int[3];
-
 				current.size[0] = Integer.parseInt(dim[0]);
 				current.size[1] = Integer.parseInt(dim[1]);
 				current.size[2] = (dim.length == 2) ? 1 : Integer.parseInt(dim[2]);
