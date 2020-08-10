@@ -1,4 +1,4 @@
-export const mapOnClick = (data, map, title) => {
+export const mapOnClick = (data, map, title, currentCcyle) => {
   const overlayContainerElement = document.querySelector(".overlay-container");
   const overlayLayer = new ol.Overlay({
     element: overlayContainerElement,
@@ -8,6 +8,7 @@ export const mapOnClick = (data, map, title) => {
   // Tied to geographic coordiantes
   map.addOverlay(overlayLayer);
   const overlayFeatureName = document.getElementById("feature-name");
+  const overlayFeatureCycle = document.getElementById("feature-cycle");
   const overlayFeatureInfected = document.getElementById("feature-infected");
   const overlayFeatureSusceptible = document.getElementById("feature-susceptible");
   const overlayFeatureRecovered = document.getElementById("feature-recovered");
@@ -29,21 +30,22 @@ export const mapOnClick = (data, map, title) => {
           clickedValue = "N/A";
         }
         overlayFeatureName.innerHTML = "DAUID: " + clickedDauid;
+        overlayFeatureCycle.innerHTML = "Current Cycle: " + currentCcyle;
         overlayFeatureInfected.innerHTML = "Proportion Infected: " + clickedValue.toFixed(3);
         overlayFeatureSusceptible.innerHTML = "Proportion Susceptible: TODO";
         overlayFeatureRecovered.innerHTML = "Proportion Recovered: TODO";
       },
       // Commented out the line below for now
       
-      // {
-      //   /*         
-      //     Layer filter function, this ensures that if we have other vector layers, 
-      //     this on("click") will only work for the current title
-      //   */
-      //   layerFilter: function (layerCandidate) {
-      //     return layerCandidate.get("title") === title;
-      //   },
-      // }
+      {
+        /*         
+          Layer filter function, this ensures that if we have other vector layers, 
+          this on("click") will only work for the current title
+        */
+        layerFilter: function (layerCandidate) {
+          return layerCandidate.get("title") === title;
+        },
+      }
     );
   });
 };
