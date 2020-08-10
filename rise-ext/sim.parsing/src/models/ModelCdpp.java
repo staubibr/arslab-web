@@ -28,7 +28,7 @@ public class ModelCdpp extends Model {
     	
         this.initialRowValues = new ArrayList<InitialRowValues>();
         this.initialValue = null;
-        this.size = null;
+        this.size = new int[3];
     }
     
     public ModelCdpp(String name) {
