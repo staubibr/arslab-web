@@ -29,6 +29,7 @@ export default Core.Templatable(
       // Every time we add a GeoJSON, it gets added to the layer switcher as well
       this.map._map.addControl(new ol.control.LayerSwitcher({groupSelectStyle: 'group'}));
 
+      // GEOCODER GETS ADDED AS A LAYER AS WELL WHICH IS PROBLEMATIC FOR AddLayer(id, layer)
       var geocoder = new Geocoder('nominatim', {
         provider: 'osm',
         lang: 'en',
@@ -68,7 +69,7 @@ export default Core.Templatable(
       let self = this;
       this.map.OL.getLayers().forEach(function (l) {
         if (l != undefined) {
-          let title = l.N.title.substring(0, l.N.title.indexOf(" "));
+          let title = (l.N.title != undefined) ? l.N.title.substring(0, l.N.title.indexOf(" ")) : "";
           if (id == title) { self.map.OL.removeLayer(l); }
         }
       })
