@@ -19,14 +19,13 @@ import CreateCsvFileForDownload from "./classes/CreateCsvFile.js";
 
 import { mapOnClick } from "./widgets/mapOnClick.js";
 import { createTransitionFromSimulation } from "../app-gis/functions/simToTransition.js";
-import { openCageChangeMapCenter } from "./widgets/changeMapCenter.js";
 
 export default class Application extends Templated {
   constructor(node) {
     super(node);
 
     // By default the legend will be red-white unless otherwise specified by the user
-    this.CreateLegend(Core.Nls("App_Legend_Title"), "translate(20,30)");
+    this.CreateLegend(Core.Nls("App_Legend_Title"), "translate(5,30)");
 
     // The world map will appear prior to any vector layers being added overtop
     this.Widget("map").InitTileLayer();
@@ -42,9 +41,6 @@ export default class Application extends Templated {
 
     // For downloading data as CSV after all necessary files are inserted by user
     this.Node("btnDownload").On("click", this.OnButtonDownload_Click.bind(this));
-
-    // For changing the map's center locaiton
-    this.Node("address").On("change", this.OnCenterChange.bind(this));
   }
 
   /*
@@ -66,6 +62,10 @@ export default class Application extends Templated {
       - Simulation data
       - GeoJSON layer file content
     - The array length increases as the user adds more simulations to the webpage
+  @Method: CurrentSelectedClass(classNum)
+    - Current number of classes based on user selection
+  @Method: CurrentColor(color)
+    - Current color based on user selection
   */
   CurrentSimulationTitle(layerFileTitle){ this.currentSimulationTitle = layerFileTitle }
 
@@ -80,10 +80,14 @@ export default class Application extends Templated {
 
   CurrentSimulationCycle(cycle) { this.curCycle = cycle; }
 
-  KeepTrackOfSubmittedUserFiles(data, title, layerFile){
+  KeepTrackOfSubmittedUserFiles(data, title, layerFile, classNum){
     if(this.DataFromFiles == undefined){ this.DataFromFiles = new Array; }
-    this.DataFromFiles.push({simulation: title, simulationData: data, GeoJSON: layerFile});
+    this.DataFromFiles.push({simulation: title, simulationData: data, GeoJSON: layerFile, layerClass: classNum});
   }
+
+  CurrentSelectedClass(classNum){ this.currentClass = classNum; }
+
+  CurrentColor(color){ this.currentColor = color; }
 
   /*
   Purpose: 
@@ -156,15 +160,23 @@ export default class Application extends Templated {
         elem.appendChild(elemText)
         var foo = document.getElementById("scale-select")
         foo.appendChild(elem)
+        // Change to the most recent option
+        foo.selectedIndex = foo.options.length-1
+
 
         // For simulaton cycle selector 
         self.Elem("cycle").setAttribute("max", self.data.length - 1);
+        self.Elem("output").textContent = 0;
+        document.getElementById("cycle").value = 0
 
         // For current simulation 
-        document.getElementById('currentSimulation').innerText = "Current simulation: " + newTitle + " with " + self.data.length + " cycles"
+        document.getElementById('currentSimulation').innerText = "Current Simulation: " + newTitle + " with " + self.data.length + " cycles"
         
+        // Get current number of classes for scale
+        let classes = (self.currentClass == undefined) ? 4 : self.currentClass;
+
         // Display the vector layer onto map
-        let scale = (self.currentScale == undefined) ? self.currentColorScale(new GetScale("red")) : self.currentScale;
+        let scale = (self.currentScale == undefined) ? self.currentColorScale(new GetScale("red", classes)) : self.currentScale;
         self.LayerOntoMap(fileContent, newTitle, self.data[0].messages, scale.GS, true);
       };
       if(f != undefined){ fileReader.readAsDataURL(f); }
@@ -213,10 +225,10 @@ export default class Application extends Templated {
     this.Widget("map").AddLayer(title, layer);
 
     // make the vector layers attributes visible through clicking census subdivisions
-    mapOnClick(data, this.Widget("map").map._map, newTitle, cycle);
+    mapOnClick(data, this.Widget("map").map._map, newTitle, title, cycle);
 
     // Creates the simulaiton object only once state.txt and geojson are loaded. This step does not occur twice.
-    if (CreateSimulationObject == true) { layer.OL.getSource().once("change", this.OnLayerChange_Handler.bind(this)); }
+    if (CreateSimulationObject == true) { layer.OL.getSource().once("change", this.OnLayerCreation_Handler.bind(this)); }
   }
 
 
@@ -231,13 +243,19 @@ export default class Application extends Templated {
   */
   CreateLegend(title, translate) {
     this.InitialLegend(title, translate);
-    this.RecreateLegend(title, translate);
+    this.RecreateLegendColor(title, translate);
+    this.RecreateLegendClass(title, translate);
   }
 
   InitialLegend(title, translate) {
     let scale;
+
+    // Get current number of classes for scale
+    let classes = (this.currentClass == undefined) ? 4 : this.currentClass;
+
     if (this.currentScale == undefined) {
-      this.currentColorScale(new GetScale("red"));
+      this.currentColor = "red";
+      this.currentColorScale(new GetScale("red", classes));
       scale = this.currentScale;
     }
     const svg = d3.select("svg");
@@ -255,13 +273,50 @@ export default class Application extends Templated {
     svg.select("." + title).call(colorLegend);
   }
 
-  RecreateLegend(title, translate) {
+  RecreateLegendColor(title, translate) {
     let self = this;
     let scale;
+    
+
     // Recreate the legend if a color change is issued
     d3.select("#colorOne").on("change", function () {
       var val = d3.select(this).node().value;
-      self.currentColorScale(new GetScale(val));
+      self.currentColor = val;
+      
+      // Get current number of classes for scale
+      let classes = (self.currentClass == undefined) ? 4 : self.currentClass;
+
+      self.currentColorScale(new GetScale(val, classes));
+      scale = self.currentScale;
+
+      const svg = d3.select("svg");
+
+      svg.selectAll("*").remove();
+
+      svg.append("g").attr("class", title).attr("transform", translate);
+
+      svg.append("text").text("Proportion of the DAUID Population with Infection").attr("transform", "translate(1,25)");
+
+      var colorLegend = d3
+        .legendColor()
+        .labelFormat(d3.format(".2f"))
+        // To actually color the legend based on our chosen colors
+        .scale(scale.GS);
+
+      svg.select("." + title).call(colorLegend);
+
+      self.RecolorLayer(scale);
+    }, false);
+  }
+
+  RecreateLegendClass(title, translate) {
+    let self = this;
+    let scale;
+    
+    // Recreate the legend if a color change is issued
+    d3.select("#class-select").on("change", function () {
+      self.currentClass = d3.select(this).node().value;
+      self.currentColorScale(new GetScale(self.currentColor, self.currentClass));
       scale = self.currentScale;
 
       const svg = d3.select("svg");
@@ -291,17 +346,26 @@ export default class Application extends Templated {
     }
   }
 
-  // Change the current simulation
+  /*
+  Purpose: 
+    - Change the current simulation being manipulated 
+  Paramters:
+    event - To find which simulation the user selected
+  Information leaving the method:
+    this.currentSimulationTitle - change current simulation title
+    this.data - change the current array data being used
+    this.userLayerGeoJSON - change the current geojson file content 
+    Rewrite on the webpage which simulation has been selected
+    Change the maximum value in the cycle selector
+  */
   OnSimulationSelectChange(ev){
     let title = ev.target.value.substring(0, ev.target.value.indexOf(" "));
-    this.CurrentSimulationTitle(title)
-    // Change the current array data being used 
     for (let index = 0; index < this.DataFromFiles.length; index++) {
       const element = this.DataFromFiles[index];
       if(element.simulation == title){
+        this.currentSimulationTitle = title
         this.data = element.simulationData;
         this.userLayerGeoJSON = element.GeoJSON;
-        
         document.getElementById('currentSimulation').innerText = "Current simulation: " + title + " with " + this.data.length + " cycles"
         this.Elem("cycle").setAttribute("max", this.data.length - 1);
         this.Elem("output").textContent = 0;
@@ -309,7 +373,14 @@ export default class Application extends Templated {
       }
     }
   }
-
+  
+  /*
+  Purpose: 
+    - Change the current simulation cycle
+    - Display the updated vectory layer based on simulation cycle
+  Paramters:
+    event - To find which simulation cycle user selected
+  */
   OnCycle_Change(ev) {
     // Let the user know what cycle theyre on
     this.Elem("output").textContent = ev.target.value;
@@ -324,8 +395,9 @@ export default class Application extends Templated {
     // This will overwrite the previous simulation cycle vector object and add the new one
     this.LayerOntoMap(this.userLayerGeoJSON, this.currentSimulationTitle, data, this.currentScale.GS);
   }
-
-  OnLayerChange_Handler(ev) {
+  
+  // Create the simulation object when the simulation is first introduced
+  OnLayerCreation_Handler(ev) {
     var features = ev.target.getFeatures();
     this.CreateSimulation(features, this.data);
   }
@@ -377,57 +449,68 @@ export default class Application extends Templated {
     
   }
 
-  OnCenterChange(ev) {
-    // openCageChangeMapCenter(city, OSM map)
-    openCageChangeMapCenter(ev.target.value, this.Widget("map").map._map)
-  }
-
   Template() {
     return (
       "<main handle='main'>" +
-
+      // Header
       "<div handle='header' widget='Widget.Header' class='header'></div>" +
 
-      "<div id='map' handle='map' widget='Widget.Map' class='map'>" +
-      "<label>Type a location and press enter to change the center of the map </label>" +
-      "<input handle = 'address' id='address' type='textbox' value=''/></div>" +
+      // Map 
+      "<div id='map' handle='map' widget='Widget.Map' class='map'></div>" +
 
-      "<div><p className='element' handle ='currentSimulation' id='currentSimulation'></p></div>" +
+      // Load Simulation and download its data
+      "<div handle='data' id='data' style='line-height:40px; border-style:groove; height:400px; width:576px; float:left; padding:5px;'>" +
+        "<label>Load Simulation</label>" +
+  
+        "<div style='margin-top:10px;'><label>Select your simulation results: " +
+        "<br><input type='file' handle = 'simResults' name='simResults' accept='.txt'></br></div>" +
+  
 
-      "<div id='controls'>" +
-      "<label for='scale-select'>Select Simulation to manipulate: </label>" +
-      "<select handle = 'selectSimulation' id='scale-select'>" +
-      "</select>" +
+        "<div style='margin-top:10px;'><label>After simulationr results are loaded, select your GeoJSON layer: " +
+        "<br><input type='file' name='vectorLayer' handle='vectorLayer' accept='.geojson' disabled></br></div>" +
+
+        "<div style='margin-top:95px; border-top: 1px solid; '><className='element' handle ='currentSimulation' id='currentSimulation'>Current Simulation: N/A</className=></div>" +
+        
+        "<label id='btnDownloadHTMLtext'>Download current simulation data as csv </label>" +
+        "<button handle='btnDownload' title='nls(Download_Files)' class='fas fa-download' disabled></button></style=>" +
+      
       "</div>" +
 
-      "<div class='overlay-container'><span class='overlay-text' id='feature-name'>" +
+      // Manipulate simulation
+      "<div handle-'navigation' id='navigation' style='line-height:40px; border-style:groove; height:400px; width:580px; float:left; padding:5px;'>" +
+        
+        "<div id='controls'><label for='scale-select'>Select Simulation to manipulate: </label>" +
+        "<select handle = 'selectSimulation' id='scale-select'></select></div>" +
+
+        "<label>Simulation Cycle Selector: <input handle='cycle' type='range' name='cycle' id='cycle' min='0' max = '0' step='1' value='0' >" +
+        "<output handle='output' class='cycle-output' for='cycle'></output></label>" +
+
+        "<div><label for='favcolor'>Change colour scale: </label>" +
+        "<input type='color' id='colorOne' name='favcolor' value='#ff0000'><br></div>" +
+
+        "<div id='classControls'><label for='class-select'>Select number of classes: </label>" +
+        "<select handle = 'selectClasses' id='class-select'>" +
+          "<option>4</option>" +
+          "<option>5</option>" +
+        "</select></div>" +
+        
+        "<svg handle='svg' width = '960' height = '150'></svg>" +
+
+      
+      "</div>" +
+
+
+      // Overlay text for vector layers
+      "<div class='overlay-container'><span class='overlay-text' id='feature-simulation'>" +
+      "</span><br><span class='overlay-text' id='feature-name'></span>" +
       "</span><br><span class='overlay-text' id='feature-cycle'></span><br>" +
       "</span><span class='overlay-text' id='feature-infected'></span><br>" +
       "</span><span class='overlay-text' id='feature-susceptible'></span><br>" +
       "</span><span class='overlay-text' id='feature-recovered'></span></div>" +
 
-      "<label>Simulation Cycle Selector: <input handle='cycle' type='range' name='cycle' id='cycle' min='0' max = '0' step='1' value='0' >" +
-      "<output handle='output' class='cycle-output' for='cycle'></output></label><br><br>" +
+      
 
-      "<div><label for='favcolor'>Change colour scale: </label>" +
-      "<input type='color' id='colorOne' name='favcolor' value='#ff0000'><br></div>" +
 
-      "<svg handle='svg' width = '960' height = '100'></svg>" +
-
-      "<p>" +
-      "<div><label>Load Simulation</label></div>" +
-
-      "<p></p>" +
-      "</div><label>Select your simulation results: " +
-      "<br><input type='file' handle = 'simResults' name='simResults' accept='.txt'></br></div>" +
-
-      "<p></p>" +
-      "<div><label>After simulationr results are loaded, you may select your GeoJSON layer: " +
-      "<br><input type='file' name='vectorLayer' handle='vectorLayer' accept='.geojson' disabled></br></div>" +
-      "</p>" +
-
-      "<div class='button-column'><label id='btnDownloadHTMLtext'>Download current simulation data as csv </label>" +
-      "<button handle='btnDownload' title='nls(Download_Files)' class='fas fa-download' disabled></button></div>" +
 
       "</main>"
     );

@@ -1,4 +1,4 @@
-export const mapOnClick = (data, map, title, currentCcyle) => {
+export const mapOnClick = (data, map, filterTitle, title, currentCcyle) => {
   const overlayContainerElement = document.querySelector(".overlay-container");
   const overlayLayer = new ol.Overlay({
     element: overlayContainerElement,
@@ -7,6 +7,7 @@ export const mapOnClick = (data, map, title, currentCcyle) => {
   // Such elements are attached to specific map locations
   // Tied to geographic coordiantes
   map.addOverlay(overlayLayer);
+  const overlayFeatureSimulation = document.getElementById("feature-simulation");
   const overlayFeatureName = document.getElementById("feature-name");
   const overlayFeatureCycle = document.getElementById("feature-cycle");
   const overlayFeatureInfected = document.getElementById("feature-infected");
@@ -29,6 +30,7 @@ export const mapOnClick = (data, map, title, currentCcyle) => {
         } else {
           clickedValue = "N/A";
         }
+        overlayFeatureSimulation.innerHTML = title
         overlayFeatureName.innerHTML = "DAUID: " + clickedDauid;
         overlayFeatureCycle.innerHTML = "Current Cycle: " + currentCcyle;
         overlayFeatureInfected.innerHTML = "Proportion Infected: " + clickedValue.toFixed(3);
@@ -43,7 +45,7 @@ export const mapOnClick = (data, map, title, currentCcyle) => {
           this on("click") will only work for the current title
         */
         layerFilter: function (layerCandidate) {
-          return layerCandidate.get("title") === title;
+          return layerCandidate.get("title") === filterTitle;
         },
       }
     );

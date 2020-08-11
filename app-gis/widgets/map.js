@@ -29,6 +29,18 @@ export default Core.Templatable(
       // Every time we add a GeoJSON, it gets added to the layer switcher as well
       this.map._map.addControl(new ol.control.LayerSwitcher({groupSelectStyle: 'group'}));
 
+      var geocoder = new Geocoder('nominatim', {
+        provider: 'osm',
+        lang: 'en',
+        placeholder: 'Search for ...',
+        limit: 5,
+        debug: false,
+        autoComplete: true,
+        keepOpen: true,
+        lang : 'en-US',
+      });
+      this.map._map.addControl(geocoder);
+
       return this.map;
     }
 

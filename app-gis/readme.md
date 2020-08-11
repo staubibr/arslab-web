@@ -4,10 +4,22 @@
 [![Demo CountPages alpha](/app-gis/demo.gif)](https://youtu.be/liGqAIcnNUo)
 - Open the [GIS Simulation Explorer](https://staubibr.github.io/arslab-dev/app-gis/index.html) in Chrome 
 - OpenStreetMap will automatically load the world map
+- Before Loading Simulations
+  - You can change the number of classes and color scale
 - Load Simulation
   1. Insert your simulation results (txt) and wait until the program alerts you that you may now move to step 2
   2. Insert your GeoJSON layer 
-- Once everything appears to be loaded, you may download the simulation object as a csv file, cycle through different timestamps of the SIR simulation, change layer/legend coloring, and view attributes by clicking census subdivisions
+  3. OPTIONAL: Repeat steps 2 and 3 to insert more simulations
+- Manipulating Simulations
+  - By default, the current simulation to be manipulated is the most recently entered one
+  - The current simulation can be selected which will allow you to:
+    - Download simulation object as a csv file
+    - Cycle through different timestamps of the SIR simulation
+    - Change legend
+    - Change color
+    - View attributes by clicking census subdivisions
+- Layer switcher (icon in the top right corner of the OpenStreetMap)
+  - Use this for changing between simulations
   
 
 ## Getting Started (Developers):
@@ -35,12 +47,6 @@
     - OpenLayers can be easily bundled with gis applications through Rollup, Webpack, etc. 
   - File `app-gis/application.js` contains a bulk of the work needed to run the gis application
 
-##### API Key for changing the current map location
-- 2500 Requests per day
-  - Please use your own key when developing so we can avoid reaching daily limit
-- Sign up free at [OpenCage GeoCoder](https://opencagedata.com/)
-- The code in `./app-gis/` uses forward Geocoding (Location string to long/lat coordinates)
-
 ##### Structure of Simulation Results Text File:
     State for model _DAUID is <1,0,16,16,0.7,0.3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0>
     
@@ -65,11 +71,6 @@
     Example of how you'd access specific data: Infected are indexes 5 to 20
 
 ## TODO:
-- Allow users to upload their `.geojson` and `.txt` files at once instead of one at a time
-  - Run multiple simulations, each with their own simulation cycler and legends
-    - Let users toggle through multiple simulations
-- Let users change the number of classes in the scale (currently 4 classes split in quarters)
-- Let users decide where the center of the map is or maybe setup a "go-to x location" 
 - Let users video record the simulation
 - Fix mapOnClick to be more visually friendly
 - Place the legend onto the OpenLayer map
@@ -98,6 +99,8 @@
 [ol.OverLay](https://openlayers.org/en/latest/apidoc/module-ol_Overlay-Overlay.html)
 
 [ol.layerswitcher](https://github.com/walkermatt/ol-layerswitcher)
+
+[ol.geocoder](https://github.com/jonataswalker/ol-geocoder)
 
 #### Web Development
 
