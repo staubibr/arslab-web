@@ -19,6 +19,7 @@ import CreateCsvFileForDownload from "./classes/CreateCsvFile.js";
 
 import { mapOnClick } from "./widgets/mapOnClick.js";
 import { createTransitionFromSimulation } from "../app-gis/functions/simToTransition.js";
+import { sortPandemicData } from "../app-gis/functions/sortPandemicData.js";
 
 export default class Application extends Templated {
   constructor(node) {
@@ -46,48 +47,27 @@ export default class Application extends Templated {
   /*
   Purpose: Information we may find useful to access throughout the program
 
-  @Method: CurrentSimulationTitle(layerFileTitle)
-    - Report the current simulation's title
-  @Method: CurrentSimulationGeoJSON(file)
-    - Report the current simulation's geojson layer file content
-    - Used for OnCycleChange() and RecolorLayer()
   @Method: ArrayOfTransitions(data, title)
     - From simulation object, we store created transitions in this method via array
     - Used for letting users download a CSV of the currently selected simulation
-  @Method: currentColorScale(scale)
-    - Report the current color scale listed on the web page
   @Method: KeepTrackOfSubmittedUserFiles(data, title, layerFile)
     - When a user finishes inserted their files, we get an array composed of an object holding:
       - Simulation title
       - Simulation data
       - GeoJSON layer file content
     - The array length increases as the user adds more simulations to the webpage
-  @Method: CurrentSelectedClass(classNum)
-    - Current number of classes based on user selection
-  @Method: CurrentColor(color)
-    - Current color based on user selection
   */
-  CurrentSimulationTitle(layerFileTitle){ this.currentSimulationTitle = layerFileTitle }
-
-  CurrentSimulationGeoJSON(file) { this.userLayerGeoJSON = file; }
-
   ArrayOfTransitions(data, title){
     if(this.allTransitions == undefined){ this.allTransitions = new Array; }
     this.allTransitions.push({simulation: title, transitionData: data});
   }
 
-  currentColorScale(scale) { this.currentScale = scale; }
+  CurrentColorScale(scale) { this.currentColorScale = scale; }
 
-  CurrentSimulationCycle(cycle) { this.curCycle = cycle; }
-
-  KeepTrackOfSubmittedUserFiles(data, title, layerFile, classNum){
+  KeepTrackOfSubmittedUserFiles(data, title, layerFile, classNum, color, cycle){
     if(this.DataFromFiles == undefined){ this.DataFromFiles = new Array; }
-    this.DataFromFiles.push({simulation: title, simulationData: data, GeoJSON: layerFile, layerClass: classNum});
+    this.DataFromFiles.push({simulation: title, simulationData: data, GeoJSON: layerFile, layerClasses: classNum, layerColor: color, layerCycle: cycle});
   }
-
-  CurrentSelectedClass(classNum){ this.currentClass = classNum; }
-
-  CurrentColor(color){ this.currentColor = color; }
 
   /*
   Purpose: 
@@ -113,7 +93,7 @@ export default class Application extends Templated {
     - this.data for CheckForGeoJSON(input)
   */
   DataLoaded_Handler(data) {
-    this.data = sortData(data);
+    this.data = sortPandemicData(data);
     // User can now insert a GeoJSON layer file
     this.Elem("vectorLayer").disabled = false;
     this.CheckForGeoJSON(document.querySelector("input[name='vectorLayer']"));
@@ -149,20 +129,14 @@ export default class Application extends Templated {
         let simNum = (self.DataFromFiles == undefined) ? 0 : self.DataFromFiles.length;
         let newTitle = "simulation" + simNum + "_" + title;
 
-        // Information leaving the method
-        self.KeepTrackOfSubmittedUserFiles(self.data, newTitle, fileContent)
-        self.CurrentSimulationTitle(newTitle)
-        self.CurrentSimulationGeoJSON(fileContent);
-
         // For simulation selector 
         var elem = document.createElement('option')
         var elemText = document.createTextNode(newTitle + " with " + self.data.length + " cycles")
         elem.appendChild(elemText)
-        var foo = document.getElementById("scale-select")
+        var foo = document.getElementById("sim-select")
         foo.appendChild(elem)
         // Change to the most recent option
         foo.selectedIndex = foo.options.length-1
-
 
         // For simulaton cycle selector 
         self.Elem("cycle").setAttribute("max", self.data.length - 1);
@@ -175,8 +149,13 @@ export default class Application extends Templated {
         // Get current number of classes for scale
         let classes = (self.currentClass == undefined) ? 4 : self.currentClass;
 
+        // Information leaving the method
+        self.KeepTrackOfSubmittedUserFiles(self.data, newTitle, fileContent, classes, self.currentColor, 0)
+        self.currentSimulationTitle = newTitle
+        self.currentSimulationLayerGeoJSON = fileContent;
+
         // Display the vector layer onto map
-        let scale = (self.currentScale == undefined) ? self.currentColorScale(new GetScale("red", classes)) : self.currentScale;
+        let scale = (self.currentColorScale == undefined) ? self.CurrentColorScale(new GetScale(self.currentColor, classes)) : self.currentColorScale;
         self.LayerOntoMap(fileContent, newTitle, self.data[0].messages, scale.GS, true);
       };
       if(f != undefined){ fileReader.readAsDataURL(f); }
@@ -210,14 +189,14 @@ export default class Application extends Templated {
 
     //Title the vector layer based on what cycle it is on, might not be necessary, but keep it this code for now
     let newTitle;
-    if (this.curCycle == undefined || CreateSimulationObject == true) { 
+    if (this.currentSimulationCycle == undefined || CreateSimulationObject == true) { 
       newTitle = title + " Cycle0"
       cycle = 0;
       layer = new VectorLayer(fileContent, newTitle, data, scale); 
     }
     else { 
-      newTitle = title + " Cycle" + this.curCycle;
-      cycle = this.curCycle
+      newTitle = title + " Cycle" + this.currentSimulationCycle;
+      cycle = this.currentSimulationCycle
       layer = new VectorLayer(fileContent, newTitle, data, scale); 
     }
 
@@ -248,17 +227,19 @@ export default class Application extends Templated {
   }
 
   InitialLegend(title, translate) {
-    let scale;
-
     // Get current number of classes for scale
-    let classes = (this.currentClass == undefined) ? 4 : this.currentClass;
+    let classes = (this.currentNumberOfClasses == undefined) ? 4 : this.currentNumberOfClasses;
 
-    if (this.currentScale == undefined) {
-      this.currentColor = "red";
-      this.currentColorScale(new GetScale("red", classes));
-      scale = this.currentScale;
-    }
+    this.currentColor = "#FF0000";
+    this.currentColorScale = new GetScale(this.currentColor, classes);
+    let scale = this.currentColorScale;
+    this.LegendToApp(title, translate, scale)
+  }
+
+  LegendToApp(title, translate, scale){
     const svg = d3.select("svg");
+
+    svg.selectAll("*").remove();
 
     svg.append("g").attr("class", title).attr("transform", translate);
 
@@ -277,33 +258,23 @@ export default class Application extends Templated {
     let self = this;
     let scale;
     
-
     // Recreate the legend if a color change is issued
     d3.select("#colorOne").on("change", function () {
       var val = d3.select(this).node().value;
       self.currentColor = val;
+
+      if(self.DataFromFiles != undefined){
+        var currentDataFileIndex = document.getElementById('sim-select').selectedIndex;
+        self.DataFromFiles[currentDataFileIndex].layerColor = val;
+      }   
       
       // Get current number of classes for scale
       let classes = (self.currentClass == undefined) ? 4 : self.currentClass;
 
-      self.currentColorScale(new GetScale(val, classes));
-      scale = self.currentScale;
+      self.currentColorScale = new GetScale(val, classes);
+      scale = self.currentColorScale;
 
-      const svg = d3.select("svg");
-
-      svg.selectAll("*").remove();
-
-      svg.append("g").attr("class", title).attr("transform", translate);
-
-      svg.append("text").text("Proportion of the DAUID Population with Infection").attr("transform", "translate(1,25)");
-
-      var colorLegend = d3
-        .legendColor()
-        .labelFormat(d3.format(".2f"))
-        // To actually color the legend based on our chosen colors
-        .scale(scale.GS);
-
-      svg.select("." + title).call(colorLegend);
+      self.LegendToApp(title, translate, scale)
 
       self.RecolorLayer(scale);
     }, false);
@@ -316,33 +287,24 @@ export default class Application extends Templated {
     // Recreate the legend if a color change is issued
     d3.select("#class-select").on("change", function () {
       self.currentClass = d3.select(this).node().value;
-      self.currentColorScale(new GetScale(self.currentColor, self.currentClass));
-      scale = self.currentScale;
+      self.currentColorScale = new GetScale(self.currentColor, self.currentClass);
+      scale = self.currentColorScale;
 
-      const svg = d3.select("svg");
+      if(self.DataFromFiles != undefined){
+        var currentDataFileIndex = document.getElementById('sim-select').selectedIndex;
+        self.DataFromFiles[currentDataFileIndex].layerClasses = self.currentClass;
+      }
 
-      svg.selectAll("*").remove();
-
-      svg.append("g").attr("class", title).attr("transform", translate);
-
-      svg.append("text").text("Proportion of the DAUID Population with Infection").attr("transform", "translate(1,25)");
-
-      var colorLegend = d3
-        .legendColor()
-        .labelFormat(d3.format(".2f"))
-        // To actually color the legend based on our chosen colors
-        .scale(scale.GS);
-
-      svg.select("." + title).call(colorLegend);
+      self.LegendToApp(title, translate, scale)
 
       self.RecolorLayer(scale);
     }, false);
   }
 
   RecolorLayer(scale) {
-    if (this.userLayerGeoJSON != undefined) {
-      let index = (this.curCycle != undefined) ? this.curCycle : 0;
-      this.LayerOntoMap(this.userLayerGeoJSON, this.currentSimulationTitle, this.data[index].messages, scale.GS);
+    if (this.currentSimulationLayerGeoJSON != undefined) {
+      let index = (this.currentSimulationCycle != undefined) ? this.currentSimulationCycle : 0;
+      this.LayerOntoMap(this.currentSimulationLayerGeoJSON, this.currentSimulationTitle, this.data[index].messages, scale.GS);
     }
   }
 
@@ -350,28 +312,64 @@ export default class Application extends Templated {
   Purpose: 
     - Change the current simulation being manipulated 
   Paramters:
-    event - To find which simulation the user selected
+    event - event.target.value would tell us which simulation we selected
   Information leaving the method:
-    this.currentSimulationTitle - change current simulation title
-    this.data - change the current array data being used
-    this.userLayerGeoJSON - change the current geojson file content 
-    Rewrite on the webpage which simulation has been selected
-    Change the maximum value in the cycle selector
+    - Change previous simulation information to the current one
+    - An updated color scale, number of classes, and legend
+    - Simulation cycle set to the correct cycle
   */
   OnSimulationSelectChange(ev){
-    let title = ev.target.value.substring(0, ev.target.value.indexOf(" "));
-    for (let index = 0; index < this.DataFromFiles.length; index++) {
-      const element = this.DataFromFiles[index];
-      if(element.simulation == title){
-        this.currentSimulationTitle = title
-        this.data = element.simulationData;
-        this.userLayerGeoJSON = element.GeoJSON;
-        document.getElementById('currentSimulation').innerText = "Current simulation: " + title + " with " + this.data.length + " cycles"
-        this.Elem("cycle").setAttribute("max", this.data.length - 1);
-        this.Elem("output").textContent = 0;
-        document.getElementById("cycle").value = 0
-      }
+    this.PreviousSimulationToCurrentSimulation(document.getElementById('sim-select').selectedIndex);
+    this.UpdateLegendToCurrentSimulation(Core.Nls("App_Legend_Title"), "translate(5,30)");
+    this.UpdateSimulationCycleSelectorToCurrentSimulation();
+  }
+
+  PreviousSimulationToCurrentSimulation(index){
+    var element = this.DataFromFiles[index];
+    this.currentSimulationTitle = element.simulation;
+    this.data = element.simulationData;
+    this.currentSimulationLayerGeoJSON = element.GeoJSON;
+    this.currentSimulationCycle = element.layerCycle;
+    this.currentNumberOfClasses = element.layerClasses;
+    this.currentColor = element.layerColor;
+  }
+
+  UpdateLegendToCurrentSimulation(title, translate){
+    this.currentColorScale = new GetScale(this.currentColor, this.currentNumberOfClasses);
+    let scale = this.currentColorScale;
+
+    this.LayerOntoMap(this.currentSimulationLayerGeoJSON, this.currentSimulationTitle, this.data[this.currentSimulationCycle].messages, scale.GS, false);
+
+    document.getElementById('colorOne').value = this.currentColor
+
+    if(this.currentNumberOfClasses == 5){
+      document.getElementById('class-select').selectedIndex = 1
+    } else {
+      document.getElementById('class-select').selectedIndex = 0
     }
+
+    const svg = d3.select("svg");
+
+    svg.selectAll("*").remove();
+
+    svg.append("g").attr("class", title).attr("transform", translate);
+
+    svg.append("text").text("Proportion of the DAUID Population with Infection").attr("transform", "translate(1,25)");
+
+    var colorLegend = d3
+      .legendColor()
+      .labelFormat(d3.format(".2f"))
+      // To actually color the legend based on our chosen colors
+      .scale(scale.GS);
+
+    svg.select("." + title).call(colorLegend);
+  }
+
+  UpdateSimulationCycleSelectorToCurrentSimulation(){
+    document.getElementById('currentSimulation').innerText = "Current simulation: " + this.currentSimulationTitle + " with " + this.data.length + " cycles"
+    this.Elem("cycle").setAttribute("max", this.data.length - 1);
+    this.Elem("output").textContent = this.currentSimulationCycle;
+    document.getElementById("cycle").value = this.currentSimulationCycle;
   }
   
   /*
@@ -386,14 +384,17 @@ export default class Application extends Templated {
     this.Elem("output").textContent = ev.target.value;
 
     // Update the current cycle
-    this.CurrentSimulationCycle(ev.target.value);
+    this.currentSimulationCycle = ev.target.value;
+    var currentDataFileIndex = document.getElementById('sim-select').selectedIndex;
+    this.DataFromFiles[currentDataFileIndex].layerCycle = ev.target.value;
+    
 
     // Access the data in the new simulation cycle
     let data = this.data[ev.target.value].messages;
 
     // New vector layer object that'll overwrite the vector layer object from the previous simulation cycle
     // This will overwrite the previous simulation cycle vector object and add the new one
-    this.LayerOntoMap(this.userLayerGeoJSON, this.currentSimulationTitle, data, this.currentScale.GS);
+    this.LayerOntoMap(this.currentSimulationLayerGeoJSON, this.currentSimulationTitle, data, this.currentColorScale.GS);
   }
   
   // Create the simulation object when the simulation is first introduced
@@ -437,16 +438,10 @@ export default class Application extends Templated {
 
   }
 
+   
   OnButtonDownload_Click(ev) {
-    for (let index = 0; index < this.allTransitions.length; index++) {
-      const element = this.allTransitions[index];
-      
-      if(element.simulation == this.currentSimulationTitle){
-        
-        new CreateCsvFileForDownload(element.transitionData);
-      }
-    }
-    
+    var index = document.getElementById('sim-select').selectedIndex
+    new CreateCsvFileForDownload(this.allTransitions[index].transitionData);
   }
 
   Template() {
@@ -459,8 +454,17 @@ export default class Application extends Templated {
       "<div id='map' handle='map' widget='Widget.Map' class='map'></div>" +
 
       // Load Simulation and download its data
-      "<div handle='data' id='data' style='line-height:40px; border-style:groove; height:400px; width:576px; float:left; padding:5px;'>" +
+      "<div handle='userdata' id='userdata' style='line-height:40px; border-style:groove; height:400px; width:576px; float:left; padding:5px;'>" +
         "<label>Load Simulation</label>" +
+
+        "<div id='simTypeControls'><label for='sim-type'>Simulation type (TODO): </label>" +
+        "<select handle = 'sim-type' id='sim-type'>" +
+          "<option>Pandemic</option>" +
+          "<option>Fire</option>" +
+          "<option>Flood</option>" +
+          "<option>Earthquake</option>" +
+          "<option>Co2</option>" +
+        "</select></div>" +
   
         "<div style='margin-top:10px;'><label>Select your simulation results: " +
         "<br><input type='file' handle = 'simResults' name='simResults' accept='.txt'></br></div>" +
@@ -469,7 +473,7 @@ export default class Application extends Templated {
         "<div style='margin-top:10px;'><label>After simulationr results are loaded, select your GeoJSON layer: " +
         "<br><input type='file' name='vectorLayer' handle='vectorLayer' accept='.geojson' disabled></br></div>" +
 
-        "<div style='margin-top:95px; border-top: 1px solid; '><className='element' handle ='currentSimulation' id='currentSimulation'>Current Simulation: N/A</className=></div>" +
+        "<div style='margin-top:65px; border-top: 1px solid; '><className='element' handle ='currentSimulation' id='currentSimulation'>Current Simulation: N/A</className=></div>" +
         
         "<label id='btnDownloadHTMLtext'>Download current simulation data as csv </label>" +
         "<button handle='btnDownload' title='nls(Download_Files)' class='fas fa-download' disabled></button></style=>" +
@@ -479,8 +483,8 @@ export default class Application extends Templated {
       // Manipulate simulation
       "<div handle-'navigation' id='navigation' style='line-height:40px; border-style:groove; height:400px; width:580px; float:left; padding:5px;'>" +
         
-        "<div id='controls'><label for='scale-select'>Select Simulation to manipulate: </label>" +
-        "<select handle = 'selectSimulation' id='scale-select'></select></div>" +
+        "<div id='controls'><label for='sim-select'>Select Simulation to manipulate: </label>" +
+        "<select handle = 'selectSimulation' id='sim-select'></select></div>" +
 
         "<label>Simulation Cycle Selector: <input handle='cycle' type='range' name='cycle' id='cycle' min='0' max = '0' step='1' value='0' >" +
         "<output handle='output' class='cycle-output' for='cycle'></output></label>" +
@@ -496,9 +500,7 @@ export default class Application extends Templated {
         
         "<svg handle='svg' width = '960' height = '150'></svg>" +
 
-      
       "</div>" +
-
 
       // Overlay text for vector layers
       "<div class='overlay-container'><span class='overlay-text' id='feature-simulation'>" +
@@ -508,40 +510,7 @@ export default class Application extends Templated {
       "</span><span class='overlay-text' id='feature-susceptible'></span><br>" +
       "</span><span class='overlay-text' id='feature-recovered'></span></div>" +
 
-      
-
-
-
       "</main>"
     );
   }
-}
-
-function sortData(data) {
-  let lines = data.map((line) => line.split(/\s+/));
-  let parsed = [];
-  let current = null;
-
-  for (var i = 0; i < lines.length; i++) {
-    var l = lines[i];
-
-    // TIME FRAME
-    if (l.length == 1 && l != "") {
-      current = { time: l[0], messages: {} };
-      parsed.push(current);
-    }
-    if (l.length == 6) {
-      let model = l[3].substring(1);
-      let infected = l[5]
-        .split(",")
-        .splice(5, 20)
-        .reduce((a, b) => +a + +b, 0);
-      // A single message, add all properties you may want
-      // to put on the map here
-      current.messages[model] = infected;
-    }
-  }
-  // Remove first item from array since it's the initial state. 
-  parsed.shift()
-  return parsed;
 }

@@ -71,14 +71,18 @@
     Example of how you'd access specific data: Infected are indexes 5 to 20
 
 ## TODO:
+- See if mapOnClick works on multiple layers 
 - Let users video record the simulation
 - Fix mapOnClick to be more visually friendly
 - Place the legend onto the OpenLayer map
 - Clean up UI
+- Let users select simulation type
 
 ## Resources:
 
 #### D3JS
+
+Data Visualization library with some limited mapping capability. Extremely lightweight with low impact on  software.
 
 [D3 Legend](https://github.com/susielu/d3-legend)  
 
@@ -91,6 +95,8 @@
 [Spatial references](https://spatialreference.org/ref/epsg/)
 
 #### OpenLayers
+
+The Grandfather of Open Source GIS on the web
 
 [ol.Map](https://openlayers.org/en/latest/apidoc/module-ol_Map-Map.html)  
 
