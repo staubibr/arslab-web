@@ -503,12 +503,17 @@ export default class Application extends Templated {
       "</div>" +
 
       // Overlay text for vector layers
-      "<div class='overlay-container'><span class='overlay-text' id='feature-simulation'>" +
+      "<div id = 'overlay-container' class='overlay-container'><span class='overlay-text' id='feature-title'>" +
+      "</span><br><span class='overlay-text' id='feature-simulation'></span>" +
       "</span><br><span class='overlay-text' id='feature-name'></span>" +
+      "</span><br><span class='overlay-text' id='feature-init-pop'></span>" +
+      "</span><br><span class='overlay-text' id='feature-current-pop'></span>" +
       "</span><br><span class='overlay-text' id='feature-cycle'></span><br>" +
       "</span><span class='overlay-text' id='feature-infected'></span><br>" +
       "</span><span class='overlay-text' id='feature-susceptible'></span><br>" +
-      "</span><span class='overlay-text' id='feature-recovered'></span></div>" +
+      "</span><span class='overlay-text' id='feature-recovered'></span><br>" +
+      "</span><span class='overlay-text' id='feature-fatal'></span></div>" +
+
 
       "</main>"
     );

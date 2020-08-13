@@ -24,23 +24,6 @@ export default Core.Templatable(
 
       // This will display the world map onto the website
       this.map = new InitialLayer(layer, this.Elem("map-container"));
-      
-      // Lets you hide the world map
-      // Every time we add a GeoJSON, it gets added to the layer switcher as well
-      this.map._map.addControl(new ol.control.LayerSwitcher({groupSelectStyle: 'group'}));
-
-      // GEOCODER GETS ADDED AS A LAYER AS WELL WHICH IS PROBLEMATIC FOR AddLayer(id, layer)
-      var geocoder = new Geocoder('nominatim', {
-        provider: 'osm',
-        lang: 'en',
-        placeholder: 'Search for ...',
-        limit: 5,
-        debug: false,
-        autoComplete: true,
-        keepOpen: true,
-        lang : 'en-US',
-      });
-      this.map._map.addControl(geocoder);
 
       return this.map;
     }

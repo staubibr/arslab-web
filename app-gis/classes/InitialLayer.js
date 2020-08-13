@@ -12,6 +12,15 @@ export default class InitialLayer {
   }
 
   constructor(layer, target) {
+    var customControl = function(opt_options) {
+      var elem = document.querySelector(".overlay-container");
+      elem.className = 'custom-control ol-unselectable ol-control';
+      ol.control.Control.call(this, {
+        element: elem
+      });
+    };
+    ol.inherits(customControl, ol.control.Control);
+
     this._map = new ol.Map({
       renderer: "canvas",
       // The target is an HTML component 
@@ -29,7 +38,26 @@ export default class InitialLayer {
         // Higher number means more close up
         zoom: 5,
       }),
-  
     });
+    this._map.addControl(new customControl);
+
+    // Lets you hide the world map
+    // Every time we add a GeoJSON, it gets added to the layer switcher as well
+    this._map.addControl(new ol.control.LayerSwitcher({groupSelectStyle: 'group'}));
+
+
+    // GEOCODER GETS ADDED AS A LAYER AS WELL WHICH IS PROBLEMATIC FOR AddLayer(id, layer)
+    var geocoder = new Geocoder('nominatim', {
+      provider: 'osm',
+      lang: 'en',
+      placeholder: 'Search for ...',
+      limit: 5,
+      debug: false,
+      autoComplete: true,
+      keepOpen: true,
+      lang : 'en-US',
+    });
+    this._map.addControl(geocoder);
   }
+  
 }
