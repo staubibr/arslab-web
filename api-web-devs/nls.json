@@ -138,7 +138,7 @@
 		"en" : "<b>{0}</b> received an input (<b>{1}</b>) from <b>{2}</b> through port <b>{3}</b>"		
 	},
 	"Diagram_Tooltip_Y" : {
-		"en" : "<b>{0}</b> emitted an output (<b>{1}</b>) through port <b>{3}</b>"		
+		"en" : "<b>{0}</b> emitted an output (<b>{1}</b>) through port <b>{2}</b>"		
 	},
 	"Grid_Tooltip_Title" : {
 		"en" : "The state of cell <b>({0}, {1}, {2})</b> on port <b>{4}</b> is <b>{3}</b>."		

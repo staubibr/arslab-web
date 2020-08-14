@@ -16,10 +16,12 @@ export default class Templated extends Evented {
 		
 		if (this.template) this.SetNamedNodes();
 	
+		// TODO: Reorganize this so that the template has been added to the DOM before building subwidgets
 		if (this.template) this.BuildSubWidgets();
 		
 		this.SetRoots();
 		
+		// TODO: Here, template is placed in DOM, this must happen before building subwidgets
 		if (container) this.Place(container);
 	}
 	

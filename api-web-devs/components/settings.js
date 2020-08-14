@@ -113,11 +113,21 @@ export default class Settings extends Evented {
 		
 		if (!layers) return options;
 		
-		for (var i = 0; i < layers; i++) {
+		options.grid.layers = Settings.DefaultLayers(layers, ports);
+		
+		options.grid.columns = Settings.DefaultColumns(options.grid.layers);
+				
+		return options;
+	}
+	
+	static DefaultLayers(maxZ, ports) {
+		var layers = [];
+		
+		for (var i = 0; i < maxZ; i++) {
 			ports.forEach((p, j) => {
 				var k = (i * ports.length) + j;
 				
-				options.grid.layers.push({
+				layers.push({
 					z : i,
 					ports : [p.name],
 					style : (p.style != undefined) ? p.style : k
@@ -125,10 +135,10 @@ export default class Settings extends Evented {
 			});
 		}
 		
-		var n = options.grid.layers.length;
-		
-		options.grid.columns = (n > 3) ? 3 : n;	
-		
-		return options;
+		return layers;
+	}
+	
+	static DefaultColumns(layers) {		
+		return (layers.length > 3) ? 3 : layers.length;	
 	}
 }

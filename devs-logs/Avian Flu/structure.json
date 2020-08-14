@@ -1,0 +1,1 @@
+{"info":{"simulator":"CDpp","name":"avian flu","type":"Cell-DEVS"},"nodes":[{"name":"top","submodels":["avain"],"type":"coupled"},{"name":"avain","size":[35,35,1],"type":"atomic"}],"ports":[{"model":"top","name":"out","type":"output","template":"{\"value\":${0}}"},{"model":"avain","name":"out","type":"output","template":"{\"value\":${0}}"}]}

@@ -7,7 +7,7 @@ export default class TransitionCA extends Transition {
 	constructor(model, coord, port, value) {
 		super(model, port, value);
 		
-		this.coord = coord;
+		this.coord = coord.map(c => +c);
 	}
 	
 	get Id() {

@@ -155,6 +155,6 @@ export default class CDppDEVS extends Parser {
 	ModelType(model) {
 		var m = this.simulation.content.models.find(m => m.name == model);
 		
-		return model.type;
+		return m.type;
 	}
 }

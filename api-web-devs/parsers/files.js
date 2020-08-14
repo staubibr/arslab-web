@@ -163,7 +163,7 @@ export class Files {
 		this.name = simulation.content.name;
 		this.simulation = simulation;
 		this.transitions = transitions;
-		this.diagram = diagram;
+		this.diagram = diagram || new Diagram();
 		this.options = options;
 	}
 	

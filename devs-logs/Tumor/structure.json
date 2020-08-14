@@ -1,0 +1,1 @@
+{"info":{"simulator":"CDpp","name":"TIS","type":"Cell-DEVS"},"nodes":[{"name":"top","submodels":["tis"],"type":"coupled"},{"name":"tis","size":[21,21,1],"type":"atomic"}],"ports":[{"model":"top","name":"out","type":"output","template":"{\"value\":${0}}"},{"model":"tis","name":"out","type":"output","template":"{\"value\":${0}}"}]}

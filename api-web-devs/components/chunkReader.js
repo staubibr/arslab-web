@@ -21,7 +21,13 @@ export default class ChunkReader extends Evented {
 		
 		this.defer = Core.Defer();
 		
+		// let start = reverse ? file.size - CHUNK_SIZE : 0;
+        // let end = reverse ? file.size : CHUNK_SIZE;
+        // let slice = file.slice(start, end);
+		
+		// TODO: readAsArrayBuffer is better for large files supposedly
 		this.fileReader.readAsText(file);
+		// this.fileReader.readAsArrayBuffer(file);
 		
 		return this.defer.promise;
 	}
@@ -82,8 +88,5 @@ export default class ChunkReader extends Evented {
 		ReadChunk(CHUNK_SIZE);
 		
 		return d.promise;
-		
-		function ReadChunk(size) {
-		}
 	}
 }

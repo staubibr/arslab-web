@@ -32,6 +32,10 @@ export default class Styler extends Evented {
 		return this.GetScale(idx).GetColor(value);
 	}
 	
+	GetColor3(idx, value) {
+		return this.GetScale(idx).GetColor3(value);
+	}
+	
 	static FromJson(json) {
 		var styler = new Styler();		
 		

@@ -2,3 +2,13 @@
 .DS_Store
 app-gis/data/pandemic_hoya_state_LARGE.txt
 app-gis/data/pandemic_hoya_state.txt.zip
+devs-logs-outputs
+devs-logs-old
+/devs-logs-scripts/.idea/.gitignore
+/devs-logs-scripts/.idea/devs-logs-scripts.iml
+/devs-logs-scripts/.idea/inspectionProfiles/profiles_settings.xml
+/devs-logs-scripts/.idea/misc.xml
+/devs-logs-scripts/.idea/modules.xml
+/devs-logs-scripts/.idea/rSettings.xml
+/devs-logs-scripts/.idea/vcs.xml
+/web.config

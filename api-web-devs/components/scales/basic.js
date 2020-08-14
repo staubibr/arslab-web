@@ -38,13 +38,17 @@ export default class Scale extends Evented {
 	}
 	
 	GetColor(value) {
+		var color = this.GetColor3(value);
+
+		return `rgb(${color.join(",")})`;
+	}
+	
+	GetColor3(value) {
 		var clss = this.classes.find((c) => {
 			return (value >= c.start && value < c.end);
 		});
 		
-		if (!clss) return null;
-		
-		return `rgb(${clss.color.join(",")})`;
+		return clss ? clss.color : [0,0,0];
 	}
 	
 	SetColor(clss, color) {
