@@ -487,7 +487,7 @@ export default class Application extends Templated {
       
       "</div>" +
 
-      "<div id='download' style='margin-top:15px; border-top: 1px solid; '><className='element' handle ='currentSimulation' id='currentSimulation'>Current Simulation: N/A</className=>" +
+      "<div id='download''><className='element' handle ='currentSimulation' id='currentSimulation'>Current Simulation: N/A</className=><br>" +
         
       "<label id='btnDownloadHTMLtext'>Download current simulation data as csv </label>" +
       "<button handle='btnDownload' title='nls(Download_Files)' class='fas fa-download' disabled></button></style=>" +
