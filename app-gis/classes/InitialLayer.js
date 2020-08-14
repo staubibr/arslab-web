@@ -27,6 +27,9 @@ export default class InitialLayer {
       target: target,
       // In case we want to add more base maps later
       layers: [new ol.layer.Group({title: 'Base map', layers: [layer]})],
+      controls: ol.control.defaults({zoom:false}).extend([new ol.control.Zoom({
+        className: 'custom-zoom'
+    })]),
       view: new ol.View({
         center: ol.proj.transform(
           // TODO: Let users change the center or a "go-to x location"
@@ -41,9 +44,20 @@ export default class InitialLayer {
     });
     this._map.addControl(new customControl);
 
+
+    var sidebar = new ol.control.Sidebar({element: "sidebar", position: 'left'});
+    this._map.addControl(sidebar);
+
     // Lets you hide the world map
     // Every time we add a GeoJSON, it gets added to the layer switcher as well
     this._map.addControl(new ol.control.LayerSwitcher({groupSelectStyle: 'group'}));
+
+    this._map.addControl(new ol.control.FullScreen())
+    // var fullscreenControl = new ol.control.FullScreen({
+    //   source: document.getElementById('map').parentNode
+    // });
+    
+    // map.addControl(fullscreenControl);
 
 
     // GEOCODER GETS ADDED AS A LAYER AS WELL WHICH IS PROBLEMATIC FOR AddLayer(id, layer)
@@ -57,7 +71,21 @@ export default class InitialLayer {
       keepOpen: true,
       lang : 'en-US',
     });
+
     this._map.addControl(geocoder);
+
+
+    // var search = new ol.control.SearchNominatim({
+    //   target: $("#search > div").get(0),
+    // });
+    // let self = this;
+    // search.on('select', function(e) {
+    //   self._map.getView().setCenter(e.coordinate)
+    //   if (self._map.getView().getZoom()<13) {
+    //     self._map.getView().setZoom(13)
+    //     e.getSource().clear()
+    //   };
+    // });
   }
   
 }

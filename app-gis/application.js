@@ -42,6 +42,17 @@ export default class Application extends Templated {
 
     // For downloading data as CSV after all necessary files are inserted by user
     this.Node("btnDownload").On("click", this.OnButtonDownload_Click.bind(this));
+    this.AddToSideBar()
+  }
+
+  AddToSideBar(){
+    var foo = document.getElementById("profile")
+    foo.appendChild(document.getElementById("userdata"))
+    var bar = document.getElementById("manipulate")
+    bar.appendChild(document.getElementById("navigation"))
+    var spam = document.getElementById("downloadCSV")
+    spam.appendChild(document.getElementById("download"))
+    
   }
 
   /*
@@ -454,8 +465,7 @@ export default class Application extends Templated {
       "<div id='map' handle='map' widget='Widget.Map' class='map'></div>" +
 
       // Load Simulation and download its data
-      "<div handle='userdata' id='userdata' style='line-height:40px; border-style:groove; height:400px; width:576px; float:left; padding:5px;'>" +
-        "<label>Load Simulation</label>" +
+      "<div handle='userdata' id='userdata' '>" +
 
         "<div id='simTypeControls'><label for='sim-type'>Simulation type (TODO): </label>" +
         "<select handle = 'sim-type' id='sim-type'>" +
@@ -473,15 +483,19 @@ export default class Application extends Templated {
         "<div style='margin-top:10px;'><label>After simulationr results are loaded, select your GeoJSON layer: " +
         "<br><input type='file' name='vectorLayer' handle='vectorLayer' accept='.geojson' disabled></br></div>" +
 
-        "<div style='margin-top:65px; border-top: 1px solid; '><className='element' handle ='currentSimulation' id='currentSimulation'>Current Simulation: N/A</className=></div>" +
-        
-        "<label id='btnDownloadHTMLtext'>Download current simulation data as csv </label>" +
-        "<button handle='btnDownload' title='nls(Download_Files)' class='fas fa-download' disabled></button></style=>" +
+
       
       "</div>" +
 
+      "<div id='download' style='margin-top:15px; border-top: 1px solid; '><className='element' handle ='currentSimulation' id='currentSimulation'>Current Simulation: N/A</className=>" +
+        
+      "<label id='btnDownloadHTMLtext'>Download current simulation data as csv </label>" +
+      "<button handle='btnDownload' title='nls(Download_Files)' class='fas fa-download' disabled></button></style=>" +
+
+      "</div>"+
+
       // Manipulate simulation
-      "<div handle-'navigation' id='navigation' style='line-height:40px; border-style:groove; height:400px; width:580px; float:left; padding:5px;'>" +
+      "<div handle-'navigation' id='navigation'>" +
         
         "<div id='controls'><label for='sim-select'>Select Simulation to manipulate: </label>" +
         "<select handle = 'selectSimulation' id='sim-select'></select></div>" +
@@ -513,6 +527,8 @@ export default class Application extends Templated {
       "</span><span class='overlay-text' id='feature-susceptible'></span><br>" +
       "</span><span class='overlay-text' id='feature-recovered'></span><br>" +
       "</span><span class='overlay-text' id='feature-fatal'></span></div>" +
+
+      
 
 
       "</main>"

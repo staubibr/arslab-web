@@ -65,9 +65,71 @@ export default Core.Templatable(
 
     Template() {
       return (
-        "<div style='display: flex;flex-direction: row; text-align: center'>" +
-        "</div>" +
-        "<div handle='map-container' class='map-container'></div>"
+        "<div style='display: flex;flex-direction: row; text-align: center'></div>" +
+        
+        '<div id="map" handle="map-container" class="sidebar-map">' +
+        // https://github.com/Turbo87/sidebar-v2/blob/master/doc/usage.md
+          '<div id="sidebar" handle="sidebar" class="sidebar collapsed">' +
+              '<div class="sidebar-tabs">'+
+                '<ul role="tablist">'+
+                  '<li><a href="#home" role="tab"><i class="fa fa-info"></i></a></li>'+
+                  '<li><a href="#profile" role="tab"><i class="fa fa-database"></i></a></li>'+
+                  '<li><a href="#downloadCSV" role="tab"><i class="fa fa-download"></i></a></li>'+
+                  '<li><a href="#manipulate" role="tab"><i class="fa fa-pencil-square"></i></a></li>'+
+                  '<li class="disabled"><a href="#messages" role="tab"><i class="fa fa-envelope"></i></a></li>'+
+                  '<li><a href="https://github.com/staubibr/arslab-dev" role="tab" target="_blank"><i class="fa fa-link"></i></a></li>'+
+                '</ul>'+
+
+                '<ul role="tablist">'+
+                  '<li><a href="#settings" role="tab"><i class="fa fa-gear"></i></a></li>'+
+                '</ul>'+
+              '</div>'+
+
+              '<div class="sidebar-content">' +
+              '<div class="sidebar-pane" id="home">' +
+                '<h1 class="sidebar-header">Information<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>'+
+                '<p>Insert Text Here</p>' +
+              '</div>'+
+        
+              '<div class="sidebar-pane" id="profile">'+
+                '<h1>Load and Download Data</h1>'+
+                '<div></div>'+
+                '<p>'+
+                '</p>'+
+              '</div>'+
+
+              '<div class="sidebar-pane" id="downloadCSV">'+
+              '<h1>Load and Download Data</h1>'+
+              '<div></div>'+
+              '<p>'+
+              '</p>'+
+            '</div>'+
+        
+              '<div class="sidebar-pane" id="manipulate">'+
+                '<h1>Manipulate Simulations</h1>'+
+                '<div></div>'+
+                '<p></p>'+
+              '</div>'+
+        
+              '<div class="sidebar-pane" id="messages">'+
+                '<h1 class="sidebar-header">Messages<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>'+
+              '</div>'+
+        
+              '<div class="sidebar-pane" id="settings">'+
+                '<h1 class="sidebar-header">Settings<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>'+
+                '<p>Insert some settings here<br/>'+
+                '</p>'+
+                '<p>Insert more settings here<br/>'+
+                '</p>'+
+              '</div>'+
+            '</div>'+
+          '</div>'+
+              
+              
+            '</div>'+
+
+          '</div>'+
+        '</div>' 
       );
     }
   }
