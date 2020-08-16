@@ -2494,3 +2494,93 @@ java.lang.InterruptedException
 
 !ENTRY org.springframework.tooling.ls.eclipse.commons 1 0 2020-08-16 03:53:25.497
 !MESSAGE executing callback sts4.classpath.cLcmUghi SUCCESS [done]
+
+!ENTRY org.springframework.tooling.ls.eclipse.commons 1 0 2020-08-16 04:34:11.628
+!MESSAGE ClasspathListenerHandler removeClasspathListener sts4.classpath.cLcmUghi
+
+!ENTRY org.springframework.tooling.ls.eclipse.commons 1 0 2020-08-16 04:34:11.629
+!MESSAGE unsubscribing from classpath changes: sts4.classpath.cLcmUghi
+
+!ENTRY org.springframework.tooling.ls.eclipse.commons 1 0 2020-08-16 04:34:11.629
+!MESSAGE subsribers = {}
+
+!ENTRY org.springframework.tooling.ls.eclipse.commons 1 0 2020-08-16 04:34:11.629
+!MESSAGE ClasspathListenerHandler removeClasspathListener sts4.classpath.cLcmUghi => OK
+
+!ENTRY org.springframework.tooling.ls.eclipse.commons 1 0 2020-08-16 04:36:37.616
+!MESSAGE Entering DelegatingStreamConnectionProvider()
+
+!ENTRY org.springframework.tooling.ls.eclipse.commons 1 0 2020-08-16 04:36:37.617
+!MESSAGE DelegatingStreamConnectionProvider classloader = org.eclipse.osgi.internal.loader.EquinoxClassLoader@1c3c9202[org.springframework.tooling.boot.ls:1.19.0.202006181152(id=530)]
+
+!ENTRY org.springframework.tooling.ls.eclipse.commons 1 0 2020-08-16 04:36:37.617
+!MESSAGE SpringBootLanguageServer exists!
+
+!ENTRY org.springframework.tooling.ls.eclipse.commons 1 0 2020-08-16 04:36:39.120
+!MESSAGE Boot LS startup time from start to initialized: 1503ms
+
+!ENTRY org.springframework.tooling.ls.eclipse.commons 1 0 2020-08-16 04:36:39.158
+!MESSAGE ClasspathListenerHandler addClasspathListener sts4.classpath.SIPwsmsHisBatched = true
+
+!ENTRY org.springframework.tooling.ls.eclipse.commons 1 0 2020-08-16 04:36:39.158
+!MESSAGE Creating project sorter...
+
+!ENTRY org.springframework.tooling.ls.eclipse.commons 1 0 2020-08-16 04:36:39.158
+!MESSAGE Creating project sorter... DONE
+
+!ENTRY org.springframework.tooling.ls.eclipse.commons 1 0 2020-08-16 04:36:39.159
+!MESSAGE Setting up ClasspathListenerManager
+
+!ENTRY org.springframework.tooling.ls.eclipse.commons 1 0 2020-08-16 04:36:39.159
+!MESSAGE Scheduling initial event for all projects ...
+
+!ENTRY org.springframework.tooling.ls.eclipse.commons 1 0 2020-08-16 04:36:39.159
+!MESSAGE Scheduling initial event for all projects DONE
+
+!ENTRY org.springframework.tooling.ls.eclipse.commons 1 0 2020-08-16 04:36:39.159
+!MESSAGE ClasspathListenerHandler addClasspathListener sts4.classpath.SIPwsmsH => OK
+
+!ENTRY org.springframework.tooling.ls.eclipse.commons 1 0 2020-08-16 04:36:39.160
+!MESSAGE exists = true open = true => deleted = false
+
+!ENTRY org.springframework.tooling.ls.eclipse.commons 1 0 2020-08-16 04:36:39.161
+!MESSAGE classpath=66 entries
+
+!ENTRY org.springframework.tooling.ls.eclipse.commons 1 0 2020-08-16 04:36:39.161
+!MESSAGE buffering callback sts4.classpath.SIPwsmsH sim.services false 66
+
+!ENTRY org.springframework.tooling.ls.eclipse.commons 1 0 2020-08-16 04:36:39.161
+!MESSAGE exists = true open = true => deleted = false
+
+!ENTRY org.springframework.tooling.ls.eclipse.commons 1 0 2020-08-16 04:36:39.162
+!MESSAGE classpath=6 entries
+
+!ENTRY org.springframework.tooling.ls.eclipse.commons 1 0 2020-08-16 04:36:39.162
+!MESSAGE buffering callback sts4.classpath.SIPwsmsH sim.parsing false 6
+
+!ENTRY org.springframework.tooling.ls.eclipse.commons 1 0 2020-08-16 04:36:39.162
+!MESSAGE executing callback sts4.classpath.SIPwsmsH 2 batched events
+
+!ENTRY org.springframework.tooling.ls.eclipse.commons 1 0 2020-08-16 04:36:39.231
+!MESSAGE executing callback sts4.classpath.SIPwsmsH SUCCESS [done]
+
+!ENTRY org.eclipse.jface 2 0 2020-08-16 04:55:47.688
+!MESSAGE Keybinding conflicts occurred.  They may interfere with normal accelerator operation.
+!SUBENTRY 1 org.eclipse.jface 2 0 2020-08-16 04:55:47.688
+!MESSAGE A conflict occurred for CTRL+R:
+Binding(CTRL+R,
+	ParameterizedCommand(Command(org.eclipse.debug.ui.commands.RunToLine,Run to Line,
+		Resume and break when execution reaches the current line,
+		Category(org.eclipse.debug.ui.category.run,Run/Debug,Run/Debug command category,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@7ed1daff,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.debug.ui.debugging,,,system)
+Binding(CTRL+R,
+	ParameterizedCommand(Command(org.springframework.ide.eclipse.boot.restart.commands.restart,Trigger Restart,
+		Restart Spring Boot Application,
+		Category(org.eclipse.debug.ui.category.run,Run/Debug,Run/Debug command category,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@760b2d7,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.debug.ui.console,,,system)
