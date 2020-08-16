@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
-import components.Utilities;
+import components.Helper;
 import models.PaletteBucket;
 
 public class Palette {
@@ -13,7 +13,7 @@ public class Palette {
 		// Type A: [rangeBegin;rangeEnd] R G B
 		ArrayList<PaletteBucket> palette = new ArrayList<PaletteBucket>();
 		
-		Utilities.ReadFile(pal, (String l) -> {			
+		Helper.ReadFile(pal, (String l) -> {			
 			if (l.isBlank()) return;
 
 			if (!l.startsWith("[")) throw new RuntimeException("File format does not correspond to a type A palette.");
@@ -41,7 +41,7 @@ public class Palette {
 		ArrayList<int[]> colors = new ArrayList<int[]>();
 		ArrayList<PaletteBucket> palette = new ArrayList<PaletteBucket>();
 
-		Utilities.ReadFile(pal, (String l) -> {			
+		Helper.ReadFile(pal, (String l) -> {			
 			if (l.isBlank()) return;
 
 			// check number of components per line

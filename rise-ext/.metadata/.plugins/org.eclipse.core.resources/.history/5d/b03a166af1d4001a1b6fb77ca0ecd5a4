@@ -1,1 +1,0 @@
-module sim.parser.services {exports models;exports components;exports application;exports com.example.demo;exports controllers;requires sim.parser;requires spring.beans;requires spring.boot;requires spring.boot.autoconfigure;requires spring.context;requires spring.core;requires spring.web;requires spring.webmvc;}

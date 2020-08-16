@@ -1,3 +1,0 @@
-server.port=8081
-spring.http.multipart.max-file-size=5GB
-spring.http.multipart.max-request-size=5GB

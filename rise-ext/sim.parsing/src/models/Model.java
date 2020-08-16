@@ -10,41 +10,33 @@ public class Model implements Serializable {
 
 	public String name;
 	public List<String> submodels;
-	public List<Link> links;
-	public List<Port> ports;
 	
 	public String getName() {
 		return this.name;
 	}
 
 	public String getType() {
-		return submodels.size() > 0 ? "coupled" : "atomic";
+		return this.getSubmodels().size() > 0 ? "coupled" : "atomic";
 	}
 	
     public List<String> getSubmodels() {
         return submodels;
     }
 
-    public List<Link> getLinks() {
-        return links;
-    }
-
-    public List<Port> getPorts() {
-        return ports;
-    }
-    
-    public Model(String name, List<String> submodels, List<Link> links, List<Port> ports) {
+    public Model(String name, List<String> submodels) {
         this.name = name;
         this.submodels = submodels;
-        this.links = links;
-        this.ports = ports;
     }
     
     public Model(String name) {
-        this(name,new ArrayList<String>(),new ArrayList<Link>(),new ArrayList<Port>());
+        this(name, new ArrayList<String>());
     }
     
     public Model() {
-        this("",new ArrayList<String>(),new ArrayList<Link>(),new ArrayList<Port>());
+        this("",new ArrayList<String>());
+    }
+    
+    public static Model getInstance(String name) {
+    	return new Model(name);
     }
 }

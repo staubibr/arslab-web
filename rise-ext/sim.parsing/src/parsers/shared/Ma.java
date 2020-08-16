@@ -4,147 +4,192 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
-import components.Utilities;
+import components.Helper;
 import models.InitialRowValues;
 import models.Link;
 import models.Model;
-import models.ModelCdpp;
+import models.ModelCA;
 import models.Port;
+import models.Structure;
 
 public class Ma {
 
-	private static ModelCdpp current;
+	private static Model current = null;
 	
-	public static List<ModelCdpp> Parse(InputStream ma) throws IOException {
-		ArrayList<ModelCdpp> models = new ArrayList<ModelCdpp>();
-		ArrayList<Link> links = new ArrayList<Link>();
-		ArrayList<String> ignore = new ArrayList<String>();
-				
-		Utilities.ReadFile(ma, (String l) -> {
-			l = l.trim().toLowerCase();
+	private static Model ReadModel(Structure structure, String l, Model model) {
+		String name = l.substring(1, l.length() - 1);
+		
+		model = new Model(name);
+		
+		structure.getNodes().add(model);
+		
+		return model;
+	}
+	
+	private static ModelCA ReadModelCA(Structure structure, String l, ModelCA model, ArrayList<String> ignore) {
+		String name = l.substring(1, l.length() - 1);
+		
+		if (ignore.contains(name)) return model; 
+		
+		model = new ModelCA(name);
+						
+		structure.getNodes().add(model);
+		
+		return model;
+	}
+	
+	private static void ReadLink(Structure structure, Model current, String r) {
+		String[] sLink = r.split("\\s+");
+		String[] lLink = sLink[0].split("@");
+		String[] rLink = sLink[1].split("@");
+		
+		Link link = new Link();
+		
+		link.modelA = lLink.length == 1 ? current.name : lLink[1];
+		link.portA = lLink[0];
+		link.portB = rLink[0];
+		link.modelB = rLink.length == 1 ? current.name : rLink[1];
+
+		// For Cell-DEVS models linked to DEVS models, links will contain the coordinate of the 
+		// linked cell. For now, we remove that information. In the future, we should keep it.
+		// This will require a linkCA class and maybe is a good time to convert parsers as 
+		// objects rather than collection of static functions.
+		// link.modelA = link.modelA.split("\\(")[0];
+		// link.modelB = link.modelB.split("\\(")[0];
+		
+		structure.getLinks().add(link);
+	}
+
+	private static void ReadDim(ModelCA model, String r) {
+		String tmp = r.replaceAll(" ", "");
+		
+		String[] dim = tmp.substring(1, tmp.length() - 1).split(",|, ");
+		
+		model.setSize(new int[3]);
+		
+		model.size[0] = Integer.parseInt(dim[0]);
+		model.size[1] = Integer.parseInt(dim[1]);
+		model.size[2] = (dim.length == 2) ? 1 : Integer.parseInt(dim[2]);
+	}
+	
+	private static void ReadNeighborPorts(Structure structure, Model current, String r, String template) {
+		Arrays.stream(r.split(" "))
+			  .forEach(p -> {
+				  structure.getPorts().add(new Port(current.name, p, "output", template));
+			  });
+	}
+	
+	private static void ReadInitialRowValues(ModelCA model, String r) {
+		String[] split = r.split("\\s+");
+		
+		InitialRowValues rv = new InitialRowValues();
+		
+		rv.row = Integer.parseInt(split[0]);
+		
+		for (int i = 0; i < split[1].length(); i++) {
+		    char c = split[1].charAt(i);        
+
+			rv.values.add(String.valueOf(c));
+		}
+		
+		model.initialRowValues.add(rv);
+	}
+	
+	private static void CompletePorts(Structure structure, String template) {
+		structure.getLinks().forEach((Link l) -> {
+			Port pA = structure.getPorts().stream()
+										  .filter(p -> p.name.equals(l.portA) && p.model.equals(l.modelA))
+										  .findFirst()
+										  .orElse(null);
+
+			if (pA == null) structure.getPorts().add(new Port(l.modelA, l.portA, "output", template));
+
+			Port pB = structure.getPorts().stream()
+									   	  .filter(p -> p.name.equals(l.portB) && p.model.equals(l.modelB))
+										  .findFirst()
+										  .orElse(null);
+
+			if (pB == null) structure.getPorts().add(new Port(l.modelB, l.portB, "input", template));			
+		});	
+	}
+	
+	public static <T extends Model> Structure Parse(InputStream ma, String template) throws IOException {	
+		Structure structure = new Structure();
+		
+		Helper.ReadFile(ma, (String line) -> {
+			String[] lr = line.trim().toLowerCase().split(":");
+			String l = lr[0].trim();
 			
-			if (l.startsWith("[")) {
-				String name = l.substring(1, l.length() - 1);
-				
-				if (ignore.contains(name)) return; 
-				
-				current = new ModelCdpp(name);
-				
-				models.add(current);
-				
-				return;
-			}
-			
-			String[] lr = l.split(":");
+			if (l.startsWith("[")) current = ReadModel(structure, l, current);
 			
 			if (lr.length < 2) return;
 			
-			String left = lr[0].trim();
-			String right = lr[1].trim();
+			String r = lr[1].trim();
 
-			if (left.equals("components")) {
-				// components : sender@Sender
-				current.submodels.add(right.split("@")[0]);
-			}
+			// components : sender@Sender
+			if (l.equals("components")) current.submodels.add(r.split("@")[0]);
 
-			else if (left.equals("link")) {
-				// Link : dataOut@sender in1@Network
-				String[] ports = right.split("\\s+");
-				String[] lPort = ports[0].split("@");
-				String[] rPort = ports[1].split("@");
-				
-				Link link = new Link();
-				
-				link.modelA = lPort.length == 1 ? current.name : lPort[1];
-				link.portA = lPort[0];
-				link.portB = rPort[0];
-				link.modelB = rPort.length == 1 ? current.name : rPort[1];
-				
-				links.add(link);
-			}
-			
-			else if (left.equals("dim")) {
-				// dim : (30, 30)
-				String tmp = right.replaceAll(" ", "");
-				
-				String[] dim = tmp.substring(1, tmp.length() - 1).split(",|, ");
-				
-				current.size[0] = Integer.parseInt(dim[0]);
-				current.size[1] = Integer.parseInt(dim[1]);
-				current.size[2] = (dim.length == 2) ? 1 : Integer.parseInt(dim[2]);
-			}
-			
-			else if (left.equals("height")) current.size[0] = Integer.parseInt(right);
-			
-			else if (left.equals("width")) current.size[1] = Integer.parseInt(right);
-			
-			else if (left.equals("neighborports")) {
-				// NeighborPorts: scenario1 scenario2 scenario3 scenario4
-				current.ports = Arrays.stream(right.split(" "))
-									  .map(p -> new Port(p, "output"))
-									  .collect(Collectors.toList());
-			}
-			
-			else if (left.equals("initialvalue")) {
-				// initialvalue : 0
-				current.initialValue = right;
-			}
-			
-			else if (left.equals("initialrowvalue")) {
-				// initialrowvalue :  1      00111011100011100200
-				String[] split = right.split("\\s+");
-				
-				InitialRowValues rv = new InitialRowValues();
-				
-				rv.row = Integer.parseInt(split[0]);
-				
-				for (int i = 0; i < split[1].length(); i++) {
-				    char c = split[1].charAt(i);        
-
-					rv.values.add(String.valueOf(c));
-				}
-				
-				current.initialRowValues.add(rv);								
-			}
-			
-			else if (left.equals("localtransition") || left.equals("zone")) {
-				// localtransition : RegionBehavior
-				ignore.add(right);
-			}
+			// Link : dataOut@sender in1@Network
+			else if (l.equals("link")) ReadLink(structure, current, r);
 		});
 		
-		links.forEach((Link l) -> {
-			Model mA = models.stream()
-							 .filter((Model m) -> m.name.equals(l.modelA))
-							 .findFirst()
-							 .orElse(null);
+		CompletePorts(structure, template);
+				
+		structure.getPorts().sort((Port a, Port b) -> a.getModel().compareTo(b.getModel()));
+		structure.getLinks().sort((Link a, Link b) -> a.getModelA().compareTo(b.getModelA()));
+		
+		return structure;
+	}
+	
+	public static Structure ParseCA(InputStream ma, String template) throws IOException {
+		Structure structure = new Structure();
+		
+		ArrayList<String> ignore = new ArrayList<String>();
+
+		Helper.ReadFile(ma, (String line) -> {
+			String[] lr = line.trim().toLowerCase().split(":");
+			String l = lr[0].trim();
 			
-			Port pA = mA.ports.stream()
-							  .filter((Port p) -> p.name.equals(l.portA))
-							  .findFirst()
-							  .orElse(null);
+			if (l.startsWith("[")) current = ReadModelCA(structure, l, (ModelCA)current, ignore);
 			
-			if (pA == null) mA.ports.add(new Port(l.portA, "output"));
+			if (lr.length < 2) return;
 			
-			Model mB = models.stream()
-							 .filter((Model m) -> m.name.equals(l.modelB))
-							 .findFirst()
-							 .orElse(null);
-			
-			
-			Port pB = mB.ports.stream()
-							  .filter((Port p) -> p.name.equals(l.portB))
-							  .findFirst()
-							  .orElse(null);
-			
-			if (pB == null) mB.ports.add(new Port(l.portB, "input"));
-			
-			mA.links.add(new Link(l.modelA, l.portA, l.modelB, l.portB));
+			String r = lr[1].trim();
+
+			// components : sender@Sender
+			if (l.equals("components")) current.submodels.add(r.split("@")[0]);
+
+			// Link : dataOut@sender in1@Network
+			else if (l.equals("link")) ReadLink(structure, current, r);
+
+			// NeighborPorts: c ty
+			else if (l.equals("neighborports")) ReadNeighborPorts(structure, current, r, template);
+
+			// dim : (30, 30)
+			else if (l.equals("dim")) ReadDim((ModelCA)current, r);
+
+			// height : 20
+			else if (l.equals("height")) ((ModelCA)current).setSizeX(Integer.parseInt(r));
+
+			// width : 50
+			else if (l.equals("width")) ((ModelCA)current).setSizeY(Integer.parseInt(r));
+
+			// initialvalue : 0
+			else if (l.equals("initialvalue")) ((ModelCA) current).initialValue = r;
+
+			// initialrowvalue :  1      00111011100011100200
+			else if (l.equals("initialrowvalue")) ReadInitialRowValues((ModelCA) current, r);
+
+			// localtransition : RegionBehavior
+			else if (l.equals("localtransition") || l.equals("zone")) ignore.add(r);
 		});
 		
-		return models;
+		CompletePorts(structure, template);
+		
+		structure.getPorts().sort((Port a, Port b) -> a.getModel().compareTo(b.getModel()));
+		structure.getLinks().sort((Link a, Link b) -> a.getModelA().compareTo(b.getModelA()));
+		
+		return structure;
 	}
 }

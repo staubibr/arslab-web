@@ -3,6 +3,7 @@ package models;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Message implements Serializable {
 
@@ -40,14 +41,18 @@ public class Message implements Serializable {
     	this("","","","");
     }
     
-    public List<String> toArray() {
-        String[] result = new String[4];
+    public List<String> toArray(Structure structure) {
+        String[] result = new String[2];
         
-        result[0] = this.time;
-        result[1] = this.model;
-        result[2] = this.port;
-        result[3] = this.value;
+        int iP = structure.getPortIndexByMessage(this);
+        
+        result[0] = String.valueOf(iP);
+        result[1] = this.value;
         
         return Arrays.asList(result);
+    }
+    
+    public String toString(Structure structure, CharSequence delimiter) {
+    	return this.toArray(structure).stream().collect(Collectors.joining(delimiter));
     }
 }

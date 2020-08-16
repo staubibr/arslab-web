@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import components.Utilities;
+import components.Helper;
 import models.MessageCA;
 import models.Model;
 
@@ -16,7 +16,7 @@ public class Val {
 		// (0,0,0)=100
 		ArrayList<MessageCA> messages = new ArrayList<MessageCA>();
 		
-		Utilities.ReadFile(val, (String l) -> {
+		Helper.ReadFile(val, (String l) -> {
 			// probably empty line
 			if (l.isBlank() || l.length() < 4) return;
 

@@ -3,44 +3,54 @@ package parsers.cdpp;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import components.Utilities;
+import components.FilesMap;
+import components.Helper;
 import models.MessageCA;
-import models.Model;
-import models.ModelCdpp;
+import models.ModelCA;
 import models.Parsed;
-import models.Simulation;
+import models.Port;
+import models.Structure;
+import models.StructureInfo;
+import parsers.IParser;
 import parsers.shared.Ma;
 import parsers.shared.Val;
 
-public class CellDevs {
+public class CellDevs implements IParser {
 
+	private static final String TEMPLATE = "{\"value\":${0}}";
 	private static List<MessageCA> messages;
+
+	@Override
+	public Parsed Parse(FilesMap files) throws IOException {
+		String name = files.FindName(".ma");
+		Structure structure = Ma.ParseCA(files.FindByExt(".ma"), TEMPLATE);
+
+		structure.setInfo(new StructureInfo(name, "CDpp", "Cell-DEVS"));
+
+		structure.nodes.forEach(m -> {
+			structure.getPorts().add(new Port(m.name, "out", "output", TEMPLATE));
+		});
 		
-	public static Parsed Parse(InputStream ma, InputStream val, InputStream log)  throws IOException {		
-		List<ModelCdpp> modelsCdpp = Ma.Parse(ma);
-		List<Model> models = new ArrayList<>(modelsCdpp);
+		messages = ParseLog(structure, files.FindByExt(".val"), Helper.FindByExt(files, ".log"));
 		
-		// TODO: Do CDpp models always have a single model?
-		ModelCdpp main = modelsCdpp.get(1);
+		files.Close();
 		
-		Simulation sim = new Simulation(main.name, "Cell-DEVS", "CDpp", models);
-		
-		messages = ParseLog(main, val, log);
-		
-		return new Parsed(sim, messages);
+		return new Parsed(name, structure, messages);
 	}
+	
+	private List<MessageCA> ParseLog(Structure structure, InputStream val, InputStream log) throws IOException {	
+		// TODO: Do CDpp models always have a single model?	
+		ModelCA main = (ModelCA)structure.getNodes().get(1);
 		
-	private static List<MessageCA> ParseLog(ModelCdpp model, InputStream val, InputStream log) throws IOException {		
 		// Merge all possible 00:000 frame messages (val > rows > global)
-		messages = Utilities.MergeFrames(model.GlobalFrame(), model.RowFrame());
+		messages = Helper.MergeFrames(main.GlobalFrame(), main.RowFrame());
 		
-		if (val != null) messages = Utilities.MergeFrames(messages, Val.Parse(val, model));
+		if (val != null) messages = Helper.MergeFrames(messages, Val.Parse(val, main));
 		
-		Utilities.ReadFile(log, (String l) -> {
+		Helper.ReadFile(log, (String l) -> {
 			// Mensaje Y / 00:00:05:000 / lug(9,35,0)(1873) / out /    101.00000 para lug(02)
 			// probably empty line
 			if (!l.startsWith("Mensaje Y")) return;
