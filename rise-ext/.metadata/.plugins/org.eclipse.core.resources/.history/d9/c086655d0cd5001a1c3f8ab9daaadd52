@@ -1,5 +1,0 @@
-package components;
-
-public interface LineProscessor {
-    public <T> int apply(T content, String line);
-}

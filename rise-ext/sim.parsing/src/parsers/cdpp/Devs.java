@@ -9,33 +9,38 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import components.Utilities;
+import components.FilesMap;
+import components.Helper;
 import models.Message;
 import models.Model;
 import models.Parsed;
-import models.Simulation;
+import models.Structure;
+import models.StructureInfo;
+import parsers.IParser;
 import parsers.shared.Ma;
 
-public class Devs {
+public class Devs implements IParser {
 
+	private static final String TEMPLATE = "{\"value\":${0}}";
 	private static List<Message> messages;
 		
-	public static Parsed Parse(String name, InputStream ma, InputStream log)  throws IOException {		
-		List<Model> models = Ma.Parse(ma).stream().map(m -> (Model)m).collect(Collectors.toList());
+	public Parsed Parse(FilesMap files)  throws IOException {
+		String name = files.FindName(".ma");
+		Structure structure = (new Ma()).Parse(files.FindByExt(".ma"), TEMPLATE);
 		
-		Simulation sim = new Simulation(name, "Cell-DEVS", "CDpp", models);
+		structure.setInfo(new StructureInfo(name, "CDpp", "DEVS"));
 		
-		messages = ParseLog(models, log);
-		
-		return new Parsed(sim, messages);
+		messages = ParseLog(structure, files.FindByExt("log"));
+				
+		return new Parsed(name, structure, messages);
 	}
 		
-	private static List<Message> ParseLog(List<Model> models, InputStream log) throws IOException {
+	private static List<Message> ParseLog(Structure structure, InputStream log) throws IOException {
 		messages = new ArrayList<Message>();
 		
-		List<Model> coupled = models.stream().filter(md -> md.getType().equals("coupled")).collect(Collectors.toList());
+		List<Model> coupled = structure.getNodes().stream().filter(md -> md.getType().equals("coupled")).collect(Collectors.toList());
 		
-		Utilities.ReadFile(log, (String l) -> {
+		Helper.ReadFile(log, (String l) -> {
 			// Mensaje Y / 00:00:20:000 / top(01) / packetsent /      1.00000 para Root(00)
 			if (!l.startsWith("Mensaje Y")) return;
 			

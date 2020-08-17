@@ -1,7 +1,0 @@
-package components;
-
-public class ZipFile {
-	public AddFile(String name, byte[] buffer) {
-		
-	}
-}

@@ -30,16 +30,16 @@ public class MessageCA extends Message {
     	this("","",null,"","");
     }
 
-    public List<String> toArray() {
-        String[] result = new String[7];
+    public List<String> toArray(Structure structure) {
+        String[] result = new String[5];
         
-        result[0] = this.time;
-        result[1] = this.model;
-        result[2] = String.valueOf(this.coord[0]);
-        result[3] = String.valueOf(this.coord[1]);
-        result[4] = String.valueOf(this.coord[2]);
-        result[5] = this.port;
-        result[6] = this.value;
+        int iP = structure.getPortIndexByMessage(this);
+        				  
+        result[0] = String.valueOf(this.coord[0]);
+        result[1] = String.valueOf(this.coord[1]);
+        result[2] = String.valueOf(this.coord[2]);
+        result[3] = String.valueOf(iP);
+        result[4] = this.value;
 
         return Arrays.asList(result);
     }

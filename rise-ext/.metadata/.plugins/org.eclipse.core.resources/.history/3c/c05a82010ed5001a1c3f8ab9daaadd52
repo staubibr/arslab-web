@@ -1,5 +1,0 @@
-package components;
-
-public interface LineProcessor<T> {
-    public void process(T content, String line);
-}

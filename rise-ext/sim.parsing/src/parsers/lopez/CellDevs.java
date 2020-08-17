@@ -7,40 +7,50 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import components.Utilities;
+import components.FilesMap;
+import components.Helper;
 import models.MessageCA;
 import models.Model;
-import models.ModelCdpp;
 import models.Parsed;
 import models.Port;
-import models.Simulation;
+import models.Structure;
+import models.StructureInfo;
+import parsers.IParser;
 import parsers.shared.Ma;
 
 // TODO: This is very similar to CDpp Cell-DEVS, maybe they could be combined
-public class CellDevs {
+public class CellDevs implements IParser {
 
+	private static final String TEMPLATE = "{\"value\":${0}}";
 	private static List<MessageCA> messages;
 		
-	public static Parsed Parse(InputStream ma, InputStream log)  throws IOException {		
-		List<ModelCdpp> modelsCdpp = Ma.Parse(ma);
-		List<Model> models = new ArrayList<>(modelsCdpp);
+	public Parsed Parse(FilesMap files)  throws IOException {
+		String name = files.FindName(".ma");
+		Structure structure = (new Ma()).ParseCA(files.FindByExt(".ma"), TEMPLATE);
+				
+		FixStructure(structure);
+				
+		structure.setInfo(new StructureInfo(name, "Lopez", "Cell-DEVS"));
 		
-		// TODO: Do CDpp models always have a single model?
-		ModelCdpp main = modelsCdpp.get(1);
+		messages = ParseLog(structure, files.FindByExt(".log"));
 		
-		main.ports.add(new Port("out", "output"));
-		
-		Simulation sim = new Simulation(main.name, "Cell-DEVS", "Lopez", models);
-		
-		messages = ParseLog(main, log);
-		
-		return new Parsed(sim, messages);
+		return new Parsed(name, structure, messages);
 	}
+	
+	private static void FixStructure(Structure structure) {
+		structure.getPorts().forEach(p -> p.name = "out_" + p.name);
 		
-	private static List<MessageCA> ParseLog(ModelCdpp model, InputStream log) throws IOException {						
+		structure.getNodes().forEach(m -> {
+			structure.getPorts().add(new Port(m.name, "out", "output", TEMPLATE));
+		});
+		
+		structure.getPorts().forEach(p -> p.template = "{\"value\":${0}}");
+	}
+	
+	private static List<MessageCA> ParseLog(Structure structure, InputStream log) throws IOException {				
 		messages = new ArrayList<MessageCA>();
 		
-		Utilities.ReadFile(log, (String l) -> {
+		Helper.ReadFile(log, (String l) -> {
 			// 0 / L / Y / 00:00:00:000:0 / region(0,0)(02) / out_scenario4 /      0.00000 / region(01)
 			// probably empty line
 			if (!l.startsWith("0 / L / Y")) return;
