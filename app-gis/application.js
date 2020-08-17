@@ -26,7 +26,7 @@ export default class Application extends Templated {
     super(node);
 
     // By default the legend will be red-white unless otherwise specified by the user
-    this.CreateLegend(Core.Nls("App_Legend_Title"), "translate(5,30)");
+    this.CreateLegend(Core.Nls("App_Legend_Title"), "translate(10,10)");
 
     // The world map will appear prior to any vector layers being added overtop
     this.Widget("map").InitTileLayer();
@@ -52,7 +52,6 @@ export default class Application extends Templated {
     bar.appendChild(document.getElementById("navigation"))
     var spam = document.getElementById("downloadCSV")
     spam.appendChild(document.getElementById("download"))
-    
   }
 
   /*
@@ -140,22 +139,7 @@ export default class Application extends Templated {
         let simNum = (self.DataFromFiles == undefined) ? 0 : self.DataFromFiles.length;
         let newTitle = "simulation" + simNum + "_" + title;
 
-        // For simulation selector 
-        var elem = document.createElement('option')
-        var elemText = document.createTextNode(newTitle + " with " + self.data.length + " cycles")
-        elem.appendChild(elemText)
-        var foo = document.getElementById("sim-select")
-        foo.appendChild(elem)
-        // Change to the most recent option
-        foo.selectedIndex = foo.options.length-1
-
-        // For simulaton cycle selector 
-        self.Elem("cycle").setAttribute("max", self.data.length - 1);
-        self.Elem("output").textContent = 0;
-        document.getElementById("cycle").value = 0
-
-        // For current simulation 
-        document.getElementById('currentSimulation').innerText = "Current Simulation: " + newTitle + " with " + self.data.length + " cycles"
+        self.SimulationSelectors(newTitle, self.data.length)
         
         // Get current number of classes for scale
         let classes = (self.currentClass == undefined) ? 4 : self.currentClass;
@@ -176,6 +160,31 @@ export default class Application extends Templated {
       document.querySelector("input[name='vectorLayer']").value = null;
       self.Elem("vectorLayer").disabled = true;
     }, false);
+  }
+
+  SimulationSelectors(title, length){
+    // For manipulate data simulation selector 
+    var elem = document.createElement('option')
+    var elemText = document.createTextNode(title + " with " + length + " cycles")
+    elem.appendChild(elemText)
+    var foo = document.getElementById("sim-select")
+    foo.appendChild(elem)
+    // Change to the most recent option
+    foo.selectedIndex = foo.options.length-1
+
+    // For download data simulation selector
+    // The next 3 lines are needed, dont remove it. 
+    elem = document.createElement('option')
+    elemText = document.createTextNode(title + " with " + length + " cycles")
+    elem.appendChild(elemText)
+    var bar = document.getElementById("sim-download")
+    bar.appendChild(elem)
+    bar.selectedIndex = bar.options.length-1
+
+    // For simulaton cycle selector 
+    this.Elem("cycle").setAttribute("max", length - 1);
+    this.Elem("output").textContent = 0;
+    document.getElementById("cycle").value = 0
   }
 
   /* 
@@ -253,8 +262,6 @@ export default class Application extends Templated {
     svg.selectAll("*").remove();
 
     svg.append("g").attr("class", title).attr("transform", translate);
-
-    svg.append("text").text("Proportion of the DAUID Population with Infection").attr("transform", "translate(1,25)");
 
     var colorLegend = d3
       .legendColor()
@@ -365,8 +372,6 @@ export default class Application extends Templated {
 
     svg.append("g").attr("class", title).attr("transform", translate);
 
-    svg.append("text").text("Proportion of the DAUID Population with Infection").attr("transform", "translate(1,25)");
-
     var colorLegend = d3
       .legendColor()
       .labelFormat(d3.format(".2f"))
@@ -377,7 +382,6 @@ export default class Application extends Templated {
   }
 
   UpdateSimulationCycleSelectorToCurrentSimulation(){
-    document.getElementById('currentSimulation').innerText = "Current simulation: " + this.currentSimulationTitle + " with " + this.data.length + " cycles"
     this.Elem("cycle").setAttribute("max", this.data.length - 1);
     this.Elem("output").textContent = this.currentSimulationCycle;
     document.getElementById("cycle").value = this.currentSimulationCycle;
@@ -451,7 +455,7 @@ export default class Application extends Templated {
 
    
   OnButtonDownload_Click(ev) {
-    var index = document.getElementById('sim-select').selectedIndex
+    var index = document.getElementById('sim-download').selectedIndex
     new CreateCsvFileForDownload(this.allTransitions[index].transitionData);
   }
 
@@ -464,47 +468,53 @@ export default class Application extends Templated {
       // Map 
       "<div id='map' handle='map' widget='Widget.Map' class='map'></div>" +
 
-      // Load Simulation and download its data
-      "<div handle='userdata' id='userdata' '>" +
+      // Load Simulation
+      "<div handle='userdata' id='userdata'>" +
 
-        "<div id='simTypeControls'><label for='sim-type'>Simulation type (TODO): </label>" +
-        "<select handle = 'sim-type' id='sim-type'>" +
-          "<option>Pandemic</option>" +
-          "<option>Fire</option>" +
-          "<option>Flood</option>" +
-          "<option>Earthquake</option>" +
-          "<option>Co2</option>" +
-        "</select></div>" +
+        // "<div id='simTypeControls'><label for='sim-type'>Simulation type (TODO): </label>" +
+        // "<select handle = 'sim-type' id='sim-type'>" +
+        //   "<option>Pandemic</option>" +
+        //   "<option>Fire</option>" +
+        //   "<option>Flood</option>" +
+        //   "<option>Earthquake</option>" +
+        //   "<option>Co2</option>" +
+        // "</select></div>" +
   
-        "<div style='margin-top:10px;'><label>Select your simulation results: " +
-        "<br><input type='file' handle = 'simResults' name='simResults' accept='.txt'></br></div>" +
+        "<div style='margin-top:10px;'><label>1. Select your simulation results: " +
+          "<br><input type='file' handle = 'simResults' name='simResults' accept='.txt'></br>"+
+        "</div>" +
   
+        "<div style='margin-top:10px;'><label>2. Select your GeoJSON layer: " +
+          "<br><input type='file' name='vectorLayer' handle='vectorLayer' accept='.geojson' disabled></br>" +
+        "</div>" +
 
-        "<div style='margin-top:10px;'><label>After simulationr results are loaded, select your GeoJSON layer: " +
-        "<br><input type='file' name='vectorLayer' handle='vectorLayer' accept='.geojson' disabled></br></div>" +
-
-
-      
       "</div>" +
 
-      "<div id='download''><className='element' handle ='currentSimulation' id='currentSimulation'>Current Simulation: N/A</className=><br>" +
-        
-      "<label id='btnDownloadHTMLtext'>Download current simulation data as csv </label>" +
-      "<button handle='btnDownload' title='nls(Download_Files)' class='fas fa-download' disabled></button></style=>" +
+      // Download data
+      "<div id='download'>" +
+      
+      "<label for='sim-type'>Select a simulation to download: </label>" +
+      "<select handle = 'sim-download' id='sim-download'></select>" +
+
+      '<br><br><button class="btn" handle="btnDownload" title="nls(Download_Files)" disabled><i class="fa fa-download"></i> Download</button>' +
 
       "</div>"+
 
       // Manipulate simulation
       "<div handle-'navigation' id='navigation'>" +
         
-        "<div id='controls'><label for='sim-select'>Select Simulation to manipulate: </label>" +
-        "<select handle = 'selectSimulation' id='sim-select'></select></div>" +
+        "<div id='controls'>" +
+          "<label for='sim-select'>Select Simulation to manipulate: </label>" +
+          "<select handle = 'selectSimulation' id='sim-select'></select>" +
+        "</div>" +
 
         "<label>Simulation Cycle Selector: <input handle='cycle' type='range' name='cycle' id='cycle' min='0' max = '0' step='1' value='0' >" +
         "<output handle='output' class='cycle-output' for='cycle'></output></label>" +
 
-        "<div><label for='favcolor'>Change colour scale: </label>" +
-        "<input type='color' id='colorOne' name='favcolor' value='#ff0000'><br></div>" +
+        "<div>" +
+          "<label for='favcolor'>Change colour scale: </label>" +
+          "<input type='color' id='colorOne' name='favcolor' value='#ff0000'><br>" +
+        "</div>" +
 
         "<div id='classControls'><label for='class-select'>Select number of classes: </label>" +
         "<select handle = 'selectClasses' id='class-select'>" +
@@ -512,7 +522,8 @@ export default class Application extends Templated {
           "<option>5</option>" +
         "</select></div>" +
         
-        "<svg handle='svg' width = '960' height = '150'></svg>" +
+        
+        "<legend class='svg-div'>Proportion Infected<svg id='svg' class='svg' handle='svg' width = '960' height = '150'></svg></legend>" +
 
       "</div>" +
 

@@ -73,10 +73,10 @@
 ## TODO:
 - See if mapOnClick works on multiple layers 
 - Let users video record the simulation
-- Fix mapOnClick to be more visually friendly
-- Place the legend onto the OpenLayer map
 - Clean up UI
 - Let users select simulation type
+- Let users see legend for density of SIR, fatalities, population, etc.
+- Fix the GeoCoder so it doesn't add itself as a layer
 
 ## Resources:
 
@@ -107,6 +107,8 @@ The Grandfather of Open Source GIS on the web
 [ol.layerswitcher](https://github.com/walkermatt/ol-layerswitcher)
 
 [ol.geocoder](https://github.com/jonataswalker/ol-geocoder)
+
+[ol.control.Sidebar](https://github.com/Turbo87/sidebar-v2/blob/master/doc/usage.md)
 
 #### Web Development
 

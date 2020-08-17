@@ -135,8 +135,8 @@ input[type="range"] {
 } */
 
 .custom-control {
-    bottom: 10px;
-    left: 10px;
+    bottom: 2px;
+    left: 2px;
     width: 350px;
     height: 200px;
     border-radius: 10px;
@@ -192,10 +192,39 @@ input[type="range"] {
     left:0;
     top:0;
     bottom: 100px;
-    height:35%;
+    max-height:32%;
+
 
 }
 
+.legend-svg {
+    background-color: rgba(255, 255, 255, 0.466);
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    width: 133px;
+    height: 120px;
+    border-radius: 10px;
+    border: 1px solid  rgba(0,60,136,.5);
+    
+}
+
+.ol-attribution.ol-unselectable.ol-control.ol-collapsed {
+    text-align: right;
+    top: 140px;
+    right: 7px;
+    max-width: calc(100% - 1.3em);
+}
+
+.ol-attribution.ol-unselectable.ol-control {
+    text-align: right;
+    bottom: 33.0em;
+    right: 0.5em;
+    top: 140px;
+    right: 7px;
+    max-width: calc(100% - 1.3em);
+    max-height: fit-content;
+}
 
 
 .custom-zoom{
