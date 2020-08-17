@@ -44,7 +44,6 @@
     <fullyQualifiedTypeName name="java.io.IOException"/>
     <fullyQualifiedTypeName name="java.io.FileOutputStream"/>
     <fullyQualifiedTypeName name="java.util.stream.Collectors"/>
-    <fullyQualifiedTypeName name="parsers.auto.Auto"/>
     <fullyQualifiedTypeName name="java.io.File"/>
     <fullyQualifiedTypeName name="java.io.FileInputStream"/>
     <fullyQualifiedTypeName name="java.util.List"/>
@@ -60,4 +59,5 @@
     <fullyQualifiedTypeName name="java.io.InputStream"/>
     <fullyQualifiedTypeName name="components.FilesMap"/>
     <fullyQualifiedTypeName name="parsers.IParser"/>
+    <fullyQualifiedTypeName name="parsers.auto.Auto"/>
 </qualifiedTypeNameHistroy>

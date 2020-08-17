@@ -26,29 +26,31 @@ public class CellDevs implements IParser {
 	@Override
 	public Parsed Parse(FilesMap files) throws IOException {
 		String name = files.FindName(".ma");
-		Structure structure = Ma.ParseCA(files.FindByExt(".ma"), TEMPLATE);
+		Structure structure = (new Ma()).ParseCA(files.FindByExt(".ma"), TEMPLATE);
 
 		structure.setInfo(new StructureInfo(name, "CDpp", "Cell-DEVS"));
 
-		structure.nodes.forEach(m -> {
+		FixStructure(structure);
+		
+		messages = ParseLog(structure, files.FindByExt(".val"), files.FindByExt(".log"));
+				
+		return new Parsed(name, structure, messages);
+	}
+	
+	private static void FixStructure(Structure structure) {
+		structure.getNodes().forEach(m -> {
 			structure.getPorts().add(new Port(m.name, "out", "output", TEMPLATE));
 		});
-		
-		messages = ParseLog(structure, files.FindByExt(".val"), Helper.FindByExt(files, ".log"));
-		
-		files.Close();
-		
-		return new Parsed(name, structure, messages);
 	}
 	
 	private List<MessageCA> ParseLog(Structure structure, InputStream val, InputStream log) throws IOException {	
 		// TODO: Do CDpp models always have a single model?	
-		ModelCA main = (ModelCA)structure.getNodes().get(1);
+		ModelCA main = (ModelCA)structure.getNodes().get(0);
 		
 		// Merge all possible 00:000 frame messages (val > rows > global)
 		messages = Helper.MergeFrames(main.GlobalFrame(), main.RowFrame());
 		
-		if (val != null) messages = Helper.MergeFrames(messages, Val.Parse(val, main));
+		if (val != null) messages = Helper.MergeFrames(messages, (new Val()).Parse(val, main));
 		
 		Helper.ReadFile(log, (String l) -> {
 			// Mensaje Y / 00:00:05:000 / lug(9,35,0)(1873) / out /    101.00000 para lug(02)

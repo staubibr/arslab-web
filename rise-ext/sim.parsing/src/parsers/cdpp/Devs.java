@@ -26,14 +26,12 @@ public class Devs implements IParser {
 		
 	public Parsed Parse(FilesMap files)  throws IOException {
 		String name = files.FindName(".ma");
-		Structure structure = Ma.Parse(files.FindByExt(".ma"), TEMPLATE);
+		Structure structure = (new Ma()).Parse(files.FindByExt(".ma"), TEMPLATE);
 		
 		structure.setInfo(new StructureInfo(name, "CDpp", "DEVS"));
 		
 		messages = ParseLog(structure, files.FindByExt("log"));
-		
-		files.Close();
-		
+				
 		return new Parsed(name, structure, messages);
 	}
 		

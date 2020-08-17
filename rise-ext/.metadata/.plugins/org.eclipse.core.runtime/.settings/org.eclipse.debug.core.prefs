@@ -1,2 +1,2 @@
 eclipse.preferences.version=1
-prefWatchExpressions=<?xml version\="1.0" encoding\="UTF-8" standalone\="no"?>\n<watchExpressions>\n    <expression enabled\="true" text\="entry.getValue().markSupported()"/>\n    <expression enabled\="true" text\="this"/>\n    <expression enabled\="true" text\="entry.getValue().markSupported()"/>\n    <expression enabled\="true" text\="e.getMessage()"/>\n</watchExpressions>\n
+prefWatchExpressions=<?xml version\="1.0" encoding\="UTF-8" standalone\="no"?>\n<watchExpressions>\n    <expression enabled\="true" text\="e"/>\n    <expression enabled\="true" text\="current"/>\n    <expression enabled\="true" text\="e.getMessage()"/>\n    <expression enabled\="true" text\="structure.getNodes()"/>\n</watchExpressions>\n

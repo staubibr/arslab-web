@@ -1,16 +1,16 @@
 package components;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 
-public class FilesMap extends HashMap<String, InputStream>{
+public class FilesMap extends HashMap<String, BufferedInputStream>{
 	private static final long serialVersionUID = 1L;
 
 	public void Mark(int pos) throws IOException {
 		// Reset Streams to read them again later.
 		// foreach requires a try catch block or a biconsumer declaration, awkward.
-		for (Entry<String, InputStream> entry : this.entrySet()) {
+		for (Entry<String, BufferedInputStream> entry : this.entrySet()) {
 			entry.getValue().mark(pos);
 		}
 	}
@@ -18,7 +18,7 @@ public class FilesMap extends HashMap<String, InputStream>{
 	public void Reset() throws IOException {
 		// Reset Streams to read them again later.
 		// foreach requires a try catch block or a biconsumer declaration, awkward.
-		for (Entry<String, InputStream> entry : this.entrySet()) {
+		for (Entry<String, BufferedInputStream> entry : this.entrySet()) {
 			entry.getValue().reset();
 		}
 	}
@@ -26,7 +26,7 @@ public class FilesMap extends HashMap<String, InputStream>{
 	public void Close() throws IOException {
 		// Reset Streams to read them again later.
 		// foreach requires a try catch block or a biconsumer declaration, awkward.
-		for (Entry<String, InputStream> entry : this.entrySet()) {
+		for (Entry<String, BufferedInputStream> entry : this.entrySet()) {
 			entry.getValue().close();
 		}
 	}
@@ -44,7 +44,7 @@ public class FilesMap extends HashMap<String, InputStream>{
 		return (key == null) ? null : key.substring(0, key.indexOf("."));
 	}
 	
-	public InputStream FindByExt(String ext) {
+	public BufferedInputStream FindByExt(String ext) {
 		String key = FindKey(ext);
 		
 		return (key == null) ? null : this.get(key);

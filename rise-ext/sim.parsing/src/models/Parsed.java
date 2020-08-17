@@ -13,10 +13,19 @@ public class Parsed {
 	public Structure structure;
 	public List<? extends Message> messages;
 	
+	// TODO: Maybe create a class for this horrible double list 
+	// It's this way becasue we can have a palette for each layer
+	public List<List<PaletteBucket>> palette;
+	
+	public void setPalette(List<List<PaletteBucket>> palette) {
+		this.palette = palette;
+	}
+	
 	public Parsed(String name, Structure structure, List<? extends Message> messages) {
 		this.name = name;
 		this.structure = structure;
 		this.messages = messages;
+		this.palette = null;
 	}
 	
 	public byte[] toZipByteArray() throws JsonProcessingException, IOException {
@@ -25,6 +34,11 @@ public class Parsed {
 		zip.Open();
 		zip.Add("structure.json", Helper.JsonToByte(this.structure));
 		zip.Add("messages.log", Helper.MessagesToByte(this.structure, this.messages));
+		
+		if (this.palette != null) {
+			zip.Add("style.json", Helper.JsonToByte(this.palette));
+		}
+		
 		zip.Close();
 		
 		return zip.toByteArray();

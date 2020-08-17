@@ -15,31 +15,31 @@ import models.Structure;
 
 public class Ma {
 
-	private static Model current = null;
+	private Model current = null;
 	
-	private static Model ReadModel(Structure structure, String l, Model model) {
+	private Model ReadModel(Structure structure, String l) {
 		String name = l.substring(1, l.length() - 1);
 		
-		model = new Model(name);
+		Model out = new Model(name);
 		
-		structure.getNodes().add(model);
+		structure.getNodes().add(out);
 		
-		return model;
+		return out;
 	}
 	
-	private static ModelCA ReadModelCA(Structure structure, String l, ModelCA model, ArrayList<String> ignore) {
+	private ModelCA ReadModelCA(Structure structure, String l, ArrayList<String> ignore) {
 		String name = l.substring(1, l.length() - 1);
 		
-		if (ignore.contains(name)) return model; 
+		if (ignore.contains(name)) return null; 
 		
-		model = new ModelCA(name);
+		ModelCA out = new ModelCA(name);
 						
-		structure.getNodes().add(model);
+		structure.getNodes().add(out);
 		
-		return model;
+		return out;
 	}
 	
-	private static void ReadLink(Structure structure, Model current, String r) {
+	private void ReadLink(Structure structure, Model current, String r) {
 		String[] sLink = r.split("\\s+");
 		String[] lLink = sLink[0].split("@");
 		String[] rLink = sLink[1].split("@");
@@ -61,7 +61,7 @@ public class Ma {
 		structure.getLinks().add(link);
 	}
 
-	private static void ReadDim(ModelCA model, String r) {
+	private void ReadDim(ModelCA model, String r) {
 		String tmp = r.replaceAll(" ", "");
 		
 		String[] dim = tmp.substring(1, tmp.length() - 1).split(",|, ");
@@ -73,14 +73,14 @@ public class Ma {
 		model.size[2] = (dim.length == 2) ? 1 : Integer.parseInt(dim[2]);
 	}
 	
-	private static void ReadNeighborPorts(Structure structure, Model current, String r, String template) {
+	private void ReadNeighborPorts(Structure structure, Model current, String r, String template) {
 		Arrays.stream(r.split(" "))
 			  .forEach(p -> {
 				  structure.getPorts().add(new Port(current.name, p, "output", template));
 			  });
 	}
 	
-	private static void ReadInitialRowValues(ModelCA model, String r) {
+	private void ReadInitialRowValues(ModelCA model, String r) {
 		String[] split = r.split("\\s+");
 		
 		InitialRowValues rv = new InitialRowValues();
@@ -96,7 +96,7 @@ public class Ma {
 		model.initialRowValues.add(rv);
 	}
 	
-	private static void CompletePorts(Structure structure, String template) {
+	private void CompletePorts(Structure structure, String template) {
 		structure.getLinks().forEach((Link l) -> {
 			Port pA = structure.getPorts().stream()
 										  .filter(p -> p.name.equals(l.portA) && p.model.equals(l.modelA))
@@ -114,14 +114,14 @@ public class Ma {
 		});	
 	}
 	
-	public static <T extends Model> Structure Parse(InputStream ma, String template) throws IOException {	
+	public <T extends Model> Structure Parse(InputStream ma, String template) throws IOException {	
 		Structure structure = new Structure();
-		
+				
 		Helper.ReadFile(ma, (String line) -> {
 			String[] lr = line.trim().toLowerCase().split(":");
 			String l = lr[0].trim();
 			
-			if (l.startsWith("[")) current = ReadModel(structure, l, current);
+			if (l.startsWith("[")) current = ReadModel(structure, l);
 			
 			if (lr.length < 2) return;
 			
@@ -142,18 +142,20 @@ public class Ma {
 		return structure;
 	}
 	
-	public static Structure ParseCA(InputStream ma, String template) throws IOException {
+	public Structure ParseCA(InputStream ma, String template) throws IOException {
 		Structure structure = new Structure();
-		
+				
 		ArrayList<String> ignore = new ArrayList<String>();
 
+		ignore.add("top");
+		
 		Helper.ReadFile(ma, (String line) -> {
 			String[] lr = line.trim().toLowerCase().split(":");
 			String l = lr[0].trim();
 			
-			if (l.startsWith("[")) current = ReadModelCA(structure, l, (ModelCA)current, ignore);
+			if (l.startsWith("[")) current = ReadModelCA(structure, l, ignore);
 			
-			if (lr.length < 2) return;
+			if (current == null || lr.length < 2) return;
 			
 			String r = lr[1].trim();
 

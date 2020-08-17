@@ -1,5 +1,6 @@
 package parsers.auto;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.util.List;
 
@@ -7,19 +8,29 @@ import components.FilesMap;
 import components.Helper;
 import models.Parsed;
 import parsers.IParser;
+import parsers.shared.Palette;
 
 public class Auto implements IParser {
 		
 	public Parsed Parse(FilesMap files) throws IOException {
+		// Parse structure and messages first. Inputstream will have to be reset because
+		// the automatic detection process reads a couple of lines
 		files.Mark(0);
-		
+
 		IParser parser = DetectParser(files);
+		
+		if (parser == null) throw new RuntimeException("Unable to automatically detect parser from files.");
 
 		files.Reset();
-				
-		if (parser == null) throw new RuntimeException("Unable to automatically detect parser from files.");
 		
-		return parser.Parse(files);
+		Parsed result = parser.Parse(files);
+		
+		// Parse palette if provided
+		BufferedInputStream pal = files.FindByExt(".pal");
+					
+		if (pal != null) result.setPalette((new Palette()).Parse(pal));
+		
+		return result;
 	}
 	
 	private IParser DetectParser(FilesMap files) throws IOException {

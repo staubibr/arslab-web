@@ -10,6 +10,7 @@ import java.util.List;
 import components.FilesMap;
 import components.Helper;
 import models.MessageCA;
+import models.Model;
 import models.Parsed;
 import models.Port;
 import models.Structure;
@@ -25,27 +26,25 @@ public class CellDevs implements IParser {
 		
 	public Parsed Parse(FilesMap files)  throws IOException {
 		String name = files.FindName(".ma");
-		Structure structure = Ma.ParseCA(files.FindByExt(".ma"), TEMPLATE);
+		Structure structure = (new Ma()).ParseCA(files.FindByExt(".ma"), TEMPLATE);
 				
-		FixPorts(structure);
+		FixStructure(structure);
 				
 		structure.setInfo(new StructureInfo(name, "Lopez", "Cell-DEVS"));
 		
 		messages = ParseLog(structure, files.FindByExt(".log"));
-
-		files.Close();
 		
 		return new Parsed(name, structure, messages);
 	}
 	
-	private static void FixPorts(Structure structure) {
-		structure.ports.forEach(p -> p.name = "out_" + p.name);
+	private static void FixStructure(Structure structure) {
+		structure.getPorts().forEach(p -> p.name = "out_" + p.name);
 		
-		structure.nodes.forEach(m -> {
+		structure.getNodes().forEach(m -> {
 			structure.getPorts().add(new Port(m.name, "out", "output", TEMPLATE));
 		});
 		
-		structure.ports.forEach(p -> p.template = "{\"value\":${0}}");
+		structure.getPorts().forEach(p -> p.template = "{\"value\":${0}}");
 	}
 	
 	private static List<MessageCA> ParseLog(Structure structure, InputStream log) throws IOException {				

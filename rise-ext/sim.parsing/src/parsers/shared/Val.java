@@ -12,7 +12,7 @@ import models.Model;
 
 public class Val {
 
-	public static List<MessageCA> Parse(InputStream val, Model model) throws IOException {
+	public List<MessageCA> Parse(InputStream val, Model model) throws IOException {
 		// (0,0,0)=100
 		ArrayList<MessageCA> messages = new ArrayList<MessageCA>();
 		

@@ -1,7 +1,6 @@
 package controllers;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.core.io.InputStreamResource;
@@ -29,7 +28,7 @@ public class ParserController {
 	@PostMapping("/parser/palette/typeA")
 	public ResponseEntity<InputStreamResource> parserPaletteTypeA(@RequestParam("pal") MultipartFile pal) throws IOException
 	{    	        
-		ArrayList<PaletteBucket> palette = Palette.ParseTypeA(pal.getInputStream());
+		List<List<PaletteBucket>> palette = (new Palette()).ParseTypeA(pal.getInputStream());
 		
 		return Utilities.JsonFileResponse(palette);
 	}
@@ -37,7 +36,7 @@ public class ParserController {
 	@PostMapping("/parser/palette/typeB")
 	public ResponseEntity<InputStreamResource> parserPaletteTypeB(@RequestParam("pal") MultipartFile pal) throws IOException
 	{    	        
-		ArrayList<PaletteBucket> palette = Palette.ParseTypeB(pal.getInputStream());
+		List<List<PaletteBucket>> palette = (new Palette()).ParseTypeB(pal.getInputStream());
 		
 		return Utilities.JsonFileResponse(palette);
 	}
@@ -49,6 +48,8 @@ public class ParserController {
 			FilesMap map = Utilities.Convert(files);
 			IParser parser = new parsers.auto.Auto();
 			Parsed result = parser.Parse(map);
+			
+			map.Close();
 			
 			return Utilities.ByteArrayResponse(result.name, result.toZipByteArray());
 		} 
@@ -64,6 +65,8 @@ public class ParserController {
 			FilesMap map = Utilities.Convert(files);
 			IParser parser = new parsers.cdpp.Devs();
 			Parsed result = parser.Parse(map);
+			
+			map.Close();
 		  			  	
 			return Utilities.ByteArrayResponse(result.name, result.toZipByteArray());
 		} 
@@ -79,6 +82,8 @@ public class ParserController {
 			FilesMap map = Utilities.Convert(files);
 			IParser parser = new parsers.cdpp.Devs();
 			Parsed result = parser.Parse(map);
+				
+			map.Close();
 		  			  	
 			return Utilities.ByteArrayResponse(result.name, result.toZipByteArray());
 		} 
@@ -95,6 +100,8 @@ public class ParserController {
 			IParser parser = new parsers.lopez.CellDevs();
 			Parsed result = parser.Parse(map);
 		  				
+			map.Close();
+			
 			return Utilities.ByteArrayResponse(result.name, result.toZipByteArray());
 		} 
 		catch (Exception e) {
