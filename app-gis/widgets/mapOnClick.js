@@ -22,17 +22,10 @@ export const mapOnClick = (data, map, filterTitle, title, currentCcyle) => {
   // So we can highlight the currently selected feature
   var featureOverlay = new ol.layer.Vector({
     map: map,
-    source: new ol.source.Vector({
-      features:  new ol.Collection,
-    }),
+    source: new ol.source.Vector({features:  new ol.Collection}),
     style: new ol.style.Style({
-      fill: new ol.style.Fill({
-        color: 'rgba(255,255,255,0.7)',
-      }),
-      stroke: new ol.style.Stroke({
-        color: '#3399CC',
-        width: 3,
-      }),
+      fill: new ol.style.Fill({color: 'rgba(255,255,255,0.7)'}),
+      stroke: new ol.style.Stroke({color: '#3399CC', width: 3}),
     })
   });
 
@@ -49,21 +42,19 @@ export const mapOnClick = (data, map, filterTitle, title, currentCcyle) => {
         let clickedValue;
         
         overlayLayer.setPosition(clickedCoordinate);
-        
+
         // Check if the census subdivision has an infected population
         if (data[parseFloat(feature.N.dauid)] != undefined) {
           clickedValue = data[parseFloat(feature.N.dauid)];
+          AddToOverLay(title, clickedDauid, clickedValue, feature.N.DApop_2016)
         } else {
           clickedValue = "N/A";
+          AddToOverLayNoData(title, clickedDauid, feature.N.DApop_2016)
         }
 
-        AddToOverLay(title, clickedDauid, clickedValue)
-        
         // Highlight feature
         featureOverlay.getSource().addFeature(feature)
       },
-      // Commented out the line below for now
-      
       {
         /*         
           Layer filter function, this ensures that if we have other vector layers, 
@@ -83,35 +74,53 @@ export const mapOnClick = (data, map, filterTitle, title, currentCcyle) => {
     // Clear contents from overlay 
     overlayFeatureDescription.innerHTML = null;
     overlayFeatureSimulation.innerHTML = null;
+    overlayFeatureCycle.innerHTML = null;
     overlayFeatureName.innerHTML = null;
+
+
     overlayFeatureInitialPopulation.innerHTML = null;
     overlayFeatureCurrentPopulation.innerHTML = null;
-    overlayFeatureCycle.innerHTML = null;
-    overlayFeatureInfected.innerHTML = null;
-    overlayFeatureSusceptible.innerHTML = null;
-    overlayFeatureRecovered.innerHTML = null;
     overlayFeatureFatalities.innerHTML = null;
     
+    overlayFeatureSusceptible.innerHTML = null;
+    overlayFeatureInfected.innerHTML = null;
+    overlayFeatureRecovered.innerHTML = null;
     
     
     // Clicking outside vector layer
     overlayLayer.setPosition(undefined);
   }
 
-  function AddToOverLay(title, clickedDauid, clickedValue){
+  function AddToOverLay(title, clickedDauid, clickedValue, population){
     overlayFeatureDescription.innerHTML = "Selected Feature: ";
     overlayFeatureSimulation.innerHTML = "Current Simulation: " + title
-    overlayFeatureName.innerHTML = "Census Subdivision: " + clickedDauid;
-    overlayFeatureInitialPopulation.innerHTML = "Initial Population: TODO";
-    overlayFeatureCurrentPopulation.innerHTML = "Current Population: TODO";
     overlayFeatureCycle.innerHTML = "Current Cycle: " + currentCcyle;
-    // TODO resolve:
-    // Uncaught TypeError: clickedValue.toFixed is not a function
-    overlayFeatureInfected.innerHTML = "Proportion Infected: " + clickedValue.toFixed(3);
-    overlayFeatureSusceptible.innerHTML = "Proportion Susceptible: TODO";
-    overlayFeatureRecovered.innerHTML = "Proportion Recovered: TODO";
-    overlayFeatureFatalities.innerHTML = "Fatalities: TODO";
+    overlayFeatureName.innerHTML = "Census Subdivision: " + clickedDauid;
 
+    overlayFeatureInitialPopulation.innerHTML = "Initial Population: " + population;
+    overlayFeatureCurrentPopulation.innerHTML = "Current Population: TODO";
+    overlayFeatureFatalities.innerHTML = "Fatalities: TODO";
+    
+
+    overlayFeatureSusceptible.innerHTML = "Proportion Susceptible: TODO";
+    if(clickedValue == "N/A"){
+      overlayFeatureInfected.innerHTML = "Proportion Infected: " + clickedValue;
+    } else {
+      overlayFeatureInfected.innerHTML = "Proportion Infected: " + clickedValue.toFixed(3);
+    }
+    overlayFeatureRecovered.innerHTML = "Proportion Recovered: TODO";
+    
+
+  }
+
+  function AddToOverLayNoData(title, clickedDauid, population){
+    overlayFeatureDescription.innerHTML = "Selected Feature: ";
+    overlayFeatureSimulation.innerHTML = "Current Simulation: " + title;
+    overlayFeatureCycle.innerHTML = "Census Subdivision not found in Simulation Results.";
+    overlayFeatureName.innerHTML = "Census Subdivision: " + clickedDauid;
+    overlayFeatureInitialPopulation.innerHTML = "Initial Population: " + population;
+    overlayFeatureCurrentPopulation.innerHTML = "No more data to show.";
+    
   }
 
 };

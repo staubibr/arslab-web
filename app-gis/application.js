@@ -5,7 +5,6 @@ import Dom from "../api-web-devs/tools/dom.js";
 import Net from "../api-web-devs/tools/net.js";
 import Templated from "../api-web-devs/components/templated.js";
 import Playback from "../api-web-devs/widgets/playback.js";
-import Header from "./widgets/header.js";
 import Map from "./widgets/map.js";
 import Box from "../api-web-devs/ui/box-input-files.js";
 import VectorLayer from "./classes/vectorLayer.js";
@@ -42,11 +41,13 @@ export default class Application extends Templated {
 
     // For downloading data as CSV after all necessary files are inserted by user
     this.Node("btnDownload").On("click", this.OnButtonDownload_Click.bind(this));
+
+    // Fill sidebar with HTML
     this.AddToSideBar()
   }
 
   AddToSideBar(){
-    var foo = document.getElementById("profile")
+    var foo = document.getElementById("userData")
     foo.appendChild(document.getElementById("userdata"))
     var bar = document.getElementById("manipulate")
     bar.appendChild(document.getElementById("navigation"))
@@ -76,7 +77,13 @@ export default class Application extends Templated {
 
   KeepTrackOfSubmittedUserFiles(data, title, layerFile, classNum, color, cycle){
     if(this.DataFromFiles == undefined){ this.DataFromFiles = new Array; }
-    this.DataFromFiles.push({simulation: title, simulationData: data, GeoJSON: layerFile, layerClasses: classNum, layerColor: color, layerCycle: cycle});
+    this.DataFromFiles.push({
+        simulation: title, 
+        simulationData: data, 
+        GeoJSON: layerFile, 
+        layerClasses: classNum, 
+        layerColor: color, 
+        layerCycle: cycle});
   }
 
   /*
@@ -88,9 +95,15 @@ export default class Application extends Templated {
     event - The event being that the user just submitted a file
   */
   ChunkSimulationResults(event) {
+    this.Elem("wait").hidden = false;
+
     let self = this,
       file = event.target.files[0], parser = new CustomParser()
-    parser.Parse(file).then(function (data) { self.DataLoaded_Handler(data); })
+
+    parser.Parse(file).then(function (data) { 
+      self.Elem("wait").hidden = true;
+      self.DataLoaded_Handler(data); 
+    })
   }
 
   /*
@@ -103,9 +116,11 @@ export default class Application extends Templated {
     - this.data for CheckForGeoJSON(input)
   */
   DataLoaded_Handler(data) {
+    
     this.data = sortPandemicData(data);
     // User can now insert a GeoJSON layer file
     this.Elem("vectorLayer").disabled = false;
+    this.Elem("downlaodbtnTwo").disabled = false;
     this.CheckForGeoJSON(document.querySelector("input[name='vectorLayer']"));
   }
 
@@ -129,6 +144,7 @@ export default class Application extends Templated {
   CheckForGeoJSON(input) {
     let self = this;
     input.addEventListener("change", function (event) {
+      self.Elem("wait").hidden = false;
       let f = event.target.files[0], 
         fileReader = new FileReader();
 
@@ -151,7 +167,7 @@ export default class Application extends Templated {
 
         // Display the vector layer onto map
         let scale = (self.currentColorScale == undefined) ? self.CurrentColorScale(new GetScale(self.currentColor, classes)) : self.currentColorScale;
-        self.LayerOntoMap(fileContent, newTitle, self.data[0].messages, scale.GS, true);
+        self.LayerOntoMap(fileContent, newTitle, self.data[0].messages, scale.GS, true, true);
       };
       if(f != undefined){ fileReader.readAsDataURL(f); }
 
@@ -159,6 +175,7 @@ export default class Application extends Templated {
       document.querySelector('input[name="simResults"]').value= null;
       document.querySelector("input[name='vectorLayer']").value = null;
       self.Elem("vectorLayer").disabled = true;
+      self.Elem("downlaodbtnTwo").disabled = true;
     }, false);
   }
 
@@ -203,7 +220,9 @@ export default class Application extends Templated {
     scale - color scale based on whats selected by the user on the webpage (or default red)
     CreateSimulationObject - a boolean to tell us whether to make a smulation object (only true in CheckForGeoJSON(input))
   */
-  LayerOntoMap(fileContent, title, data, scale, CreateSimulationObject) {
+  LayerOntoMap(fileContent, title, data, scale, CreateSimulationObject, wait) {
+    if (wait) this.Elem("wait").hidden = true;
+
     let layer;
     let cycle;
 
@@ -322,7 +341,7 @@ export default class Application extends Templated {
   RecolorLayer(scale) {
     if (this.currentSimulationLayerGeoJSON != undefined) {
       let index = (this.currentSimulationCycle != undefined) ? this.currentSimulationCycle : 0;
-      this.LayerOntoMap(this.currentSimulationLayerGeoJSON, this.currentSimulationTitle, this.data[index].messages, scale.GS);
+      this.LayerOntoMap(this.currentSimulationLayerGeoJSON, this.currentSimulationTitle, this.data[index].messages, scale.GS, false, false);
     }
   }
 
@@ -356,7 +375,7 @@ export default class Application extends Templated {
     this.currentColorScale = new GetScale(this.currentColor, this.currentNumberOfClasses);
     let scale = this.currentColorScale;
 
-    this.LayerOntoMap(this.currentSimulationLayerGeoJSON, this.currentSimulationTitle, this.data[this.currentSimulationCycle].messages, scale.GS, false);
+    this.LayerOntoMap(this.currentSimulationLayerGeoJSON, this.currentSimulationTitle, this.data[this.currentSimulationCycle].messages, scale.GS, false, false);
 
     document.getElementById('colorOne').value = this.currentColor
 
@@ -409,7 +428,7 @@ export default class Application extends Templated {
 
     // New vector layer object that'll overwrite the vector layer object from the previous simulation cycle
     // This will overwrite the previous simulation cycle vector object and add the new one
-    this.LayerOntoMap(this.currentSimulationLayerGeoJSON, this.currentSimulationTitle, data, this.currentColorScale.GS);
+    this.LayerOntoMap(this.currentSimulationLayerGeoJSON, this.currentSimulationTitle, data, this.currentColorScale.GS, false, false);
   }
   
   // Create the simulation object when the simulation is first introduced
@@ -453,7 +472,6 @@ export default class Application extends Templated {
 
   }
 
-   
   OnButtonDownload_Click(ev) {
     var index = document.getElementById('sim-download').selectedIndex
     new CreateCsvFileForDownload(this.allTransitions[index].transitionData);
@@ -461,65 +479,68 @@ export default class Application extends Templated {
 
   Template() {
     return (
-      "<main handle='main'>" +
-      // Header
-      "<div handle='header' widget='Widget.Header' class='header'></div>" +
-
-      // Map 
-      "<div id='map' handle='map' widget='Widget.Map' class='map'></div>" +
+      "<div id='map' handle='map' widget='Widget.Map' class='map' ></div>" +
 
       // Load Simulation
       "<div handle='userdata' id='userdata'>" +
-
-        // "<div id='simTypeControls'><label for='sim-type'>Simulation type (TODO): </label>" +
-        // "<select handle = 'sim-type' id='sim-type'>" +
-        //   "<option>Pandemic</option>" +
-        //   "<option>Fire</option>" +
-        //   "<option>Flood</option>" +
-        //   "<option>Earthquake</option>" +
-        //   "<option>Co2</option>" +
-        // "</select></div>" +
   
-        "<div style='margin-top:10px;'><label>1. Select your simulation results: " +
-          "<br><input type='file' handle = 'simResults' name='simResults' accept='.txt'></br>"+
+        "<div class='upload-btn-wrapper'>" +
+          "<br><button class='downloadButton'><i class='far fa-file-text'> Choose Simulation Results File </i>" +
+            "<input type='file' handle = 'simResults' name='simResults' accept='.txt'>" +
+          "</button></br>"+
         "</div>" +
+
+        // Loading Icon
+        "<div id='wait' handle='wait' class='wait' hidden><img src='./assets/loading.gif'></div>" + 
   
-        "<div style='margin-top:10px;'><label>2. Select your GeoJSON layer: " +
-          "<br><input type='file' name='vectorLayer' handle='vectorLayer' accept='.geojson' disabled></br>" +
+        "<div class='upload-btn-wrapper' style='margin-top:10px;'>" +
+          "<br><button handle='downlaodbtnTwo'class='downloadButtonTwo'disabled><i class='far fa-file-code-o'> Choose GeoJSON File </i>" +
+            "<input type='file' name='vectorLayer' handle='vectorLayer' accept='.geojson' disabled></button></br>" +
         "</div>" +
 
       "</div>" +
 
+      
+
       // Download data
       "<div id='download'>" +
       
-      "<label for='sim-type'>Select a simulation to download: </label>" +
-      "<select handle = 'sim-download' id='sim-download'></select>" +
+      "<label for='sim-type'>Select simulation to download: </label>" +
+      "<select class='select-css' handle = 'sim-download' id='sim-download'></select>" +
 
-      '<br><br><button class="btn" handle="btnDownload" title="nls(Download_Files)" disabled><i class="fa fa-download"></i> Download</button>' +
+      '<br><br><button class="btnDownload" handle="btnDownload" title="nls(Download_Files)" disabled><i class="fa fa-download"></i> Download</button>' +
 
       "</div>"+
 
       // Manipulate simulation
-      "<div handle-'navigation' id='navigation'>" +
+      "<div class='sim-navigation' handle-'navigation' id='navigation'>" +
         
-        "<div id='controls'>" +
-          "<label for='sim-select'>Select Simulation to manipulate: </label>" +
-          "<select handle = 'selectSimulation' id='sim-select'></select>" +
+        "<div class='select-css-box' id='controls'>" +
+          "<br><label for='sim-select'>Select Simulation: </label>" +
+          "<select class='select-css' handle = 'selectSimulation' id='sim-select'>" +
+          "</select>" +
+            
         "</div>" +
 
-        "<label>Simulation Cycle Selector: <input handle='cycle' type='range' name='cycle' id='cycle' min='0' max = '0' step='1' value='0' >" +
-        "<output handle='output' class='cycle-output' for='cycle'></output></label>" +
+        "<br><label>Select Simulation Cycle: <input handle='cycle' type='range' name='cycle' id='cycle' min='0' max = '0' step='1' value='0' >" +
+        "<output handle='output' class='cycle-output' for='cycle'></output></label><br><br>" +
 
         "<div>" +
-          "<label for='favcolor'>Change colour scale: </label>" +
+          "<label for='favcolor'>Select colour scale: </label>" +
           "<input type='color' id='colorOne' name='favcolor' value='#ff0000'><br>" +
         "</div>" +
 
-        "<div id='classControls'><label for='class-select'>Select number of classes: </label>" +
+        "<br><div id='classControls'><label for='class-select'>Select # of classes: </label>" +
         "<select handle = 'selectClasses' id='class-select'>" +
           "<option>4</option>" +
           "<option>5</option>" +
+        "</select></div>" +
+
+        "<br><div id='classControls'><label for='class-select'>Choose what to visualize: </label>" +
+        "<select handle = 'selectClasses' id='class-select'>" +
+          "<option>Susceptible</option>" +
+          "<option>Infected</option>" +
+          "<option>Recovered</option>" +
         "</select></div>" +
         
         
@@ -531,18 +552,16 @@ export default class Application extends Templated {
       "<div id = 'overlay-container' class='overlay-container'><span class='overlay-text' id='feature-title'>" +
       "</span><br><span class='overlay-text' id='feature-simulation'></span>" +
       "</span><br><span class='overlay-text' id='feature-name'></span>" +
+      "</span><br><span class='overlay-text' id='feature-cycle'></span><br>" +
+
       "</span><br><span class='overlay-text' id='feature-init-pop'></span>" +
       "</span><br><span class='overlay-text' id='feature-current-pop'></span>" +
-      "</span><br><span class='overlay-text' id='feature-cycle'></span><br>" +
-      "</span><span class='overlay-text' id='feature-infected'></span><br>" +
-      "</span><span class='overlay-text' id='feature-susceptible'></span><br>" +
-      "</span><span class='overlay-text' id='feature-recovered'></span><br>" +
-      "</span><span class='overlay-text' id='feature-fatal'></span></div>" +
-
+      "</span><br><span class='overlay-text' id='feature-fatal'></span><br>" +
       
-
-
-      "</main>"
+      "</span><br><span class='overlay-text' id='feature-susceptible'></span>" +
+      "</span><br><span class='overlay-text' id='feature-infected'></span>" +
+      "</span><br><span class='overlay-text' id='feature-recovered'></span></div>" 
+      
     );
   }
 }

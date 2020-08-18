@@ -1,10 +1,3 @@
-/* 
-  NOTICE: OpenLayers uses long/lat
-  Spatial reference list: https://spatialreference.org/ref/epsg/
-  EPSG:4326 (CRS84 is equivalent) used by GPS nav systems and NATO for geodetic surveying
-  EPSG:3857 for rendering web maps
-*/
-
 export default class InitialLayer {
   // Get initial layer object
   get OL() {
@@ -12,6 +5,7 @@ export default class InitialLayer {
   }
 
   constructor(layer, target) {
+
     var LayerInformationControl = function(opt_options) {
       var elem = document.querySelector(".overlay-container");
       elem.className = 'custom-control ol-unselectable ol-control';
@@ -41,7 +35,7 @@ export default class InitialLayer {
       renderer: "canvas",
       // The target is an HTML component 
       target: target,
-      // In case we want to add more base maps later
+      // In case we want to add more base maps later, replace [layers] with
       // [new ol.layer.Group({title: 'Base map', layers: [layer]})]
       layers: [layer],
       controls: ol.control.defaults({zoom:false}).extend(
@@ -63,7 +57,6 @@ export default class InitialLayer {
             keepOpen: true,
             lang : 'en-US',
           })
-        
         ]),
       view: new ol.View({
         center: ol.proj.transform(

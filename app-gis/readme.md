@@ -26,6 +26,8 @@
 ##### Essentials:
 - Download [Web Server for Chrome](https://chrome.google.com/webstore/detail/web-server-for-chrome/ofhbbkphhbklhfoeikjpcbhemlocgigb)
 - Open [app-gis](https://github.com/staubibr/arslab-dev/tree/master/app-gis) in your preferred text editor 
+- Use [Chrome DevTools](https://developers.google.com/web/tools/chrome-devtools/) for debugging
+  - Ensure that cache is disabled in DevTools
 
 ##### Running the local server:
 > Open Chrome and go to Apps
@@ -71,11 +73,11 @@
     Example of how you'd access specific data: Infected are indexes 5 to 20
 
 ## TODO:
-- See if mapOnClick works on multiple layers 
+- See if mapOnClick works on multiple layers (need more data to try this)
 - Let users video record the simulation
 - Clean up UI
-- Let users select simulation type
-- Let users see legend for density of SIR, fatalities, population, etc.
+- Interpret simulation types (pandemic, flood, fire, etc.)
+- Let users see legend for density of S, I , and R.
 - Fix the GeoCoder so it doesn't add itself as a layer
 
 ## Resources:
@@ -96,7 +98,9 @@ Data Visualization library with some limited mapping capability. Extremely light
 
 #### OpenLayers
 
-The Grandfather of Open Source GIS on the web
+The Grandfather of Open Source GIS on the web. 
+
+OpenLayers coordinate format is Long/Lat. 
 
 [ol.Map](https://openlayers.org/en/latest/apidoc/module-ol_Map-Map.html)  
 

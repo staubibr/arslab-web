@@ -4,9 +4,9 @@ export default class VectorLayer {
   }
 
   /* Create the vector layer: 
-		 - Read Ontario's coordinates 
+		 - Read GeoJSON coordinates 
 		 - Add a title 
-		 - Match simulation data to Ontarios census subdivisions
+		 - Match simulation data to census subdivisions
 		 - Color in each census subdivision based on its infeced proportion value
 	*/
   constructor(url, title, data, scale) {    

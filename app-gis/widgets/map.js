@@ -63,8 +63,6 @@ export default Core.Templatable("Widget.Map", class Map extends Templated {
 
     Template() {
       return (
-        "<div style='display: flex;flex-direction: row; text-align: center'></div>" +
-        
         // Map container where functionality will be held
         '<div id="map" handle="map-container" class="sidebar-map">' +
 
@@ -73,7 +71,7 @@ export default Core.Templatable("Widget.Map", class Map extends Templated {
               '<div class="sidebar-tabs">'+
                 '<ul role="tablist">'+
                   '<li><a href="#home" role="tab"><i class="fa fa-info"></i></a></li>'+
-                  '<li><a href="#profile" role="tab"><i class="fa fa-database"></i></a></li>'+
+                  '<li><a href="#userData" role="tab"><i class="fa fa-database"></i></a></li>'+
                   '<li><a href="#manipulate" role="tab"><i class="fa fa-pencil-square-o"></i></a></li>'+
                   '<li><a href="#downloadCSV" role="tab"><i class="fa fa-download"></i></a></li>'+
                   // '<li class="disabled"><a href="#messages" role="tab"><i class="fa fa-envelope"></i></a></li>'+
@@ -89,11 +87,12 @@ export default Core.Templatable("Widget.Map", class Map extends Templated {
                 '<div class="sidebar-pane" id="home">' +
                   '<h1 class="sidebar-header">Information<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>'+
                   '<p><a href="https://github.com/staubibr/arslab-dev/tree/master/app-gis" target="new">Click here for Documentation and Source Code</a></p>' +
+                  '<p><a href="https://www.youtube.com/watch?v=liGqAIcnNUo" target="new">Click here for Video Tutorial</a></p>' +
+                  '<p><a href="https://arslab.sce.carleton.ca/" target="new">Click here for ARSLab</a></p>' +
                 '</div>'+
           
-                '<div class="sidebar-pane" id="profile">'+
+                '<div class="sidebar-pane" id="userData">'+
                   '<h1 class="sidebar-header">Load Data<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>'+
-                  '<p></p>' +
                 '</div>'+
 
                 '<div class="sidebar-pane" id="downloadCSV">'+
@@ -103,7 +102,6 @@ export default Core.Templatable("Widget.Map", class Map extends Templated {
           
                 '<div class="sidebar-pane" id="manipulate">'+
                 '<h1 class="sidebar-header">Manipulate Simulations<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>'+
-                '<p></p>' +
                 '</div>'+
           
                 // '<div class="sidebar-pane" id="messages">'+
