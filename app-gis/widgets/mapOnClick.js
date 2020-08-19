@@ -39,16 +39,28 @@ export const mapOnClick = (data, map, filterTitle, title, currentCcyle) => {
         
         let clickedCoordinate = e.coordinate;
         let clickedDauid = parseFloat(feature.N.dauid);
-        let clickedValue;
         
         overlayLayer.setPosition(clickedCoordinate);
 
         // Check if the census subdivision has an infected population
         if (data[parseFloat(feature.N.dauid)] != undefined) {
-          clickedValue = data[parseFloat(feature.N.dauid)];
-          AddToOverLay(title, clickedDauid, clickedValue, feature.N.DApop_2016)
+          let clickedFatalities = data[parseFloat(feature.N.dauid)].Fatalities;
+
+          let clickedSusceptible = data[parseFloat(feature.N.dauid)].Susceptible;
+          let clickedInfected = data[parseFloat(feature.N.dauid)].Infected;
+          let clickedRecovered = data[parseFloat(feature.N.dauid)].Recovered;
+
+
+          AddToOverLay(
+            title, 
+            clickedDauid, 
+            clickedFatalities, 
+            clickedSusceptible, 
+            clickedInfected,
+            clickedRecovered, 
+            feature.N.DApop_2016
+            )
         } else {
-          clickedValue = "N/A";
           AddToOverLayNoData(title, clickedDauid, feature.N.DApop_2016)
         }
 
@@ -72,7 +84,7 @@ export const mapOnClick = (data, map, filterTitle, title, currentCcyle) => {
     featureOverlay.getSource().clear();
 
     // Clear contents from overlay 
-    overlayFeatureDescription.innerHTML = null;
+    overlayFeatureDescription.innerHTML = "No Feature Selected";
     overlayFeatureSimulation.innerHTML = null;
     overlayFeatureCycle.innerHTML = null;
     overlayFeatureName.innerHTML = null;
@@ -91,24 +103,21 @@ export const mapOnClick = (data, map, filterTitle, title, currentCcyle) => {
     overlayLayer.setPosition(undefined);
   }
 
-  function AddToOverLay(title, clickedDauid, clickedValue, population){
+  function AddToOverLay(title, clickedDauid, clickedFatalities, clickedSusceptible, clickedInfected, clickedRecovered,  population){
+
     overlayFeatureDescription.innerHTML = "Selected Feature: ";
     overlayFeatureSimulation.innerHTML = "Current Simulation: " + title
     overlayFeatureCycle.innerHTML = "Current Cycle: " + currentCcyle;
     overlayFeatureName.innerHTML = "Census Subdivision: " + clickedDauid;
 
     overlayFeatureInitialPopulation.innerHTML = "Initial Population: " + population;
-    overlayFeatureCurrentPopulation.innerHTML = "Current Population: TODO";
-    overlayFeatureFatalities.innerHTML = "Fatalities: TODO";
+    overlayFeatureCurrentPopulation.innerHTML = "Current Population: " + (population - clickedFatalities);
+    overlayFeatureFatalities.innerHTML = "Fatalities this cycle: " + clickedFatalities;
     
 
-    overlayFeatureSusceptible.innerHTML = "Proportion Susceptible: TODO";
-    if(clickedValue == "N/A"){
-      overlayFeatureInfected.innerHTML = "Proportion Infected: " + clickedValue;
-    } else {
-      overlayFeatureInfected.innerHTML = "Proportion Infected: " + clickedValue.toFixed(3);
-    }
-    overlayFeatureRecovered.innerHTML = "Proportion Recovered: TODO";
+    overlayFeatureSusceptible.innerHTML = "Proportion Susceptible: " + clickedSusceptible;
+    overlayFeatureInfected.innerHTML = "Proportion Infected: " + clickedInfected //.toFixed(3);
+    overlayFeatureRecovered.innerHTML = "Proportion Recovered: " + clickedRecovered;
     
 
   }

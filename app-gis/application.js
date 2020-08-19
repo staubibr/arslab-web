@@ -25,7 +25,7 @@ export default class Application extends Templated {
     super(node);
 
     // By default the legend will be red-white unless otherwise specified by the user
-    this.CreateLegend(Core.Nls("App_Legend_Title"), "translate(10,10)");
+    this.CreateLegend(Core.Nls("App_Legend_Title"), "translate(23,5)");
 
     // The world map will appear prior to any vector layers being added overtop
     this.Widget("map").InitTileLayer();
@@ -42,6 +42,9 @@ export default class Application extends Templated {
     // For downloading data as CSV after all necessary files are inserted by user
     this.Node("btnDownload").On("click", this.OnButtonDownload_Click.bind(this));
 
+    // Check what part of SIR the user wants to visualize
+    this.Node("SIR-select").On("change", this.OnSIRchange.bind(this));
+
     // Fill sidebar with HTML
     this.AddToSideBar()
   }
@@ -53,6 +56,9 @@ export default class Application extends Templated {
     bar.appendChild(document.getElementById("navigation"))
     var spam = document.getElementById("downloadCSV")
     spam.appendChild(document.getElementById("download"))
+    var spam = document.getElementById("featureInfo")
+    spam.appendChild(document.getElementById("overlay-container"))
+    
   }
 
   /*
@@ -75,7 +81,7 @@ export default class Application extends Templated {
 
   CurrentColorScale(scale) { this.currentColorScale = scale; }
 
-  KeepTrackOfSubmittedUserFiles(data, title, layerFile, classNum, color, cycle){
+  KeepTrackOfSubmittedUserFiles(data, title, layerFile, classNum, color, cycle, SIR){
     if(this.DataFromFiles == undefined){ this.DataFromFiles = new Array; }
     this.DataFromFiles.push({
         simulation: title, 
@@ -83,7 +89,12 @@ export default class Application extends Templated {
         GeoJSON: layerFile, 
         layerClasses: classNum, 
         layerColor: color, 
-        layerCycle: cycle});
+        layerCycle: cycle,
+        layerSIR: SIR});
+  }
+
+  CurrentSIRselected(SIR){
+    this.currentSIR = SIR;
   }
 
   /*
@@ -118,6 +129,7 @@ export default class Application extends Templated {
   DataLoaded_Handler(data) {
     
     this.data = sortPandemicData(data);
+    
     // User can now insert a GeoJSON layer file
     this.Elem("vectorLayer").disabled = false;
     this.Elem("downlaodbtnTwo").disabled = false;
@@ -161,12 +173,16 @@ export default class Application extends Templated {
         let classes = (self.currentClass == undefined) ? 4 : self.currentClass;
 
         // Information leaving the method
-        self.KeepTrackOfSubmittedUserFiles(self.data, newTitle, fileContent, classes, self.currentColor, 0)
+        let SIR;
+        if(this.currentSIR == undefined) {SIR = "Susceptible"}
+        self.KeepTrackOfSubmittedUserFiles(self.data, newTitle, fileContent, classes, self.currentColor, 0, SIR)
         self.currentSimulationTitle = newTitle
         self.currentSimulationLayerGeoJSON = fileContent;
 
         // Display the vector layer onto map
         let scale = (self.currentColorScale == undefined) ? self.CurrentColorScale(new GetScale(self.currentColor, classes)) : self.currentColorScale;
+        // This line below might cause problems later COME BACK TO IT LATER
+        self.currentSimulationCycle = 0;
         self.LayerOntoMap(fileContent, newTitle, self.data[0].messages, scale.GS, true, true);
       };
       if(f != undefined){ fileReader.readAsDataURL(f); }
@@ -231,12 +247,12 @@ export default class Application extends Templated {
     if (this.currentSimulationCycle == undefined || CreateSimulationObject == true) { 
       newTitle = title + " Cycle0"
       cycle = 0;
-      layer = new VectorLayer(fileContent, newTitle, data, scale); 
+      layer = new VectorLayer(fileContent, newTitle, data, this.currentSIR, scale); 
     }
     else { 
       newTitle = title + " Cycle" + this.currentSimulationCycle;
       cycle = this.currentSimulationCycle
-      layer = new VectorLayer(fileContent, newTitle, data, scale); 
+      layer = new VectorLayer(fileContent, newTitle, data, this.currentSIR, scale); 
     }
 
     // add vector layer onto world map
@@ -357,7 +373,7 @@ export default class Application extends Templated {
   */
   OnSimulationSelectChange(ev){
     this.PreviousSimulationToCurrentSimulation(document.getElementById('sim-select').selectedIndex);
-    this.UpdateLegendToCurrentSimulation(Core.Nls("App_Legend_Title"), "translate(5,30)");
+    this.UpdateLegendToCurrentSimulation(Core.Nls("App_Legend_Title"), "translate(23,5)");
     this.UpdateSimulationCycleSelectorToCurrentSimulation();
   }
 
@@ -369,6 +385,7 @@ export default class Application extends Templated {
     this.currentSimulationCycle = element.layerCycle;
     this.currentNumberOfClasses = element.layerClasses;
     this.currentColor = element.layerColor;
+    this.currentSIR = element.layerSIR;
   }
 
   UpdateLegendToCurrentSimulation(title, translate){
@@ -378,6 +395,16 @@ export default class Application extends Templated {
     this.LayerOntoMap(this.currentSimulationLayerGeoJSON, this.currentSimulationTitle, this.data[this.currentSimulationCycle].messages, scale.GS, false, false);
 
     document.getElementById('colorOne').value = this.currentColor
+
+    document.getElementById("legend-svg").firstChild.textContent = "Proportion " + this.currentSIR;
+
+    if(this.currentSIR == "Susceptible"){
+      document.getElementById("SIR-select").selectedIndex = 0;
+    } else if (this.currentSIR == "Infected") {
+      document.getElementById("SIR-select").selectedIndex = 1;
+    } else {
+      document.getElementById("SIR-select").selectedIndex = 2;
+    }
 
     if(this.currentNumberOfClasses == 5){
       document.getElementById('class-select').selectedIndex = 1
@@ -430,6 +457,23 @@ export default class Application extends Templated {
     // This will overwrite the previous simulation cycle vector object and add the new one
     this.LayerOntoMap(this.currentSimulationLayerGeoJSON, this.currentSimulationTitle, data, this.currentColorScale.GS, false, false);
   }
+
+  OnSIRchange(ev){
+    this.currentSIR = ev.target.value;
+    var currentDataFileIndex = document.getElementById('sim-select').selectedIndex;
+    this.DataFromFiles[currentDataFileIndex].layerSIR = ev.target.value;
+    document.getElementById("legend-svg").firstChild.textContent = "Proportion " + ev.target.value;
+    // Change layer if there is one
+    if(this.currentSimulationTitle != undefined){
+      this.LayerOntoMap(this.currentSimulationLayerGeoJSON, 
+        this.currentSimulationTitle, 
+        this.data[this.currentSimulationCycle].messages, 
+        this.currentColorScale.GS, 
+        false, 
+        false
+        );
+    }
+  }
   
   // Create the simulation object when the simulation is first introduced
   OnLayerCreation_Handler(ev) {
@@ -457,7 +501,7 @@ export default class Application extends Templated {
       simulation.AddFrame(frame);
 
       for (var id in data[i].messages) {
-        var transition = new TransitionDEVS(id, "infected", data[i].messages[id]);
+        var transition = new TransitionDEVS(id, "infected", data[i].messages[id].Infected);
         frame.AddTransition(transition);
       }
     }
@@ -536,31 +580,31 @@ export default class Application extends Templated {
           "<option>5</option>" +
         "</select></div>" +
 
-        "<br><div id='classControls'><label for='class-select'>Choose what to visualize: </label>" +
-        "<select handle = 'selectClasses' id='class-select'>" +
+        "<br><div id='SIRControls'><label for='class-select'>Choose what to visualize: </label>" +
+        "<select handle = 'SIR-select' id='SIR-select'>" +
           "<option>Susceptible</option>" +
           "<option>Infected</option>" +
           "<option>Recovered</option>" +
         "</select></div>" +
         
         
-        "<legend class='svg-div'>Proportion Infected<svg id='svg' class='svg' handle='svg' width = '960' height = '150'></svg></legend>" +
+        "<legend id='legend-svg' class='svg-div'>Proportion Susceptible<svg id='svg' class='svg' handle='svg' width = '960' height = '150'></svg></legend>" +
 
       "</div>" +
 
       // Overlay text for vector layers
-      "<div id = 'overlay-container' class='overlay-container'><span class='overlay-text' id='feature-title'>" +
-      "</span><br><span class='overlay-text' id='feature-simulation'></span>" +
-      "</span><br><span class='overlay-text' id='feature-name'></span>" +
-      "</span><br><span class='overlay-text' id='feature-cycle'></span><br>" +
+      "<div id = 'overlay-container' class='overlay-container'><span class='overlay-text' id='feature-title'>No Feature Selected" +
+      "</span><br><br><span class='overlay-text' id='feature-name'></span>" +
+      "</span><br><br><span class='overlay-text' id='feature-simulation'></span>" +
+      "</span><br><br><span class='overlay-text' id='feature-cycle'></span><br>" +
 
-      "</span><br><span class='overlay-text' id='feature-init-pop'></span>" +
-      "</span><br><span class='overlay-text' id='feature-current-pop'></span>" +
-      "</span><br><span class='overlay-text' id='feature-fatal'></span><br>" +
+      "</span><br><br><span class='overlay-text' id='feature-init-pop'></span>" +
+      "</span><br><br><span class='overlay-text' id='feature-current-pop'></span>" +
+      "</span><br><br><span class='overlay-text' id='feature-fatal'></span><br>" +
       
-      "</span><br><span class='overlay-text' id='feature-susceptible'></span>" +
-      "</span><br><span class='overlay-text' id='feature-infected'></span>" +
-      "</span><br><span class='overlay-text' id='feature-recovered'></span></div>" 
+      "</span><br><br><span class='overlay-text' id='feature-susceptible'></span>" +
+      "</span><br><br><span class='overlay-text' id='feature-infected'></span>" +
+      "</span><br><br><span class='overlay-text' id='feature-recovered'></span></div>" 
       
     );
   }

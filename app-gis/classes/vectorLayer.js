@@ -9,7 +9,7 @@ export default class VectorLayer {
 		 - Match simulation data to census subdivisions
 		 - Color in each census subdivision based on its infeced proportion value
 	*/
-  constructor(url, title, data, scale) {    
+  constructor(url, title, data, SIR, scale) {    
     // Fix later 
     new ol.layer.Group({
       title: 'Data',
@@ -30,7 +30,13 @@ export default class VectorLayer {
           // data[feature.N.dauid] will allow us to access the 
           // proportion of infected people in the current feature
           if (data[feature.N.dauid] != undefined) {
-            x = data[feature.N.dauid];
+            if(SIR == "Susceptible" || SIR == undefined){
+              x = data[feature.N.dauid].Susceptible;
+            } else if (SIR == "Infected") {
+              x = data[feature.N.dauid].Infected;
+            } else {
+              x = data[feature.N.dauid].Recovered;
+            }
           } else {
             x = 0;
           }

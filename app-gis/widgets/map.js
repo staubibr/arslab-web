@@ -70,10 +70,11 @@ export default Core.Templatable("Widget.Map", class Map extends Templated {
           '<div id="sidebar" handle="sidebar" class="sidebar collapsed">' +
               '<div class="sidebar-tabs">'+
                 '<ul role="tablist">'+
-                  '<li><a href="#home" role="tab"><i class="fa fa-info"></i></a></li>'+
+                  '<li><a href="#home" role="tab"><i class="fa fa-home"></i></a></li>'+
                   '<li><a href="#userData" role="tab"><i class="fa fa-database"></i></a></li>'+
                   '<li><a href="#manipulate" role="tab"><i class="fa fa-pencil-square-o"></i></a></li>'+
                   '<li><a href="#downloadCSV" role="tab"><i class="fa fa-download"></i></a></li>'+
+                  '<li><a href="#featureInfo" role="tab"><i class="fa fa-info"></i></a></li>'+
                   // '<li class="disabled"><a href="#messages" role="tab"><i class="fa fa-envelope"></i></a></li>'+
                   // '<li><a href="https://github.com/staubibr/arslab-dev" role="tab" target="_blank"><i class="fa fa-link"></i></a></li>'+
                 '</ul>'+
@@ -85,7 +86,7 @@ export default Core.Templatable("Widget.Map", class Map extends Templated {
 
               '<div class="sidebar-content">' +
                 '<div class="sidebar-pane" id="home">' +
-                  '<h1 class="sidebar-header">Information<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>'+
+                  '<h1 class="sidebar-header">Home<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>'+
                   '<p><a href="https://github.com/staubibr/arslab-dev/tree/master/app-gis" target="new">Click here for Documentation and Source Code</a></p>' +
                   '<p><a href="https://www.youtube.com/watch?v=liGqAIcnNUo" target="new">Click here for Video Tutorial</a></p>' +
                   '<p><a href="https://arslab.sce.carleton.ca/" target="new">Click here for ARSLab</a></p>' +
@@ -102,6 +103,10 @@ export default Core.Templatable("Widget.Map", class Map extends Templated {
           
                 '<div class="sidebar-pane" id="manipulate">'+
                 '<h1 class="sidebar-header">Manipulate Simulations<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>'+
+                '</div>'+
+
+                '<div class="sidebar-pane" id="featureInfo">'+
+                '<h1 class="sidebar-header">Feature Information<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>'+
                 '</div>'+
           
                 // '<div class="sidebar-pane" id="messages">'+
