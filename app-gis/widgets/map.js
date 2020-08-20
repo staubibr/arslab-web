@@ -50,7 +50,7 @@ export default Core.Templatable("Widget.Map", class Map extends Templated {
       let self = this;
       this.map.OL.getLayers().forEach(function (l) {
         if (l != undefined) {
-          let title = (l.N.title != undefined) ? l.N.title.substring(0, l.N.title.indexOf(" ")) : "";
+          let title = (l.N.title != undefined) ? l.N.title : "";
           if (id == title) { self.map.OL.removeLayer(l); }
         }
       })

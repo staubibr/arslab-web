@@ -167,7 +167,7 @@ export default class Application extends Templated {
         let simNum = (self.DataFromFiles == undefined) ? 0 : self.DataFromFiles.length;
         let newTitle = "simulation" + simNum + "_" + title;
 
-        self.SimulationSelectors(newTitle, self.data.length)
+        self.SimulationSelectors(newTitle, self.data.length-1)
         
         // Get current number of classes for scale
         let classes = (self.currentClass == undefined) ? 4 : self.currentClass;
@@ -198,7 +198,7 @@ export default class Application extends Templated {
   SimulationSelectors(title, length){
     // For manipulate data simulation selector 
     var elem = document.createElement('option')
-    var elemText = document.createTextNode(title + " with " + length + " cycles")
+    var elemText = document.createTextNode(title + " with " + length + " cycle(s)")
     elem.appendChild(elemText)
     var foo = document.getElementById("sim-select")
     foo.appendChild(elem)
@@ -215,7 +215,7 @@ export default class Application extends Templated {
     bar.selectedIndex = bar.options.length-1
 
     // For simulaton cycle selector 
-    this.Elem("cycle").setAttribute("max", length - 1);
+    this.Elem("cycle").setAttribute("max", length);
     this.Elem("output").textContent = 0;
     document.getElementById("cycle").value = 0
   }
@@ -239,30 +239,24 @@ export default class Application extends Templated {
   LayerOntoMap(fileContent, title, data, scale, CreateSimulationObject, wait) {
     if (wait) this.Elem("wait").hidden = true;
 
-    let layer;
-    let cycle;
-
-    //Title the vector layer based on what cycle it is on, might not be necessary, but keep it this code for now
-    let newTitle;
-    if (this.currentSimulationCycle == undefined || CreateSimulationObject == true) { 
-      newTitle = title + " Cycle0"
-      cycle = 0;
-      layer = new VectorLayer(fileContent, newTitle, data, this.currentSIR, scale); 
-    }
-    else { 
-      newTitle = title + " Cycle" + this.currentSimulationCycle;
-      cycle = this.currentSimulationCycle
-      layer = new VectorLayer(fileContent, newTitle, data, this.currentSIR, scale); 
-    }
-
+    let layer = new VectorLayer(fileContent, title, data, this.currentSIR, scale); 
+    
     // add vector layer onto world map
     this.Widget("map").AddLayer(title, layer);
 
     // make the vector layers attributes visible through clicking census subdivisions
-    mapOnClick(data, this.Widget("map").map._map, newTitle, title, cycle);
+    // debugger;
+    mapOnClick(data, this.Widget("map").map._map, title, this.currentSimulationCycle);
 
     // Creates the simulaiton object only once state.txt and geojson are loaded. This step does not occur twice.
     if (CreateSimulationObject == true) { layer.OL.getSource().once("change", this.OnLayerCreation_Handler.bind(this)); }
+  }
+
+  RedrawLayerOnMap(data){
+    var layer = this.Widget("map").Layer(this.currentSimulationTitle)
+    layer.Redraw(this.currentColorScale.GS, data, this.currentSIR)
+    mapOnClick(data, this.Widget("map").map._map, this.currentSimulationTitle, this.currentSimulationCycle)
+    
   }
 
 
@@ -357,7 +351,7 @@ export default class Application extends Templated {
   RecolorLayer(scale) {
     if (this.currentSimulationLayerGeoJSON != undefined) {
       let index = (this.currentSimulationCycle != undefined) ? this.currentSimulationCycle : 0;
-      this.LayerOntoMap(this.currentSimulationLayerGeoJSON, this.currentSimulationTitle, this.data[index].messages, scale.GS, false, false);
+      this.RedrawLayerOnMap(this.data[index].messages);
     }
   }
 
@@ -392,7 +386,7 @@ export default class Application extends Templated {
     this.currentColorScale = new GetScale(this.currentColor, this.currentNumberOfClasses);
     let scale = this.currentColorScale;
 
-    this.LayerOntoMap(this.currentSimulationLayerGeoJSON, this.currentSimulationTitle, this.data[this.currentSimulationCycle].messages, scale.GS, false, false);
+    this.RedrawLayerOnMap(this.data[this.currentSimulationCycle].messages);
 
     document.getElementById('colorOne').value = this.currentColor
 
@@ -455,7 +449,8 @@ export default class Application extends Templated {
 
     // New vector layer object that'll overwrite the vector layer object from the previous simulation cycle
     // This will overwrite the previous simulation cycle vector object and add the new one
-    this.LayerOntoMap(this.currentSimulationLayerGeoJSON, this.currentSimulationTitle, data, this.currentColorScale.GS, false, false);
+    //this.LayerOntoMap(this.currentSimulationLayerGeoJSON, this.currentSimulationTitle, data, this.currentColorScale.GS, false, false);
+    this.RedrawLayerOnMap(data);
   }
 
   OnSIRchange(ev){
@@ -465,13 +460,7 @@ export default class Application extends Templated {
     document.getElementById("legend-svg").firstChild.textContent = "Proportion " + ev.target.value;
     // Change layer if there is one
     if(this.currentSimulationTitle != undefined){
-      this.LayerOntoMap(this.currentSimulationLayerGeoJSON, 
-        this.currentSimulationTitle, 
-        this.data[this.currentSimulationCycle].messages, 
-        this.currentColorScale.GS, 
-        false, 
-        false
-        );
+      this.RedrawLayerOnMap(this.data[this.currentSimulationCycle].messages);
     }
   }
   

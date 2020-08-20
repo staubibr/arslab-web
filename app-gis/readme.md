@@ -74,10 +74,8 @@
 
 ## TODO:
 - See if mapOnClick works on multiple layers (need more data to try this)
-- Let users video record the simulation
 - Clean up UI
 - Interpret simulation types (pandemic, flood, fire, etc.)
-- Let users see legend for density of S, I , and R.
 - Fix the GeoCoder so it doesn't add itself as a layer
 
 ## Resources:

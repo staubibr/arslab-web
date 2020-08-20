@@ -1,4 +1,4 @@
-export const mapOnClick = (data, map, filterTitle, title, currentCcyle) => {
+export const mapOnClick = (data, map, title, currentCcyle) => {
 
   const overlayContainerElement = document.querySelector(".overlay-container");
   const overlayLayer = new ol.Overlay({
@@ -73,7 +73,7 @@ export const mapOnClick = (data, map, filterTitle, title, currentCcyle) => {
           this on("click") will only work for the current title
         */
         layerFilter: function (layerCandidate) {
-          return layerCandidate.get("title") === filterTitle;
+          return layerCandidate.get("title") === title;
         },
       }
     );
