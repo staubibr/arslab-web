@@ -5,14 +5,10 @@ import Templated from "../../api-web-devs/components/templated.js";
 import InitialLayer from "../classes/InitialLayer.js";
 
 export default Core.Templatable("Widget.Map", class Map extends Templated {
-    get Map() {
-      return this.map;
-    }
+    get Map() { return this.map; }
 
     constructor(container) {
       super(container);
-      // For storing layer objects and accessing them
-      // Required for Layer() , Layers(), and AddLayer()
       this.layers = {};
     }
 
@@ -20,8 +16,7 @@ export default Core.Templatable("Widget.Map", class Map extends Templated {
     InitTileLayer() {
       var layer = this.LayerForMap();
 
-      // This will display the world map onto the website
-      // This will also add controls to the map (sidebar, search, zoom, full screen, etc.)
+      // Display OSM map and add controls to the map (sidebar, search, zoom, full screen, etc.)
       this.map = new InitialLayer(layer, this.Elem("map-container"));
 
       return this.map;
@@ -37,29 +32,15 @@ export default Core.Templatable("Widget.Map", class Map extends Templated {
       return layer;
     }
 
-    Layer(id) {
-      return this.layers[id];
-    }
+    Layer(id) { return this.layers[id]; }
     
     // Add a vector layer onto of the world map
-    // If another vector layer is below the new vector layer,
-    // the new vector layer will appear on top of the bottom one
-    // The code below is so we don't have the same vector layer on the world map multiple times
     AddLayer(id, layer) {
       this.layers[id] = layer;
-      let self = this;
-      this.map.OL.getLayers().forEach(function (l) {
-        if (l != undefined) {
-          let title = (l.N.title != undefined) ? l.N.title : "";
-          if (id == title) { self.map.OL.removeLayer(l); }
-        }
-      })
       this.map.OL.addLayer(layer.OL);
     }
 
-    Layers(){
-      return this.layers;
-    }
+    Layers(){ return this.layers; }
 
     Template() {
       return (
@@ -71,12 +52,11 @@ export default Core.Templatable("Widget.Map", class Map extends Templated {
               '<div class="sidebar-tabs">'+
                 '<ul role="tablist">'+
                   '<li><a href="#home" role="tab"><i class="fa fa-home"></i></a></li>'+
-                  '<li><a href="#userData" role="tab"><i class="fa fa-database"></i></a></li>'+
-                  '<li><a href="#manipulate" role="tab"><i class="fa fa-pencil-square-o"></i></a></li>'+
-                  '<li><a href="#downloadCSV" role="tab"><i class="fa fa-download"></i></a></li>'+
-                  '<li><a href="#featureInfo" role="tab"><i class="fa fa-info"></i></a></li>'+
-                  // '<li class="disabled"><a href="#messages" role="tab"><i class="fa fa-envelope"></i></a></li>'+
-                  // '<li><a href="https://github.com/staubibr/arslab-dev" role="tab" target="_blank"><i class="fa fa-link"></i></a></li>'+
+                  '<li><a href="#loadDataSidebar" role="tab"><i class="fa fa-database"></i></a></li>'+
+                  '<li><a href="#editSimulationSidebar" role="tab"><i class="fa fa-filter"></i></a></li>'+
+                  '<li><a href="#playSidebar" role="tab"><i class="fa fa-play"></i></a></li>'+
+                  '<li><a href="#downloadDataSidebar" role="tab"><i class="fa fa-download"></i></a></li>'+
+                  '<li><a href="#featureInfoSidebar" role="tab"><i class="fa fa-info"></i></a></li>'+
                 '</ul>'+
 
                 '<ul role="tablist">'+
@@ -92,26 +72,29 @@ export default Core.Templatable("Widget.Map", class Map extends Templated {
                   '<p><a href="https://arslab.sce.carleton.ca/" target="new">Click here for ARSLab</a></p>' +
                 '</div>'+
           
-                '<div class="sidebar-pane" id="userData">'+
+                '<div class="sidebar-pane" id="loadDataSidebar">'+
                   '<h1 class="sidebar-header">Load Data<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>'+
                 '</div>'+
 
-                '<div class="sidebar-pane" id="downloadCSV">'+
+                '<div class="sidebar-pane" id="editSimulationSidebar">'+
+                '<h1 class="sidebar-header">Visualization<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>'+
+                '</div>'+
+
+                '<div class="sidebar-pane" id="playSidebar">'+
+                '<h1 class="sidebar-header">Play Visualization<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>'+
+                '<p></p>' +
+                '</div>'+
+
+                '<div class="sidebar-pane" id="downloadDataSidebar">'+
                   '<h1 class="sidebar-header">Download Data (as CSV)<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>'+
                   '<p></p>' +
                 '</div>'+
           
-                '<div class="sidebar-pane" id="manipulate">'+
-                '<h1 class="sidebar-header">Manipulate Simulations<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>'+
-                '</div>'+
 
-                '<div class="sidebar-pane" id="featureInfo">'+
+                '<div class="sidebar-pane" id="featureInfoSidebar">'+
                 '<h1 class="sidebar-header">Feature Information<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>'+
                 '</div>'+
-          
-                // '<div class="sidebar-pane" id="messages">'+
-                //   '<h1 class="sidebar-header">Messages<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>'+
-                // '</div>'+
+
           
                 '<div class="sidebar-pane" id="settings">'+
                   '<h1 class="sidebar-header">Settings<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>'+

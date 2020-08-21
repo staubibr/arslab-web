@@ -58,7 +58,7 @@ export default class VectorLayer {
         let x;
         if (data[d.dauid] != undefined) {
           if(SIR == "Susceptible" || SIR == undefined){
-            x = data[d.dauid].Susceptible;
+            x = data[feature.N.dauid].Susceptible;
           } else if (SIR == "Infected") {
             x = data[d.dauid].Infected;
           } else {
@@ -68,7 +68,7 @@ export default class VectorLayer {
           x = 0;
         }
         if(data[d.dauid] != undefined){
-          var newStyle = new ol.style.Style({
+          feature.setStyle(new ol.style.Style({
             stroke: new ol.style.Stroke({
               color: "black",
               width: 1.2,
@@ -76,8 +76,7 @@ export default class VectorLayer {
             fill: new ol.style.Fill({
               color: scale(x),
             }),
-          });
-          feature.setStyle(newStyle)
+          }))
         }
     });
   }

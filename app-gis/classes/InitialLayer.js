@@ -1,17 +1,13 @@
 export default class InitialLayer {
   // Get initial layer object
-  get OL() {
-    return this._map;
-  }
+  get OL() { return this._map; }
 
   constructor(layer, target) {
 
     var LayerInformationControl = function(opt_options) {
       var elem = document.querySelector(".overlay-container");
       elem.className = 'custom-control ol-unselectable ol-control';
-      ol.control.Control.call(this, {
-        element: elem
-      });
+      ol.control.Control.call(this, { element: elem });
     };
     ol.inherits(LayerInformationControl, ol.control.Control);
 
@@ -33,7 +29,6 @@ export default class InitialLayer {
 
     this._map = new ol.Map({
       renderer: "canvas",
-      // The target is an HTML component 
       target: target,
       // In case we want to add more base maps later, replace [layers] with
       // [new ol.layer.Group({title: 'Base map', layers: [layer]})]
@@ -46,7 +41,7 @@ export default class InitialLayer {
           new Legend,
           new ol.control.Sidebar({element: "sidebar", position: 'left'}),
           new ol.control.LayerSwitcher({groupSelectStyle: 'group'}),
-          // GEOCODER GETS ADDED AS A LAYER AS WELL WHICH IS PROBLEMATIC FOR AddLayer(id, layer)
+          // GEOCODER GETS ADDED AS A LAYER, FIND A WAY TO REMOVE IT LATER
           new Geocoder('nominatim', {
             provider: 'osm',
             lang: 'en',
@@ -60,7 +55,6 @@ export default class InitialLayer {
         ]),
       view: new ol.View({
         center: ol.proj.transform(
-          // TODO: Let users change the center or a "go-to x location"
           // Ontario coordinates
           [-85.0, 50.0],
           "EPSG:4326",

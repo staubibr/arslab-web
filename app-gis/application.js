@@ -4,7 +4,8 @@ import Core from "../api-web-devs/tools/core.js";
 import Dom from "../api-web-devs/tools/dom.js";
 import Net from "../api-web-devs/tools/net.js";
 import Templated from "../api-web-devs/components/templated.js";
-import Playback from "../api-web-devs/widgets/playback.js";
+import Playback from "./playbackCustom.js";
+import Recorder from '../api-web-devs/components/recorder.js';
 import Map from "./widgets/map.js";
 import Box from "../api-web-devs/ui/box-input-files.js";
 import VectorLayer from "./classes/vectorLayer.js";
@@ -45,20 +46,20 @@ export default class Application extends Templated {
     // Check what part of SIR the user wants to visualize
     this.Node("SIR-select").On("change", this.OnSIRchange.bind(this));
 
+
+
     // Fill sidebar with HTML
     this.AddToSideBar()
+
+    
   }
 
   AddToSideBar(){
-    var foo = document.getElementById("userData")
-    foo.appendChild(document.getElementById("userdata"))
-    var bar = document.getElementById("manipulate")
-    bar.appendChild(document.getElementById("navigation"))
-    var spam = document.getElementById("downloadCSV")
-    spam.appendChild(document.getElementById("download"))
-    var spam = document.getElementById("featureInfo")
-    spam.appendChild(document.getElementById("overlay-container"))
-    
+    document.getElementById("loadDataSidebar").appendChild(document.getElementById("loadDataApp"))
+    document.getElementById("editSimulationSidebar").appendChild(document.getElementById("editSimulationApp"))
+    document.getElementById("playSidebar").appendChild(document.getElementById("playbackApp"))
+    document.getElementById("downloadDataSidebar").appendChild(document.getElementById("downloadDataApp"))
+    document.getElementById("featureInfoSidebar").appendChild(document.getElementById("overlay-container"))
   }
 
   /*
@@ -245,20 +246,30 @@ export default class Application extends Templated {
     this.Widget("map").AddLayer(title, layer);
 
     // make the vector layers attributes visible through clicking census subdivisions
-    // debugger;
+    // Change _map to OL
     mapOnClick(data, this.Widget("map").map._map, title, this.currentSimulationCycle);
+
+    // Video
+    this.PlaySimulation(layer)
 
     // Creates the simulaiton object only once state.txt and geojson are loaded. This step does not occur twice.
     if (CreateSimulationObject == true) { layer.OL.getSource().once("change", this.OnLayerCreation_Handler.bind(this)); }
   }
 
-  RedrawLayerOnMap(data){
+  RedrawLayerOnMap(index){
+    let d = this.data[index].messages
     var layer = this.Widget("map").Layer(this.currentSimulationTitle)
-    layer.Redraw(this.currentColorScale.GS, data, this.currentSIR)
-    mapOnClick(data, this.Widget("map").map._map, this.currentSimulationTitle, this.currentSimulationCycle)
     
+    layer.Redraw(this.currentColorScale.GS, d, this.currentSIR)
+    mapOnClick(d, this.Widget("map").map._map, this.currentSimulationTitle, this.currentSimulationCycle)
+    
+    this.PlaySimulation(layer)
   }
 
+  PlaySimulation(layer){
+    this.Widget("playback").Enable(true)
+    this.Widget("playback").Initialize(this.data, layer, this.currentColorScale.GS, this.currentSIR);
+  }
 
   /*
   Purpose: 
@@ -351,7 +362,7 @@ export default class Application extends Templated {
   RecolorLayer(scale) {
     if (this.currentSimulationLayerGeoJSON != undefined) {
       let index = (this.currentSimulationCycle != undefined) ? this.currentSimulationCycle : 0;
-      this.RedrawLayerOnMap(this.data[index].messages);
+      this.RedrawLayerOnMap(index);
     }
   }
 
@@ -386,7 +397,7 @@ export default class Application extends Templated {
     this.currentColorScale = new GetScale(this.currentColor, this.currentNumberOfClasses);
     let scale = this.currentColorScale;
 
-    this.RedrawLayerOnMap(this.data[this.currentSimulationCycle].messages);
+    this.RedrawLayerOnMap(this.currentSimulationCycle);
 
     document.getElementById('colorOne').value = this.currentColor
 
@@ -442,15 +453,12 @@ export default class Application extends Templated {
     this.currentSimulationCycle = ev.target.value;
     var currentDataFileIndex = document.getElementById('sim-select').selectedIndex;
     this.DataFromFiles[currentDataFileIndex].layerCycle = ev.target.value;
-    
 
-    // Access the data in the new simulation cycle
-    let data = this.data[ev.target.value].messages;
 
     // New vector layer object that'll overwrite the vector layer object from the previous simulation cycle
     // This will overwrite the previous simulation cycle vector object and add the new one
     //this.LayerOntoMap(this.currentSimulationLayerGeoJSON, this.currentSimulationTitle, data, this.currentColorScale.GS, false, false);
-    this.RedrawLayerOnMap(data);
+    this.RedrawLayerOnMap(ev.target.value);
   }
 
   OnSIRchange(ev){
@@ -460,7 +468,7 @@ export default class Application extends Templated {
     document.getElementById("legend-svg").firstChild.textContent = "Proportion " + ev.target.value;
     // Change layer if there is one
     if(this.currentSimulationTitle != undefined){
-      this.RedrawLayerOnMap(this.data[this.currentSimulationCycle].messages);
+      this.RedrawLayerOnMap(this.currentSimulationCycle);
     }
   }
   
@@ -515,7 +523,7 @@ export default class Application extends Templated {
       "<div id='map' handle='map' widget='Widget.Map' class='map' ></div>" +
 
       // Load Simulation
-      "<div handle='userdata' id='userdata'>" +
+      "<div handle='loadDataApp' id='loadDataApp'>" +
   
         "<div class='upload-btn-wrapper'>" +
           "<br><button class='downloadButton'><i class='far fa-file-text'> Choose Simulation Results File </i>" +
@@ -536,9 +544,9 @@ export default class Application extends Templated {
       
 
       // Download data
-      "<div id='download'>" +
+      "<div id='downloadDataApp'>" +
       
-      "<label for='sim-type'>Select simulation to download: </label>" +
+      "<label for='sim-type'>Current Simulation: </label>" +
       "<select class='select-css' handle = 'sim-download' id='sim-download'></select>" +
 
       '<br><br><button class="btnDownload" handle="btnDownload" title="nls(Download_Files)" disabled><i class="fa fa-download"></i> Download</button>' +
@@ -546,10 +554,10 @@ export default class Application extends Templated {
       "</div>"+
 
       // Manipulate simulation
-      "<div class='sim-navigation' handle-'navigation' id='navigation'>" +
+      "<div class='sim-navigation'  id='editSimulationApp'>" +
         
-        "<div class='select-css-box' id='controls'>" +
-          "<br><label for='sim-select'>Select Simulation: </label>" +
+        "<div class='select-css-box' id='select-simulation'>" +
+          "<br><label for='sim-select'>Current Simulation: </label>" +
           "<select class='select-css' handle = 'selectSimulation' id='sim-select'>" +
           "</select>" +
             
@@ -575,12 +583,22 @@ export default class Application extends Templated {
           "<option>Infected</option>" +
           "<option>Recovered</option>" +
         "</select></div>" +
+
+
         
         
         "<legend id='legend-svg' class='svg-div'>Proportion Susceptible<svg id='svg' class='svg' handle='svg' width = '960' height = '150'></svg></legend>" +
 
       "</div>" +
 
+      // Video
+      "<div class='playbackApp' id='playbackApp'>" +
+        
+        "<br><br><div id='playback' handle='playback' widget='Widget.Playback'></div>" +
+          
+      "</div>" +
+     
+           
       // Overlay text for vector layers
       "<div id = 'overlay-container' class='overlay-container'><span class='overlay-text' id='feature-title'>No Feature Selected" +
       "</span><br><br><span class='overlay-text' id='feature-name'></span>" +

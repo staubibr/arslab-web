@@ -90,13 +90,7 @@ button:not(:disabled):hover {
 }
 
 /* Style for body of application */
-.playback {
-	text-align:center; 
-}
 
-.playback .controls button:not(:last-child) {
-    border-right-color: #eee;
-}
 
 .map-container {
 	width:100%;
@@ -314,4 +308,57 @@ input[type="range"] {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+}
+
+
+.playback {
+    text-align: center;
+}
+
+.playback .controls button:not(:last-child) {
+    border-right-color: #eee;
+}
+
+.playback .controls button {
+    border-radius: 0px;
+}
+
+.playback .controls button:first-child {
+	border-radius: 4px 0px 0px 4px;
+}
+
+.playback .controls button:last-child {
+	border-radius: 0px 4px 4px 0px;
+}
+
+.playback button.settings,
+.playback button.record {
+	border-radius: 4px;
+}
+
+.playback .controls button:not(:last-child) {
+	border-right: solid thin silver;
+}
+
+.playback label {
+	font-weight: bold;
+    color: #0051A3;
+}
+
+.playback > * {
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.playback .slider {
+    margin: auto 10px;
+    width: 200px;
+}
+
+.playback > * {
+    margin: auto 5px;
+}
+
+.playback .record:not(:disabled) {
+	color: #dd4237;
 }
