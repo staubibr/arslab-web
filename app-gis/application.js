@@ -6,6 +6,8 @@ import Net from "../api-web-devs/tools/net.js";
 import Templated from "../api-web-devs/components/templated.js";
 import Playback from "./playbackCustom.js";
 import Recorder from '../api-web-devs/components/recorder.js';
+import MultiView from './multiViewCustom.js'
+import oSettings from '../api-web-devs/components/settings.js';
 import Map from "./widgets/map.js";
 import Box from "../api-web-devs/ui/box-input-files.js";
 import VectorLayer from "./classes/vectorLayer.js";
@@ -46,7 +48,7 @@ export default class Application extends Templated {
     // Check what part of SIR the user wants to visualize
     this.Node("SIR-select").On("change", this.OnSIRchange.bind(this));
 
-
+    this.Widget("playback").Recorder = new Recorder(this.Widget("multi").Canvas);
 
     // Fill sidebar with HTML
     this.AddToSideBar()
@@ -59,7 +61,7 @@ export default class Application extends Templated {
     document.getElementById("editSimulationSidebar").appendChild(document.getElementById("editSimulationApp"))
     document.getElementById("playSidebar").appendChild(document.getElementById("playbackApp"))
     document.getElementById("downloadDataSidebar").appendChild(document.getElementById("downloadDataApp"))
-    document.getElementById("featureInfoSidebar").appendChild(document.getElementById("overlay-container"))
+    // document.getElementById("featureInfoSidebar").appendChild(document.getElementById("overlay-container"))
   }
 
   /*
@@ -268,7 +270,14 @@ export default class Application extends Templated {
 
   PlaySimulation(layer){
     this.Widget("playback").Enable(true)
+    this.settings = new oSettings()
+    console.log(this.settings)
+    
+    
     this.Widget("playback").Initialize(this.data, layer, this.currentColorScale.GS, this.currentSIR);
+    // this.Widget('multi').Initialize(this.settings);
+    // this.Widget("multi").Resize();
+		// this.Widget("multi").Redraw();
   }
 
   /*
@@ -504,6 +513,8 @@ export default class Application extends Templated {
     }
     simulation.Initialize(10);
 
+    this.simulation = simulation;
+
     this.transitions = createTransitionFromSimulation(simulation.frames)
 
     this.ArrayOfTransitions(this.transitions, this.currentSimulationTitle)
@@ -595,24 +606,22 @@ export default class Application extends Templated {
       "<div class='playbackApp' id='playbackApp'>" +
         
         "<br><br><div id='playback' handle='playback' widget='Widget.Playback'></div>" +
+        "<div handle='multi' widget='Widget.MultiView'></div>" +
           
       "</div>" +
      
            
       // Overlay text for vector layers
-      "<div id = 'overlay-container' class='overlay-container'><span class='overlay-text' id='feature-title'>No Feature Selected" +
-      "</span><br><br><span class='overlay-text' id='feature-name'></span>" +
-      "</span><br><br><span class='overlay-text' id='feature-simulation'></span>" +
-      "</span><br><br><span class='overlay-text' id='feature-cycle'></span><br>" +
-
-      "</span><br><br><span class='overlay-text' id='feature-init-pop'></span>" +
-      "</span><br><br><span class='overlay-text' id='feature-current-pop'></span>" +
-      "</span><br><br><span class='overlay-text' id='feature-fatal'></span><br>" +
-      
-      "</span><br><br><span class='overlay-text' id='feature-susceptible'></span>" +
-      "</span><br><br><span class='overlay-text' id='feature-infected'></span>" +
-      "</span><br><br><span class='overlay-text' id='feature-recovered'></span></div>" 
-      
+      "<div id = 'overlay-container' class='overlay-container' style='none'>" +
+          "<span class='overlay-text' id='feature-name'></span>" +
+          "</span><br><br><span class='overlay-text' id='feature-simulation'></span>" +
+          "</span><br><br><span class='overlay-text' id='feature-cycle'></span>" +
+          "</span><br><br><span class='overlay-text' id='feature-init-pop'></span>" +
+          "</span><br><br><span class='overlay-text' id='feature-current-pop'></span>" +
+          "</span><br><br><span class='overlay-text' id='feature-fatal'></span>" +
+          "</span><br><br><span class='overlay-text' id='feature-susceptible'></span>" +
+          "</span><br><br><span class='overlay-text' id='feature-infected'></span>" +
+          "</span><br><br><span class='overlay-text' id='feature-recovered'></span></div>" 
     );
   }
 }

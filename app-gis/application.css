@@ -101,46 +101,53 @@ input[type="range"] {
     width:200px;
   }
 
-/*Adding a background color makes the map look funky until we get our layer on the map */
-/* .overlay-container {
+
+.overlay-container {
+    display: none;
     position: absolute;
     background-color: white;
     box-shadow: 0 1px 4px rgba(0,0,0,0.2);
     padding: 15px;
     border-radius: 10px;
     border: 1px solid #cccccc;
+    bottom: 12px;
+    left: -50px;
+    min-width: 280px;
 
-    color: #131212;
-    width: 300px;
-    text-align: left;
-    z-index: 1;
-    bottom: 100%;
-    left: 50%;
-    margin-left: -80px;
 
-}
-.overlay-container #feature-additional-info::after{
-    content: ' ';
-    position: absolute;
+
+  }
+  .overlay-container:after, .overlay-container:before {
     top: 100%;
-    left: 50%;
-    margin-left: -10px;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+    
+    
+  }
+  .overlay-container:after {
+    border-top-color: white;
     border-width: 10px;
-    border-style: solid;
-    border-color: #555;
-} */
-
-.custom-control {
-
-    left: 5px;
-    width: auto;
-    height: auto;
-    border-radius: 10px;
+    left: 48px;
+    margin-left: -10px;
     
-    /* border: 1px solid  rgba(0,60,136,.5); */
     
+  }
+  .overlay-container:before {
+    border-top-color: #cccccc;
+    border-width: 11px;
+    left: 48px;
+    margin-left: -11px;
+  }
 
-}
+
+
+
+
+
 
 /* background: no-repeat url(./.png); */
 /* .custom-control::after{

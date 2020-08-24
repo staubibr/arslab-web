@@ -3,14 +3,6 @@ export default class InitialLayer {
   get OL() { return this._map; }
 
   constructor(layer, target) {
-
-    var LayerInformationControl = function(opt_options) {
-      var elem = document.querySelector(".overlay-container");
-      elem.className = 'custom-control ol-unselectable ol-control';
-      ol.control.Control.call(this, { element: elem });
-    };
-    ol.inherits(LayerInformationControl, ol.control.Control);
-
     var Legend = function(opt_options) {
       var options = opt_options || {};
 
@@ -37,7 +29,6 @@ export default class InitialLayer {
         [
           new ol.control.Zoom({className: 'custom-zoom'}),
           new ol.control.FullScreen(),
-          new LayerInformationControl, 
           new Legend,
           new ol.control.Sidebar({element: "sidebar", position: 'left'}),
           new ol.control.LayerSwitcher({groupSelectStyle: 'group'}),

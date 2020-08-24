@@ -5,9 +5,10 @@ import Dom from '../api-web-devs/tools/dom.js';
 import Templated from '../api-web-devs/components/templated.js';
 import VectorLayer from "./classes/vectorLayer.js";
 
+
 export default Core.Templatable("Widget.Playback", class Playback extends Templated { 
 
-	//get IsLooping() { return this.settings.Get("playback", "loop"); } 
+	get IsLooping() { return 1 } //this.settings.Get("playback", "loop"); } 
 	
 	get Interval() { return 60 } // this.settings.Get("playback", "speed") }
 
@@ -30,14 +31,14 @@ export default Core.Templatable("Widget.Playback", class Playback extends Templa
 		
 		this.Enable(false);
 		
-		//this.Node("first").On("click", this.onFirstClick_Handler.bind(this));
-		//this.Node("stepBack").On("click", this.onStepBackClick_Handler.bind(this));
-		//this.Node("rewind").On("click", this.onRewindClick_Handler.bind(this));
+		this.Node("first").On("click", this.onFirstClick_Handler.bind(this));
+		this.Node("stepBack").On("click", this.onStepBackClick_Handler.bind(this));
+		this.Node("rewind").On("click", this.onRewindClick_Handler.bind(this));
 		this.Node("play").On("click", this.onPlayClick_Handler.bind(this));
-		//this.Node("stepForward").On("click", this.onStepForwardClick_Handler.bind(this));
-		//this.Node("last").On("click", this.onLastClick_Handler.bind(this));
+		this.Node("stepForward").On("click", this.onStepForwardClick_Handler.bind(this));
+		this.Node("last").On("click", this.onLastClick_Handler.bind(this));
 		this.Node("slider").On("input", this.onSliderChange_Handler.bind(this));
-		//this.Node("record").On("click", this.onRecordClick_Handler.bind(this));
+		this.Node("record").On("click", this.onRecordClick_Handler.bind(this));
 	}
 	
 	Initialize(data, layer, colorScale, SIR) {
@@ -111,17 +112,11 @@ export default Core.Templatable("Widget.Playback", class Playback extends Templa
 	}
 	
 	GoToPrevious() {
-		this.SetCurrent(--this.current);
-		
-		this.simulation[this.current];
+		this.GoTo(--this.current);
 	}
 	
 	GoToNext() {
-		this.SetCurrent(++this.current);
-		
-		this.simulation[this.current]
-		this.layer.Redraw(this.colorScale, this.simulation[this.current].messages, this.sir)
-		
+		this.GoTo(++this.current);
 	}
 	
 	GoTo(i) {

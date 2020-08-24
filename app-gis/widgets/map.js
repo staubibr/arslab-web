@@ -56,7 +56,7 @@ export default Core.Templatable("Widget.Map", class Map extends Templated {
                   '<li><a href="#editSimulationSidebar" role="tab"><i class="fa fa-filter"></i></a></li>'+
                   '<li><a href="#playSidebar" role="tab"><i class="fa fa-play"></i></a></li>'+
                   '<li><a href="#downloadDataSidebar" role="tab"><i class="fa fa-download"></i></a></li>'+
-                  '<li><a href="#featureInfoSidebar" role="tab"><i class="fa fa-info"></i></a></li>'+
+                  // '<li><a href="#featureInfoSidebar" role="tab"><i class="fa fa-info"></i></a></li>'+
                 '</ul>'+
 
                 '<ul role="tablist">'+
@@ -91,9 +91,9 @@ export default Core.Templatable("Widget.Map", class Map extends Templated {
                 '</div>'+
           
 
-                '<div class="sidebar-pane" id="featureInfoSidebar">'+
-                '<h1 class="sidebar-header">Feature Information<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>'+
-                '</div>'+
+                // '<div class="sidebar-pane" id="featureInfoSidebar">'+
+                // '<h1 class="sidebar-header">Feature Information<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>'+
+                // '</div>'+
 
           
                 '<div class="sidebar-pane" id="settings">'+
