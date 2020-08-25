@@ -52,7 +52,7 @@ export default class Application extends Templated {
     // Check what part of SIR the user wants to visualize
     this.Node("SIR-select").On("change", this.OnSIRchange.bind(this));
 
-    this.Widget("playback").Recorder = new Recorder(this.Elem("canvas"))
+    this.Widget("playback").Recorder = new Recorder(this.Node("map").Elem("canvas.ol-unselectable"));
 
 
     // Fill sidebar with HTML
