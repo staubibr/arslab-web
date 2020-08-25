@@ -116,7 +116,7 @@ export default class Simulation extends Evented {
 	GoToFrame(i) {
 		this.state = this.GetState(i);
 		
-		this.Emit("Jump", { state:this.state });
+		this.Emit("Jump", { state:this.state, i: i });
 	}
 	
 	GoToNextFrame() {
@@ -133,7 +133,7 @@ export default class Simulation extends Evented {
 		
 		this.state.RollbackTransitions(frame);
 		
-		this.Emit("Move", { frame : reverse, direction:"previous" });
+		this.Emit("Move", { frame : reverse, direction:"previous"});
 	}
 	
 	Save() {

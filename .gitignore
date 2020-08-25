@@ -12,3 +12,5 @@ devs-logs-old
 /devs-logs-scripts/.idea/rSettings.xml
 /devs-logs-scripts/.idea/vcs.xml
 /web.config
+app-gis/data/pandemic_state.txt.tar.gz
+app-gis/data/pandemic_state 2.txt

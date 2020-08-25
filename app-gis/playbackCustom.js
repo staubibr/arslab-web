@@ -4,13 +4,14 @@ import Core from '../api-web-devs/tools/core.js';
 import Dom from '../api-web-devs/tools/dom.js';
 import Templated from '../api-web-devs/components/templated.js';
 import VectorLayer from "./classes/vectorLayer.js";
+import Recorder from '../api-web-devs/components/recorder.js';
 
 
 export default Core.Templatable("Widget.Playback", class Playback extends Templated { 
 
-	get IsLooping() { return 1 } //this.settings.Get("playback", "loop"); } 
+	get IsLooping() { return this.settings.Get("playback", "loop"); } 
 	
-	get Interval() { return 60 } // this.settings.Get("playback", "speed") }
+	get Interval() { return 1000 / this.settings.Get("playback", "speed") }
 
 	set Recorder(value) {
 		this.recorder = value;
@@ -41,19 +42,23 @@ export default Core.Templatable("Widget.Playback", class Playback extends Templa
 		this.Node("record").On("click", this.onRecordClick_Handler.bind(this));
 	}
 	
-	Initialize(data, layer, colorScale, SIR) {
-		this.simulation = data;
-		this.layer = layer;
-		this.colorScale = colorScale;
-		this.sir = SIR;
-
+	Initialize(simulation, settings) {
+		this.simulation = simulation;
+		this.settings = settings;
+		
+		this.simulation.On("Session", this.onSimulationSession_Handler.bind(this));
+		
+		this.values = this.simulation.frames.map((f) => { return f.time; });
+		
 		this.min = 0;
-		this.max = this.simulation.length - 1;
+		this.max = this.values.length - 1;
 		
 		this.Elem("slider").setAttribute("min", this.min);
 		this.Elem("slider").setAttribute("max", this.max);
 		
 		this.SetCurrent(this.min);
+		
+		this.Enable(true);
 	}
 	
 	Enable (isEnabled) {
@@ -70,7 +75,7 @@ export default Core.Templatable("Widget.Playback", class Playback extends Templa
 	SetCurrent(i) {
 		this.current = i;
 		
-		// this.Elem("label").innerHTML = this.simulatin[this.current];
+		this.Elem("label").innerHTML = this.values[this.current];
 		this.Elem("slider").value = this.current;
 	}
 	
@@ -112,17 +117,21 @@ export default Core.Templatable("Widget.Playback", class Playback extends Templa
 	}
 	
 	GoToPrevious() {
-		this.GoTo(--this.current);
+		this.SetCurrent(--this.current);
+		
+		this.simulation.GoToPreviousFrame();
 	}
 	
 	GoToNext() {
-		this.GoTo(++this.current);
+		this.SetCurrent(++this.current);
+		
+		this.simulation.GoToNextFrame();
 	}
 	
 	GoTo(i) {
 		this.SetCurrent(i);
 		
-		this.layer.Redraw(this.colorScale, this.simulation[i].messages, this.sir);
+		this.simulation.GoToFrame(i);
 	}
 	
 	onFirstClick_Handler(ev) {

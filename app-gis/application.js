@@ -22,10 +22,14 @@ import CreateCsvFileForDownload from "./classes/CreateCsvFile.js";
 import { mapOnClick } from "./widgets/mapOnClick.js";
 import { createTransitionFromSimulation } from "../app-gis/functions/simToTransition.js";
 import { sortPandemicData } from "../app-gis/functions/sortPandemicData.js";
+import Evented from "../api-web-devs/components/evented.js";
+import Port from "../api-web-devs/simulation/port.js";
 
 export default class Application extends Templated {
   constructor(node) {
     super(node);
+
+    this.settings = new oSettings()
 
     // By default the legend will be red-white unless otherwise specified by the user
     this.CreateLegend(Core.Nls("App_Legend_Title"), "translate(23,5)");
@@ -48,7 +52,8 @@ export default class Application extends Templated {
     // Check what part of SIR the user wants to visualize
     this.Node("SIR-select").On("change", this.OnSIRchange.bind(this));
 
-    this.Widget("playback").Recorder = new Recorder(this.Widget("multi").Canvas);
+    this.Widget("playback").Recorder = new Recorder(this.Elem("canvas"))
+
 
     // Fill sidebar with HTML
     this.AddToSideBar()
@@ -130,13 +135,23 @@ export default class Application extends Templated {
     - this.data for CheckForGeoJSON(input)
   */
   DataLoaded_Handler(data) {
-    
+
+
     this.data = sortPandemicData(data);
     
     // User can now insert a GeoJSON layer file
     this.Elem("vectorLayer").disabled = false;
     this.Elem("downlaodbtnTwo").disabled = false;
     this.CheckForGeoJSON(document.querySelector("input[name='vectorLayer']"));
+    
+  }
+
+  OnSimulation_Jump(ev){
+    this.layer.Redraw(this.currentColorScale.GS, this.data[this.simulation.state.i].messages, this.currentSIR);
+  }
+
+  OnSimulation_Move(ev){
+    this.layer.Redraw(this.currentColorScale.GS, this.data[this.simulation.state.i].messages, this.currentSIR);
   }
 
   /*
@@ -240,45 +255,47 @@ export default class Application extends Templated {
     CreateSimulationObject - a boolean to tell us whether to make a smulation object (only true in CheckForGeoJSON(input))
   */
   LayerOntoMap(fileContent, title, data, scale, CreateSimulationObject, wait) {
+    this.Widget("playback").Enable(true)
     if (wait) this.Elem("wait").hidden = true;
 
-    let layer = new VectorLayer(fileContent, title, data, this.currentSIR, scale); 
+    this.layer = new VectorLayer(fileContent, title, data, this.currentSIR, scale); 
     
     // add vector layer onto world map
-    this.Widget("map").AddLayer(title, layer);
+    this.Widget("map").AddLayer(title, this.layer);
 
     // make the vector layers attributes visible through clicking census subdivisions
     // Change _map to OL
     mapOnClick(data, this.Widget("map").map._map, title, this.currentSimulationCycle);
 
     // Video
-    this.PlaySimulation(layer)
+    // this.PlaySimulation(layer)
 
     // Creates the simulaiton object only once state.txt and geojson are loaded. This step does not occur twice.
-    if (CreateSimulationObject == true) { layer.OL.getSource().once("change", this.OnLayerCreation_Handler.bind(this)); }
+    if (CreateSimulationObject == true) { this.layer.OL.getSource().once("change", this.OnLayerCreation_Handler.bind(this)); }
   }
 
   RedrawLayerOnMap(index){
-    let d = this.data[index].messages
-    var layer = this.Widget("map").Layer(this.currentSimulationTitle)
     
-    layer.Redraw(this.currentColorScale.GS, d, this.currentSIR)
+    let d = this.data[index].messages
+    this.layer = this.Widget("map").Layer(this.currentSimulationTitle)
+    
+    this.layer.Redraw(this.currentColorScale.GS, d, this.currentSIR)
     mapOnClick(d, this.Widget("map").map._map, this.currentSimulationTitle, this.currentSimulationCycle)
     
-    this.PlaySimulation(layer)
   }
 
-  PlaySimulation(layer){
-    this.Widget("playback").Enable(true)
-    this.settings = new oSettings()
-    console.log(this.settings)
+  // PlaySimulation(layer){
+  //   this.Widget("playback").Enable(true)
+  //   console.log(this.settings)
     
     
-    this.Widget("playback").Initialize(this.data, layer, this.currentColorScale.GS, this.currentSIR);
-    // this.Widget('multi').Initialize(this.settings);
-    // this.Widget("multi").Resize();
-		// this.Widget("multi").Redraw();
-  }
+  //   this.Widget("playback").Initialize(this.data, layer, this.currentColorScale.GS, this.currentSIR);
+    
+  //   //console.log(new Recorder(this.Widget("multi").Canvas))
+  //   // this.Widget('multi').Initialize(this.simulation, this.settings);
+  //   // this.Widget("multi").Resize();
+	// 	// this.Widget("multi").Redraw();
+  // }
 
   /*
   Purpose: 
@@ -485,6 +502,9 @@ export default class Application extends Templated {
   OnLayerCreation_Handler(ev) {
     var features = ev.target.getFeatures();
     this.CreateSimulation(features, this.data);
+    this.simulation.On("Move", this.OnSimulation_Move.bind(this))
+    this.simulation.On("Jump", this.OnSimulation_Jump.bind(this))
+    this.Widget("playback").Initialize(this.simulation, this.settings)
   }
 
   CreateSimulation(features, data) {
@@ -495,8 +515,11 @@ export default class Application extends Templated {
     // difficult to have everything you need in one place. In addition, there is no
     // simulation structure file that contains all models, links, ports, etc. These
     // all have to be derived from the geojson and output file.
+    var ports = ["Susceptible","Infected", "Recovered"]
+    ports = ports.map(p => new Port(p, "output"))
+
     var models = features.map((f) => {
-      return new Model(f.getProperties().dauid, "atomic");
+      return new Model(f.getProperties().dauid, "atomic", null, ports);
     });
 
     var simulation = new SimulationDEVS("hoya", "custom", "Cell-DEVS", models);
@@ -507,11 +530,18 @@ export default class Application extends Templated {
       simulation.AddFrame(frame);
 
       for (var id in data[i].messages) {
-        var transition = new TransitionDEVS(id, "infected", data[i].messages[id].Infected);
-        frame.AddTransition(transition);
+        ports.forEach(p => {
+          var transition = new TransitionDEVS(id, p.name, data[i].messages[id][p.name]);
+          frame.AddTransition(transition);
+        })
+        
+        
+        
       }
     }
     simulation.Initialize(10);
+
+    //ev.frame.transitions.filter(t => t.port == "Infected")
 
     this.simulation = simulation;
 
@@ -531,7 +561,13 @@ export default class Application extends Templated {
 
   Template() {
     return (
-      "<div id='map' handle='map' widget='Widget.Map' class='map' ></div>" +
+      
+      //"<video id='video' handle='video' class='video' style='display:none'></video> " +
+      "<div id='screen' handle='screen' class='screen'>" +
+        "<canvas id='canvas' handle='canvas' class='canvas'></canvas> " +
+        "<div id='map' handle='map' widget='Widget.Map' class='map' ></div>" +
+      "</div>" +
+      
 
       // Load Simulation
       "<div handle='loadDataApp' id='loadDataApp'>" +
@@ -606,7 +642,7 @@ export default class Application extends Templated {
       "<div class='playbackApp' id='playbackApp'>" +
         
         "<br><br><div id='playback' handle='playback' widget='Widget.Playback'></div>" +
-        "<div handle='multi' widget='Widget.MultiView'></div>" +
+        // "<div handle='multi' widget='Widget.MultiView'></div>" +
           
       "</div>" +
      

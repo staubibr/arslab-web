@@ -62,37 +62,39 @@ export default Core.Templatable("Widget.MultiView", class MultiView extends Temp
 	
 	Initialize(simulation, settings) {
 		this.Clear();
+
 		
-		//this.Simulation = simulation;
-        this.Settings = settings;
-        this.simulation = simulation;
-        this.type = "Cell-DEVS"
 		
-		Dom.SetCss(this.Elem("viz"), `viz-container ${this.type}`);
+		// //this.Simulation = simulation;
+        // this.Settings = settings;
+        // this.simulation = simulation;
+        // this.type = "Cell-DEVS"
 		
-		// // TODO : Maybe just pass settings to auto, not sure what to do with clickEnabled though
-		// if (this.Type == "DEVS") {			
+		// Dom.SetCss(this.Elem("viz"), `viz-container ${this.type}`);
+		
+		// // // TODO : Maybe just pass settings to auto, not sure what to do with clickEnabled though
+		// if (this.type == "Cell-DEVS") {			
 		// 	var options = {
 		// 		clickEnabled:false
 		// 	}
 			
 		// 	this.view = new DiagramAuto(this.Widget("diagram"), this.simulation, options);
 		// }
-		if (this.type === "Cell-DEVS") {
-			var options = { 
-				clickEnabled:false,
-				columns:this.settings.Get("grid", "columns"), 
-				spacing:this.settings.Get("grid", "spacing"), 
-				//layers:this.settings.Get("grid", "layers") || simulation.LayersAndPorts(), 
-				styler:this.settings.styler
-			}
+		// // if (this.type === "Cell-DEVS") {
+		// // 	var options = { 
+		// // 		clickEnabled:false,
+		// // 		columns:this.settings.Get("grid", "columns"), 
+		// // 		spacing:this.settings.Get("grid", "spacing"), 
+		// // 		//layers:this.settings.Get("grid", "layers") || simulation.LayersAndPorts(), 
+		// // 		styler:this.settings.styler
+		// // 	}
 			
-			this.view = new GridAuto(this.Widget("grid"), this.simulation, options);
-		}
-		else {
-			this.Elem("viz").style.width = null;
-			this.Elem("viz").style.height = null;
-		}
+		// // 	this.view = new GridAuto(this.Widget("grid"), this.simulation, options);
+		// // }
+		// else {
+		// 	this.Elem("viz").style.width = null;
+		// 	this.Elem("viz").style.height = null;
+		// }
 	}
 	
 	OnSettings_Change(ev) {
