@@ -45,7 +45,7 @@ export default class VectorLayer {
           }),
           // The feature will now have its polygon filled with a color 
           fill: new ol.style.Fill({
-            color: scale(x),
+            color: scale.GetColor(feature, x),
           }),
         });
       },
@@ -74,7 +74,7 @@ export default class VectorLayer {
               width: 1.2,
             }),
             fill: new ol.style.Fill({
-              color: scale(x),
+              color: scale.GetColor(feature, x),
             }),
           }))
         }

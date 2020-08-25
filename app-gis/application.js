@@ -54,10 +54,8 @@ export default class Application extends Templated {
 
     this.Widget("playback").Recorder = new Recorder(this.Node("map").Elem("canvas.ol-unselectable"));
 
-
     // Fill sidebar with HTML
     this.AddToSideBar()
-
     
   }
 
@@ -147,11 +145,11 @@ export default class Application extends Templated {
   }
 
   OnSimulation_Jump(ev){
-    this.layer.Redraw(this.currentColorScale.GS, this.data[this.simulation.state.i].messages, this.currentSIR);
+    this.layer.Redraw(this.currentColorScale, this.data[this.simulation.state.i].messages, this.currentSIR);
   }
 
   OnSimulation_Move(ev){
-    this.layer.Redraw(this.currentColorScale.GS, this.data[this.simulation.state.i].messages, this.currentSIR);
+    this.layer.Redraw(this.currentColorScale, this.data[this.simulation.state.i].messages, this.currentSIR);
   }
 
   /*
@@ -201,7 +199,7 @@ export default class Application extends Templated {
         let scale = (self.currentColorScale == undefined) ? self.CurrentColorScale(new GetScale(self.currentColor, classes)) : self.currentColorScale;
         // This line below might cause problems later COME BACK TO IT LATER
         self.currentSimulationCycle = 0;
-        self.LayerOntoMap(fileContent, newTitle, self.data[0].messages, scale.GS, true, true);
+        self.LayerOntoMap(fileContent, newTitle, self.data[0].messages, scale, true, true);
       };
       if(f != undefined){ fileReader.readAsDataURL(f); }
 
@@ -267,9 +265,6 @@ export default class Application extends Templated {
     // Change _map to OL
     mapOnClick(data, this.Widget("map").map._map, title, this.currentSimulationCycle);
 
-    // Video
-    // this.PlaySimulation(layer)
-
     // Creates the simulaiton object only once state.txt and geojson are loaded. This step does not occur twice.
     if (CreateSimulationObject == true) { this.layer.OL.getSource().once("change", this.OnLayerCreation_Handler.bind(this)); }
   }
@@ -279,23 +274,10 @@ export default class Application extends Templated {
     let d = this.data[index].messages
     this.layer = this.Widget("map").Layer(this.currentSimulationTitle)
     
-    this.layer.Redraw(this.currentColorScale.GS, d, this.currentSIR)
+    this.layer.Redraw(this.currentColorScale, d, this.currentSIR)
     mapOnClick(d, this.Widget("map").map._map, this.currentSimulationTitle, this.currentSimulationCycle)
     
   }
-
-  // PlaySimulation(layer){
-  //   this.Widget("playback").Enable(true)
-  //   console.log(this.settings)
-    
-    
-  //   this.Widget("playback").Initialize(this.data, layer, this.currentColorScale.GS, this.currentSIR);
-    
-  //   //console.log(new Recorder(this.Widget("multi").Canvas))
-  //   // this.Widget('multi').Initialize(this.simulation, this.settings);
-  //   // this.Widget("multi").Resize();
-	// 	// this.Widget("multi").Redraw();
-  // }
 
   /*
   Purpose: 
@@ -333,7 +315,7 @@ export default class Application extends Templated {
       .legendColor()
       .labelFormat(d3.format(".2f"))
       // To actually color the legend based on our chosen colors
-      .scale(scale.GS);
+      .scale(scale.d3Scale);
 
     svg.select("." + title).call(colorLegend);
   }
@@ -453,7 +435,7 @@ export default class Application extends Templated {
       .legendColor()
       .labelFormat(d3.format(".2f"))
       // To actually color the legend based on our chosen colors
-      .scale(scale.GS);
+      .scale(scale);
 
     svg.select("." + title).call(colorLegend);
   }
@@ -508,14 +490,7 @@ export default class Application extends Templated {
   }
 
   CreateSimulation(features, data) {
-    // NOTE : Creates a Simulation object.
-    // This is something I would usually do as a preload
-    // step. You load all your data, build your simulation, then initialize the app.
-    // As it is now, different pieces of data are loaded in various places so it's
-    // difficult to have everything you need in one place. In addition, there is no
-    // simulation structure file that contains all models, links, ports, etc. These
-    // all have to be derived from the geojson and output file.
-    var ports = ["Susceptible","Infected", "Recovered"]
+    var ports = ["Susceptible", "Infected", "Recovered"]
     ports = ports.map(p => new Port(p, "output"))
 
     var models = features.map((f) => {
@@ -534,8 +509,6 @@ export default class Application extends Templated {
           var transition = new TransitionDEVS(id, p.name, data[i].messages[id][p.name]);
           frame.AddTransition(transition);
         })
-        
-        
         
       }
     }
