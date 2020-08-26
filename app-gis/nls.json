@@ -22,5 +22,17 @@
     },
     "Download_Files" : {
 		"en" : "Download normalized simulation files"
+    },
+	"Dropzone_Convert" : {
+		"en":"Convert model and log files to JSON format"
+	},
+	"Dropzone_Rise" : {
+		"en":"Load from RISE"
+	},
+	"Dropzone_Load" : {
+		"en":"Load simulation"
+	},
+	"Dropzone_Viz" : {
+		"en":"Visualize simulation"
 	}
 }
