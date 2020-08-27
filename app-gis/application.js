@@ -19,11 +19,13 @@ import CustomParser from "./parsers/customParser.js";
 import CreateCsvFileForDownload from "./classes/CreateCsvFile.js";
 import Evented from "../api-web-devs/components/evented.js";
 import Port from "../api-web-devs/simulation/port.js";
+import ColorLegend from "./widgets/colorLegend.js";
 
 import { mapOnClick } from "./widgets/mapOnClick.js";
 import { createTransitionFromSimulation } from "../app-gis/functions/simToTransition.js";
 import { sortPandemicData } from "../app-gis/functions/sortPandemicData.js";
 import { simSelectAndCycle } from "./widgets/simSelectAndCycle.js";
+
 
 export default class Application extends Templated {
   constructor(node) {
@@ -155,30 +157,14 @@ export default class Application extends Templated {
     this.currentNumberOfClasses = 4;
     this.currentColor = "#FF0000";
     this.currentColorScale = new GetScale(this.currentColor, this.currentNumberOfClasses);
-
-    // Draw legend on map
-    this.LegendToApp(title, translate, this.currentColorScale)
+    
+    // Draw legend on Map
+    this.AppLegend = new ColorLegend(title, translate, this.currentColorScale)
   }
 
-  LegendToApp(title, translate, scale){
-    const svg = d3.select("svg");
-
-    svg.selectAll("*").remove();
-
-    svg.append("g").attr("class", title).attr("transform", translate);
-
-    var colorLegend = d3
-      .legendColor()
-      .labelFormat(d3.format(".2f"))
-      // To actually color the legend based on our chosen colors
-      .scale(scale.d3Scale);
-
-    svg.select("." + title).call(colorLegend);
-  }
 
   RecreateLegendColor(title, translate) {
     let self = this;
-    let scale;
     
     // Recreate the legend if a color change is issued
     d3.select("#colorOne").on("change", function () {
@@ -194,9 +180,8 @@ export default class Application extends Templated {
       let classes = (self.currentClass == undefined) ? 4 : self.currentClass;
 
       self.currentColorScale = new GetScale(val, classes);
-      scale = self.currentColorScale;
 
-      self.LegendToApp(title, translate, scale)
+      self.AppLegend = new ColorLegend(title, translate, self.currentColorScale)
 
       self.RecolorLayer();
     }, false);
@@ -204,20 +189,18 @@ export default class Application extends Templated {
 
   RecreateLegendClass(title, translate) {
     let self = this;
-    let scale;
     
-    // Recreate the legend if a color change is issued
+    // Recreate the legend if a class change is issued
     d3.select("#class-select").on("change", function () {
       self.currentClass = d3.select(this).node().value;
       self.currentColorScale = new GetScale(self.currentColor, self.currentClass);
-      scale = self.currentColorScale;
 
       if(self.DataFromFiles != undefined){
         var currentDataFileIndex = document.getElementById('sim-select').selectedIndex;
         self.DataFromFiles[currentDataFileIndex].layerClasses = self.currentClass;
       }
 
-      self.LegendToApp(title, translate, scale)
+      self.AppLegend = new ColorLegend(title, translate, self.currentColorScale)
 
       self.RecolorLayer();
     }, false);
@@ -368,7 +351,7 @@ export default class Application extends Templated {
       0, 
       this.currentSIR
       )
-    var ports = ["Susceptible", "Infected", "Recovered"]
+    var ports = ["Susceptible", "Infected", "Recovered", ]
     ports = ports.map(p => new Port(p, "output"))
 
     var models = features.map((f) => {
@@ -378,6 +361,7 @@ export default class Application extends Templated {
     var simulation = new SimulationDEVS("hoya", "custom", "Cell-DEVS", models);
 
     for (var i = 0; i < data.length; i++) {
+      
       var frame = new FrameDEVS(data[i].time);
 
       simulation.AddFrame(frame);
