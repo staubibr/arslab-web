@@ -71,29 +71,28 @@ export default class Main extends Templated {
 		var log = this.config.series[i].logs[j];
 		var path = `../devs-logs/COVID/tr_${log.transmission}_dr_${log.death}/`;
 		
-		var p1 = Net.File(path + `simulation.json`, 'simulation.json');
-		var p2 = Net.File(path + `transitions.csv`, 'transitions.csv');
-		var p3 = Net.File(path + `options.json`, 'options.json');
+		var p1 = Net.File(path + `structure.json`, 'structure.json');
+		var p2 = Net.File(path + `messages.log`, 'messages.log');
+		var p3 = Net.JSON(path + `options.json`, 'options.json');
 		
 		Promise.all([p1, p2, p3]).then(this.OnFiles_Loaded.bind(this), (error) => { this.OnWidget_Error({ error:error }); });
 	}
 	
-	OnFiles_Loaded(files) {		
+	OnFiles_Loaded(responses) {		
+		this.settings = oSettings.FromJson(responses[2]);
+		
 		var parser = new Standardized();
 		
-		var p = parser.Parse(files);
+		var p = parser.Parse([responses[0], responses[1]]);
 		
 		p.then(this.OnParser_Parsed.bind(this), (error) => { this.OnWidget_Error({ error:error }); });
 	}
 	
-	OnParser_Parsed(files) {	
+	OnParser_Parsed(ev) {	
 		Dom.AddCss(this.Elem("wait"), "hidden");
 		Dom.RemoveCss(this.Elem("simulation"), "hidden");
 		
-		var content = files.Content();
-		
-		this.simulation = SimulationCA.FromFiles(content);
-		this.settings = oSettings.FromJson(content.options);
+		this.simulation = ev.simulation;
 		
 		this.settings.json.grid.width = 400;
 		this.settings.json.grid.height = 400;

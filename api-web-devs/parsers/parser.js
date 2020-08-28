@@ -9,28 +9,11 @@ export default class Parser extends Evented {
 	Parse() {		
 		throw new Error("Parsers must implement a Parse() function");
 	}
-	
-	
-	ParseCsvChunk(parsed, chunk) {
-		var lines = chunk.split("\n");
 		
-		for (var i = 0; i < lines.length; i++) {
-			parsed.push(lines[i].trim().split(","));
-		}
-		
-		return parsed;
-	}
-	
 	Read(file, delegate) {
 		var reader = new ChunkReader();
 		
 		return reader.Read(file, delegate);
-	}
-	
-	ReadByChunk(file, delegate) {
-		var reader = new ChunkReader();
-		
-		return reader.ReadByChunk(file, "\n", delegate);
 	}
 	
 	ReadByChunk(file, delegate) {

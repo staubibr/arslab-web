@@ -56,7 +56,7 @@ export default class SimulationDEVS extends Simulation {
 	LoadSVG(svg) {		
 		var root = Dom.Create("div", { innerHTML:svg });
 		
-		this.Models.forEach(model => {	
+		this.Models.forEach(model => {			
 			model.svg = model.svg.map(s => root.querySelector(s)).filter(s => s != null);		
 			
 			model.ports.forEach(port => {
@@ -71,22 +71,19 @@ export default class SimulationDEVS extends Simulation {
 		this.diagram = root.children[0];
 	}
 	
-	ToFiles() {
+	static FromJson(json, messages, diagram) {
+		var info = json.info;
+		var models = json.models.map(m => Model.FromJson(m));
+		var simulation = new SimulationDEVS(info.name, info.simulator, info.type, models, diagram);
 		
-	}
-	
-	static FromFiles(files) {
-		var s = files.simulation;		
-		var models = s.models.map(m => Model.FromJson(m));
-		var simulation = new SimulationDEVS(s.name, s.simulator, s.type, models, files.diagram);
-		
-		// Add frames from flat transitions list		
-		for (var i = 0; i < files.transitions.length; i++) {
-			var time = files.transitions[i].time;
-			
-			simulation.AddTransition(time, TransitionDEVS.FromCsv(files.transitions[i]));
+		// Add frames from flat transitions list			
+		for (var i = 0; i < messages.length; i++) {
+			var m = messages[i];			
+			var transition = new TransitionDEVS(m.model, m.port, m.value);
+						
+			simulation.AddTransition(m.time, transition);
 		}
 		
-		return simulation;
+		return simulation;		
 	}
 }

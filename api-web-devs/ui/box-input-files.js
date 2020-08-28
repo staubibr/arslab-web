@@ -13,42 +13,70 @@ export default Core.Templatable("Widget.Box-Input-Files", class Dropzone extends
 	constructor(container) {
 		super(container);
 		
+		this.files = [];
+		
 		this.Node("input").On("change", this.OnInput_Change.bind(this));
 	}
 	
 	Template() {
 		return "<div class='box'>" +
-				  "<label handle='label' class='top'>nls(Dropzone_Upload_Label)</label>" +
-				  "<i handle='icon' class='fas fa-file-upload'></i>" +
-				  "<label handle='bottom' class='bottom hidden'>nls(Dropzone_Upload_Files)</label>" +
-				  "<input handle='input' type='file' multiple />" +
+				   "<div class='box-inner'>" +
+					  "<label handle='label' class='top'>nls(Dropzone_Upload_Label)</label>" +
+					  "<i handle='icon' class='fas fa-file-upload'></i>" +
+					  "<input handle='input' type='file' multiple />" +
+				   "</div>" +
+				   "<div handle='files' class='files-container hidden'></div>" +
 			   "</div>";
 	}
 	
-	Update(files) {
-		Dom.ToggleCss(this.Elem("bottom"), "hidden", files.length == 0);
+	Update(newFiles) {
+		// Set css on condition of having files or not
+		Dom.ToggleCss(this.Elem("files"), "hidden", this.files.length == 0);
 		
-		if (files.length == 0) return;
-		
-		var names = [];
-		
-		for (var i = 0; i < files.length; i++) names.push(files[i].name);
-				
-		this.Elem("bottom").innerHTML = Core.Nls("Dropzone_Upload_Files", [names.join(", ")]);
-		
-		var css = files.length > 0 ? "fas fa-thumbs-up" : "fas fa-exclamation-triangle";
+		var css = this.files.length > 0 ? "fas fa-thumbs-up" : "fas fa-exclamation-triangle";
 		
 		Dom.SetCss(this.Elem("icon"), css);
+		
+		// Reload individual file boxes
+		this.Refresh(this.files);
+	}
+	
+	Clear() {
+		this.files = [];
+		
+		this.Refresh(this.files);
+	}
+	
+	Refresh(files) {
+		// load the individual file label buttons
+		Dom.Empty(this.Elem("files"));
+				
+		for (var i = 0; i < files.length; i++) {
+			var options = { className:"file", title:Core.Nls("Dropzone_File_Title"), innerHTML:files[i].name };
+			var lbl = Dom.Create("label", options, this.Elem("files"));
+			
+			Dom.Create("span", { className:"fa fa-times-circle" }, lbl);
+			
+			lbl.addEventListener("click", this.OnFileLabel_Click.bind(this, lbl, files[i]));
+		}
+	}
+	
+	OnFileLabel_Click(lbl, file, ev) {
+		this.files.splice(this.files.indexOf(file), 1);
+		
+		this.Elem("files").removeChild(lbl);
 	}
 	
 	OnInput_Change(ev) {
-		this.files = []
-				
 		for (var i = 0; i < ev.target.files.length; i++) {
-			this.files.push(ev.target.files[i]);
+			var exists = this.files.find(f => f.name === ev.target.files[i].name);
+			
+			if (!exists) this.files.push(ev.target.files[i]);
 		}
 		
 		this.Update(this.files);
+
+		ev.target.value = null;
 
 		this.Emit("change", { files:this.files });
 	}

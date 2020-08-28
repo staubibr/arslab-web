@@ -39,6 +39,7 @@ export default class SimulationCA extends Simulation {
 	}
 	
 	get Ports() {
+		// TODO : Is this always 0?? Is there always only one model in Cell-DEVS?
 		return this.models[0].ports.map(p => p.name);
 	}
 	
@@ -62,18 +63,22 @@ export default class SimulationCA extends Simulation {
 		return layers;
 	}
 	
-	static FromFiles(files) {
-		var s = files.simulation;		
-		var models = s.models.map(m => Model.FromJson(m));
-		var simulation = new SimulationCA(s.name, s.simulator, s.type, models, s.size);
+	static FromJson(json, messages) {
+		var info = json.info;
+		var models = json.models.map(m => Model.FromJson(m));
 		
-		// Add frames from flat transitions list		
-		for (var i = 0; i < files.transitions.length; i++) {
-			var time = files.transitions[i].time;
-			
-			simulation.AddTransition(time, TransitionCA.FromCsv(files.transitions[i]));
+		// TODO : This is awkward, do Cell-DEVS models always have a single cell space?
+		var size = json.models[0].size;
+		var simulation = new SimulationCA(info.name, info.simulator, info.type, models, size);
+		
+		// Add frames from flat transitions list			
+		for (var i = 0; i < messages.length; i++) {
+			var m = messages[i];			
+			var transition = new TransitionCA(m.model, m.coord, m.port, m.value);
+						
+			simulation.AddTransition(m.time, transition);
 		}
 		
 		return simulation;
-	};
+	}
 }

@@ -26,13 +26,13 @@ export default Core.Templatable("Widget.RiseList", class RiseLoader extends Temp
 				"type" : "DEVS",
 				"url": path + "/ABP/"
 			}, {
-				"name": "Drugs and Addiction",
+				"name": "Crime and Drugs",
 				"type" : "Cell-DEVS",
-				"url": path + "/Addiction/Final/"
+				"url": path + "/Crime and Drugs/Final/"
 			}, {
 				"name": "Classroom CO2",
 				"type" : "Cell-DEVS",
-				"url": path + "/CO2/"
+				"url": path + "/Classroom CO2/"
 			}, {
 				"name": "COVID (TR 0.4, DR 0.01)",
 				"type" : "Cell-DEVS",
@@ -80,7 +80,7 @@ export default Core.Templatable("Widget.RiseList", class RiseLoader extends Temp
 			}, {
 				"name": "Settlement Growth",
 				"type" : "Cell-DEVS",
-				"url": path + "/Region/"
+				"url": path + "/Settlement Growth/"
 			}, {
 				"name": "Smog",
 				"type" : "Cell-DEVS",
@@ -124,8 +124,8 @@ export default Core.Templatable("Widget.RiseList", class RiseLoader extends Temp
     getRiseModel(model){
 		Dom.RemoveCss(this.Elem("wait"), "hidden");
 
-		var p1 = Net.Request(`${model.url}simulation.json`, null, 'blob');
-		var p2 = Net.Request(`${model.url}transitions.csv`, null, 'blob');
+		var p1 = Net.Request(`${model.url}structure.json`, null, 'blob');
+		var p2 = Net.Request(`${model.url}messages.log`, null, 'blob');
 		var p3 = Net.Request(`${model.url}options.json`, null, 'blob');
 
 		var defs = [p1, p2, p3];
@@ -139,8 +139,8 @@ export default Core.Templatable("Widget.RiseList", class RiseLoader extends Temp
 	
 			var files = [];
 			
-			files.push(new File([responses[0]], 'simulation.json'));
-			files.push(new File([responses[1]], 'transitions.csv'));
+			files.push(new File([responses[0]], 'structure.json'));
+			files.push(new File([responses[1]], 'messages.log'));
 			files.push(new File([responses[2]], 'options.json'));
 			
 			if (model.type == "DEVS") files.push(new File([responses[3]], 'diagram.svg'));

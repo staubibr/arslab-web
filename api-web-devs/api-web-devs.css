@@ -40,22 +40,21 @@ table tr:nth-child(even) td:not(:last-child) {
 	display: none !important;
 }
 
-.box {
+.box .box-inner {
     position: relative;
     border: 2.5px dashed silver;
-    width: 200px;
-    height: 250px;
     box-sizing: border-box;
+	display:inline-block;
 }
 
-.box input, .box button {
+.box .box-inner input, .box .box-inner button {
     width: 100%;
     height: 100%;
     opacity: 0;
     cursor: pointer;
 }
 
-.box i {
+.box .box-inner i {
     position: absolute;
 	font-size: 30px;
     top: 50%;
@@ -63,21 +62,54 @@ table tr:nth-child(even) td:not(:last-child) {
     transform: translate(-50%, -50%);
 }
 
-.box label {
+.box .box-inner label {
 	position: absolute;
     width: 100%;
-    font-weight: bold;
-    word-wrap: break-word;
-    padding: 0px 20px;
-    box-sizing: border-box;
 }
 
-.box label.top {
+.box > * {
+	width:100%;
+}
+
+.box .box-inner {
+	height:250px;
+}
+
+.box .files-container {
+    text-align: left;
+    overflow-y: auto;
+	max-height:100px;
+    margin-top: 10px;
+}
+
+/*
+.box > * {
+	vertical-align:middle;
+    height: 250px;
+}
+*/
+.box .box-inner label.top {
     top: 60px;
 }
 
-.box label.bottom {
-    bottom: 40px;
+.box .files-container > * {
+    width: initial;
+    display: inline-block;
+    position: relative;
+    z-index: 1000;
+}
+
+.box .files-container .file {
+    margin: 3px;
+    padding: 2px;
+    border-radius: 3px;
+    border: dashed thin black;
+    cursor: pointer;
+}
+
+.box .files-container .file span {
+    font-size: 14px;
+	margin-left: 4px;
 }
 
 .tooltip {
@@ -294,48 +326,47 @@ table tr:nth-child(even) td:not(:last-child) {
     transform: translate(-50%, -50%);
 }
 
-.converter .box {
-	display: inline-block;
+.loader .box {
     width: 100%;
 }
 
-.converter .save {
+.loader .save {
 	margin-top: 10px;
     width: 100%;
 }
 
-.converter .options-container {
+.loader .options-container {
     text-align: center;
 }
 
-.converter .options-container > * {
+.loader .options-container > * {
 	display: inline-block;
     margin-bottom: 10px;
     vertical-align: top;
 }
 
-.converter .options-container .option {
+.loader .options-container .option {
 	cursor: pointer;
 }
 
-.converter .options-column {	
+.loader .options-column {	
     width: 50%;
 }
 
-.converter .options-column > * {
+.loader .options-column > * {
 	display: block;
 	text-align: left;
     padding: 1px;
 }
 
-.converter .options-column > *:first-child {
+.loader .options-column > *:first-child {
     font-size: 1.1em;
     font-weight: bold;
     color: #198CFF;
     padding-bottom: 4px;
 }
 
-.converter .options-column > *:not(:first-child) {
+.loader .options-column > *:not(:first-child) {
     padding-left: 10px;
 }
 

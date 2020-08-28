@@ -88,7 +88,8 @@ export default class Net {
 	static Download(name, content) {
 		var link = document.createElement("a");
 		
-		link.href = "data:application/octet-stream," + encodeURIComponent(content);
+		// link.href = "data:application/octet-stream," + encodeURIComponent(content);
+		link.href = URL.createObjectURL(content);
 		link.download = name;
 		link.click();
 		link = null;

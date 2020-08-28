@@ -71,6 +71,9 @@
 	"Settings_Playback_Cache" : {
 		"en" : "Cache step:"
 	},
+	"Loader_Clear" : {
+		"en" : "Clear"
+	},
 	"Settings_Save" : {
 		"en" : "Save"
 	},
@@ -131,8 +134,8 @@
 	"Settings_Layers_Del_Style_Title" : {
 		"en" : "Remove this style from the visualization"
 	},
-	"Converter_Parse" : {
-		"en" : "Parse files"
+	"Loader_Parse" : {
+		"en" : "Load simulation"
 	},
 	"Diagram_Tooltip_X" : {
 		"en" : "<b>{0}</b> received an input (<b>{1}</b>) from <b>{2}</b> through port <b>{3}</b>"		
@@ -156,7 +159,11 @@
         "fr": "GLISSER ET DÉPOSER<BR> LES FICHIERS ICI"
     },
     "Dropzone_Upload_Files": {
-        "en": "FILES LOADED:<br>{0}",
-        "fr": "FICHIERS CHARGÉS:<br>{0}"
-    }
+        "en": "FILES LOADED:",
+        "fr": "FICHIERS CHARGÉS:"
+    },
+	"Dropzone_File_Title" : {
+		"en" : "Click to remove file",
+		"fr" : "Cliquer pour retirer le fichier"
+	}
 }

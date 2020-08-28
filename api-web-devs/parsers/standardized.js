@@ -3,48 +3,52 @@
 import Core from '../tools/core.js';
 import Parser from "./parser.js";
 import Settings from "../components/settings.js";
-
-import { Simulation, TransitionDEVS, TransitionsDEVS, TransitionCA, TransitionsCA, Diagram, Options, Files } from './files.js';
+import SimulationDEVS from "../simulation/simulationDEVS.js";
+import SimulationCA from "../simulation/simulationCA.js";
+import Model from "../simulation/Model.js";
 
 export default class Standardized extends Parser { 
 	
 	Parse(files) {
 		var d = Core.Defer();
 
-		var simulation = files.find(function(f) { return f.name == 'structure.json'; });
-		var transitions = files.find(function(f) { return f.name == 'messages.log'; });
-		var svg = files.find(function(f) { return f.name == 'diagram.svg'; });
-		var options = files.find(function(f) { return f.name == 'options.json'; });
+		var structure = files.find(function(f) { return f.name == 'structure.json'; });
+		var messages = files.find(function(f) { return f.name == 'messages.log'; });
+		var diagram = files.find(function(f) { return f.name == 'diagram.svg'; });
+		var style = files.find(function(f) { return f.name == 'style.json'; });
 
-		if (!simulation || !transitions) {
-			d.Reject(new Error("A simulation (.json) and transitions (.csv) file must be provided for the standardized DEVS parser."));
+		if (!structure || !messages) {
+			d.Reject(new Error("A structure (.json) and messages (.log) file must be provided for the standardized DEVS parser."));
 		
 			return d.promise;
 		}
 
-		this.Read(simulation, this.ParseStructure.bind(this)).then(struc => {
-			this.ports = struc.ports;
-			this.simulation = new Simulation(struc.info.name, struc.info.simulator, struc.info.type, struc.models, struc.size);
+		this.Read(structure, this.ParseStructure.bind(this)).then(response => {
+			this.structure = response;
 			
-			var p1 = this.Read(svg, (content) => content);
-			var p2 = this.ReadByChunk(transitions, this.ParseLogChunk.bind(this));
-			var p3 = this.Read(options, (content) => JSON.parse(content));
+			var type = this.structure.info.type;
 			
-			var defs = [p1, p2, p3];
-		
-			Promise.all(defs).then((data) => {				
-				if (!data[1]) return d.Reject(new Error("Unable to parse the messages (.log) file."));
+			if (type == "DEVS" && !diagram) return d.Reject(new Error("Unable to parse the diagram (.svg) file."));
+			
+			var p1 = this.ReadByChunk(messages, this.ParseLogChunk.bind(this));
+			var p2 = this.Read(diagram, (content) => content);
+			var p3 = this.Read(style, (content) => JSON.parse(content));
+			
+			Promise.all([p1, p2, p3]).then((data) => {			
+				if (!data[0]) return d.Reject(new Error("Unable to parse the messages (.log) file."));
 				
-				var transitions = this.simulation.content.type == "DEVS" ? new TransitionsDEVS(data[1]) : new TransitionsCA(data[1]);
-				var diagram = new Diagram(data[0]);
-				var options = new Options(data[2]);
+				var simulation = null;
 				
-				var files = new Files(this.simulation, transitions, diagram, options);
+				if (type == "DEVS") simulation = SimulationDEVS.FromJson(this.structure, data[0], data[1]);
+				if (type == "Cell-DEVS") simulation = SimulationCA.FromJson(this.structure, data[0]);
 				
-				d.Resolve(files);
-			}, (error) => {
-				d.Reject(error);
-			});
+				var oFiles = { structure:structure, messages:messages }
+				
+				if (diagram) oFiles.diagram = diagram;
+				if (style) oFiles.style = style;
+				
+				d.Resolve({ simulation:simulation, style:data[2], files:oFiles });
+			}, (error) => d.Reject(error));
 		});
 		
 		return d.promise;
@@ -72,7 +76,16 @@ export default class Standardized extends Parser {
 		
 		if (!size) size = models.length;
 		
-		if (json.ports) json.ports.forEach(p => index[p.model].ports.push(p));
+		if (json.ports) json.ports.forEach(p => {
+			// When a DEVS model is connected to a Cell-DEVS model, there will be ports linked to the main model with coords, 
+			// these are not in the models list. It has to be fixed someday.
+			var model = index[p.model];
+			
+			if (!model) return;
+			
+			model.ports.push(p)
+		});
+		
 		if (json.links) json.links.forEach(l => index[l.modelA].links.push(l));
 		
 		return {
@@ -86,21 +99,20 @@ export default class Standardized extends Parser {
 	ParseLogChunk(parsed, chunk) {
 		chunk.split("\n").forEach(l => {
 			var messages = l.split(";");
-			var t = messages[0];
 			
 			for (var i = 1; i < messages.length; i++) {
 				var v = messages[i].split(",");
-				
-				if (v.length == 2) {
-					var p = this.ports[v[0]];
 					
-					parsed.push(new TransitionDEVS(t, p.model, p.name, v[1]));
+				if (v.length == 2) {
+					var p = this.structure.ports[v[0]];
+					
+					parsed.push({ time:messages[0], model:p.model, port:p.name, value:v[1] });
 				}
 				else if (v.length == 5) {
 					var c = [v[0],v[1],v[2]];
-					var p = this.ports[v[3]];
+					var p = this.structure.ports[v[3]];
 					
-					parsed.push(new TransitionCA(t, p.model, c, p.name, v[4]));
+					parsed.push({ time:messages[0], coord:c, model:p.model, port:p.name, value:v[4] });
 				}
 				else {
 					throw new Error("Message format not recognized.");

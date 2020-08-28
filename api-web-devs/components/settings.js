@@ -8,9 +8,19 @@ export default class Settings extends Evented {
 	set json(value) {
 		this._json = value;
 
-		this.styler = Styler.FromJson(value.grid.styles);
+		if (value.grid.styles.length == 0) return;
+	
+		this._styler = Styler.FromJson(value.grid.styles);
 	}
 	
+	set styler(value) {
+		this._styler = value;
+		
+		this._json.grid.styles = value.ToJson();
+	}
+	
+	get styler() { return this._styler; }
+
 	get json() { return this._json; }
 
 	set layers (values) { this.json.grid.layers = value; }
@@ -20,7 +30,9 @@ export default class Settings extends Evented {
 	constructor() {
 		super();
 		
-		this._json = Settings.Default(0);
+		this._styler = null;
+		
+		this.json = Settings.Default();
 	}
 		
 	CanvasSize(simulation, nGrids) {
@@ -85,10 +97,20 @@ export default class Settings extends Evented {
 		return settings;
 	}
 	
-	static Default(layers, ports) {
-		layers = layers || 0;
+	static FromSimulation(simulation) {
+		var options = Settings.Default();
 		
-		var options =  {
+		if (simulation.type == "DEVS") return Settings.FromJson(options);
+		
+		options.grid.layers = Settings.DefaultLayers(simulation.MaxZ, simulation.Ports);
+		
+		options.grid.columns = Settings.DefaultColumns(options.grid.layers);
+
+		return Settings.FromJson(options);
+	}
+	
+	static Default() {		
+		return {
 			diagram : {
 				width : 600,
 				height : 400,
@@ -109,29 +131,15 @@ export default class Settings extends Evented {
 				loop : false,
 				cache : 10
 			}
-		}		
-		
-		if (!layers) return options;
-		
-		options.grid.layers = Settings.DefaultLayers(layers, ports);
-		
-		options.grid.columns = Settings.DefaultColumns(options.grid.layers);
-				
-		return options;
+		}
 	}
 	
 	static DefaultLayers(maxZ, ports) {
 		var layers = [];
 		
 		for (var i = 0; i < maxZ; i++) {
-			ports.forEach((p, j) => {
-				var k = (i * ports.length) + j;
-				
-				layers.push({
-					z : i,
-					ports : [p.name],
-					style : (p.style != undefined) ? p.style : k
-				})
+			ports.forEach(p => {				
+				layers.push({ z:i, ports:[p], style:0 });
 			});
 		}
 		

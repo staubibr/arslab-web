@@ -1,1 +1,1 @@
-{"info":{"simulator":"CDpp","name":"UAVSearch","type":"Cell-DEVS"},"nodes":[{"name":"top","submodels":["uav"],"type":"coupled"},{"name":"uav","size":[10,10,1],"type":"atomic"}],"ports":[{"model":"top","name":"out","type":"output","template":"{\"value\":${0}}"},{"model":"uav","name":"out","type":"output","template":"{\"value\":${0}}"}]}
+{"info":{"simulator":"CDpp","name":"UAVSearch","type":"Cell-DEVS"},"nodes":[{"name":"uav","size":[10,10,1],"type":"atomic"}],"ports":[{"model":"uav","name":"out","type":"output","template":"{\"value\":${0}}"}]}

@@ -63,7 +63,7 @@ export default class ChunkReader extends Evented {
 			var chunk = file.slice(position, position + size);
 		
 			this.PromiseRead(chunk).then((result) => {
-				var idx = result.lastIndexOf(split);
+				var idx = size > result.length ? result.length - 1 : result.lastIndexOf(split);
 				var content = result.substr(0, idx);
 				
 				position += content.length + 1;

@@ -30,7 +30,7 @@ export default class StateCA extends State {
 	Reset() {
 		this.data = [];
 		
-		// TODO : Is this always 0?? Is there always only one model in Cell-DEVS?
+		// TODO : Is this always 1?? Is there always only one model in Cell-DEVS?
 		var m = this.models[0];
 		
 		for (var x = 0; x < this.size[0]; x++) {

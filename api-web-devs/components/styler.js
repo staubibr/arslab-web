@@ -6,12 +6,14 @@ import Scale from './scales/basic.js';
 
 export default class Styler extends Evented { 
 	
+	get Empty() { return this.scales.length == 0 };
+	
 	constructor(scales) {
 		super();
 		
 		this.scales = scales || [];
 	}
-		
+	
 	ToJson() {
 		return this.scales.map(s => s.ToJson());
 	}
@@ -46,5 +48,9 @@ export default class Styler extends Evented {
 		});
 		
 		return styler;
+	}
+	
+	ToJson() {
+		return this.scales.map(s => s.ToJson());
 	}
 }

@@ -1,0 +1,1 @@
+{"info":{"simulator":"CDpp","name":"sheepsHOT","type":"Cell-DEVS"},"nodes":[{"name":"sheeps","size":[20,20,1],"type":"atomic"}],"ports":[{"model":"sheeps","name":"out","type":"output","template":"{\"value\":${0}}"}]}

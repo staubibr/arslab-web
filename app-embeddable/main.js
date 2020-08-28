@@ -12,7 +12,7 @@ if (!model) Fail();
 var p1 = Net.JSON(`../api-web-devs/nls.json`);
 var p2 = Net.JSON(`./nls.json`);
 var p3 = Core.WaitForDocument();
-var p4 = Net.JSON(`../devs-logs/${model}/simulation.json`);
+var p4 = Net.JSON(`../devs-logs/${model}/structure.json`);
 
 Promise.all([p1, p2, p3, p4]).then(CheckConsent, Fail);
 
@@ -30,8 +30,8 @@ function CheckConsent(responses) {
 }
 
 function Finish(json) {
-	var p1 = Net.Request(`../devs-logs/${model}/transitions.csv`, null, 'blob');
-	var p2 = Net.Request(`../devs-logs/${model}/options.json`, null, 'blob');
+	var p1 = Net.Request(`../devs-logs/${model}/messages.log`, null, 'blob');
+	var p2 = Net.JSON(`../devs-logs/${model}/options.json`, null, 'blob');
 	
 	var defs = [p1, p2];
 	
@@ -42,16 +42,14 @@ function Finish(json) {
 		
 		var blob = new Blob([JSON.stringify(json)], { type:"application/json" })
 		
-		files.push(new File([blob], 'simulation.json'));
-		files.push(new File([responses[0]], 'transitions.csv'));
+		files.push(new File([blob], 'structure.json'));
+		files.push(new File([responses[0]], 'messages.log'));
 	
 		if (json.type == "DEVS") files.push(new File([responses[2]], 'diagram.svg'));
 		
-		files.push(new File([responses[1]], 'options.json'));
-		
 		Dom.Empty(document.body);
 		
-		var app = new Application(document.body, files);
+		var app = new Application(document.body, files, responses[1]);
 	}, Fail);
 }
 

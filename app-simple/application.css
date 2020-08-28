@@ -92,10 +92,14 @@ button:disabled {
     border-color: #7e7e7e;
 }
 
-.box:hover {
-  background: #9eceff9e;
+.box .box-inner:hover {
+  background: #eff7ff;
   border-color: #0051a3;
   transition: all .2s ease;
+}
+
+.box .files-container .file:hover {
+  background: #eff7ff;
 }
 
 button:not(:disabled):hover {
@@ -144,13 +148,26 @@ select, input[type=text], input[type=number] {
 	margin : 15px 5px;
 }
 
-.body .save,
-.body .box {
-    width: 100%;
+.body .clear,
+.body .parse {
+    display:inline-block;
 }
 
-.body .save {
+.body .clear {
+    border-bottom: solid 2px #980000;
+	background:#fd6e6e;
+    width: 29%;
+}
+
+.body .clear:hover {
+	background:#980000;
+}
+
+
+.body .parse {
+    width: 69%;
 	margin-top : 10px;
+	margin-left : 2%;
 }
 
 .button-column {
@@ -162,17 +179,17 @@ select, input[type=text], input[type=number] {
 	margin-bottom: 6px;
 }
 
-.box {
+.box .box-inner {
     background: #fff;
 	border-color: #198CFF;
-	text-align:center;
-}
+	/*width:30%;*/
+}/*
+.box .files-container {
+	width:70%;
+}*/
 
 .box i, .box label {
     font-weight: bold;
-    word-wrap: break-word;
-    padding: 0px 20px;
-    box-sizing: border-box;
 }
 
 .playback {

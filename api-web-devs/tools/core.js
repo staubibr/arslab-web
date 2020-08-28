@@ -75,6 +75,18 @@ export default class Core {
 			defer.Reject = (error) => { reject(error); };
 		});
 		
+		defer.Resolved = (value) => {
+			defer.Resolve(value);
+			
+			return defer.promise;
+		}
+		
+		defer.Rejected = (error) => {
+			defer.Reject(error);
+			
+			return defer.promise;
+		}
+		
 		return defer;
 	}
 	

@@ -54,4 +54,26 @@ History
 		- Decision to rename options.json to viewer.json.
 		- Decision to allow users to style by grid. Different styles can be used for different grids. Same values can be colored
 		  differently on different grids.
+	
+	2020 July 9th:
+		- Reviewed semantics of data structure and files to hold standardized results. Intentionally removed references to simulation.
+		  since it could be used to hold other types of data.
+
+	2020 July 16th:
+		- Built the server side parsing services
+		- Brought back an automated parser
+		- Updated app code to reflect these changes, simpler loading process (for users)
+
+ 
+
+
+
+
+
+
+
+
+
+
+
 
