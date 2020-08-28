@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-    <fullyQualifiedTypeName name="cdpp.celldevs"/>
     <fullyQualifiedTypeName name="java.util.Dictionary"/>
     <fullyQualifiedTypeName name="palette.typeA"/>
     <fullyQualifiedTypeName name="java.io.InputStreamReader"/>
@@ -21,7 +20,6 @@
     <fullyQualifiedTypeName name="java.util.zip.ZipEntry"/>
     <fullyQualifiedTypeName name="java.util.zip.ZipFile"/>
     <fullyQualifiedTypeName name="components.ZipFile"/>
-    <fullyQualifiedTypeName name="java.util.Arrays"/>
     <fullyQualifiedTypeName name="models.Port"/>
     <fullyQualifiedTypeName name="models.iModel"/>
     <fullyQualifiedTypeName name="models.Message"/>
@@ -33,7 +31,6 @@
     <fullyQualifiedTypeName name="java.awt.List"/>
     <fullyQualifiedTypeName name="models.StructureInfo"/>
     <fullyQualifiedTypeName name="java.util.Comparator"/>
-    <fullyQualifiedTypeName name="models.Model"/>
     <fullyQualifiedTypeName name="models.ModelCA"/>
     <fullyQualifiedTypeName name="models.Structure"/>
     <fullyQualifiedTypeName name="java.util.stream.IntStream"/>
@@ -56,8 +53,11 @@
     <fullyQualifiedTypeName name="parsers.cdpp.Devs"/>
     <fullyQualifiedTypeName name="parsers.lopez.CellDevs"/>
     <fullyQualifiedTypeName name="java.util.HashMap"/>
-    <fullyQualifiedTypeName name="java.io.InputStream"/>
     <fullyQualifiedTypeName name="components.FilesMap"/>
-    <fullyQualifiedTypeName name="parsers.IParser"/>
     <fullyQualifiedTypeName name="parsers.auto.Auto"/>
+    <fullyQualifiedTypeName name="java.io.InputStream"/>
+    <fullyQualifiedTypeName name="java.io.BufferedInputStream"/>
+    <fullyQualifiedTypeName name="parsers.IParser"/>
+    <fullyQualifiedTypeName name="java.util.Arrays"/>
+    <fullyQualifiedTypeName name="models.Model"/>
 </qualifiedTypeNameHistroy>

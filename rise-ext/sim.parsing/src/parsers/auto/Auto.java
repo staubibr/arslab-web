@@ -42,7 +42,7 @@ public class Auto implements IParser {
 			List<String> lines = Helper.ReadNLines(files.get(log), 3);
 			
 			// 0 / L / Y is the Lopez format, as far as I know, Lopez only does Cell-DEVS
-			if (lines.get(0).contains("0 / L / Y")) return new parsers.lopez.CellDevs();
+			if (lines.get(0).contains("0 / L / ")) return new parsers.lopez.CellDevs();
 			
 			// CDpp Cell-DEVS will contain ')(' sequence because of coordinates (ie. ...para food_chain(0,0)(03))
 			// TODO: This is super shifty but it should work unless someone puts )( in the model name

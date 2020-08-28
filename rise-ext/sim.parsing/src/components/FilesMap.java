@@ -33,7 +33,7 @@ public class FilesMap extends HashMap<String, BufferedInputStream>{
 	
 	public String FindKey(String ext) {
 		return this.keySet().stream()
-				   			.filter(k -> k.contains(ext))
+				   			.filter(k -> k.toLowerCase().contains(ext.toLowerCase()))
 							.findFirst()
 							.orElse(null);
 	}
