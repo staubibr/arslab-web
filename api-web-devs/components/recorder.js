@@ -19,7 +19,6 @@ export default class Recorder {
 		
 		// every time the recorder has new data, we will store it in our array
 		this.recorder.ondataavailable = (function(ev) {
-			console.log(ev.data)
 			this.chunks.push(ev.data);
 		}).bind(this);
 	}	
