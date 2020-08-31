@@ -27,7 +27,7 @@ export default Core.Templatable("Widget.Loader", class Loader extends Templated 
 	}
 
 	static get URL() {
-		return "http://192.168.0.148:8081/parser/auto";
+		return "http://ec2-100-25-4-105.compute-1.amazonaws.com:8080/rise-ext/parser/auto";
 	}
 	
 	constructor(node) {		
