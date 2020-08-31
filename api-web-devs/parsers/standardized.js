@@ -5,7 +5,7 @@ import Parser from "./parser.js";
 import Settings from "../components/settings.js";
 import SimulationDEVS from "../simulation/simulationDEVS.js";
 import SimulationCA from "../simulation/simulationCA.js";
-import Model from "../simulation/Model.js";
+import Model from "../simulation/model.js";
 
 export default class Standardized extends Parser { 
 	
