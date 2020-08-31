@@ -386,7 +386,10 @@ export default class Application extends Templated {
 
     // Let the download button be clickable
     this.Elem("btnDownload").disabled = false;
-
+    // Erase the previous files and disable the load simulation button
+    document.getElementById("upload").getElementsByTagName("div")[2].innerHTML = null;
+    document.getElementById("upload").getElementsByTagName("div")[1].querySelector("i").className = "fas fa-file-upload"
+    this.Elem("load").disabled = true;
   }
 
   OnButtonDownload_Click(ev) {
@@ -443,7 +446,7 @@ export default class Application extends Templated {
       "<div handle='loadDataApp' id='loadDataApp'>" +
         // Drag and drop files
         "<div handle='dropzone' class='dropzone-container'>" + 
-          "<div handle='upload' widget='Widget.Box-Input-Files'></div>" +
+          "<div id='upload' handle='upload' widget='Widget.Box-Input-Files'></div>" +
           "<button handle='load' class='save' disabled>nls(Dropzone_Load)</button>" +
         "</div>" +
         // Loading Icon
