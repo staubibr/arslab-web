@@ -133,6 +133,7 @@ export default class Application extends Templated {
 
   RedrawLayerOnMap(index){
     this.layer = this.Widget("map").Layer(this.currentSimulationTitle)
+    debugger;
     this.layer.ColorLayer(this.currentColorScale, this.data[index].messages, this.currentSIR)
     mapOnClick(this.data[index].messages, this.Widget("map").map.OL, this.currentSimulationTitle, this.currentSimulationCycle)
   }
@@ -350,7 +351,8 @@ export default class Application extends Templated {
       this.currentColor, 
       0, 
       this.currentSIR
-      )
+    )
+
     var ports = ["Susceptible", "Infected", "Recovered", ]
     ports = ports.map(p => new Port(p, "output"))
 
@@ -375,8 +377,6 @@ export default class Application extends Templated {
       }
     }
     simulation.Initialize(10);
-
-    //ev.frame.transitions.filter(t => t.port == "Infected")
 
     this.simulation = simulation;
 
