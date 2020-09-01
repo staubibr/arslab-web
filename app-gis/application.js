@@ -38,28 +38,29 @@ export default class Application extends Templated {
     // By default the legend will be red-white unless otherwise specified by the user
     this.CreateLegend(Core.Nls("App_Legend_Title"), "translate(23,5)");
 
-    // The world map will appear prior to any vector layers being added overtop
+    // Create map container 
     this.Widget("map").InitTileLayer();
 
-    // User data for the application
+    // Read user data 
     this.Node('upload').On("change", this.OnUpload_Change.bind(this));
     this.Node('load').On("click", this.OnLoad_Click.bind(this));
     
-    // Change which simulation you wish to manipulate 
+    // Change which simulation users wish to manipulate 
     this.Node('selectSimulation').On("change", this.OnSimulationSelectChange.bind(this))
 
-    // Modifies an existing vector layer depending on the simulation cycle selector's current value
+    // Modify an existing vector layer depending on the simulation cycle selector's current value
     this.Node("cycle").On("change", this.OnCycle_Change.bind(this));
 
-    // For downloading simulation object as CSV 
+    // For downloading transitions 
     this.Node("btnDownload").On("click", this.OnButtonDownload_Click.bind(this));
 
-    // Check what part of SIR the user wants to visualize
+    // Check if user wants to visualize susceptible or infected or recovered
     this.Node("SIR-select").On("change", this.OnSIRchange.bind(this));
 
+    // Record visualization
     this.Widget("playback").Recorder = new Recorder(this.Node("map").Elem("canvas.ol-unselectable"));
 
-    // Fill sidebar with DOMs
+    // Fill map container sidebar with DOMs
     this.AddToSideBar()
   }
 
