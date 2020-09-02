@@ -19,6 +19,7 @@ import components.Utilities;
 import models.PaletteBucket;
 import models.Parsed;
 import parsers.IParser;
+import parsers.auto.Auto;
 import parsers.shared.Palette;
  
 @RestController
@@ -46,7 +47,7 @@ public class ParserController {
 	{    	        
 		try {
 			FilesMap map = Utilities.Convert(files);
-			IParser parser = new parsers.auto.Auto();
+			Auto parser = new parsers.auto.Auto();
 			Parsed result = parser.Parse(map);
 			
 			map.Close();

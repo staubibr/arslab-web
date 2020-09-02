@@ -44,20 +44,10 @@
 		</dependency>
 		
 		<dependency>
-		    <groupId>com.sim</groupId>
-		    <artifactId>sim</artifactId>
+		    <groupId>com.sim.parsing</groupId>
+		    <artifactId>sim.parsing</artifactId>
 		    <version>1.0</version>
-		    <scope>system</scope>
-		    <systemPath>/home/staubibr/Development/arslab-dev/rise-ext/sim.parsing/build/sim.parsing.jar</systemPath>
 		</dependency>
-		
-        <!-- dependency>
-           <groupId>sim</groupId>
-           <artifactId>sim.parsing</artifactId>
-           <version>1.0</version>
-           <scope>system</scope>
-           <systemPath>path/to/myejbproject.jar</systemPath>
-        </dependency-->
 	</dependencies>
 
 	<build>

@@ -35,7 +35,7 @@
 		<item key="updateSimilarElementsMatchStrategy" value="1"/>
 	</section>
 	<section name="BuildPathsPropertyPage">
-		<item key="pageIndex" value="3"/>
+		<item key="pageIndex" value="1"/>
 	</section>
 	<section name="OptionalMessageDialog.hide.">
 		<item key="org.eclipse.jdt.ui.typecomment.deprecated" value="true"/>
@@ -108,7 +108,9 @@
 		<item key="JarManifestWizardPage.MANIFEST_LOCATION" value=""/>
 		<item key="JarManifestWizardPage.SEAL_JAR" value="false"/>
 		<list key="JarPackageWizardPage.DESTINATION_NAMES_ID">
+			<item value="/home/staubibr/Development/arslab-dev/rise-ext-build/sim.parsing.jar"/>
 			<item value="sim.parsing/build/sim.parsing.jar"/>
+			<item value="/home/staubibr/Downloads/sim.parsing.jar"/>
 			<item value="/home/staubibr/Development/RISE-ext/sim.parsing/build/sim.parsing.jar"/>
 		</list>
 	</section>

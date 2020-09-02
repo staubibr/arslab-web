@@ -10,7 +10,6 @@
     <fullyQualifiedTypeName name="java.util.function.BiConsumer"/>
     <fullyQualifiedTypeName name="components.LineProcessor"/>
     <fullyQualifiedTypeName name="models.Palette"/>
-    <fullyQualifiedTypeName name="models.PaletteBucket"/>
     <fullyQualifiedTypeName name="java.io.ByteArrayOutputStream"/>
     <fullyQualifiedTypeName name="org.apache.commons.csv.CSVPrinter"/>
     <fullyQualifiedTypeName name="java.io.OutputStreamWriter"/>
@@ -54,10 +53,11 @@
     <fullyQualifiedTypeName name="parsers.lopez.CellDevs"/>
     <fullyQualifiedTypeName name="java.util.HashMap"/>
     <fullyQualifiedTypeName name="components.FilesMap"/>
-    <fullyQualifiedTypeName name="parsers.auto.Auto"/>
     <fullyQualifiedTypeName name="java.io.InputStream"/>
     <fullyQualifiedTypeName name="java.io.BufferedInputStream"/>
     <fullyQualifiedTypeName name="parsers.IParser"/>
     <fullyQualifiedTypeName name="java.util.Arrays"/>
     <fullyQualifiedTypeName name="models.Model"/>
+    <fullyQualifiedTypeName name="parsers.auto.Auto"/>
+    <fullyQualifiedTypeName name="models.PaletteBucket"/>
 </qualifiedTypeNameHistroy>
