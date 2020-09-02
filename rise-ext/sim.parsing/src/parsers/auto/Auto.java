@@ -33,6 +33,10 @@ public class Auto implements IParser {
 		return result;
 	}
 	
+	public void SayHi() {
+		
+	}
+	
 	private IParser DetectParser(FilesMap files) throws IOException {
 		String ma = files.FindKey(".ma");
 		String log = files.FindKey(".log");

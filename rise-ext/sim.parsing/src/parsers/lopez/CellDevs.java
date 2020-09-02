@@ -10,7 +10,6 @@ import java.util.List;
 import components.FilesMap;
 import components.Helper;
 import models.MessageCA;
-import models.Model;
 import models.Parsed;
 import models.Port;
 import models.Structure;
