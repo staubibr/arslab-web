@@ -63,7 +63,7 @@ export const mapOnClick = (data, map, title, currentCcyle) => {
     overlayFeatureName.innerHTML = "Census Subdivision: " + clickedDauid;
 
     overlayFeatureInitialPopulation.innerHTML = "Initial Population: " + population;
-    overlayFeatureCurrentPopulation.innerHTML = "Current Population: " + (population - clickedFatalities);
+    overlayFeatureCurrentPopulation.innerHTML = "Current Population: " + (population - (population * clickedFatalities));
     overlayFeatureFatalities.innerHTML = "Fatalities this cycle: " + clickedFatalities;
     
 
