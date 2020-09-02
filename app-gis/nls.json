@@ -34,5 +34,8 @@
 	},
 	"Dropzone_Viz" : {
 		"en":"Visualize simulation"
+	},
+	"Dropzone_Clear" : {
+		"en":"Clear"
 	}
 }
