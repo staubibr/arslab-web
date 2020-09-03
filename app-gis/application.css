@@ -397,5 +397,18 @@ button:not(:disabled):hover {
 	text-align:center;
 }
 
+.save{
+    width: 71%;
+}
 
+.clear {
+    border-bottom: solid 2px #980000;
+	background:#fd6e6e;
+    width: 29%;
+    display:inline-block;
+}
+
+.clear:hover {
+	background:#980000;
+}
 

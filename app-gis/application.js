@@ -44,6 +44,7 @@ export default class Application extends Templated {
     // Read user data 
     this.Node('upload').On("change", this.OnUpload_Change.bind(this));
     this.Node('load').On("click", this.OnLoad_Click.bind(this));
+    this.Node('clear').On("click", this.OnClear_Click.bind(this));
     
     // Change which simulation users wish to manipulate 
     this.Node('selectSimulation').On("change", this.OnSimulationSelectChange.bind(this))
@@ -71,6 +72,7 @@ export default class Application extends Templated {
       return;
     }
     this.Elem("load").disabled = false;
+    this.Elem("clear").disabled = false;
   }
 
   // Google Chrome only supports 500mb blobs. The uploaded simulation result file is uploaded to the app in chunks.
@@ -84,7 +86,15 @@ export default class Application extends Templated {
       parser = new CustomParser();
 
     parser.Parse(self.fileTXT[0]).then(function (data) { self.OnLoad_DataHandler(data); })
-	}
+  }
+  
+  OnClear_Click(ev){
+    // Erase the previous files and disable the load simulation button
+    document.getElementById("upload").getElementsByTagName("div")[2].innerHTML = null;
+    document.getElementById("upload").getElementsByTagName("div")[1].querySelector("i").className = "fas fa-file-upload"
+    this.Elem("load").disabled = true;
+    this.Elem("clear").disabled = true;
+  }
 
   /*
   Purpose: 
@@ -390,6 +400,7 @@ export default class Application extends Templated {
     document.getElementById("upload").getElementsByTagName("div")[2].innerHTML = null;
     document.getElementById("upload").getElementsByTagName("div")[1].querySelector("i").className = "fas fa-file-upload"
     this.Elem("load").disabled = true;
+    this.Elem("clear").disabled = true;
   }
 
   OnButtonDownload_Click(ev) {
@@ -447,6 +458,7 @@ export default class Application extends Templated {
         // Drag and drop files
         "<div handle='dropzone' class='dropzone-container'>" + 
           "<div id='upload' handle='upload' widget='Widget.Box-Input-Files'></div>" +
+          "<button handle='clear' class='clear' disabled>nls(Dropzone_Clear)</button>" +
           "<button handle='load' class='save' disabled>nls(Dropzone_Load)</button>" +
         "</div>" +
         // Loading Icon
