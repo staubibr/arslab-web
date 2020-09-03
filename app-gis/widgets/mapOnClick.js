@@ -33,6 +33,7 @@ export const mapOnClick = (data, map, title, currentCcyle) => {
           AddToOverLay(
             title, 
             clickedDauid, 
+            data[parseFloat(feature.N.dauid)].Population, 
             data[parseFloat(feature.N.dauid)].Fatalities, 
             data[parseFloat(feature.N.dauid)].Susceptible, 
             data[parseFloat(feature.N.dauid)].Infected,
@@ -54,7 +55,7 @@ export const mapOnClick = (data, map, title, currentCcyle) => {
   });
 
 
-  function AddToOverLay(title, clickedDauid, clickedFatalities, clickedSusceptible, clickedInfected, clickedRecovered,  population){
+  function AddToOverLay(title, clickedDauid, clickedPop, clickedFatalities, clickedSusceptible, clickedInfected, clickedRecovered,  population){
 
     overlayContainerElement.style.display = 'block'
 
@@ -63,7 +64,7 @@ export const mapOnClick = (data, map, title, currentCcyle) => {
     overlayFeatureName.innerHTML = "Census Subdivision: " + clickedDauid;
 
     overlayFeatureInitialPopulation.innerHTML = "Initial Population: " + population;
-    overlayFeatureCurrentPopulation.innerHTML = "Current Population: " + (population - (population * clickedFatalities));
+    overlayFeatureCurrentPopulation.innerHTML = "Current Population: " + clickedPop;
     overlayFeatureFatalities.innerHTML = "Fatalities this cycle: " + clickedFatalities;
     
 
@@ -81,7 +82,7 @@ export const mapOnClick = (data, map, title, currentCcyle) => {
     overlayFeatureCycle.innerHTML = "Census Subdivision not found in Simulation Results.";
     overlayFeatureName.innerHTML = "Census Subdivision: " + clickedDauid;
 
-    overlayFeatureInitialPopulation.innerHTML = "Initial Population: " + population;
+    overlayFeatureInitialPopulation.innerHTML = "Population: " + population;
     overlayFeatureCurrentPopulation.innerHTML = "No more data to show.";
     overlayFeatureFatalities.innerHTML = null;
 
