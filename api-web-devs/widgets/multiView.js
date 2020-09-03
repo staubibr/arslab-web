@@ -12,7 +12,7 @@ import Grid from './grid/grid.js';
 export default Core.Templatable("Widget.MultiView", class MultiView extends Templated { 
 
 	get Canvas() {
-		return this.Widget("grid").Canvas;
+		return (this.Type == "DEVS") ? this.Widget("diagram").Canvas : this.Widget("grid").Canvas;
 	}
 
 	set Size(value) {

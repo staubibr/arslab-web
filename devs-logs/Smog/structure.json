@@ -1,1 +1,0 @@
-{"info":{"simulator":"Lopez","name":"smog","type":"Cell-DEVS"},"nodes":[{"name":"smog","size":[20,20,1],"type":"atomic"}],"ports":[{"model":"smog","name":"out","type":"output","template":"{\"value\":${0}}"}]}

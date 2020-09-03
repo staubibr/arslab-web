@@ -13,9 +13,10 @@
   let supportsTransferable = false
   const test = fn => { try { fn() } catch (e) {} }
   const ponyfill = window.WebStreamsPolyfill || {}
-  const isSecureContext = window.isSecureContext
+  const isSecureContext = true; // window.isSecureContext
   // TODO: Must come up with a real detection test (#69)
   let useBlobFallback = /constructor/i.test(window.HTMLElement) || !!window.safari || !!window.WebKitPoint
+    
   const downloadStrategy = isSecureContext || 'MozAppearance' in document.documentElement.style
     ? 'iframe'
     : 'navigate'
@@ -25,7 +26,7 @@
     WritableStream: window.WritableStream || ponyfill.WritableStream,
     supported: true,
     version: { full: '2.0.0', major: 2, minor: 0, dot: 0 },
-    mitm: 'http://localhost/Dev/ARSLab/api-web-devs/references/StreamSaver/mitm.html'
+    mitm: ''
   }
 
   /**

@@ -10,14 +10,16 @@ export default Core.Templatable("Widget.RiseList", class RiseLoader extends Temp
     constructor(id) {
         super(id);
 		
-		var path = location.href.split("/");
+		//var path = location.href.split("/");
 		
-		path.pop();
-		path.pop();
+		//path.pop();
+		//path.pop();
+
+	    // path.push('http://localhost:82/devs-logs');
 	    
-	    path.push('devs-logs');
-	    
-		path = path.join("/");
+		//path = path.join("/");
+		
+		var path = 'http://localhost:82/devs-logs';
 		
 		// TODO : This is temporary, just to showcase how we could read from RISE. We need
 		// to fix a bunch of issues with RISE before we can fully implement this.

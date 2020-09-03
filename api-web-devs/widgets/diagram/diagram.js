@@ -6,6 +6,8 @@ import Templated from '../../components/templated.js';
 
 export default Core.Templatable("Widgets.Diagram", class Diagram extends Templated { 
 
+	get Canvas() { return this.Elem("canvas"); }
+
 	constructor(node) {
 		super(node);
 	}
@@ -17,6 +19,10 @@ export default Core.Templatable("Widgets.Diagram", class Diagram extends Templat
 		
 		this.Node('diagram').Elem("svg").setAttribute("preserveAspectRatio", "none");
 		
+		var style = "marker.highlighted path {fill: #1e94c3 !important;stroke: #1e94c3 !important;}marker.highlighted.origin path {fill: #b36402 !important;stroke: #b36402 !important;}text.highlighted {fill: #1e94c3 !important;}text.highlighted.origin {fill: #b36402 !important;}path.highlighted {stroke: #1e94c3 !important;}path.highlighted.origin {stroke: #b36402 !important;}.highlighted:not(text):not(path) {stroke: #1e94c3 !important;fill: #d6f2fd !important;}.highlighted.origin:not(text):not(path) {stroke: #b36402 !important;fill: #f9e5c1 !important;}";
+		
+		Dom.Create("style", { innerHTML:style }, this.Node("diagram").Elem("svg"));
+				
 		this.Simulation = simulation;
 		
 		this.Simulation.models.forEach(model => {
@@ -41,18 +47,47 @@ export default Core.Templatable("Widgets.Diagram", class Diagram extends Templat
 	}
 		
 	Template() {
-		return "<div handle='diagram' class='diagram-container'></div>";
+		return "<div>" +
+				   "<div handle='diagram' class='diagram-container'></div>" +
+				   "<canvas handle='canvas' class='diagram-canvas hidden'></canvas>" +
+			   "</div>";
 	}
 
 	Resize() {
-		this.size = Dom.Geometry(this.Node("diagram"));
+		this.size = Dom.Geometry(this.Elem("diagram"));
 		
 		var pH = 30;
 		var pV = 30;
 		
-		this.Node("diagram").style.margin = `${pV}px ${pH}px`;
-		this.Node("diagram").style.width = `${(this.size.w - (30))}px`;	
-		this.Node("diagram").style.height = `${(this.size.h - (30))}px`;
+		// this.Elem("diagram").style.margin = `${pV}px ${pH}px`;
+		// this.Elem("diagram").style.width = `${(this.size.w - (30))}px`;	
+		// this.Elem("diagram").style.height = `${(this.size.h - (30))}px`;
+		this.Elem("canvas").setAttribute('width', this.size.w);	
+		this.Elem("canvas").setAttribute('height', this.size.h);
+	}
+		
+	DrawToCanvas(node) {
+		var serializer = new XMLSerializer();
+		var source = serializer.serializeToString(node);
+		var canvas = this.Elem("canvas");
+		
+		// create a file blob of our SVG.
+		var blob = new Blob([source], { type: 'image/svg+xml;charset=utf-8' });
+		var url = window.URL.createObjectURL(blob);
+		
+		var img = new Image();
+
+		img.onload = function() {
+			var ctx = canvas.getContext('2d');
+			
+			ctx.fillStyle = "#f9f9f9";
+			ctx.fillRect(0, 0, canvas.getAttribute("width"), canvas.getAttribute("height"));
+			ctx.drawImage(img, 0, 0, canvas.getAttribute("width"), canvas.getAttribute("height"));
+			
+			window.URL.revokeObjectURL(url);
+		}
+		
+		img.src = url;
 	}
 	
 	Draw(transitions) {
@@ -61,6 +96,8 @@ export default Core.Templatable("Widgets.Diagram", class Diagram extends Templat
 		transitions.forEach((t) => {
 			this.DrawYTransition(t);
 		});
+		
+		this.DrawToCanvas(this.Node('diagram').Elem("svg"));
 	}
 	
 	DrawYTransition(t) {  

@@ -42,6 +42,10 @@ export default Core.Templatable("Auto.Diagram", class AutoDiagram extends Automa
 	UpdateSelected() {
 		this.selected = this.Simulation.Selected;
 	}
+	
+	Redraw() {
+		this.Widget.Resize();
+	}
 		
 	onSimulationJump_Handler(ev) {		
 		var f = this.Simulation.frames[ev.state.i];
