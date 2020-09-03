@@ -44,8 +44,6 @@ export default class Main extends Templated {
 		this.Widget('upload').On('error', this.OnWidget_Error.bind(this));
 		this.Widget("rise").On("filesready", this.OnFiles_Loaded.bind(this));
 		this.Widget("rise").On("error", this.OnWidget_Error.bind(this));
-		
-		this.Widget("playback").Recorder = new Recorder(this.Widget("multi").Canvas);
 	}
 	
 	OnUpload_Ready(ev) {							
@@ -58,12 +56,12 @@ export default class Main extends Templated {
 		this.Elem("btnDownload").disabled = false;
 		
 		this.simulation.Initialize(this.settings.Get("playback", "cache"));
-		
 		this.ShowDropzone(false);	
-		
 		this.Widget("playback").Initialize(this.simulation, this.settings);
 		this.Widget('multi').Initialize(this.simulation, this.settings);	
 		this.Widget('settings').Initialize(this.simulation, this.settings);	
+		
+		this.Widget("playback").Recorder = new Recorder(this.Widget("multi").Canvas);
 		
 		this.Widget("multi").Resize();
 		this.Widget("multi").Redraw();

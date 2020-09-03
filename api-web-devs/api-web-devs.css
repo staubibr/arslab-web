@@ -385,7 +385,7 @@ table tr:nth-child(even) td:not(:last-child) {
 .diagram-container path {
 	pointer-events:none;
 }
-
+/*
 .diagram-container marker.highlighted path {
     fill: #1e94c3 !important;
     stroke: #1e94c3 !important;
@@ -421,6 +421,7 @@ table tr:nth-child(even) td:not(:last-child) {
     stroke: #b36402 !important;
     fill: #f9e5c1 !important;
 }
+*/
 
 
 
