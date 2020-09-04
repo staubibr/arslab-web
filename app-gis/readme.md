@@ -77,6 +77,7 @@
 
 ## TODO:
 - See if mapOnClick works on multiple layers (need more data to try this)
+- Address the .gpkg to .geojson issue
 - Clean up UI
 - Refactor code 
 - Interpret simulation types (pandemic, flood, fire, etc.)
