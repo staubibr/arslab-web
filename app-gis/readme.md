@@ -1,7 +1,7 @@
 # GIS Simulation Explorer
 
 ## Getting Started (Users):
-[![Demo CountPages alpha](/app-gis/demo.gif)](https://www.youtube.com/watch?v=eAaeGtoMDUQ)
+[![gif](/app-gis/demo.gif)](https://www.youtube.com/watch?v=eAaeGtoMDUQ)
 - Open the [GIS Simulation Explorer](https://staubibr.github.io/arslab-web/app-gis/index.html) in Chrome 
 - OpenStreetMap will automatically load the world map
 - Before Loading Simulations
