@@ -1,5 +1,15 @@
 # GIS Simulation Explorer
 
+## Purpose
+
+Build a GIS environment for web-based simulations
+
+## Background
+
+Geographical tracking and mapping of pandemic data through the application of Geographic Information Systems (GIS) has been proven to be a powerful system for disease monitoring and planning ([Buolos & Geraghty, 2020](https://ij-healthgeographics.biomedcentral.com/articles/10.1186/s12942-020-00202-8)). Such a system allows researchers to present large volumes of data in an intuitive way. For one, web-based mapping has created an environment for accessible remote collaboration between decision makers ([Franch-Pardo et al., 2020](https://www.sciencedirect.com/science/article/pii/S0048969720335531)). By integrating simulation models into map-based web applications, researchers can also highlight spatiotemporal trends in various scenarios. 
+
+Modern open-source GIS libraries, such as OpenLayers, provide developers with the necessary tools to load and display data into dynamic map-based web applications. OpenLayers' is entirely free, easy to customize, and supports vector data rendering. D3JS, a lightweight data visualization library, also has some limited mapping capability that could be incorporated into a map-based web application. 
+
 ## Getting Started (Users):
 [![gif](/app-gis/demo.gif)](https://www.youtube.com/watch?v=eAaeGtoMDUQ)
 - Open the [GIS Simulation Explorer](https://staubibr.github.io/arslab-web/app-gis/index.html) in Chrome 
@@ -76,11 +86,12 @@
 
 
 ## TODO:
-- See if mapOnClick works on multiple layers (need more data to try this)
+- Fix bug when loading multiple simulations
+- See if mapOnClick works on multiple layers 
 - Address the .gpkg to .geojson issue
 - Clean up UI
 - Refactor code 
-- Interpret simulation types (pandemic, flood, fire, etc.)
+- Incorporate library of models
 - Fix the GeoCoder so it doesn't add itself as a layer
 - Introduce spatial analysis tools
 - Let users choose what their simulation object will contain
@@ -88,8 +99,6 @@
 ## Resources:
 
 #### D3JS
-
-Data Visualization library with some limited mapping capability. Extremely lightweight with low impact on  software.
 
 [D3 Legend](https://github.com/susielu/d3-legend)  
 
@@ -102,8 +111,6 @@ Data Visualization library with some limited mapping capability. Extremely light
 [Spatial references](https://spatialreference.org/ref/epsg/)
 
 #### OpenLayers
-
-The Grandfather of Open Source GIS on the web. 
 
 OpenLayers coordinate format is Long/Lat. 
 
