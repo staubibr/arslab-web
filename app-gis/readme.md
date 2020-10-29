@@ -10,6 +10,24 @@ Geographical tracking and mapping of pandemic data through the application of Ge
 
 Modern open-source GIS libraries, such as OpenLayers, provide developers with the necessary tools to load and display data into dynamic map-based web applications. OpenLayers' is entirely free, easy to customize, and supports vector data rendering. D3JS, a lightweight data visualization library, also has some limited mapping capability that could be incorporated into a map-based web application. 
 
+Outline for writing:
+- The evolution of GIS web apps?
+  - Tools available
+  - Why have they become so useful now?
+  - Their use casess 
+- Where do we fit in? How did we accomplish it?
+
+The current COVID-19 pandemic has negatively affected the lives of arguably billions around the globe. The ongoing tensions caused by the pandemic has revealed a lot of holes in local, national, and global plans for handling outbreaks. 
+
+In relation to current studies of COVID-19 (as well as future pandemics), such an application will be available on the web for remote collaboration and use by practitioners. Why remote collaboration? (summarize the points to maybe show why software such as this is useful if implemented on a global scale?)
+- Throughout the last decade, online resources like Zoom and Slack have continued developing and have proved extremely useful in adapting to the current pandemic ([Levy, 2020](https://www.cnbc.com/2020/05/11/work-from-home-is-here-to-stay-after-coronavirus.html)) 
+- Confinement / restrictions 
+- One might hypothesize that a lot of jobs in the digital sphere may permanently move into being optionally or completely remote. It **(remove expletive)** will be interesting to analyze whether the pandemic has caused this shift of focus towards remote workers, or whether jobs in the digital sphere were heading this way regardless.
+- If employers were to remove the restriction of location for employment, it **(remove expletive)** may allow employers to focus more on the merits and qualifications (equity?) of their candidates rather than whether they live in the correct city or not.
+- Many geographical factors play a role in hindering a person’s career choices or a company’s growth and operations. For example, certain companies and digital programs may require a constant access to the internet, making a stable internet connection a requirement for their operations.
+
+
+
 ## Getting Started (Users):
 [![gif](/app-gis/demo.gif)](https://www.youtube.com/watch?v=eAaeGtoMDUQ)
 - Open the [GIS Simulation Explorer](https://staubibr.github.io/arslab-web/app-gis/index.html) in Chrome 
