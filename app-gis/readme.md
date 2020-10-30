@@ -101,18 +101,34 @@ In relation to current studies of COVID-19 (as well as future pandemics), such a
     
     - The population formula is (population - population * fatalities)
 
-
-
 ## TODO:
-- Fix bug when loading multiple simulations
-- See if mapOnClick works on multiple layers 
-- Address the .gpkg to .geojson issue
+- Find a better way to clear added items for loading
+- Fix mapOnClick 
+  - If one layer is over top another, the code gets wanky
+- Legend SIR doesn't change until simulation is added
+- Address the .gpkg to .geojson issue 
 - Clean up UI
 - Refactor code 
-- Incorporate library of models
+- Integrate with DEVS Web Viewer
+  - Incorporate library of models w/ backend
 - Fix the GeoCoder so it doesn't add itself as a layer
+  - Also maybe use a different GeoCoder? The current one seems to break often if using AdBlock
 - Introduce spatial analysis tools
 - Let users choose what their simulation object will contain
+
+## Credits and Acknowledgements
+
+[Carleton University - ARSLab](https://arslab.sce.carleton.ca/)
+
+[Tobias Bieniek - Sidebar-v2](https://github.com/Turbo87/sidebar-v2)
+
+[Jonatas Walker - OpenLayers Control Geocoder](https://github.com/jonataswalker/ol-geocoder)
+
+[Matt Walker - OpenLayers Popup](https://github.com/walkermatt/ol-popup)
+
+[OpenLayers](https://openlayers.org/)
+
+[D3JS](https://d3js.org/)
 
 ## Resources:
 
@@ -130,7 +146,7 @@ In relation to current studies of COVID-19 (as well as future pandemics), such a
 
 #### OpenLayers
 
-OpenLayers coordinate format is Long/Lat. 
+**Note:** Coordinate format is Longitude / Latitude. 
 
 [ol.Map](https://openlayers.org/en/latest/apidoc/module-ol_Map-Map.html)  
 
@@ -146,7 +162,5 @@ OpenLayers coordinate format is Long/Lat.
 
 #### Web Development
 
-Javascript/CSS/HTML
-
-[Event References](https://developer.mozilla.org/en-US/docs/Web/Events)
+[JavaScript - Event References](https://developer.mozilla.org/en-US/docs/Web/Events)
 

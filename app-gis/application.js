@@ -24,8 +24,26 @@ import ColorLegend from "./widgets/colorLegend.js";
 import { mapOnClick } from "./widgets/mapOnClick.js";
 import { createTransitionFromSimulation } from "../app-gis/functions/simToTransition.js";
 import { sortPandemicData } from "../app-gis/functions/sortPandemicData.js";
-import { simSelectAndCycle } from "./widgets/simSelectAndCycle.js";
+import { simAndCycleSelect } from "./widgets/simAndCycleSelect.js";
+import map from "./widgets/map.js";
 
+/*
+This application is a GIS environment for web-based simulations
+
+Features: 
+  - OpenStreetMap as base layer / canvas
+    - Zoom in/out
+    - Layer Switcher
+    - Search bar
+    - Sidebar 
+      - Home 
+      - Load Simulation 
+      - Manipulating Simulations
+      - Download Simulation
+      - Playback
+      - Legend
+    - Interacting with Simulations Shown on Map
+*/
 
 export default class Application extends Templated {
   constructor(node) {
@@ -35,11 +53,11 @@ export default class Application extends Templated {
 
     this.simulation = null;
 
-    // By default the legend will be red-white unless otherwise specified by the user
-    this.CreateLegend(Core.Nls("App_Legend_Title"), "translate(23,5)");
+    // Create map container (sidebar, search, zoom, layer switcher, etc.)
+    this.Widget("map").InitLayer();
 
-    // Create map container 
-    this.Widget("map").InitTileLayer();
+    // Default legend ("Proportion Susceptible" and colored white to red)
+    this.CreateLegend(Core.Nls("App_Legend_Title"), "translate(23,5)");
 
     // Read user data 
     this.Node('upload').On("change", this.OnUpload_Change.bind(this));
@@ -61,14 +79,15 @@ export default class Application extends Templated {
     // Record visualization
     this.Widget("playback").Recorder = new Recorder(this.Node("map").Elem("canvas.ol-unselectable"));
 
-    // Fill map container sidebar with DOMs
-    this.AddToSideBar()
   }
+
 
   OnUpload_Change(ev){
     this.files = this.Widget('upload').files;
-    if(this.files.filter(d => d.name.split(".").pop() == "geojson" || d.name.split(".").pop() == "txt").length != 2){
-      alert("You've entered an invalid number of files. Only insert a .txt and .geojson.")
+    if(this.files.filter(d => d.name.split(".").pop() == "geojson" || d.name.split(".").pop() == "txt").length > 2){
+      alert("You've entered an invalid number of files.\nOnly insert a .txt and .geojson.")
+      // Should probably deal with this a better way
+      this.OnClear_Click(null);
       return;
     }
     this.Elem("load").disabled = false;
@@ -90,18 +109,14 @@ export default class Application extends Templated {
   
   OnClear_Click(ev){
     // Erase the previous files and disable the load simulation button
+    this.files = [];
+    this.Widget('upload').files = [];
     document.getElementById("upload").getElementsByTagName("div")[2].innerHTML = null;
     document.getElementById("upload").getElementsByTagName("div")[1].querySelector("i").className = "fas fa-file-upload"
     this.Elem("load").disabled = true;
     this.Elem("clear").disabled = true;
   }
 
-  /*
-  Purpose: 
-
-  Paramter:
-    data - holds everything from the simulation results text file
-  */
   OnLoad_DataHandler(data) {
     this.tempData = data;
 
@@ -143,9 +158,16 @@ export default class Application extends Templated {
   }
 
   RedrawLayerOnMap(index){
-    this.layer = this.Widget("map").Layer(this.currentSimulationTitle)
-    this.layer.ColorLayer(this.currentColorScale, this.data[index].messages, this.currentSIR)
-    mapOnClick(this.data[index].messages, this.Widget("map").map.OL, this.currentSimulationTitle, this.currentSimulationCycle)
+    this.layer = this.Widget("map").Layer(this.currentSimulationTitle);
+    this.layer.ColorLayer(this.currentColorScale, this.data[index].messages, this.currentSIR);
+    mapOnClick(
+      this.data[index].messages,
+      this.Widget("map").map.OL,
+      this.currentSimulationTitle,
+      this.currentSimulationCycle,
+      this.currentColorScale,
+      this.currentSIR
+    );
   }
 
   /*
@@ -268,11 +290,7 @@ export default class Application extends Templated {
       document.getElementById("SIR-select").selectedIndex = 2;
     }
 
-    if(this.currentNumberOfClasses == 5){
-      document.getElementById('class-select').selectedIndex = 1
-    } else {
-      document.getElementById('class-select').selectedIndex = 0
-    }
+    document.getElementById('class-select').selectedIndex = this.currentNumberOfClasses == 5 ? 1 : 0
 
     const svg = d3.select("svg");
 
@@ -353,7 +371,7 @@ export default class Application extends Templated {
     let data = sortPandemicData(this.tempData);
     this.data = data;
     //ev.frame.transitions.filter(t => t.port == "Infected")
-    simSelectAndCycle(this.currentSimulationTitle, data.length-1)
+    simAndCycleSelect(this.currentSimulationTitle, data.length-1)
     this.KeepTrackOfSubmittedUserFiles(data, 
       this.currentSimulationTitle, 
       this.currentSimulationLayerGeoJSON, 
@@ -397,6 +415,8 @@ export default class Application extends Templated {
     // Let the download button be clickable
     this.Elem("btnDownload").disabled = false;
     // Erase the previous files and disable the load simulation button
+    this.file = [];
+    this.Widget('upload').files = [];
     document.getElementById("upload").getElementsByTagName("div")[2].innerHTML = null;
     document.getElementById("upload").getElementsByTagName("div")[1].querySelector("i").className = "fas fa-file-upload"
     this.Elem("load").disabled = true;
@@ -441,16 +461,12 @@ export default class Application extends Templated {
 
   CurrentSIRselected(SIR){ this.currentSIR = SIR; }
 
-  AddToSideBar(){
-    document.getElementById("loadDataSidebar").appendChild(document.getElementById("loadDataApp"))
-    document.getElementById("editSimulationSidebar").appendChild(document.getElementById("editSimulationApp"))
-    document.getElementById("playSidebar").appendChild(document.getElementById("playbackApp"))
-    document.getElementById("downloadDataSidebar").appendChild(document.getElementById("downloadDataApp"))
-  }
+
 
   Template() {
     return (
       
+      // Map container
       "<div id='map' handle='map' widget='Widget.Map' class='map' ></div>" +
 
       // Load Simulation
@@ -481,20 +497,24 @@ export default class Application extends Templated {
           "</select>" +
         "</div>" +
 
+        // Simulation cycle select
         "<br><label>Select Simulation Cycle: <input handle='cycle' type='range' name='cycle' id='cycle' min='0' max = '0' step='1' value='0' >" +
         "<output handle='output' class='cycle-output' for='cycle'></output></label><br><br>" +
 
+        // Color select
         "<div>" +
           "<label for='favcolor'>Select colour scale: </label>" +
           "<input type='color' id='colorOne' name='favcolor' value='#ff0000'><br>" +
         "</div>" +
 
+        // Classes select (4 or 5)
         "<br><div id='classControls'><label for='class-select'>Select # of classes: </label>" +
         "<select handle = 'selectClasses' id='class-select'>" +
           "<option>4</option>" +
           "<option>5</option>" +
         "</select></div>" +
 
+        // Simulation select
         "<br><div id='SIRControls'><label for='class-select'>Choose what to visualize: </label>" +
         "<select handle = 'SIR-select' id='SIR-select'>" +
           "<option>Susceptible</option>" +
@@ -502,25 +522,26 @@ export default class Application extends Templated {
           "<option>Recovered</option>" +
         "</select></div>" +
         
+        // Legend 
         "<legend id='legend-svg' class='svg-div'>Proportion Susceptible<svg id='svg' class='svg' handle='svg' width = '960' height = '150'></svg></legend>" +
       "</div>" +
 
       // Video
       "<div class='playbackApp' id='playbackApp'>" +
         "<br><br><div id='playback' handle='playback' widget='Widget.Playback'></div>" +
-      "</div>" +
+      "</div>" //+
      
-      // Overlay text for vector layers
-      "<div id = 'overlay-container' class='overlay-container' style='none'>" +
-          "<span class='overlay-text' id='feature-name'></span>" +
-          "</span><br><br><span class='overlay-text' id='feature-simulation'></span>" +
-          "</span><br><br><span class='overlay-text' id='feature-cycle'></span>" +
-          "</span><br><br><span class='overlay-text' id='feature-init-pop'></span>" +
-          "</span><br><br><span class='overlay-text' id='feature-current-pop'></span>" +
-          "</span><br><br><span class='overlay-text' id='feature-fatal'></span>" +
-          "</span><br><br><span class='overlay-text' id='feature-susceptible'></span>" +
-          "</span><br><br><span class='overlay-text' id='feature-infected'></span>" +
-          "</span><br><br><span class='overlay-text' id='feature-recovered'></span></div>" 
+      // Overlay text for vector layers when using mapOnClick
+      // "<div id = 'overlay-container' class='overlay-container' style='none'>" +
+      //     "<span class='overlay-text' id='feature-name'></span>" +
+      //     "</span><br><br><span class='overlay-text' id='feature-simulation'></span>" +
+      //     "</span><br><br><span class='overlay-text' id='feature-cycle'></span>" +
+      //     "</span><br><br><span class='overlay-text' id='feature-init-pop'></span>" +
+      //     "</span><br><br><span class='overlay-text' id='feature-current-pop'></span>" +
+      //     "</span><br><br><span class='overlay-text' id='feature-fatal'></span>" +
+      //     "</span><br><br><span class='overlay-text' id='feature-susceptible'></span>" +
+      //     "</span><br><br><span class='overlay-text' id='feature-infected'></span>" +
+      //     "</span><br><br><span class='overlay-text' id='feature-recovered'></span></div>" 
     );
   }
 }
