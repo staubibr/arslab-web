@@ -105,6 +105,7 @@ In relation to current studies of COVID-19 (as well as future pandemics), such a
 - Fix mapOnClick 
   - If one layer is over top another, the code gets wanky
     - See layer switcher
+- Hide and show legend 
 - Address the .gpkg to .geojson issue 
 - Clean up UI
 - Refactor code 

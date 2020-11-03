@@ -4,17 +4,15 @@
   Tied to geographic coordiantes
 */
 export const mapOnClick = (data, map, title, currentCycle, scale, SIR) => {
-
   // Exit if the box is unchecked
   // document.getElementsByClassName("panel")
   // document.querySelector('[title="simulation0_ottawaDA"]');
   // map.getControls().a[6]
 
-  // Go through each until you find the title 
+  // Go through each until you find the title
   // map.getControls().a[6]._layers [index].li.innerText == title
   // [index].listeners[2].target.N.visible
   // debugger;
-
 
   var highlightStyle = new ol.style.Style({
     fill: new ol.style.Fill({
@@ -42,7 +40,6 @@ export const mapOnClick = (data, map, title, currentCycle, scale, SIR) => {
   // Add popup to overlay (won't show up yet)
   map.addOverlay(popup);
 
-
   // Add listener for feature selection
   var select_interaction = new ol.interaction.Select();
   map.addInteraction(select_interaction);
@@ -51,7 +48,7 @@ export const mapOnClick = (data, map, title, currentCycle, scale, SIR) => {
     // When we click outside a feature the popup will disappear
     popup.setPosition(undefined);
 
-    // Reset feature to unhighlighted 
+    // Reset feature to unhighlighted
     highlightedFeature.forEach((f) => f.setStyle(removeHighlightStyle()));
 
     highlightedFeature = [];
@@ -69,36 +66,33 @@ export const mapOnClick = (data, map, title, currentCycle, scale, SIR) => {
     //   }
     // }
     // if(uncheckedBox != true){
-      
-      var coord = evt.mapBrowserEvent.coordinate;
-  
-      var features = select_interaction.getFeatures();
-  
-      let f;
-      features.forEach(function (feature) {
-        f = feature;
-      });
-  
-      if (f != undefined) {
-        preserveFeature = f;
-  
-        f.setStyle(highlightStyle);
-  
-        highlightedFeature.push(f);
-  
-        popup.setPosition(coord);
-  
-        let clickedDauid = parseFloat(f.N.dauid);
-  
-        if (data[clickedDauid] != undefined) {
-          AddToOverLay(coord, clickedDauid, f.N.DApop_2016);
-        } else {
-          AddToOverLayNoData(coord);
-        }
-    //}
 
+    var coord = evt.mapBrowserEvent.coordinate;
 
+    var features = select_interaction.getFeatures();
 
+    let f;
+    features.forEach(function (feature) {
+      f = feature;
+    });
+
+    if (f != undefined) {
+      preserveFeature = f;
+
+      f.setStyle(highlightStyle);
+
+      highlightedFeature.push(f);
+
+      popup.setPosition(coord);
+
+      let clickedDauid = parseFloat(f.N.dauid);
+
+      if (data[clickedDauid] != undefined) {
+        AddToOverLay(coord, clickedDauid, f.N.DApop_2016);
+      } else {
+        AddToOverLayNoData(coord);
+      }
+      //}
     }
   });
 

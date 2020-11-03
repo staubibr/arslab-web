@@ -189,15 +189,19 @@ input[type="range"] {
 .legend-svg {
     background-color: rgba(255, 255, 255, 0.466);
     position: absolute;
-    bottom: 5px;
-    right: 5px;
+    bottom: 10px;
+    left: 8px;
     width: 150px;
     height: 120px;
     border-radius: 10px;
     border: 1px solid  rgba(0,60,136,.5);
     text-align: center;
+
+    /* display: none; */
     
-}z
+    
+}
+
 
 .ol-attribution.ol-unselectable.ol-control.ol-collapsed {
     text-align: right;

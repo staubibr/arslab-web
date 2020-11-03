@@ -3917,6 +3917,8 @@
   -webkit-box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.5);
   box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.5);
 }
+
+/* Change to .ol-closebox for x button */
 .ol-popup .closeBox {
   background-color: rgba(0, 60, 136, 0.5);
   color: #fff;

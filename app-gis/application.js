@@ -25,7 +25,6 @@ import { mapOnClick } from "./widgets/mapOnClick.js";
 import { createTransitionFromSimulation } from "../app-gis/functions/simToTransition.js";
 import { sortPandemicData } from "../app-gis/functions/sortPandemicData.js";
 import { simAndCycleSelect } from "./widgets/simAndCycleSelect.js";
-import map from "./widgets/map.js";
 
 /*
 This application is a GIS environment for web-based simulations
@@ -41,7 +40,7 @@ Features:
       - Manipulating Simulations
       - Download Simulation
       - Playback
-      - Legend
+    - Legend
     - Interacting with Simulations Shown on Map
 */
 
@@ -53,11 +52,18 @@ export default class Application extends Templated {
 
     this.simulation = null;
 
+    this.hideLegend = true;
+
+    this.currentSIR = "Susceptible"
+
     // Create map container (sidebar, search, zoom, layer switcher, etc.)
     this.Widget("map").InitLayer();
 
     // Default legend ("Proportion Susceptible" and colored white to red)
-    this.CreateLegend(Core.Nls("App_Legend_Title"), "translate(23,5)");
+    this.CreateLegend(Core.Nls("App_Legend_Title"), "translate(8,4)");
+
+    // Hide or show legend
+    
 
     // Read user data 
     this.Node('upload').On("change", this.OnUpload_Change.bind(this));
@@ -186,6 +192,7 @@ export default class Application extends Templated {
     this.InitialLegend(title, translate);
     this.RecreateLegendColor(title, translate);
     this.RecreateLegendClass(title, translate);
+    this.hideOrShowlegend(title, translate);
   }
 
   InitialLegend(title, translate) {
@@ -193,9 +200,46 @@ export default class Application extends Templated {
     this.currentNumberOfClasses = 4;
     this.currentColor = "#FF0000";
     this.currentColorScale = new GetScale(this.currentColor, this.currentNumberOfClasses);
+
+    this.hiddenLegend(title, translate)
     
-    // Draw legend on Map
-    this.AppLegend = new ColorLegend(title, translate, this.currentColorScale)
+
+    // if(this.hideLegend == true){
+    //   this.hiddenLegend(title, translate)
+    // }else{
+    //   // Draw legend on Map
+    //   this.AppLegend = new ColorLegend(title, translate, this.currentColorScale)
+    // }
+    
+    
+    
+  }
+
+  hiddenLegend(title, translate){
+    
+    document.getElementById("legend-svg").firstChild.textContent = 
+    "Legend";
+
+    const svg = d3.select("svg");
+
+    svg.selectAll("*").remove();
+
+    // svg
+    // .append('svg:image')
+    // .attr("xlink:href", function() {return "./legend.png"})
+    // .attr('width', "50")
+    // .attr('height', "50")
+    // .attr("transform", "translate(-5,-14)")
+    // svg.append("g").attr("class", title).attr("transform", translate);
+
+    // svg.select("." + title);
+
+    document.getElementById("legend-svg").style.cssText =
+      "padding:5px; background-color:rgba(0,60,136,.5); font-size:12px; color: white";
+    document.getElementById("legend-svg").style.width = "40px";
+    document.getElementById("legend-svg").style.height = "15px";
+
+
   }
 
 
@@ -204,6 +248,7 @@ export default class Application extends Templated {
     
     // Recreate the legend if a color change is issued
     d3.select("#colorOne").on("change", function () {
+      
       var val = d3.select(this).node().value;
       self.currentColor = val;
 
@@ -226,20 +271,52 @@ export default class Application extends Templated {
   RecreateLegendClass(title, translate) {
     let self = this;
     
+    
     // Recreate the legend if a class change is issued
     d3.select("#class-select").on("change", function () {
       self.currentClass = d3.select(this).node().value;
-      self.currentColorScale = new GetScale(self.currentColor, self.currentClass);
-
-      if(self.DataFromFiles != undefined){
-        var currentDataFileIndex = document.getElementById('sim-select').selectedIndex;
-        self.DataFromFiles[currentDataFileIndex].layerClasses = self.currentClass;
+        self.currentNumberOfClasses = self.currentClass
+        self.currentColorScale = new GetScale(self.currentColor, self.currentClass);
+      if(self.hideLegend == true){
+        self.recreateLegend(title, translate)
+      }else{
+        if(self.DataFromFiles != undefined){
+          var currentDataFileIndex = document.getElementById('sim-select').selectedIndex;
+          self.DataFromFiles[currentDataFileIndex].layerClasses = self.currentClass;
+        }
+        self.AppLegend = new ColorLegend(title, translate, self.currentColorScale)
       }
-
-      self.AppLegend = new ColorLegend(title, translate, self.currentColorScale)
+      
 
       self.RecolorLayer();
     }, false);
+  }
+
+  hideOrShowlegend(title, translate){
+    var legend = document.querySelector(".legend-svg");
+
+    let self = this;
+
+    legend.addEventListener("click", function () {
+      // Use document.getElementById("legend-svg").style.width = "80px" instead?
+      if (self.hideLegend == false) {
+        self.hideLegend  = true;
+        self.hiddenLegend(title, translate)
+      } 
+      else{
+        self.hideLegend  = false;
+        self.recreateLegend(title, translate)
+        
+      }
+    });
+
+  }
+
+  recreateLegend(title, translate){
+    this.currentColorScale = new GetScale(this.currentColor, this.currentNumberOfClasses);
+    document.getElementById("legend-svg").firstChild.textContent = this.currentSIR
+    this.AppLegend = new ColorLegend(title, translate, this.currentColorScale)
+    
   }
 
   RecolorLayer() {
@@ -283,7 +360,7 @@ export default class Application extends Templated {
 
     document.getElementById('colorOne').value = this.currentColor
 
-    document.getElementById("legend-svg").firstChild.textContent = "Proportion " + this.currentSIR;
+    document.getElementById("legend-svg").firstChild.textContent = this.currentSIR;
 
     if(this.currentSIR == "Susceptible"){
       document.getElementById("SIR-select").selectedIndex = 0;
@@ -300,6 +377,7 @@ export default class Application extends Templated {
     svg.selectAll("*").remove();
 
     svg.append("g").attr("class", title).attr("transform", translate);
+    
 
     var colorLegend = d3
       .legendColor()
@@ -343,12 +421,14 @@ export default class Application extends Templated {
     // Change layer if there is one
     if(this.currentSimulationTitle != undefined){
       this.DataFromFiles[currentDataFileIndex].layerSIR = ev.target.value;
-      document.getElementById("legend-svg").firstChild.textContent = "Proportion " + ev.target.value;
+      //document.getElementById("legend-svg").firstChild.textContent =  ev.target.value;
       this.RedrawLayerOnMap(this.currentSimulationCycle);
     }
 
     // Change legend title
-    document.getElementById("legend-svg").firstChild.textContent = "Proportion " + this.currentSIR;
+    if(document.getElementById("legend-svg").style.width== "120px"){
+      document.getElementById("legend-svg").firstChild.textContent = this.currentSIR;
+    }
 
     if(this.currentSIR == "Susceptible"){
       document.getElementById("SIR-select").selectedIndex = 0;
@@ -357,8 +437,6 @@ export default class Application extends Templated {
     } else {
       document.getElementById("SIR-select").selectedIndex = 2;
     }
-
-    // Change what is loaded
 
   }
   
@@ -478,8 +556,6 @@ export default class Application extends Templated {
 
   CurrentSIRselected(SIR){ this.currentSIR = SIR; }
 
-
-
   Template() {
     return (
       
@@ -540,25 +616,16 @@ export default class Application extends Templated {
         "</select></div>" +
         
         // Legend 
-        "<legend id='legend-svg' class='svg-div'>Proportion Susceptible<svg id='svg' class='svg' handle='svg' width = '960' height = '150'></svg></legend>" +
+        "<legend id='legend-svg' class='svg-div'>Place Holder" +
+        "<svg id='svg' class='svg' handle='svg' width = '150px' height = '120px'></svg>" +
+        "</legend>" +
       "</div>" +
 
       // Video
       "<div class='playbackApp' id='playbackApp'>" +
         "<br><br><div id='playback' handle='playback' widget='Widget.Playback'></div>" +
-      "</div>" //+
-     
-      // Overlay text for vector layers when using mapOnClick
-      // "<div id = 'overlay-container' class='overlay-container' style='none'>" +
-      //     "<span class='overlay-text' id='feature-name'></span>" +
-      //     "</span><br><br><span class='overlay-text' id='feature-simulation'></span>" +
-      //     "</span><br><br><span class='overlay-text' id='feature-cycle'></span>" +
-      //     "</span><br><br><span class='overlay-text' id='feature-init-pop'></span>" +
-      //     "</span><br><br><span class='overlay-text' id='feature-current-pop'></span>" +
-      //     "</span><br><br><span class='overlay-text' id='feature-fatal'></span>" +
-      //     "</span><br><br><span class='overlay-text' id='feature-susceptible'></span>" +
-      //     "</span><br><br><span class='overlay-text' id='feature-infected'></span>" +
-      //     "</span><br><br><span class='overlay-text' id='feature-recovered'></span></div>" 
+      "</div>" 
+
     );
   }
 }
