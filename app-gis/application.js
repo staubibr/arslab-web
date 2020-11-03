@@ -90,8 +90,11 @@ export default class Application extends Templated {
       this.OnClear_Click(null);
       return;
     }
-    this.Elem("load").disabled = false;
-    this.Elem("clear").disabled = false;
+    if(this.files.filter(d => d.name.split(".").pop() == "geojson" || d.name.split(".").pop() == "txt").length == 2){
+      this.Elem("load").disabled = false;
+      this.Elem("clear").disabled = false;
+    }
+
   }
 
   // Google Chrome only supports 500mb blobs. The uploaded simulation result file is uploaded to the app in chunks.
@@ -343,6 +346,20 @@ export default class Application extends Templated {
       document.getElementById("legend-svg").firstChild.textContent = "Proportion " + ev.target.value;
       this.RedrawLayerOnMap(this.currentSimulationCycle);
     }
+
+    // Change legend title
+    document.getElementById("legend-svg").firstChild.textContent = "Proportion " + this.currentSIR;
+
+    if(this.currentSIR == "Susceptible"){
+      document.getElementById("SIR-select").selectedIndex = 0;
+    } else if (this.currentSIR == "Infected") {
+      document.getElementById("SIR-select").selectedIndex = 1;
+    } else {
+      document.getElementById("SIR-select").selectedIndex = 2;
+    }
+
+    // Change what is loaded
+
   }
   
   // Create the simulation object when the simulation is first introduced

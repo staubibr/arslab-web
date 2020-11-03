@@ -174,9 +174,10 @@
 .ol-attribution.ol-collapsed ul {
   display: none;
 }
-.ol-attribution.ol-logo-only ul {
+/* .ol-attribution.ol-logo-only ul {
   display: block;
-}
+  
+} */
 .ol-attribution:not(.ol-collapsed) {
   background: rgba(255, 255, 255, 0.8);
 }

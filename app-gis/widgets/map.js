@@ -87,7 +87,7 @@ export default Core.Templatable("Widget.Map", class Map extends Templated {
                 '<div class="sidebar-pane" id="home">' +
                   '<h1 class="sidebar-header">Home<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>'+
                   '<p><a href="https://github.com/staubibr/arslab-dev/tree/master/app-gis" target="new">Click here for Documentation and Source Code</a></p>' +
-                  '<p><a href="https://www.youtube.com/watch?v=liGqAIcnNUo" target="new">Click here for Video Tutorial</a></p>' +
+                  '<p><a href="https://www.youtube.com/watch?v=eAaeGtoMDUQ" target="new">Click here for Video Tutorial</a></p>' +
                   '<p><a href="https://arslab.sce.carleton.ca/" target="new">Click here for ARSLab</a></p>' +
                 '</div>'+
           

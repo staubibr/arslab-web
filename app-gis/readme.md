@@ -102,10 +102,9 @@ In relation to current studies of COVID-19 (as well as future pandemics), such a
     - The population formula is (population - population * fatalities)
 
 ## TODO:
-- Find a better way to clear added items for loading
 - Fix mapOnClick 
   - If one layer is over top another, the code gets wanky
-- Legend SIR doesn't change until simulation is added
+    - See layer switcher
 - Address the .gpkg to .geojson issue 
 - Clean up UI
 - Refactor code 
@@ -123,6 +122,8 @@ In relation to current studies of COVID-19 (as well as future pandemics), such a
 [Tobias Bieniek - Sidebar-v2](https://github.com/Turbo87/sidebar-v2)
 
 [Jonatas Walker - OpenLayers Control Geocoder](https://github.com/jonataswalker/ol-geocoder)
+
+[Jean-Marc Viglino](https://github.com/Viglino/ol-ext)
 
 [Matt Walker - OpenLayers Popup](https://github.com/walkermatt/ol-popup)
 

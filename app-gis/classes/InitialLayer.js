@@ -30,6 +30,7 @@ export default class InitialLayer {
       controls: ol.control.defaults({ zoom: false }).extend([
         new ol.control.Zoom({ className: "custom-zoom" }),
         new ol.control.FullScreen(),
+        new ol.control.Legend({title: "Legend"}),
         new Legend(),
         new ol.control.Sidebar({ element: "sidebar", position: "left" }),
         new ol.control.LayerSwitcher({ groupSelectStyle: "group" }),
