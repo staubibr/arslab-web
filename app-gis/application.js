@@ -56,18 +56,19 @@ export default class Application extends Templated {
 
     this.currentSIR = "Susceptible"
 
-    // Create map container (sidebar, search, zoom, layer switcher, etc.)
+    // Create map container (canvas, sidebar, search, zoom, layer switcher, etc.)
     this.Widget("map").InitLayer();
 
-    // Default legend ("Proportion Susceptible" and colored white to red)
+    // The legend is hidden by default
     this.CreateLegend(Core.Nls("App_Legend_Title"), "translate(8,4)");
-
-    // Hide or show legend
     
-
-    // Read user data 
+    // User uploads data to the program
     this.Node('upload').On("change", this.OnUpload_Change.bind(this));
+
+    // User loads data into the program 
     this.Node('load').On("click", this.OnLoad_Click.bind(this));
+
+    // Clear uploaded files
     this.Node('clear').On("click", this.OnClear_Click.bind(this));
     
     // Change which simulation users wish to manipulate 
@@ -87,20 +88,61 @@ export default class Application extends Templated {
 
   }
 
-
   OnUpload_Change(ev){
-    this.files = this.Widget('upload').files;
-    if(this.files.filter(d => d.name.split(".").pop() == "geojson" || d.name.split(".").pop() == "txt").length > 2){
-      alert("You've entered an invalid number of files.\nOnly insert a .txt and .geojson.")
+    // Read files the user has entered
+    var numFilesBeforeFilter = this.Widget("upload").files.length;
+
+    // Remove files that are not in the correct format
+    this.Widget("upload").files = this.Widget("upload").files.filter( function(item) {
+      var temp = item.name;
+      var ext = temp.split(".").pop();
+      if(ext === "txt" || ext === "geojson"){
+        return true;
+      }else{
+        var Dom = document.querySelector(".files-container").children;
+        for (let index = 0; index < Dom.length; index++) {
+          if (Dom[index].outerText == temp) {
+            Dom[index].remove();
+          }
+        }
+        return false;
+      }
+      
+    });
+    
+    this.files = this.Widget("upload").files;
+
+    if(numFilesBeforeFilter != this.files.length){
+      // Swap thumbs-up icon
+      document
+      .getElementById("upload")
+      .getElementsByTagName("div")[1]
+      .querySelector("i").className = "fas fa-file-upload";
+
+      alert(
+        "An invalid file has been removed.\nThe only accepted file formats are:\n .txt\n .geojson."
+      );
+    }
+
+    // Accept the files if they're valid
+    if (this.files.length > 2) {
+      alert(
+        "You've entered an invalid number of files. All files have been removed."
+      );
       // Should probably deal with this a better way
       this.OnClear_Click(null);
       return;
     }
-    if(this.files.filter(d => d.name.split(".").pop() == "geojson" || d.name.split(".").pop() == "txt").length == 2){
+    if (
+      this.files.length == 2 &&
+      this.files.filter((d) => d.name.split(".").pop() == "geojson").length ==
+        1 &&
+      this.files.filter((d) => d.name.split(".").pop() == "txt").length == 1
+    ) {
+      // Remove zip files if they show up
       this.Elem("load").disabled = false;
       this.Elem("clear").disabled = false;
     }
-
   }
 
   // Google Chrome only supports 500mb blobs. The uploaded simulation result file is uploaded to the app in chunks.
