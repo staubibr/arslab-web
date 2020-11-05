@@ -1,9 +1,10 @@
+// Pandemic Data Format
+// < (initial population - fatalities), number susceptible, number infected, number recovered, number new infected, number new recovered, number fatalities >
+
 export const sortPandemicData = (data) => {
   let lines = data.map((line) => line.split(/\s+/));
   let parsed = [];
   let current = null;
-
-  // <initial population - fatalities, number susceptible, number infected, number recovered, number new infected, number new recovered, number fatalities>
 
   for (var i = 0; i < lines.length; i++) {
     var l = lines[i];

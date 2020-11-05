@@ -1,9 +1,11 @@
 export const simAndCycleSelect = (title, length) => {
+  
   // For manipulate data simulation selector
   var elem = document.createElement("option");
   var elemText = document.createTextNode(
     title + " with " + length + " cycle(s)"
   );
+
   elem.appendChild(elemText);
   var foo = document.getElementById("sim-select");
   foo.appendChild(elem);

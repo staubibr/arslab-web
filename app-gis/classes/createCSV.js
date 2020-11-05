@@ -1,11 +1,13 @@
-export default class CreateCsvFileForDownload {
+export default class CreateCSV {
     get CSV() {
       return this._file;
     }
   
     constructor(transitions) {
+      // Create the CSV
       this._file = this.ToFile(transitions)
 
+      // Make the CSV downloadable on the webpage
       var blob = new Blob([this._file], { type: 'text/csv;charset=utf-8;' });
 
       var link = document.createElement("a");
@@ -29,7 +31,7 @@ export default class CreateCsvFileForDownload {
 		
 		return new File([content], "transitions.csv", { type:"text/plain",endings:'native' });
     }
-  
+    
     ToCSV(c) { return [c.time, c.model, c.port, c.value].join(","); }
   }
   

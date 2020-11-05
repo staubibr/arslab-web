@@ -98,7 +98,7 @@ In relation to current studies of COVID-19 (as well as future pandemics), such a
 
 >>>> Open Web Server for Chrome by clicking the Web Server URL
 
-![Web Server.](/app-gis/webserver.png "Web Server image.")
+![Web Server.](/app-gis/img/webserver.png "Web Server image.")
 
 ##### Development:
 - In `./app-gis/`, there are many folders and files to choose from
@@ -121,22 +121,24 @@ In relation to current studies of COVID-19 (as well as future pandemics), such a
     - The population formula is (population - population * fatalities)
 
 ## TODO:
-- Fix mapOnClick 
-  - If one layer is over top another, the code gets wanky
-    - See layer switcher
-- Hide and show legend 
-- Address the .gpkg to .geojson issue 
-  - Look into [GeoPackage JS](https://github.com/ngageoint/geopackage-js)
-  - For now use [MyGeodata Converter](https://mygeodata.cloud/converter/gpkg-to-geojson) or QGIS to convert .gpkg to .geojson
-  - Could also create a [Python script](https://www.geodose.com/2020/06/pyqgis-tutorial-shapefile-conversion.html)?
-- Clean up UI
-- Refactor code 
-- Integrate with DEVS Web Viewer
-  - Incorporate library of models w/ backend
-- Fix the GeoCoder so it doesn't add itself as a layer
-  - Also maybe use a different GeoCoder? The current one seems to break often if using AdBlock
-- Introduce spatial analysis tools
-- Let users choose what their simulation object will contain
+1. General bug fixes, UI changes, and code refactoring 
+2. Update instructional video demo 
+3. Fix mapOnClick
+   - Code gets wanky when layers are on top of each other
+   - The issue could likely be fixed by looking at the layer switcher
+4. Let users title their simulation 
+5. Let users choose what their simulation object will contain
+6. Add options to the Settings tab
+   - Support for multiple languages 
+7. Allow geopackage files as an accepted file format
+   - Look into [GeoPackage JS](https://github.com/ngageoint/geopackage-js)
+   - For now use [MyGeodata Converter](https://mygeodata.cloud/converter/gpkg-to-geojson) or QGIS to convert .gpkg to .geojson
+   - Could also create a [Python script](https://www.geodose.com/2020/06/pyqgis-tutorial-shapefile-conversion.html) for the time being?
+8. Fix GeoCoder so it does not add itself as a layer
+   - Also maybe use a different GeoCoder? The current one seems to break often if using AdBlock
+9. Integrate with DEVS Web Viewer
+   - Incorporate library of models w/ backend
+10. Introduce spatial analysis tools
 
 ## Credits and Acknowledgements
 

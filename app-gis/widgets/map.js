@@ -77,6 +77,7 @@ export default Core.Templatable("Widget.Map", class Map extends Templated {
                   // '<li><a href="#featureInfoSidebar" role="tab"><i class="fa fa-info"></i></a></li>'+
                 '</ul>'+
 
+                // Lowest sidebar tab (settings)
                 '<ul role="tablist">'+
                   '<li><a href="#settings" role="tab"><i class="fa fa-gear"></i></a></li>'+
                 '</ul>'+
@@ -86,9 +87,11 @@ export default Core.Templatable("Widget.Map", class Map extends Templated {
               '<div class="sidebar-content">' +
                 '<div class="sidebar-pane" id="home">' +
                   '<h1 class="sidebar-header">Home<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>'+
-                  '<p><a href="https://github.com/staubibr/arslab-dev/tree/master/app-gis" target="new">Click here for Documentation and Source Code</a></p>' +
-                  '<p><a href="https://www.youtube.com/watch?v=eAaeGtoMDUQ" target="new">Click here for Video Tutorial</a></p>' +
-                  '<p><a href="https://arslab.sce.carleton.ca/" target="new">Click here for ARSLab</a></p>' +
+                  '<p><h3>Resources</h3></p>' +
+                  '<p><a href="https://github.com/staubibr/arslab-dev/tree/master/app-gis" target="new">Documentation and Source Code</a></p>' +
+                  '<p><a href="https://www.youtube.com/watch?v=eAaeGtoMDUQ" target="new">Video Tutorial</a></p>' +
+                  '<p><h3>Contact</h3></p>' +
+                  '<p><a href="https://arslab.sce.carleton.ca/" target="new">ARSLab</a></p>' +
                 '</div>'+
           
                 '<div class="sidebar-pane" id="loadDataSidebar">'+

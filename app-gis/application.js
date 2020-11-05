@@ -16,15 +16,17 @@ import Model from "../api-web-devs/simulation/model.js";
 import FrameDEVS from "../api-web-devs/simulation/frameDEVS.js";
 import TransitionDEVS from "../api-web-devs/simulation/transitionDEVS.js";
 import CustomParser from "./parsers/customParser.js";
-import CreateCsvFileForDownload from "./classes/CreateCsvFile.js";
+import CreateCSV from "./classes/createCSV.js";
 import Evented from "../api-web-devs/components/evented.js";
 import Port from "../api-web-devs/simulation/port.js";
 import ColorLegend from "./widgets/colorLegend.js";
 
 import { mapOnClick } from "./widgets/mapOnClick.js";
-import { createTransitionFromSimulation } from "../app-gis/functions/simToTransition.js";
+import { simulationToTransition } from "./functions/simulationToTransition.js";
 import { sortPandemicData } from "../app-gis/functions/sortPandemicData.js";
-import { simAndCycleSelect } from "./widgets/simAndCycleSelect.js";
+import { simAndCycleSelect } from "./ui/simAndCycleSelect.js";
+import { filterFiles } from "./functions/filterFiles.js";
+import { sirSelect } from "./ui/sirSelect.js";
 
 /*
 This application is a GIS environment for web-based simulations
@@ -89,26 +91,10 @@ export default class Application extends Templated {
   }
 
   OnUpload_Change(ev){
-    // Read files the user has entered
     var numFilesBeforeFilter = this.Widget("upload").files.length;
 
     // Remove files that are not in the correct format
-    this.Widget("upload").files = this.Widget("upload").files.filter( function(item) {
-      var temp = item.name;
-      var ext = temp.split(".").pop();
-      if(ext === "txt" || ext === "geojson"){
-        return true;
-      }else{
-        var Dom = document.querySelector(".files-container").children;
-        for (let index = 0; index < Dom.length; index++) {
-          if (Dom[index].outerText == temp) {
-            Dom[index].remove();
-          }
-        }
-        return false;
-      }
-      
-    });
+    this.Widget("upload").files = filterFiles(this.Widget("upload").files)
     
     this.files = this.Widget("upload").files;
 
@@ -135,8 +121,7 @@ export default class Application extends Templated {
     }
     if (
       this.files.length == 2 &&
-      this.files.filter((d) => d.name.split(".").pop() == "geojson").length ==
-        1 &&
+      this.files.filter((d) => d.name.split(".").pop() == "geojson").length == 1 &&
       this.files.filter((d) => d.name.split(".").pop() == "txt").length == 1
     ) {
       // Remove zip files if they show up
@@ -146,6 +131,7 @@ export default class Application extends Templated {
   }
 
   // Google Chrome only supports 500mb blobs. The uploaded simulation result file is uploaded to the app in chunks.
+  // File chunking
   OnLoad_Click(ev) {
     this.Elem("wait").hidden = false;
 
@@ -161,9 +147,19 @@ export default class Application extends Templated {
   OnClear_Click(ev){
     // Erase the previous files and disable the load simulation button
     this.files = [];
-    this.Widget('upload').files = [];
-    document.getElementById("upload").getElementsByTagName("div")[2].innerHTML = null;
-    document.getElementById("upload").getElementsByTagName("div")[1].querySelector("i").className = "fas fa-file-upload"
+    this.Widget("upload").files = [];
+
+    // Clear all labels from file upload container
+    document
+      .getElementById("upload")
+      .getElementsByTagName("div")[2].innerHTML = null;
+
+    // Change file upload container icon
+    document
+      .getElementById("upload")
+      .getElementsByTagName("div")[1]
+      .querySelector("i").className = "fas fa-file-upload";
+
     this.Elem("load").disabled = true;
     this.Elem("clear").disabled = true;
   }
@@ -191,13 +187,6 @@ export default class Application extends Templated {
     fileReader.readAsDataURL(f); 
   }
 
-  /* 
-  Purpose: 
-    - Create the vector layer by: 
-  Parameters:
-    fileContent - Content from GeoJSON layer file
-    title - Title from GeoJSON layer file
-  */
   AddVectorLayerToMapCollection() {
     this.layer = new VectorLayer(this.currentSimulationLayerGeoJSON, this.currentSimulationTitle); 
     
@@ -223,9 +212,6 @@ export default class Application extends Templated {
 
   /*
   Purpose: 
-    - Create the initial legend (red) whent the webpage loads
-    - Recreate the the legend on the webpage based on user selection
-      - Also recolors the current simulation vector layer (if there is a current one)
   Paramters:
     title - Name of the legend 
     translate - Where on the webpage the legend will appear
@@ -243,21 +229,11 @@ export default class Application extends Templated {
     this.currentColor = "#FF0000";
     this.currentColorScale = new GetScale(this.currentColor, this.currentNumberOfClasses);
 
-    this.hiddenLegend(title, translate)
-    
-
-    // if(this.hideLegend == true){
-    //   this.hiddenLegend(title, translate)
-    // }else{
-    //   // Draw legend on Map
-    //   this.AppLegend = new ColorLegend(title, translate, this.currentColorScale)
-    // }
-    
-    
+    this.hiddenLegend()
     
   }
 
-  hiddenLegend(title, translate){
+  hiddenLegend(){
     
     document.getElementById("legend-svg").firstChild.textContent = 
     "Legend";
@@ -265,16 +241,6 @@ export default class Application extends Templated {
     const svg = d3.select("svg");
 
     svg.selectAll("*").remove();
-
-    // svg
-    // .append('svg:image')
-    // .attr("xlink:href", function() {return "./legend.png"})
-    // .attr('width', "50")
-    // .attr('height', "50")
-    // .attr("transform", "translate(-5,-14)")
-    // svg.append("g").attr("class", title).attr("transform", translate);
-
-    // svg.select("." + title);
 
     document.getElementById("legend-svg").style.cssText =
       "padding:5px; background-color:rgba(0,60,136,.5); font-size:12px; color: white";
@@ -304,7 +270,11 @@ export default class Application extends Templated {
 
       self.currentColorScale = new GetScale(val, classes);
 
-      self.AppLegend = new ColorLegend(title, translate, self.currentColorScale)
+      if (self.hideLegend == true) {
+          self.recreateLegend(title, translate);
+        } else {
+          self.AppLegend = new ColorLegend( title, translate, self.currentColorScale );
+        }
 
       self.RecolorLayer();
     }, false);
@@ -312,26 +282,31 @@ export default class Application extends Templated {
 
   RecreateLegendClass(title, translate) {
     let self = this;
-    
-    
-    // Recreate the legend if a class change is issued
-    d3.select("#class-select").on("change", function () {
-      self.currentClass = d3.select(this).node().value;
-        self.currentNumberOfClasses = self.currentClass
-        self.currentColorScale = new GetScale(self.currentColor, self.currentClass);
-      if(self.hideLegend == true){
-        self.recreateLegend(title, translate)
-      }else{
-        if(self.DataFromFiles != undefined){
-          var currentDataFileIndex = document.getElementById('sim-select').selectedIndex;
-          self.DataFromFiles[currentDataFileIndex].layerClasses = self.currentClass;
-        }
-        self.AppLegend = new ColorLegend(title, translate, self.currentColorScale)
-      }
-      
 
-      self.RecolorLayer();
-    }, false);
+    // Recreate the legend if a class change is issued
+    d3.select("#class-select").on(
+      "change",
+      function () {
+        self.currentClass = d3.select(this).node().value;
+        self.currentNumberOfClasses = self.currentClass;
+        self.currentColorScale = new GetScale( self.currentColor, self.currentClass );
+        if (self.hideLegend == true) {
+          self.recreateLegend(title, translate);
+        } else {
+          self.AppLegend = new ColorLegend( title, translate, self.currentColorScale );
+        }
+        if (self.DataFromFiles != undefined) {
+          var currentDataFileIndex = document.getElementById("sim-select")
+            .selectedIndex;
+
+          self.DataFromFiles[currentDataFileIndex].layerClasses =
+            self.currentClass;
+        }
+
+        self.RecolorLayer();
+      },
+      false
+    );
   }
 
   hideOrShowlegend(title, translate){
@@ -343,7 +318,7 @@ export default class Application extends Templated {
       // Use document.getElementById("legend-svg").style.width = "80px" instead?
       if (self.hideLegend == false) {
         self.hideLegend  = true;
-        self.hiddenLegend(title, translate)
+        self.hiddenLegend()
       } 
       else{
         self.hideLegend  = false;
@@ -379,7 +354,7 @@ export default class Application extends Templated {
   */
   OnSimulationSelectChange(ev){
     this.PreviousSimulationToCurrentSimulation(document.getElementById('sim-select').selectedIndex);
-    this.UpdateLegendToCurrentSimulation(Core.Nls("App_Legend_Title"), "translate(23,5)");
+    this.UpdateLegendToCurrentSimulation(Core.Nls("App_Legend_Title"), "translate(8,4)");
     this.UpdateSimulationCycleSelectorToCurrentSimulation();
   }
 
@@ -396,7 +371,6 @@ export default class Application extends Templated {
 
   UpdateLegendToCurrentSimulation(title, translate){
     this.currentColorScale = new GetScale(this.currentColor, this.currentNumberOfClasses);
-    let scale = this.currentColorScale;
 
     this.RedrawLayerOnMap(this.currentSimulationCycle);
 
@@ -404,30 +378,11 @@ export default class Application extends Templated {
 
     document.getElementById("legend-svg").firstChild.textContent = this.currentSIR;
 
-    if(this.currentSIR == "Susceptible"){
-      document.getElementById("SIR-select").selectedIndex = 0;
-    } else if (this.currentSIR == "Infected") {
-      document.getElementById("SIR-select").selectedIndex = 1;
-    } else {
-      document.getElementById("SIR-select").selectedIndex = 2;
-    }
+    sirSelect(this.currentSIR)
 
     document.getElementById('class-select').selectedIndex = this.currentNumberOfClasses == 5 ? 1 : 0
 
-    const svg = d3.select("svg");
-
-    svg.selectAll("*").remove();
-
-    svg.append("g").attr("class", title).attr("transform", translate);
-    
-
-    var colorLegend = d3
-      .legendColor()
-      .labelFormat(d3.format(".2f"))
-      // To actually color the legend based on our chosen colors
-      .scale(scale.d3Scale);
-
-    svg.select("." + title).call(colorLegend);
+    this.AppLegend = new ColorLegend(title, translate, this.currentColorScale)
   }
 
   UpdateSimulationCycleSelectorToCurrentSimulation(){
@@ -467,18 +422,15 @@ export default class Application extends Templated {
       this.RedrawLayerOnMap(this.currentSimulationCycle);
     }
 
-    // Change legend title
+    // This is to prevent us from changing the svg legend "button"
     if(document.getElementById("legend-svg").style.width== "120px"){
       document.getElementById("legend-svg").firstChild.textContent = this.currentSIR;
     }
 
-    if(this.currentSIR == "Susceptible"){
-      document.getElementById("SIR-select").selectedIndex = 0;
-    } else if (this.currentSIR == "Infected") {
-      document.getElementById("SIR-select").selectedIndex = 1;
-    } else {
-      document.getElementById("SIR-select").selectedIndex = 2;
-    }
+    sirSelect(this.currentSIR)
+    
+
+    
 
   }
   
@@ -545,7 +497,7 @@ export default class Application extends Templated {
 
     this.simulation = simulation;
 
-    this.transitions = createTransitionFromSimulation(simulation.frames)
+    this.transitions = simulationToTransition(simulation.frames)
 
     this.ArrayOfTransitions(this.transitions, this.currentSimulationTitle)
 
@@ -562,7 +514,7 @@ export default class Application extends Templated {
 
   OnButtonDownload_Click(ev) {
     var index = document.getElementById('sim-download').selectedIndex
-    new CreateCsvFileForDownload(this.allTransitions[index].transitionData);
+    new CreateCSV(this.allTransitions[index].transitionData);
   }
 
     /*

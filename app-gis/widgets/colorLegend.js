@@ -1,6 +1,5 @@
 export default class ColorLegend {
   constructor(title, translate, scale) {
-
     document.getElementById("legend-svg").style.cssText =
       "width: 120px; height: 110px; background-color: rgba(255, 255, 255, 0.466)";
 

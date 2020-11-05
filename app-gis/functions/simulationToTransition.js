@@ -1,4 +1,4 @@
-export const createTransitionFromSimulation = (data) => { 
+export const simulationToTransition = (data) => { 
     /*
     SimulationDEVS {cache, frames, index, listeners, models, name, selected, simulator, state, transitions, type}
     - SimulationDEVS.frames prints [FrameDEVS, FrameDEVS,..., FrameDEVS]
