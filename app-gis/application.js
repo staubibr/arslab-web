@@ -127,6 +127,15 @@ export default class Application extends Templated {
       // Remove zip files if they show up
       this.Elem("load").disabled = false;
       this.Elem("clear").disabled = false;
+
+      var Dom = document.querySelector(".files-container")
+
+      Dom.addEventListener("click", function () {
+        if(Dom.children.length < 2 ){
+          self.Elem("load").disabled = true;
+          self.Elem("clear").disabled = true;
+        }
+      })
     }
   }
 
