@@ -129,11 +129,11 @@ export default class Application extends Templated {
       this.Elem("clear").disabled = false;
 
       var Dom = document.querySelector(".files-container")
-
+      let self = this;
       Dom.addEventListener("click", function () {
         if(Dom.children.length < 2 ){
-          this.Elem("load").disabled = true;
-          this.Elem("clear").disabled = true;
+          self.Elem("load").disabled = true;
+          self.Elem("clear").disabled = true;
         }
       })
     }
