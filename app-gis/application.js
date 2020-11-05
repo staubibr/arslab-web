@@ -106,7 +106,7 @@ export default class Application extends Templated {
       .querySelector("i").className = "fas fa-file-upload";
 
       alert(
-        "An invalid file has been removed.\nThe only accepted file formats are:\n .txt\n .geojson."
+        "One or more invalid files have been removed.\nThe only accepted file formats are:\n .txt\n .geojson."
       );
     }
 
@@ -217,13 +217,13 @@ export default class Application extends Templated {
     translate - Where on the webpage the legend will appear
   */
   CreateLegend(title, translate) {
-    this.InitialLegend(title, translate);
+    this.InitLegend();
     this.RecreateLegendColor(title, translate);
     this.RecreateLegendClass(title, translate);
     this.hideOrShowlegend(title, translate);
   }
 
-  InitialLegend(title, translate) {
+  InitLegend() {
     // Initial legend settings 
     this.currentNumberOfClasses = 4;
     this.currentColor = "#FF0000";
@@ -418,7 +418,6 @@ export default class Application extends Templated {
     // Change layer if there is one
     if(this.currentSimulationTitle != undefined){
       this.DataFromFiles[currentDataFileIndex].layerSIR = ev.target.value;
-      //document.getElementById("legend-svg").firstChild.textContent =  ev.target.value;
       this.RedrawLayerOnMap(this.currentSimulationCycle);
     }
 
@@ -428,10 +427,6 @@ export default class Application extends Templated {
     }
 
     sirSelect(this.currentSIR)
-    
-
-    
-
   }
   
   // Create the simulation object when the simulation is first introduced
@@ -470,6 +465,7 @@ export default class Application extends Templated {
       this.currentSIR
     )
 
+    // Turn into a function
     var ports = ["Susceptible", "Infected", "Recovered", ]
     ports = ports.map(p => new Port(p, "output"))
 
@@ -517,25 +513,13 @@ export default class Application extends Templated {
     new CreateCSV(this.allTransitions[index].transitionData);
   }
 
-    /*
-    Purpose: Information we may find useful to access throughout the program
-    @Method: ArrayOfTransitions(data, title)
-      - From simulation object, we store created transitions in this method via array
-      - Used for letting users download a CSV of the currently selected simulation
-    @Method: KeepTrackOfSubmittedUserFiles(data, title, layerFile)
-      - When a user finishes inserted their files, we get an array composed of an object holding:
-        - Simulation title
-        - Simulation data
-        - GeoJSON layer file content
-      - The array length increases as the user adds more simulations to the webpage
-    */
-  ArrayOfTransitions(data, title){
-    if(this.allTransitions == undefined){ this.allTransitions = new Array; }
-    this.allTransitions.push({simulation: title, transitionData: data});
-  }
-
-  CurrentColorScale(scale) { this.currentColorScale = scale; }
-
+  /*
+    - When a user finishes inserted their files, we get an array composed of an object holding:
+      - Simulation title
+      - Simulation data
+      - GeoJSON layer file content...
+    - The array length increases as the user adds more simulations to the webpage
+  */
   KeepTrackOfSubmittedUserFiles(data, title, layerFile, classNum, color, cycle, SIR){
     if(this.DataFromFiles == undefined){ this.DataFromFiles = new Array; }
     this.DataFromFiles.push({
@@ -547,6 +531,15 @@ export default class Application extends Templated {
         layerCycle: cycle,
         layerSIR: SIR});
   }
+
+  //  From simulation object, we store created transitions in this method via array
+  //  Used for letting users download a CSV of the currently selected simulation
+  ArrayOfTransitions(data, title){
+    if(this.allTransitions == undefined){ this.allTransitions = new Array; }
+    this.allTransitions.push({simulation: title, transitionData: data});
+  }
+
+  CurrentColorScale(scale) { this.currentColorScale = scale; }
 
   CurrentSIRselected(SIR){ this.currentSIR = SIR; }
 
