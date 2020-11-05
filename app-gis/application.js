@@ -132,8 +132,8 @@ export default class Application extends Templated {
 
       Dom.addEventListener("click", function () {
         if(Dom.children.length < 2 ){
-          self.Elem("load").disabled = true;
-          self.Elem("clear").disabled = true;
+          this.Elem("load").disabled = true;
+          this.Elem("clear").disabled = true;
         }
       })
     }
