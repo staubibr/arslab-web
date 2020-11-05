@@ -101,13 +101,23 @@ In relation to current studies of COVID-19 (as well as future pandemics), such a
 ![Web Server.](/app-gis/img/webserver.png "Web Server image.")
 
 ##### Development:
-- In `./app-gis/`, there are many folders and files to choose from
-  - Folder `./app-gis/classes` contains class level functions
-  - Folder `./app-gis/widgets` contains code for UI functions
-  - Folder `./app-gis/data` has sample data 
-  - Folder `./app-gis/ol` contains OpenLayers packages. 
-    - OpenLayers can be easily bundled with gis applications through Rollup, Webpack, etc. 
-  - File `app-gis/application.js` contains a bulk of the work needed to run the gis application
+
+Features: 
+  - OpenStreetMap as base layer / canvas
+    - Zoom in/out
+    - Layer Switcher
+    - Search bar
+    - Sidebar 
+      - Home 
+      - Load Simulation 
+      - Manipulating Simulations
+        - Color
+        - Classes
+        - SIR
+      - Download Simulation
+      - Playback
+    - Legend
+    - Interacting with Simulations Shown on Map
 
 ##### Structure of Simulation Results Text File:
     State for model _DAUID is <population, number of susceptible, number of infected, number of recovered, number of new infected, number new recovered, number fatalities>
@@ -173,6 +183,8 @@ In relation to current studies of COVID-19 (as well as future pandemics), such a
 #### OpenLayers
 
 **Note:** Coordinate format is Longitude / Latitude. 
+
+OpenLayers can be easily bundled with GIS applications through Rollup, Webpack, etc. 
 
 [ol.Map](https://openlayers.org/en/latest/apidoc/module-ol_Map-Map.html)  
 

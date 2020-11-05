@@ -11,10 +11,6 @@ import Map from "./widgets/map.js";
 import Box from "../api-web-devs/ui/box-input-files.js";
 import VectorLayer from "./classes/vectorLayer.js";
 import GetScale from "./classes/getScale.js";
-import SimulationDEVS from "../api-web-devs/simulation/simulationDEVS.js";
-import Model from "../api-web-devs/simulation/model.js";
-import FrameDEVS from "../api-web-devs/simulation/frameDEVS.js";
-import TransitionDEVS from "../api-web-devs/simulation/transitionDEVS.js";
 import CustomParser from "./parsers/customParser.js";
 import CreateCSV from "./classes/createCSV.js";
 import Evented from "../api-web-devs/components/evented.js";
@@ -27,27 +23,11 @@ import { sortPandemicData } from "../app-gis/functions/sortPandemicData.js";
 import { simAndCycleSelect } from "./ui/simAndCycleSelect.js";
 import { filterFiles } from "./functions/filterFiles.js";
 import { sirSelect } from "./ui/sirSelect.js";
-
-/*
-This application is a GIS environment for web-based simulations
-
-Features: 
-  - OpenStreetMap as base layer / canvas
-    - Zoom in/out
-    - Layer Switcher
-    - Search bar
-    - Sidebar 
-      - Home 
-      - Load Simulation 
-      - Manipulating Simulations
-      - Download Simulation
-      - Playback
-    - Legend
-    - Interacting with Simulations Shown on Map
-*/
+import { createSimulationObject } from "./functions/simulationObject.js";
 
 export default class Application extends Templated {
   constructor(node) {
+    // For inheritance 
     super(node);
 
     this.settings = new oSettings()
@@ -57,6 +37,12 @@ export default class Application extends Templated {
     this.hideLegend = true;
 
     this.currentSIR = "Susceptible"
+
+    // Initial legend settings 
+    this.currentNumberOfClasses = 4;
+    this.currentColor = "#FF0000";
+    this.currentColorScale = new GetScale(this.currentColor, this.currentNumberOfClasses);
+    this.AppLegend = new ColorLegend();
 
     // Create map container (canvas, sidebar, search, zoom, layer switcher, etc.)
     this.Widget("map").InitLayer();
@@ -101,9 +87,9 @@ export default class Application extends Templated {
     if(numFilesBeforeFilter != this.files.length){
       // Swap thumbs-up icon
       document
-      .getElementById("upload")
-      .getElementsByTagName("div")[1]
-      .querySelector("i").className = "fas fa-file-upload";
+        .getElementById("upload")
+        .getElementsByTagName("div")[1]
+        .querySelector("i").className = "fas fa-file-upload";
 
       alert(
         "One or more invalid files have been removed.\nThe only accepted file formats are:\n .txt\n .geojson."
@@ -154,7 +140,11 @@ export default class Application extends Templated {
   }
   
   OnClear_Click(ev){
-    // Erase the previous files and disable the load simulation button
+    this.clearUploadedFiles()
+  }
+
+  clearUploadedFiles(){
+    // Erase files and disable the load simulation button
     this.files = [];
     this.Widget("upload").files = [];
 
@@ -226,39 +216,13 @@ export default class Application extends Templated {
     translate - Where on the webpage the legend will appear
   */
   CreateLegend(title, translate) {
-    this.InitLegend();
+    this.AppLegend.hideLegend()
+    
+    // Legend listeners
     this.RecreateLegendColor(title, translate);
     this.RecreateLegendClass(title, translate);
     this.hideOrShowlegend(title, translate);
   }
-
-  InitLegend() {
-    // Initial legend settings 
-    this.currentNumberOfClasses = 4;
-    this.currentColor = "#FF0000";
-    this.currentColorScale = new GetScale(this.currentColor, this.currentNumberOfClasses);
-
-    this.hiddenLegend()
-    
-  }
-
-  hiddenLegend(){
-    
-    document.getElementById("legend-svg").firstChild.textContent = 
-    "Legend";
-
-    const svg = d3.select("svg");
-
-    svg.selectAll("*").remove();
-
-    document.getElementById("legend-svg").style.cssText =
-      "padding:5px; background-color:rgba(0,60,136,.5); font-size:12px; color: white";
-    document.getElementById("legend-svg").style.width = "40px";
-    document.getElementById("legend-svg").style.height = "15px";
-
-
-  }
-
 
   RecreateLegendColor(title, translate) {
     let self = this;
@@ -279,11 +243,8 @@ export default class Application extends Templated {
 
       self.currentColorScale = new GetScale(val, classes);
 
-      if (self.hideLegend == true) {
-          self.recreateLegend(title, translate);
-        } else {
-          self.AppLegend = new ColorLegend( title, translate, self.currentColorScale );
-        }
+      self.AppLegend.showLegend( title, translate, self.currentColorScale, self.currentSIR);
+
 
       self.RecolorLayer();
     }, false);
@@ -299,11 +260,8 @@ export default class Application extends Templated {
         self.currentClass = d3.select(this).node().value;
         self.currentNumberOfClasses = self.currentClass;
         self.currentColorScale = new GetScale( self.currentColor, self.currentClass );
-        if (self.hideLegend == true) {
-          self.recreateLegend(title, translate);
-        } else {
-          self.AppLegend = new ColorLegend( title, translate, self.currentColorScale );
-        }
+        self.AppLegend.showLegend( title, translate, self.currentColorScale, self.currentSIR);
+
         if (self.DataFromFiles != undefined) {
           var currentDataFileIndex = document.getElementById("sim-select")
             .selectedIndex;
@@ -319,30 +277,25 @@ export default class Application extends Templated {
   }
 
   hideOrShowlegend(title, translate){
-    var legend = document.querySelector(".legend-svg");
 
     let self = this;
 
-    legend.addEventListener("click", function () {
-      // Use document.getElementById("legend-svg").style.width = "80px" instead?
-      if (self.hideLegend == false) {
-        self.hideLegend  = true;
-        self.hiddenLegend()
-      } 
-      else{
-        self.hideLegend  = false;
-        self.recreateLegend(title, translate)
-        
-      }
-    });
+    document
+      .querySelector(".legend-svg")
+      .addEventListener("click", function () {
 
-  }
+        self.AppLegend.hideOrShowLegend(
+          title,
+          translate,
+          self.currentColorScale,
+          self.hideLegend,
+          self.currentSIR
+        );
 
-  recreateLegend(title, translate){
-    this.currentColorScale = new GetScale(this.currentColor, this.currentNumberOfClasses);
-    document.getElementById("legend-svg").firstChild.textContent = this.currentSIR
-    this.AppLegend = new ColorLegend(title, translate, this.currentColorScale)
-    
+        if (self.hideLegend == false) { self.hideLegend = true; } 
+        else { self.hideLegend = false; }
+      });
+
   }
 
   RecolorLayer() {
@@ -385,13 +338,11 @@ export default class Application extends Templated {
 
     document.getElementById('colorOne').value = this.currentColor
 
-    document.getElementById("legend-svg").firstChild.textContent = this.currentSIR;
-
     sirSelect(this.currentSIR)
 
     document.getElementById('class-select').selectedIndex = this.currentNumberOfClasses == 5 ? 1 : 0
 
-    this.AppLegend = new ColorLegend(title, translate, this.currentColorScale)
+    this.AppLegend.showLegend(title, translate, this.currentColorScale, this.currentSIR)
   }
 
   UpdateSimulationCycleSelectorToCurrentSimulation(){
@@ -457,13 +408,22 @@ export default class Application extends Templated {
   }
 
   OnSimulation_Move(ev){
-    this.layer.ColorLayer(this.currentColorScale, this.data[this.simulation.state.i].messages, this.currentSIR);
+    /*
+      Uncaught TypeError: Cannot read property 'Reverse' of undefined
+      at SimulationDEVS.GoToPreviousFrame (simulation.js:132)
+        --> var reverse = frame.Reverse();
+    */
+
+    // Until the above error is solved
+    if( this.data[this.simulation.state.i] != undefined ){
+      this.layer.ColorLayer(this.currentColorScale, this.data[this.simulation.state.i].messages, this.currentSIR);
+    }    
   }
 
   CreateSimulation(features) {
     let data = sortPandemicData(this.tempData);
     this.data = data;
-    //ev.frame.transitions.filter(t => t.port == "Infected")
+
     simAndCycleSelect(this.currentSimulationTitle, data.length-1)
     this.KeepTrackOfSubmittedUserFiles(data, 
       this.currentSimulationTitle, 
@@ -474,47 +434,19 @@ export default class Application extends Templated {
       this.currentSIR
     )
 
-    // Turn into a function
+    // Eventually let users select ports based on simulation type 
+    // Probably store the ports in KeepTrackOfSubmittedUserFiles()
     var ports = ["Susceptible", "Infected", "Recovered", ]
-    ports = ports.map(p => new Port(p, "output"))
 
-    var models = features.map((f) => {
-      return new Model(f.getProperties().dauid, "atomic", null, ports);
-    });
+    this.simulation = createSimulationObject(features, ports, data);
 
-    var simulation = new SimulationDEVS("hoya", "custom", "Cell-DEVS", models);
-
-    for (var i = 0; i < data.length; i++) {
-      
-      var frame = new FrameDEVS(data[i].time);
-
-      simulation.AddFrame(frame);
-
-      for (var id in data[i].messages) {
-        ports.forEach(p => {
-          var transition = new TransitionDEVS(id, p.name, data[i].messages[id][p.name]);
-          frame.AddTransition(transition);
-        })
-        
-      }
-    }
-    simulation.Initialize(10);
-
-    this.simulation = simulation;
-
-    this.transitions = simulationToTransition(simulation.frames)
+    this.transitions = simulationToTransition(this.simulation.frames)
 
     this.ArrayOfTransitions(this.transitions, this.currentSimulationTitle)
 
     // Let the download button be clickable
     this.Elem("btnDownload").disabled = false;
-    // Erase the previous files and disable the load simulation button
-    this.file = [];
-    this.Widget('upload').files = [];
-    document.getElementById("upload").getElementsByTagName("div")[2].innerHTML = null;
-    document.getElementById("upload").getElementsByTagName("div")[1].querySelector("i").className = "fas fa-file-upload"
-    this.Elem("load").disabled = true;
-    this.Elem("clear").disabled = true;
+    this.clearUploadedFiles()
   }
 
   OnButtonDownload_Click(ev) {
@@ -554,7 +486,6 @@ export default class Application extends Templated {
 
   Template() {
     return (
-      
       // Map container
       "<div id='map' handle='map' widget='Widget.Map' class='map' ></div>" +
 
