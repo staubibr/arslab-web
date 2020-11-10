@@ -11,3 +11,30 @@ html, body, select, .popup {
 	font-family: 'Varela Round', sans-serif;
     font-size: 11pt;
 }
+
+.playback {
+	position: absolute;
+    z-index: 5000;
+    bottom: 30px;
+    left: 50%;
+    transform: translate(-50%,0);
+    padding: 2px;
+    background: rgba(255,255,255,.8);
+    border-radius: 4px;
+}
+
+.playback button {
+	height: 30px;
+    width: 30px;
+    background-color: rgba(0,60,136,.5);
+    color: #eee;
+    font-size: 15px;
+    border: none;
+    border-bottom: solid 2px #0051A3;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.playback .controls button:not(:last-child) {
+    border-right-color: #eee;
+}

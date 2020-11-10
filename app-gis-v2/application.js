@@ -70,6 +70,7 @@ export default class Main extends Templated {
 	Template() {
 		return	"<main handle='main'>" +
 					"<div handle='map' class='map'></div>" +
+					"<div handle='playback' widget='Widget.Playback'></div>" +
 				"</main>";
 	}
 }
