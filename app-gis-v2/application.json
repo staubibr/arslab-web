@@ -1,3 +1,9 @@
 {
-   
+	"layers": [{
+		"url" : "data/DA_Ottawa.geojson",
+		"label" : "Dissemination Areas (DA)"
+	},{
+		"url" : "data/hospitals.geojson",
+		"label" : "Hospitals"
+	}]
 }

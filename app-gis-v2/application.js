@@ -23,10 +23,15 @@ export default class Main extends Templated {
 		
 		this.map.SetView([-75.7, 45.3], 10);
 		
-		var p1 = Net.JSON("http://localhost:81/app-gis-v2/data/DA_Ottawa.geojson");
-		var p2 = Net.JSON("http://localhost:81/app-gis-v2/data/Hospitals.geojson");
+		var defs = config.layers.map(l => {
+			var base = location.href.split("/").slice(0,-1);
+			
+			base.push(l.url);
+			
+			return Net.JSON(base.join("/"));			
+		});
 		
-		Promise.all([p1, p2]).then(this.onData_Loaded.bind(this));
+		Promise.all(defs).then(this.onData_Loaded.bind(this));
 	}
 	
 	onData_Loaded(data) {
