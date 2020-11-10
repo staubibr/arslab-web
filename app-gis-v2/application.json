@@ -3,7 +3,7 @@
 		"url" : "data/DA_Ottawa.geojson",
 		"label" : "Dissemination Areas (DA)"
 	},{
-		"url" : "data/hospitals.geojson",
+		"url" : "data/Hospitals.geojson",
 		"label" : "Hospitals"
 	}]
 }
