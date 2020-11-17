@@ -22,7 +22,11 @@ export default class Main extends Templated {
 		this.map = new Map(this.Elem("map"), Map.BasemapOSM());
 		
 		this.map.SetView([-75.7, 45.3], 10);
-		
+
+		this.baseMapTitle = this.map.OL.getLayers().item(0).get("title")
+
+		this.map.addLayerToGroup(Map.SatelliteOSM(), this.baseMapTitle)
+
 		var defs = config.layers.map(l => {
 			var base = location.href.split("/").slice(0,-1);
 			

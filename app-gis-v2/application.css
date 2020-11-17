@@ -38,3 +38,21 @@ html, body, select, .popup {
 .playback .controls button:not(:last-child) {
     border-right-color: #eee;
 }
+
+.ol-unselectable.ol-control.layer-switcher {
+    background-color: transparent;
+    color: rgb(10, 9, 9);
+    font-family: sans-serif;
+    font-size: smaller;
+    position: absolute;
+    right: 10px;
+    top: 50px;
+    width: 30em;
+    
+}
+
+.ol-unselectable.ol-control button {
+    background-size: cover;
+    font-size: 1.14em;
+    background-color: rgba(0,60,136,.5);
+}
