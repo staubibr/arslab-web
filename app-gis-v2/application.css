@@ -14,8 +14,7 @@ html, body, select, .popup {
 
 .playback {
 	position: absolute;
-    z-index: 5000;
-    bottom: 30px;
+    bottom: 8px;
     left: 50%;
     transform: translate(-50%,0);
     padding: 2px;
