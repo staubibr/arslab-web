@@ -24,8 +24,6 @@ export default class InitialLayer {
     this._map = new ol.Map({
       renderer: "canvas",
       target: target,
-      // In case we want to add more base maps later, replace [layers] with
-      // [new ol.layer.Group({title: 'Base map', layers: [layer]})]
       layers: [layer],
       controls: ol.control.defaults({ zoom: false }).extend([
         new ol.control.Zoom({ className: "custom-zoom" }),
