@@ -6,6 +6,17 @@ Build a GIS environment based visualization for large scale spatial simulations 
 
 ## Background (Draft)
 
+Current text:
+- COVID impact 
+- Addressing COVID
+- TFL and Zhong
+- Lots of data
+- GIS web apps may help
+- GIS web app evolution and their usefulness / tools
+- The move towards remote work and how GIS web apps can help
+- Application of our tool
+
+
 ###### Might be useful? 
 - https://www.cmaj.ca/content/192/37/E1074 
 
