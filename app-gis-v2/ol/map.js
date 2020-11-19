@@ -28,14 +28,13 @@ export default class Map {
 	}
 
 	addLayerToGroup(layerToAdd, groupTitle){
+		// https://gis.stackexchange.com/questions/165447/dynamically-add-layers-to-layer-group
 		var innerLayers = [];
-		//loop each layer of the map
+		// loop through all the layers in the map
 		this.OL.getLayers().forEach(function (layer) {
 		if (layer instanceof ol.layer.Group) {
-			// look if the group layer already exists
-			if (layer.get("title") === groupTitle) {
-			// check if layer.getLayers exists
-			if (layer.getLayers) {
+			// Find the ol.layer.Group and see if they have layers
+			if (layer.get("title") === groupTitle && layer.getLayers) {
 				// get inner layers from group layer as Collection
 				innerLayers = layer.getLayers();
 				// new layer to Collection
@@ -44,7 +43,6 @@ export default class Map {
 				// set the layer collection of the grouplayer
 				layer.setLayers(innerLayers);
 				}
-			}
 			}
 		}
 		});
@@ -55,9 +53,9 @@ export default class Map {
 	
 		var format = new ol.format.GeoJSON({ featureProjection : proj });
 		
-		var vs = new ol.source.Vector({features: format.readFeatures(json) });
+		var vs = new ol.source.Vector({features: format.readFeatures(json)});
 		
-		return this.AddLayer(new ol.layer.Vector({ source: vs }));
+		return this.AddLayer(new ol.layer.Vector({ source: vs, title: json.name  }));
 	}
 	
 	SetView(coord, zoom) {
