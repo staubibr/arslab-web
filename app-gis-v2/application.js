@@ -9,6 +9,7 @@ import oSettings from '../api-web-devs/components/settings.js';
 import Standardized from '../api-web-devs/parsers/standardized.js';
 import SimulationDEVS from '../api-web-devs/simulation/simulationDEVS.js';
 import Playback from '../api-web-devs/widgets/playback.js';
+import { mapOnClick } from "./mapOnClick.js";
 
 import Map from './ol/map.js';
 
@@ -36,6 +37,8 @@ export default class Main extends Templated {
 		});
 		
 		Promise.all(defs).then(this.onData_Loaded.bind(this));
+
+		
 	}
 	
 	onData_Loaded(data) {
@@ -43,6 +46,8 @@ export default class Main extends Templated {
 			var layer = this.map.AddGeoJsonLayer(d);
 			
 			layer.setStyle(this.StyleFunction);
+
+			mapOnClick(d, this.map.OL)
 		});
 	}
 	
