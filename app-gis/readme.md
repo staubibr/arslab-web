@@ -6,6 +6,31 @@ Build a GIS environment based visualization for large scale spatial simulations 
 
 ## Background (Draft)
 
+Changes to be made:
+- Remove the part about COVID, needs to be more generic to apply to anything
+- Include a bit about map-based visualization (MBV)
+  - https://dl.acm.org/doi/abs/10.1145/3206505.3206516
+  - https://dl.acm.org/doi/10.1145/1998076.1998169
+  - https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7177515/
+  - https://www.tandfonline.com/doi/full/10.1080/23729333.2017.1288534
+  - https://www.frontiersin.org/articles/10.3389/fcomp.2020.00032/full
+- Reference symbology guru Jacques Bertin (1967 / 1970)
+  - He wrote on visual variables (different ways to view geospatial data)
+  - Related to simulation and how we can use it with simulation results 
+  - Ex. The more cases we have at a hospital, the larger the circle becomes
+  - Resources:
+    - https://gistbok.ucgis.org/bok-topics/symbolization-and-visual-variables#:~:text=Jacques%20Bertin%20(1967%2F2010),quantitative%20characteristics%20into%20each%20symbol
+    - https://www.axismaps.com/guide/visual-variables
+    - https://www.researchgate.net/publication/317266613_Visual_Variables
+  - visual variables: 
+    - position
+    - size
+    - shape
+    - value
+    - color
+    - orientation
+    - texture.
+
 ##### GIS
 
 What is it? What can it do?
@@ -14,8 +39,6 @@ What is it? What can it do?
 What can GIS reveal in data? 
 
 In Geography, there are various forms of thematic mapping. For the sake of this paper, the focus will be on choropleth maps as the thematic map for presenting the COVID-19 spread model from simulation results. By shading affected regions by proportion or other statistical variables, users can recognize the impact of COVID-19 within a geographic region. 
-
-
 
   - Tools available
     - Thematic mapping
@@ -40,9 +63,6 @@ Since the inception of TFL, researchers in the GIS community have employed such 
 
 Modern open-source GIS libraries, such as OpenLayers, provide developers with the necessary tools to load and display data into dynamic map-based web applications. OpenLayers is entirely free, easy to customize, and supports vector data rendering. D3JS, a lightweight data visualization library, also has some limited mapping capability that could be incorporated into a map-based web application. These web mapping libraries were used to develop the GIS Simulation Explorer application to support current studies of COVID-19 (as well as future pandemics) through remote collaboration. In the application's current state, simulation results are mapped to vector files, and then displayed for observation. 
 
-
-In the case of the GIS Simulation Explorer, the web mapping libraries used enable 
-
 OpenStreetMap...
 
 Load files and they get read through openlayers 
@@ -53,8 +73,6 @@ what is it
 future applications and improvements 
 
 Given the unprecedented amount of data surrounding the COVID-19 pandemic, local / national / global real-time, non-real-time, or simulated disease cases must be carefully analyzed to recognize high risk geographical regions which may be susceptible to outbreaks or further disease spreading.
-
-
 
 
 (summarize the points to maybe show why software such as this is useful if implemented on a global scale?)
@@ -226,6 +244,8 @@ OpenLayers can be easily bundled with GIS applications through Rollup, Webpack, 
 [ol.geocoder](https://github.com/jonataswalker/ol-geocoder)
 
 [ol.control.Sidebar](https://github.com/Turbo87/sidebar-v2/blob/master/doc/usage.md)
+
+[3rd Party Extensions](https://openlayers.org/3rd-party/)
 
 #### Web Development
 
