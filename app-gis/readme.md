@@ -41,7 +41,6 @@ Since the inception of TFL, researchers in the GIS community have employed such 
 Modern open-source GIS libraries, such as OpenLayers, provide developers with the necessary tools to load and display data into dynamic map-based web applications. OpenLayers is entirely free, easy to customize, and supports vector data rendering. D3JS, a lightweight data visualization library, also has some limited mapping capability that could be incorporated into a map-based web application. These web mapping libraries were used to develop the GIS Simulation Explorer application to support current studies of COVID-19 (as well as future pandemics) through remote collaboration. In the application's current state, simulation results are mapped to vector files, and then displayed for observation. 
 
 
-
 In the case of the GIS Simulation Explorer, the web mapping libraries used enable 
 
 OpenStreetMap...
