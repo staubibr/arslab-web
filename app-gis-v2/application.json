@@ -1,9 +1,40 @@
 {
 	"layers": [{
 		"url" : "data/DA_Ottawa.geojson",
-		"label" : "Dissemination Areas (DA)"
+		"label" : "Dissemination Areas (DA)",
+		"style" : {
+			"type" : "polygon",
+			"fill" : "rgba(194, 231, 231, 1)",
+			"stroke" : {
+				"width" : 0.5,
+				"color" : "black"
+			}
+		}
 	},{
 		"url" : "data/Hospitals.geojson",
-		"label" : "Hospitals"
-	}]
+		"label" : "Hospitals",
+		"style" : {
+			"type" : "point",
+			"image" : "circle",
+			"radius" : 4,
+			"fill" : "rgba(240, 78, 14, 1)",
+			"stroke" : {
+				"width" : 1,
+				"color" : "black"
+			}
+		}
+	}],
+	"styles" : {
+		"highlight": {
+			"type" : "polygon",
+			"fill" : "rgba(255,255,255,0.7)",
+			"stroke" : {
+				"width" : 1,
+				"color" : "#3399CC"
+			}
+		}
+	},
+	"popup" : {
+		"fields" : ["dauid", "csduid", "cduid", "pruid"]
+	}
 }

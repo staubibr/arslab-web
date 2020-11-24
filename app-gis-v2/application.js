@@ -9,11 +9,11 @@ import oSettings from '../api-web-devs/components/settings.js';
 import Standardized from '../api-web-devs/parsers/standardized.js';
 import SimulationDEVS from '../api-web-devs/simulation/simulationDEVS.js';
 import Playback from '../api-web-devs/widgets/playback.js';
-import { mapOnClick } from "./mapOnClick.js";
 
 import Map from './ol/map.js';
-import LayerSwitcher from './ol/layerSwitcher.js';
-import baseMaps from './ol/baseMaps.js';
+import LayerSwitcher from './ol/layer-switcher.js';
+
+import Style from "./utils/style.js";
 
 export default class Main extends Templated { 
 
@@ -22,16 +22,18 @@ export default class Main extends Templated {
 		
 		this.config = config;
 		
-		this.map = new Map(this.Elem("map"), Map.BasemapOSM());
+		var baseLayers = [Map.BasemapOSM(true), Map.BasemapSatellite()];
+	
+		this.map = new Map(this.Elem("map"), baseLayers);
 		
 		this.map.SetView([-75.7, 45.3], 10);
 
-		this.layerSwitcher = new LayerSwitcher()
+		this.selected = null;
 
-		this.baseMaps = new baseMaps()
+		this.map.On("click", this.onMap_Click.bind(this));
 
-		this.layerSwitcher.addLayerToBaseMapGroup(this.map, this.baseMaps.SatelliteOSM())
-
+		this.layerSwitcher = new LayerSwitcher(this.map);
+		
 		var defs = config.layers.map(l => {
 			var base = location.href.split("/").slice(0,-1);
 			
@@ -44,38 +46,38 @@ export default class Main extends Templated {
 	}
 	
 	onData_Loaded(data) {
-		var layers = data.map(d => {			
+		var layers = data.map((d, i) => {			
 			var layer = this.map.AddGeoJsonLayer(d);
 			
-			layer.setStyle(this.StyleFunction);
-
-			mapOnClick(d, this.map.OL)
+			var style = this.config.layers[i].style;
+			
+			layer.setStyle(Style.GetStyleFunction(style));
 		});
 	}
 	
-	StyleFunction(f) {
-		var styles = {
-			'MultiPoint': new ol.style.Style({
-				image: new ol.style.Circle({
-					radius: 4,
-					fill: new ol.style.Fill({
-						color: 'rgba(240, 78, 14, 1)'
-					}),
-					stroke: new ol.style.Stroke({color: 'black', width: 1}),
-				})
-			}),
-			'MultiPolygon': new ol.style.Style({
-				stroke: new ol.style.Stroke({
-					color: 'black',
-					width: 0.5,
-				}),
-				fill: new ol.style.Fill({
-					color: 'rgba(194, 231, 231, 0.75)',
-				})
-			})
-		};
-
-		return styles[f.getGeometry().getType()];
+	onMap_Click(ev) {
+		var original = Style.GetStyle(this.config.layers[0].style);
+		var style = Style.GetStyle(this.config.styles.highlight);
+		
+		if (this.selected) this.selected.setStyle(original);
+		
+		this.selected = ev.features.length > 0 ? ev.features[0] : null;
+		
+		if (this.selected) this.selected.setStyle(style);
+		
+		if (this.selected) {
+			var props = this.selected.getProperties();
+			
+			var content = "<ul>";
+			
+			this.config.popup.fields.forEach(f => content += `<li>${f}: ${props[f]}</li>`);
+			
+			content += "</ul>";
+			
+			this.map.ShowPopup(ev.coordinates, content);
+		}
+		
+		else this.map.ShowPopup(null);
 	}
 	
 	Template() {
