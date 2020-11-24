@@ -9,8 +9,11 @@ import oSettings from '../api-web-devs/components/settings.js';
 import Standardized from '../api-web-devs/parsers/standardized.js';
 import SimulationDEVS from '../api-web-devs/simulation/simulationDEVS.js';
 import Playback from '../api-web-devs/widgets/playback.js';
+import { mapOnClick } from "./mapOnClick.js";
 
 import Map from './ol/map.js';
+import LayerSwitcher from './ol/layerSwitcher.js';
+import baseMaps from './ol/baseMaps.js';
 
 export default class Main extends Templated { 
 
@@ -23,9 +26,11 @@ export default class Main extends Templated {
 		
 		this.map.SetView([-75.7, 45.3], 10);
 
-		this.baseMapTitle = this.map.OL.getLayers().item(0).get("title")
+		this.layerSwitcher = new LayerSwitcher()
 
-		this.map.addLayerToGroup(Map.SatelliteOSM(), this.baseMapTitle)
+		this.baseMaps = new baseMaps()
+
+		this.layerSwitcher.addLayerToBaseMapGroup(this.map, this.baseMaps.SatelliteOSM())
 
 		var defs = config.layers.map(l => {
 			var base = location.href.split("/").slice(0,-1);
@@ -43,6 +48,8 @@ export default class Main extends Templated {
 			var layer = this.map.AddGeoJsonLayer(d);
 			
 			layer.setStyle(this.StyleFunction);
+
+			mapOnClick(d, this.map.OL)
 		});
 	}
 	

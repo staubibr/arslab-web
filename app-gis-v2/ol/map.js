@@ -26,38 +26,15 @@ export default class Map {
 		
 		return layer;
 	}
-
-	addLayerToGroup(layerToAdd, groupTitle){
-		var innerLayers = [];
-		//loop each layer of the map
-		this.OL.getLayers().forEach(function (layer) {
-		if (layer instanceof ol.layer.Group) {
-			// look if the group layer already exists
-			if (layer.get("title") === groupTitle) {
-			// check if layer.getLayers exists
-			if (layer.getLayers) {
-				// get inner layers from group layer as Collection
-				innerLayers = layer.getLayers();
-				// new layer to Collection
-				innerLayers.push(layerToAdd);
-				if (innerLayers instanceof ol.Collection) {
-				// set the layer collection of the grouplayer
-				layer.setLayers(innerLayers);
-				}
-			}
-			}
-		}
-		});
-	}
 	
 	AddGeoJsonLayer(json) {		
 		var proj = this.basemap.getSource().getProjection().getCode();
 	
 		var format = new ol.format.GeoJSON({ featureProjection : proj });
 		
-		var vs = new ol.source.Vector({features: format.readFeatures(json) });
+		var vs = new ol.source.Vector({features: format.readFeatures(json)});
 		
-		return this.AddLayer(new ol.layer.Vector({ source: vs }));
+		return this.AddLayer(new ol.layer.Vector({ source: vs, title: json.name  }));
 	}
 	
 	SetView(coord, zoom) {
@@ -67,35 +44,10 @@ export default class Map {
 		}));
 	}
 
-	// For more base maps, see:
-	// https://wiki.openstreetmap.org/wiki/Tile_servers
 	static BasemapOSM() {
 		return new ol.layer.Tile({ 
 			source: new ol.source.OSM(),
 			title: "OpenStreetMap"
-		});
-	}
-
-
-	// For logistics research maybe?
-	// https://openlayers.org/en/latest/examples/osm-vector-tiles.html
-	static BuildingsRoadsAndWaterOSM(){
-		return new ol.layer.Tile({ 
-			source: new ol.source.OSM(),
-			title: "OpenStreetMap"
-		});
-	}
-
-	static SatelliteOSM() {
-		return new ol.layer.Tile({ 
-			source: new ol.source.XYZ({
-				// attributions: ['Powered by Esri',
-				// 			   'Source: Esri, DigitalGlobe, GeoEye, Earthstar Geographics, CNES/Airbus DS, USDA, USGS, AeroGRID, IGN, and the GIS User Community'],
-				attributionsCollapsible: false,
-				url: 'https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-				maxZoom: 23
-			  }),
-			title: "Satellite"
 		});
 	}
 }
