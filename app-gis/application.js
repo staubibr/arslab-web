@@ -22,7 +22,6 @@ import { simulationToTransition } from "./functions/simulationToTransition.js";
 import { sortPandemicData } from "../app-gis/functions/sortPandemicData.js";
 import { simAndCycleSelect } from "./ui/simAndCycleSelect.js";
 import { filterFiles } from "./functions/filterFiles.js";
-import { sirSelect } from "./ui/sirSelect.js";
 import { createSimulationObject } from "./functions/simulationObject.js";
 
 export default class Application extends Templated {
@@ -37,6 +36,9 @@ export default class Application extends Templated {
     this.hideLegend = true;
 
     this.currentSIR = "Susceptible"
+
+    // For creating simulation object and changing SIR in HTML
+    this.ports = ["Susceptible", "Infected", "Recovered", "newInfected"]
 
     // Initial legend settings 
     this.currentNumberOfClasses = 4;
@@ -338,7 +340,11 @@ export default class Application extends Templated {
 
     document.getElementById('colorOne').value = this.currentColor
 
-    sirSelect(this.currentSIR)
+    for (let index = 0; index < this.ports.length; index++) {
+      if(this.currentSIR == ports[index]){
+        document.getElementById("SIR-select").selectedIndex = index;
+      }
+    }
 
     document.getElementById('class-select').selectedIndex = this.currentNumberOfClasses == 5 ? 1 : 0
 
@@ -386,7 +392,12 @@ export default class Application extends Templated {
       document.getElementById("legend-svg").firstChild.textContent = this.currentSIR;
     }
 
-    sirSelect(this.currentSIR)
+    // Change SIR select
+    for (let index = 0; index < this.ports.length; index++) {
+      if(this.currentSIR == this.ports[index]){
+        document.getElementById("SIR-select").selectedIndex = index;
+      }
+    }
   }
   
   // Create the simulation object when the simulation is first introduced
@@ -433,12 +444,9 @@ export default class Application extends Templated {
       0, 
       this.currentSIR
     )
+    
 
-    // Eventually let users select ports based on simulation type 
-    // Probably store the ports in KeepTrackOfSubmittedUserFiles()
-    var ports = ["Susceptible", "Infected", "Recovered", ]
-
-    this.simulation = createSimulationObject(features, ports, data);
+    this.simulation = createSimulationObject(features, this.ports, data);
 
     this.transitions = simulationToTransition(this.simulation.frames)
 
@@ -540,6 +548,7 @@ export default class Application extends Templated {
           "<option>Susceptible</option>" +
           "<option>Infected</option>" +
           "<option>Recovered</option>" +
+          "<option>newInfected</option>" +
         "</select></div>" +
         
         // Legend 
