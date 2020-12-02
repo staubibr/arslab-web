@@ -45,11 +45,15 @@ export default class Main extends Templated {
 		});
 		
 		Promise.all(defs).then(this.onData_Loaded.bind(this));
+
+		this.Node("variableSelect").On("change", this.variableChange.bind(this));
 	}
 	
 	onData_Loaded(data) {	
 		var layers = data.map((d, i) => {	
 			var config = this.config.layers[i];	
+			
+			this.variablesToDropdown(config.fields)
 			
 			d.name = config.id;
 			
@@ -61,6 +65,32 @@ export default class Main extends Templated {
 		var parser = new Parser();
 		
 		parser.Parse(this.files).then(this.onSimulation_Loaded.bind(this), this.onApplication_Error.bind(this));
+	}
+
+	variablesToDropdown(fields){
+		this.fields = fields
+		this.select = document.getElementById("variableSelect");
+		
+		for (let index = 0; index < fields.length; index++) {
+			var option = document.createElement("option");
+			option.text = fields[index];
+
+			var v = this.config.simulation.filter(order => (order.fill.property === fields[index]));
+
+			// Disable all variables that don't have style
+			if(v.length != 1){
+				option.disabled = true;
+			}
+
+			this.select.add(option);
+		}
+	}
+
+	variableChange(ev){
+		// Change to the style of the newly selected variable
+		var v = this.config.simulation.filter(order => (order.fill.property === ev.target.value));
+		this.current = v[0]
+		this.Draw(this.simulation.state.data);
 	}
 		
 	onSimulation_Loaded(ev) {
@@ -75,6 +105,9 @@ export default class Main extends Templated {
 		
 		this.styles = this.PrepareSimulationVisualization();
 		this.current = this.styles[0];		
+
+		// Update the variable selector to reflect the current property being coloured
+		this.select.selectedIndex = this.fields.indexOf(this.current.fill.property);
 		
 		var canvas = this.Elem("map").querySelector(".ol-layer").firstChild;
 		
@@ -85,7 +118,7 @@ export default class Main extends Templated {
 		this.simulation.On("Move", this.onSimulation_Move.bind(this));
 		
 		for (var id in this.map.Layers) this.map.Layers[id].set('visible', true);
-		
+
 		this.Draw(this.simulation.state.data);
 	}
 	
@@ -118,6 +151,7 @@ export default class Main extends Templated {
 	}
 	
 	Draw(data) {
+		
 		var layer = this.map.Layer(this.current.layer);
 		var features = layer.getSource().getFeatures();
 		
@@ -180,6 +214,8 @@ export default class Main extends Templated {
 		return	"<main handle='main'>" +
 					"<div handle='map' class='map'></div>" +
 					"<div handle='playback' widget='Widget.Playback'></div>" +
+					"<div id='variableSelector' class='variableSelector'><label for='class-select'></label>" +
+					"<select handle = 'variableSelect' id='variableSelect'></select></div>" +
 				"</main>";
 	}
 }
