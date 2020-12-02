@@ -1,6 +1,6 @@
 {
 	"layers": [{
-		"url" : "data/DA_Ottawa.geojson",
+		"url" : "data/DA_Ottawa.old.geojson",
 		"label" : "Dissemination Areas (DA)",
 		"style" : {
 			"type" : "polygon",

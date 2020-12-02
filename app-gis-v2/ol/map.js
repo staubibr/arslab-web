@@ -9,10 +9,12 @@ export default class Map extends Evented {
 	constructor(container, basemaps) {
 		super(); 
 		
+		this.layers = {};
+		
 		var sl = new ol.control.ScaleLine();
 		var fs = new ol.control.FullScreen();
-		var ls = new ol.control.LayerSwitcher({ groupSelectStyle: "group" })
-	  	  
+		var ls = new ol.control.LayerSwitcher({ groupSelectStyle: "group" });
+	  	
 		this.basemaps = basemaps;
 		
 		this._ol = new ol.Map({
@@ -23,7 +25,18 @@ export default class Map extends Evented {
 			})],
 			controls: ol.control.defaults().extend([fs, sl, ls]),
 		});
+		
+		this._ol.on("click", (ev) => {
+			var features = [];
 			
+			this._ol.forEachFeatureAtPixel(ev.pixel, function (feature, layer) {
+				features.push({ layer:layer.get('title'), feature:feature });
+			});
+
+			this.Emit("click", { "features" : features, "coordinates" : ev.coordinate });
+		})
+		
+		/*
 		var select = new ol.interaction.Select();
 	
 		this.OL.addInteraction(select);
@@ -34,7 +47,7 @@ export default class Map extends Evented {
 
 			this.Emit("click", { "features" : features, "coordinates" : coord });
 		});
-	
+		*/
 		this.projection = basemaps[0].getSource().getProjection();
 		
 		this.popup = new ol.Overlay.Popup();
@@ -42,18 +55,24 @@ export default class Map extends Evented {
 		this.OL.addOverlay(this.popup);
 	}
 	
-	AddLayer(layer) {
+	Layer(id) {
+		return this.layers[id];
+	}
+	
+	AddLayer(id, layer) {
 		this.OL.addLayer(layer);
+		
+		this.layers[id] = layer;
 		
 		return layer;
 	}
 	
-	AddGeoJsonLayer(json) {			
+	AddGeoJsonLayer(id, json) {			
 		var format = new ol.format.GeoJSON({ featureProjection : this.projection });
 		
 		var vs = new ol.source.Vector({features: format.readFeatures(json)});
 		
-		return this.AddLayer(new ol.layer.Vector({ source: vs, title: json.name  }));
+		return this.AddLayer(id, new ol.layer.Vector({ source: vs, title: json.name  }));
 	}
 	
 	SetView(coord, zoom) {

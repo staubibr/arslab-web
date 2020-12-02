@@ -1,0 +1,4369 @@
+{
+    "output": ["Susceptible(accumulative)", "Infected(accumulative)", "Recovered(accumulative)", "New Infective", "New Recovered", "Current Deaths", "Deaths(accumulative)"],
+    "scenario": {
+        "default_delay": "inertial",
+        "default_cell_type": "zhong",
+        "default_state": {
+            "population": 1,
+            "age_group_proportions": [0.35, 0.3, 0.25, 0.1, 0],
+            "susceptible": [1, 1, 1, 1, 1],
+            "fatalities": [0, 0, 0, 0, 0],
+            "infected": [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]],
+            "recovered": [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]],
+            "disobedient": 0.25,
+            "hospital_capacity": 0.2,
+            "fatality_modifier": 1.5
+        },
+        "default_vicinity": {
+            "correlation": 1,
+            "infection_correction_factors": {}
+        },
+        "default_config": {
+            "zhong": {
+                "precision": 100000000,
+                "virulence_rates": [[0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15], [0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15], [0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15], [0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15], [0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15]],
+                "recovery_rates": [[0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07], [0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07], [0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07], [0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07], [0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07]],
+                "mobility_rates": [[0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6], [0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6], [0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6], [0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6], [0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6]],
+                "fatality_rates": [[0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005], [0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005], [0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005], [0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005], [0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005, 0.005]],
+                "SIIRS_model": true
+            }
+        }
+    },
+    "cells": [{
+            "cell_id": "Alta Vista",
+            "state": {
+                "population": 1,
+                "age_group_proportions": [0.35, 0.30, 0.25, 0.1, 0],
+                "susceptible": [0.5, 0.6, 0.4, 0.3, 0.2],
+                "fatalities": [0, 0, 0, 0, 0],
+                "infected": [[0.5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0.4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0.6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0.7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0.8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]],
+                "recovered": [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]],
+                "disobedient": 0.5,
+                "hospital_capacity": 0.2,
+                "fatality_modifier": 1.5
+            },
+            "neighborhood": [{
+                    "cell_id": "Knoxdale-Merivale",
+                    "vicinity": {
+                        "correlation": 0.7188012599945068,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "River",
+                    "vicinity": {
+                        "correlation": 0.8563689589500427,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Gloucester-South Nepean",
+                    "vicinity": {
+                        "correlation": 0.7510950565338135,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Kanata North",
+                    "vicinity": {
+                        "correlation": 0.3801773488521576,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Beacon Hill-Cyrville",
+                    "vicinity": {
+                        "correlation": 0.8754711151123047,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "College",
+                    "vicinity": {
+                        "correlation": 0.6006870865821838,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Bay",
+                    "vicinity": {
+                        "correlation": 0.5262588858604431,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Osgoode",
+                    "vicinity": {
+                        "correlation": 0.5598647594451904,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "West Carleton – March",
+                    "vicinity": {
+                        "correlation": 0.0,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Barrhaven",
+                    "vicinity": {
+                        "correlation": 0.6240742206573486,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Rideau-Goulbourn",
+                    "vicinity": {
+                        "correlation": 0.3258461356163025,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Somerset",
+                    "vicinity": {
+                        "correlation": 0.8563119173049927,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Orléans",
+                    "vicinity": {
+                        "correlation": 0.6638566255569458,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Cumberland",
+                    "vicinity": {
+                        "correlation": 0.49632933735847473,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Rideau-Rockcliffe",
+                    "vicinity": {
+                        "correlation": 0.8932399153709412,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Innes",
+                    "vicinity": {
+                        "correlation": 0.7820730209350586,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Stittsville",
+                    "vicinity": {
+                        "correlation": 0.3559736907482147,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Rideau-Vanier",
+                    "vicinity": {
+                        "correlation": 0.8914324045181274,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Gloucester-Southgate",
+                    "vicinity": {
+                        "correlation": 0.8952521681785583,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Alta Vista",
+                    "vicinity": {
+                        "correlation": 1.0,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Capital",
+                    "vicinity": {
+                        "correlation": 0.9073644876480103,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Kitchissippi",
+                    "vicinity": {
+                        "correlation": 0.7711079716682434,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Kanata South",
+                    "vicinity": {
+                        "correlation": 0.44958817958831787,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }
+            ]
+        }, {
+            "cell_id": "Orléans",
+            "neighborhood": [{
+                    "cell_id": "Knoxdale-Merivale",
+                    "vicinity": {
+                        "correlation": 0.5258896350860596,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "River",
+                    "vicinity": {
+                        "correlation": 0.6314138770103455,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Gloucester-South Nepean",
+                    "vicinity": {
+                        "correlation": 0.5761309266090393,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Kanata North",
+                    "vicinity": {
+                        "correlation": 0.2751822769641876,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Beacon Hill-Cyrville",
+                    "vicinity": {
+                        "correlation": 0.8262252807617188,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "College",
+                    "vicinity": {
+                        "correlation": 0.43706414103507996,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Bay",
+                    "vicinity": {
+                        "correlation": 0.3915909230709076,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Osgoode",
+                    "vicinity": {
+                        "correlation": 0.5728045701980591,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "West Carleton – March",
+                    "vicinity": {
+                        "correlation": 0.0,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Barrhaven",
+                    "vicinity": {
+                        "correlation": 0.45719674229621887,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Rideau-Goulbourn",
+                    "vicinity": {
+                        "correlation": 0.2360951155424118,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Somerset",
+                    "vicinity": {
+                        "correlation": 0.6566120982170105,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Orléans",
+                    "vicinity": {
+                        "correlation": 1.0,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Cumberland",
+                    "vicinity": {
+                        "correlation": 0.7971351742744446,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Rideau-Rockcliffe",
+                    "vicinity": {
+                        "correlation": 0.7526850700378418,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Innes",
+                    "vicinity": {
+                        "correlation": 0.9052078127861023,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Stittsville",
+                    "vicinity": {
+                        "correlation": 0.24874447286128998,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Rideau-Vanier",
+                    "vicinity": {
+                        "correlation": 0.7087268233299255,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Gloucester-Southgate",
+                    "vicinity": {
+                        "correlation": 0.7282052636146545,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Alta Vista",
+                    "vicinity": {
+                        "correlation": 0.7417527437210083,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Capital",
+                    "vicinity": {
+                        "correlation": 0.6786391139030457,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Kitchissippi",
+                    "vicinity": {
+                        "correlation": 0.5819360613822937,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Kanata South",
+                    "vicinity": {
+                        "correlation": 0.32085904479026794,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }
+            ]
+        }, {
+            "cell_id": "Barrhaven",
+            "neighborhood": [{
+                    "cell_id": "Knoxdale-Merivale",
+                    "vicinity": {
+                        "correlation": 0.8607982993125916,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "River",
+                    "vicinity": {
+                        "correlation": 0.706896185874939,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Gloucester-South Nepean",
+                    "vicinity": {
+                        "correlation": 0.7761373519897461,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Kanata North",
+                    "vicinity": {
+                        "correlation": 0.5465449094772339,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Beacon Hill-Cyrville",
+                    "vicinity": {
+                        "correlation": 0.39056235551834106,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "College",
+                    "vicinity": {
+                        "correlation": 0.7996264100074768,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Bay",
+                    "vicinity": {
+                        "correlation": 0.6372221112251282,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Osgoode",
+                    "vicinity": {
+                        "correlation": 0.3893609941005707,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "West Carleton – March",
+                    "vicinity": {
+                        "correlation": 0.05098900943994522,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Barrhaven",
+                    "vicinity": {
+                        "correlation": 1.0,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Rideau-Goulbourn",
+                    "vicinity": {
+                        "correlation": 0.6277278065681458,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Somerset",
+                    "vicinity": {
+                        "correlation": 0.5957463979721069,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Orléans",
+                    "vicinity": {
+                        "correlation": 0.13796330988407135,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Cumberland",
+                    "vicinity": {
+                        "correlation": 0.0,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Rideau-Rockcliffe",
+                    "vicinity": {
+                        "correlation": 0.462292343378067,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Innes",
+                    "vicinity": {
+                        "correlation": 0.28759095072746277,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Stittsville",
+                    "vicinity": {
+                        "correlation": 0.5969937443733215,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Rideau-Vanier",
+                    "vicinity": {
+                        "correlation": 0.5242210030555725,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Gloucester-Southgate",
+                    "vicinity": {
+                        "correlation": 0.5575272440910339,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Alta Vista",
+                    "vicinity": {
+                        "correlation": 0.5413339138031006,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Capital",
+                    "vicinity": {
+                        "correlation": 0.6124192476272583,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Kitchissippi",
+                    "vicinity": {
+                        "correlation": 0.6669575572013855,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Kanata South",
+                    "vicinity": {
+                        "correlation": 0.6908338665962219,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }
+            ]
+        }, {
+            "cell_id": "Rideau-Rockcliffe",
+            "neighborhood": [{
+                    "cell_id": "Knoxdale-Merivale",
+                    "vicinity": {
+                        "correlation": 0.6604509949684143,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "River",
+                    "vicinity": {
+                        "correlation": 0.7948805689811707,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Gloucester-South Nepean",
+                    "vicinity": {
+                        "correlation": 0.650553822517395,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Kanata North",
+                    "vicinity": {
+                        "correlation": 0.363724946975708,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Beacon Hill-Cyrville",
+                    "vicinity": {
+                        "correlation": 0.8977779150009155,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "College",
+                    "vicinity": {
+                        "correlation": 0.5661116242408752,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Bay",
+                    "vicinity": {
+                        "correlation": 0.5193842053413391,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Osgoode",
+                    "vicinity": {
+                        "correlation": 0.44597676396369934,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "West Carleton – March",
+                    "vicinity": {
+                        "correlation": 0.0,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Barrhaven",
+                    "vicinity": {
+                        "correlation": 0.5506893396377563,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Rideau-Goulbourn",
+                    "vicinity": {
+                        "correlation": 0.24016785621643066,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Somerset",
+                    "vicinity": {
+                        "correlation": 0.868189811706543,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Orléans",
+                    "vicinity": {
+                        "correlation": 0.67180335521698,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Cumberland",
+                    "vicinity": {
+                        "correlation": 0.4535621404647827,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Rideau-Rockcliffe",
+                    "vicinity": {
+                        "correlation": 1.0,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Innes",
+                    "vicinity": {
+                        "correlation": 0.7689775824546814,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Stittsville",
+                    "vicinity": {
+                        "correlation": 0.3187113106250763,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Rideau-Vanier",
+                    "vicinity": {
+                        "correlation": 0.9397003650665283,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Gloucester-Southgate",
+                    "vicinity": {
+                        "correlation": 0.7864211797714233,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Alta Vista",
+                    "vicinity": {
+                        "correlation": 0.8911561369895935,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Capital",
+                    "vicinity": {
+                        "correlation": 0.8745533227920532,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Kitchissippi",
+                    "vicinity": {
+                        "correlation": 0.7694832682609558,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Kanata South",
+                    "vicinity": {
+                        "correlation": 0.4140053987503052,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }
+            ]
+        }, {
+            "cell_id": "Knoxdale-Merivale",
+            "neighborhood": [{
+                    "cell_id": "Knoxdale-Merivale",
+                    "vicinity": {
+                        "correlation": 1.0,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "River",
+                    "vicinity": {
+                        "correlation": 0.8228188753128052,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Gloucester-South Nepean",
+                    "vicinity": {
+                        "correlation": 0.7851832509040833,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Kanata North",
+                    "vicinity": {
+                        "correlation": 0.5182303190231323,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Beacon Hill-Cyrville",
+                    "vicinity": {
+                        "correlation": 0.4863581359386444,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "College",
+                    "vicinity": {
+                        "correlation": 0.820111870765686,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Bay",
+                    "vicinity": {
+                        "correlation": 0.6670973896980286,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Osgoode",
+                    "vicinity": {
+                        "correlation": 0.34988224506378174,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "West Carleton – March",
+                    "vicinity": {
+                        "correlation": 0.0,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Barrhaven",
+                    "vicinity": {
+                        "correlation": 0.8537841439247131,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Rideau-Goulbourn",
+                    "vicinity": {
+                        "correlation": 0.46518877148628235,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Somerset",
+                    "vicinity": {
+                        "correlation": 0.7202270030975342,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Orléans",
+                    "vicinity": {
+                        "correlation": 0.20911626517772675,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Cumberland",
+                    "vicinity": {
+                        "correlation": 0.029511751607060432,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Rideau-Rockcliffe",
+                    "vicinity": {
+                        "correlation": 0.5731730461120605,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Innes",
+                    "vicinity": {
+                        "correlation": 0.3630158603191376,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Stittsville",
+                    "vicinity": {
+                        "correlation": 0.5225787162780762,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Rideau-Vanier",
+                    "vicinity": {
+                        "correlation": 0.6415945887565613,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Gloucester-Southgate",
+                    "vicinity": {
+                        "correlation": 0.6244689226150513,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Alta Vista",
+                    "vicinity": {
+                        "correlation": 0.6396223902702332,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Capital",
+                    "vicinity": {
+                        "correlation": 0.7296479940414429,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Kitchissippi",
+                    "vicinity": {
+                        "correlation": 0.7936207056045532,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Kanata South",
+                    "vicinity": {
+                        "correlation": 0.639032781124115,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }
+            ]
+        }, {
+            "cell_id": "River",
+            "neighborhood": [{
+                    "cell_id": "Knoxdale-Merivale",
+                    "vicinity": {
+                        "correlation": 0.8424713015556335,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "River",
+                    "vicinity": {
+                        "correlation": 1.0,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Gloucester-South Nepean",
+                    "vicinity": {
+                        "correlation": 0.8095985651016235,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Kanata North",
+                    "vicinity": {
+                        "correlation": 0.44636428356170654,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Beacon Hill-Cyrville",
+                    "vicinity": {
+                        "correlation": 0.7007322907447815,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "College",
+                    "vicinity": {
+                        "correlation": 0.7054864168167114,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Bay",
+                    "vicinity": {
+                        "correlation": 0.6045199036598206,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Osgoode",
+                    "vicinity": {
+                        "correlation": 0.47155216336250305,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "West Carleton – March",
+                    "vicinity": {
+                        "correlation": 0.0,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Barrhaven",
+                    "vicinity": {
+                        "correlation": 0.726275622844696,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Rideau-Goulbourn",
+                    "vicinity": {
+                        "correlation": 0.3798997700214386,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Somerset",
+                    "vicinity": {
+                        "correlation": 0.8721590042114258,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Orléans",
+                    "vicinity": {
+                        "correlation": 0.4533437192440033,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Cumberland",
+                    "vicinity": {
+                        "correlation": 0.27740249037742615,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Rideau-Rockcliffe",
+                    "vicinity": {
+                        "correlation": 0.7707557678222656,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Innes",
+                    "vicinity": {
+                        "correlation": 0.5886985659599304,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Stittsville",
+                    "vicinity": {
+                        "correlation": 0.4280509650707245,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Rideau-Vanier",
+                    "vicinity": {
+                        "correlation": 0.82390296459198,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Gloucester-Southgate",
+                    "vicinity": {
+                        "correlation": 0.797701358795166,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Alta Vista",
+                    "vicinity": {
+                        "correlation": 0.8363429307937622,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Capital",
+                    "vicinity": {
+                        "correlation": 0.9102666974067688,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Kitchissippi",
+                    "vicinity": {
+                        "correlation": 0.8528837561607361,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Kanata South",
+                    "vicinity": {
+                        "correlation": 0.5342649221420288,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }
+            ]
+        }, {
+            "cell_id": "Somerset",
+            "neighborhood": [{
+                    "cell_id": "Knoxdale-Merivale",
+                    "vicinity": {
+                        "correlation": 0.7471269369125366,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "River",
+                    "vicinity": {
+                        "correlation": 0.8700354695320129,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Gloucester-South Nepean",
+                    "vicinity": {
+                        "correlation": 0.6770105361938477,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Kanata North",
+                    "vicinity": {
+                        "correlation": 0.42477288842201233,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Beacon Hill-Cyrville",
+                    "vicinity": {
+                        "correlation": 0.7441115975379944,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "College",
+                    "vicinity": {
+                        "correlation": 0.6557433009147644,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Bay",
+                    "vicinity": {
+                        "correlation": 0.6002875566482544,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Osgoode",
+                    "vicinity": {
+                        "correlation": 0.359415203332901,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "West Carleton – March",
+                    "vicinity": {
+                        "correlation": 0.0,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Barrhaven",
+                    "vicinity": {
+                        "correlation": 0.6162039041519165,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Rideau-Goulbourn",
+                    "vicinity": {
+                        "correlation": 0.2637507915496826,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Somerset",
+                    "vicinity": {
+                        "correlation": 1.0,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Orléans",
+                    "vicinity": {
+                        "correlation": 0.482256144285202,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Cumberland",
+                    "vicinity": {
+                        "correlation": 0.25654318928718567,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Rideau-Rockcliffe",
+                    "vicinity": {
+                        "correlation": 0.8502402305603027,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Innes",
+                    "vicinity": {
+                        "correlation": 0.6044619679450989,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Stittsville",
+                    "vicinity": {
+                        "correlation": 0.3755902945995331,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Rideau-Vanier",
+                    "vicinity": {
+                        "correlation": 0.9187114238739014,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Gloucester-Southgate",
+                    "vicinity": {
+                        "correlation": 0.7328101396560669,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Alta Vista",
+                    "vicinity": {
+                        "correlation": 0.8335583806037903,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Capital",
+                    "vicinity": {
+                        "correlation": 0.9303632974624634,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Kitchissippi",
+                    "vicinity": {
+                        "correlation": 0.8871708512306213,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Kanata South",
+                    "vicinity": {
+                        "correlation": 0.48374441266059875,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }
+            ]
+        }, {
+            "cell_id": "Bay",
+            "neighborhood": [{
+                    "cell_id": "Knoxdale-Merivale",
+                    "vicinity": {
+                        "correlation": 0.7340596318244934,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "River",
+                    "vicinity": {
+                        "correlation": 0.6446555852890015,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Gloucester-South Nepean",
+                    "vicinity": {
+                        "correlation": 0.5626531839370728,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Kanata North",
+                    "vicinity": {
+                        "correlation": 0.8425377607345581,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Beacon Hill-Cyrville",
+                    "vicinity": {
+                        "correlation": 0.42056357860565186,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "College",
+                    "vicinity": {
+                        "correlation": 0.8632944226264954,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Bay",
+                    "vicinity": {
+                        "correlation": 1.0,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Osgoode",
+                    "vicinity": {
+                        "correlation": 0.2148413509130478,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "West Carleton – March",
+                    "vicinity": {
+                        "correlation": 0.4567926824092865,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Barrhaven",
+                    "vicinity": {
+                        "correlation": 0.6955907940864563,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Rideau-Goulbourn",
+                    "vicinity": {
+                        "correlation": 0.5017496943473816,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Somerset",
+                    "vicinity": {
+                        "correlation": 0.6467208862304688,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Orléans",
+                    "vicinity": {
+                        "correlation": 0.18923327326774597,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Cumberland",
+                    "vicinity": {
+                        "correlation": 0.0,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Rideau-Rockcliffe",
+                    "vicinity": {
+                        "correlation": 0.51736980676651,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Innes",
+                    "vicinity": {
+                        "correlation": 0.2986272871494293,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Stittsville",
+                    "vicinity": {
+                        "correlation": 0.7634754180908203,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Rideau-Vanier",
+                    "vicinity": {
+                        "correlation": 0.5770690441131592,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Gloucester-Southgate",
+                    "vicinity": {
+                        "correlation": 0.46303653717041016,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Alta Vista",
+                    "vicinity": {
+                        "correlation": 0.5149879455566406,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Capital",
+                    "vicinity": {
+                        "correlation": 0.6090850830078125,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Kitchissippi",
+                    "vicinity": {
+                        "correlation": 0.7456810474395752,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Kanata South",
+                    "vicinity": {
+                        "correlation": 0.8381701707839966,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }
+            ]
+        }, {
+            "cell_id": "Capital",
+            "neighborhood": [{
+                    "cell_id": "Knoxdale-Merivale",
+                    "vicinity": {
+                        "correlation": 0.7675130367279053,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "River",
+                    "vicinity": {
+                        "correlation": 0.9132078289985657,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Gloucester-South Nepean",
+                    "vicinity": {
+                        "correlation": 0.7415692806243896,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Kanata North",
+                    "vicinity": {
+                        "correlation": 0.4165818393230438,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Beacon Hill-Cyrville",
+                    "vicinity": {
+                        "correlation": 0.7856879830360413,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "College",
+                    "vicinity": {
+                        "correlation": 0.6532350778579712,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Bay",
+                    "vicinity": {
+                        "correlation": 0.5791918039321899,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Osgoode",
+                    "vicinity": {
+                        "correlation": 0.455968976020813,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "West Carleton – March",
+                    "vicinity": {
+                        "correlation": 0.0,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Barrhaven",
+                    "vicinity": {
+                        "correlation": 0.6499089002609253,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Rideau-Goulbourn",
+                    "vicinity": {
+                        "correlation": 0.3141603469848633,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Somerset",
+                    "vicinity": {
+                        "correlation": 0.9337462782859802,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Orléans",
+                    "vicinity": {
+                        "correlation": 0.5390061140060425,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Cumberland",
+                    "vicinity": {
+                        "correlation": 0.3428891599178314,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Rideau-Rockcliffe",
+                    "vicinity": {
+                        "correlation": 0.8643944263458252,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Innes",
+                    "vicinity": {
+                        "correlation": 0.6637239456176758,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Stittsville",
+                    "vicinity": {
+                        "correlation": 0.38316643238067627,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Rideau-Vanier",
+                    "vicinity": {
+                        "correlation": 0.9154098629951477,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Gloucester-Southgate",
+                    "vicinity": {
+                        "correlation": 0.8114897608757019,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Alta Vista",
+                    "vicinity": {
+                        "correlation": 0.8979081511497498,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Capital",
+                    "vicinity": {
+                        "correlation": 1.0,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Kitchissippi",
+                    "vicinity": {
+                        "correlation": 0.8498150110244751,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Kanata South",
+                    "vicinity": {
+                        "correlation": 0.48663806915283203,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }
+            ]
+        }, {
+            "cell_id": "Kitchissippi",
+            "neighborhood": [{
+                    "cell_id": "Knoxdale-Merivale",
+                    "vicinity": {
+                        "correlation": 0.7911974191665649,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "River",
+                    "vicinity": {
+                        "correlation": 0.8325873613357544,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Gloucester-South Nepean",
+                    "vicinity": {
+                        "correlation": 0.6389358639717102,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Kanata North",
+                    "vicinity": {
+                        "correlation": 0.4822739064693451,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Beacon Hill-Cyrville",
+                    "vicinity": {
+                        "correlation": 0.5876736640930176,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "College",
+                    "vicinity": {
+                        "correlation": 0.7333793044090271,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Bay",
+                    "vicinity": {
+                        "correlation": 0.67790687084198,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Osgoode",
+                    "vicinity": {
+                        "correlation": 0.23186619579792023,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "West Carleton – March",
+                    "vicinity": {
+                        "correlation": 0.0,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Barrhaven",
+                    "vicinity": {
+                        "correlation": 0.6460684537887573,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Rideau-Goulbourn",
+                    "vicinity": {
+                        "correlation": 0.2627379596233368,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Somerset",
+                    "vicinity": {
+                        "correlation": 0.8737026453018188,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Orléans",
+                    "vicinity": {
+                        "correlation": 0.29442098736763,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Cumberland",
+                    "vicinity": {
+                        "correlation": 0.05044267326593399,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Rideau-Rockcliffe",
+                    "vicinity": {
+                        "correlation": 0.7068285942077637,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Innes",
+                    "vicinity": {
+                        "correlation": 0.43366578221321106,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Stittsville",
+                    "vicinity": {
+                        "correlation": 0.42466816306114197,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Rideau-Vanier",
+                    "vicinity": {
+                        "correlation": 0.7834452986717224,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Gloucester-Southgate",
+                    "vicinity": {
+                        "correlation": 0.615440309047699,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Alta Vista",
+                    "vicinity": {
+                        "correlation": 0.7032130360603333,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Capital",
+                    "vicinity": {
+                        "correlation": 0.823303759098053,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Kitchissippi",
+                    "vicinity": {
+                        "correlation": 1.0,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Kanata South",
+                    "vicinity": {
+                        "correlation": 0.5449705123901367,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }
+            ]
+        }, {
+            "cell_id": "Stittsville",
+            "neighborhood": [{
+                    "cell_id": "Knoxdale-Merivale",
+                    "vicinity": {
+                        "correlation": 0.6702650189399719,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "River",
+                    "vicinity": {
+                        "correlation": 0.5556978583335876,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Gloucester-South Nepean",
+                    "vicinity": {
+                        "correlation": 0.5481628775596619,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Kanata North",
+                    "vicinity": {
+                        "correlation": 0.8891546130180359,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Beacon Hill-Cyrville",
+                    "vicinity": {
+                        "correlation": 0.33288654685020447,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "College",
+                    "vicinity": {
+                        "correlation": 0.7830315232276917,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Bay",
+                    "vicinity": {
+                        "correlation": 0.7955097556114197,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Osgoode",
+                    "vicinity": {
+                        "correlation": 0.2671492397785187,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "West Carleton – March",
+                    "vicinity": {
+                        "correlation": 0.5853078365325928,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Barrhaven",
+                    "vicinity": {
+                        "correlation": 0.7076352834701538,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Rideau-Goulbourn",
+                    "vicinity": {
+                        "correlation": 0.6973604559898376,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Somerset",
+                    "vicinity": {
+                        "correlation": 0.522870659828186,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Orléans",
+                    "vicinity": {
+                        "correlation": 0.13446594774723053,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Cumberland",
+                    "vicinity": {
+                        "correlation": 0.0,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Rideau-Rockcliffe",
+                    "vicinity": {
+                        "correlation": 0.4085148274898529,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Innes",
+                    "vicinity": {
+                        "correlation": 0.23707236349582672,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Stittsville",
+                    "vicinity": {
+                        "correlation": 1.0,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Rideau-Vanier",
+                    "vicinity": {
+                        "correlation": 0.4607671797275543,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Gloucester-Southgate",
+                    "vicinity": {
+                        "correlation": 0.4109203517436981,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Alta Vista",
+                    "vicinity": {
+                        "correlation": 0.4299521744251251,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Capital",
+                    "vicinity": {
+                        "correlation": 0.5045928359031677,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Kitchissippi",
+                    "vicinity": {
+                        "correlation": 0.6072538495063782,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Kanata South",
+                    "vicinity": {
+                        "correlation": 0.9168947339057922,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }
+            ]
+        }, {
+            "cell_id": "Rideau-Goulbourn",
+            "neighborhood": [{
+                    "cell_id": "Knoxdale-Merivale",
+                    "vicinity": {
+                        "correlation": 0.6093544960021973,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "River",
+                    "vicinity": {
+                        "correlation": 0.4905495345592499,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Gloucester-South Nepean",
+                    "vicinity": {
+                        "correlation": 0.5848863124847412,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Kanata North",
+                    "vicinity": {
+                        "correlation": 0.5719924569129944,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Beacon Hill-Cyrville",
+                    "vicinity": {
+                        "correlation": 0.25235626101493835,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "College",
+                    "vicinity": {
+                        "correlation": 0.6312444806098938,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Bay",
+                    "vicinity": {
+                        "correlation": 0.544421911239624,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Osgoode",
+                    "vicinity": {
+                        "correlation": 0.39009854197502136,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "West Carleton – March",
+                    "vicinity": {
+                        "correlation": 0.2621143162250519,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Barrhaven",
+                    "vicinity": {
+                        "correlation": 0.7143772840499878,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Rideau-Goulbourn",
+                    "vicinity": {
+                        "correlation": 1.0,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Somerset",
+                    "vicinity": {
+                        "correlation": 0.40500909090042114,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Orléans",
+                    "vicinity": {
+                        "correlation": 0.0692034587264061,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Cumberland",
+                    "vicinity": {
+                        "correlation": 0.0,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Rideau-Rockcliffe",
+                    "vicinity": {
+                        "correlation": 0.3023311495780945,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Innes",
+                    "vicinity": {
+                        "correlation": 0.18467645347118378,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Stittsville",
+                    "vicinity": {
+                        "correlation": 0.6799302697181702,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Rideau-Vanier",
+                    "vicinity": {
+                        "correlation": 0.3493412137031555,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Gloucester-Southgate",
+                    "vicinity": {
+                        "correlation": 0.3997971713542938,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Alta Vista",
+                    "vicinity": {
+                        "correlation": 0.36891812086105347,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Capital",
+                    "vicinity": {
+                        "correlation": 0.41744643449783325,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Kitchissippi",
+                    "vicinity": {
+                        "correlation": 0.46772706508636475,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Kanata South",
+                    "vicinity": {
+                        "correlation": 0.6771146059036255,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }
+            ]
+        }, {
+            "cell_id": "Kanata North",
+            "neighborhood": [{
+                    "cell_id": "Knoxdale-Merivale",
+                    "vicinity": {
+                        "correlation": 0.6643145680427551,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "River",
+                    "vicinity": {
+                        "correlation": 0.5661147236824036,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Gloucester-South Nepean",
+                    "vicinity": {
+                        "correlation": 0.5223149657249451,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Kanata North",
+                    "vicinity": {
+                        "correlation": 1.0,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Beacon Hill-Cyrville",
+                    "vicinity": {
+                        "correlation": 0.3595021963119507,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "College",
+                    "vicinity": {
+                        "correlation": 0.7896470427513123,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Bay",
+                    "vicinity": {
+                        "correlation": 0.8626583218574524,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Osgoode",
+                    "vicinity": {
+                        "correlation": 0.22396181523799896,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "West Carleton – March",
+                    "vicinity": {
+                        "correlation": 0.635990560054779,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Barrhaven",
+                    "vicinity": {
+                        "correlation": 0.6681230068206787,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Rideau-Goulbourn",
+                    "vicinity": {
+                        "correlation": 0.5917162299156189,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Somerset",
+                    "vicinity": {
+                        "correlation": 0.5565593242645264,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Orléans",
+                    "vicinity": {
+                        "correlation": 0.15752890706062317,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Cumberland",
+                    "vicinity": {
+                        "correlation": 0.0,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Rideau-Rockcliffe",
+                    "vicinity": {
+                        "correlation": 0.4427022337913513,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Innes",
+                    "vicinity": {
+                        "correlation": 0.25504767894744873,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Stittsville",
+                    "vicinity": {
+                        "correlation": 0.8881728649139404,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Rideau-Vanier",
+                    "vicinity": {
+                        "correlation": 0.49507659673690796,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Gloucester-Southgate",
+                    "vicinity": {
+                        "correlation": 0.41016095876693726,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Alta Vista",
+                    "vicinity": {
+                        "correlation": 0.4465162456035614,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Capital",
+                    "vicinity": {
+                        "correlation": 0.5272800326347351,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Kitchissippi",
+                    "vicinity": {
+                        "correlation": 0.6434476375579834,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Kanata South",
+                    "vicinity": {
+                        "correlation": 0.8864346742630005,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }
+            ]
+        }, {
+            "cell_id": "Kanata South",
+            "neighborhood": [{
+                    "cell_id": "Knoxdale-Merivale",
+                    "vicinity": {
+                        "correlation": 0.7287862300872803,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "River",
+                    "vicinity": {
+                        "correlation": 0.6064130663871765,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Gloucester-South Nepean",
+                    "vicinity": {
+                        "correlation": 0.5884808897972107,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Kanata North",
+                    "vicinity": {
+                        "correlation": 0.877539336681366,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Beacon Hill-Cyrville",
+                    "vicinity": {
+                        "correlation": 0.36465972661972046,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "College",
+                    "vicinity": {
+                        "correlation": 0.8543264865875244,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Bay",
+                    "vicinity": {
+                        "correlation": 0.8477926850318909,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Osgoode",
+                    "vicinity": {
+                        "correlation": 0.27410364151000977,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "West Carleton – March",
+                    "vicinity": {
+                        "correlation": 0.4936255216598511,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Barrhaven",
+                    "vicinity": {
+                        "correlation": 0.7560023069381714,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Rideau-Goulbourn",
+                    "vicinity": {
+                        "correlation": 0.6678684949874878,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Somerset",
+                    "vicinity": {
+                        "correlation": 0.5708472728729248,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Orléans",
+                    "vicinity": {
+                        "correlation": 0.14878937602043152,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Cumberland",
+                    "vicinity": {
+                        "correlation": 0.0,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Rideau-Rockcliffe",
+                    "vicinity": {
+                        "correlation": 0.44653910398483276,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Innes",
+                    "vicinity": {
+                        "correlation": 0.26020559668540955,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Stittsville",
+                    "vicinity": {
+                        "correlation": 0.909591555595398,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Rideau-Vanier",
+                    "vicinity": {
+                        "correlation": 0.5033217668533325,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Gloucester-Southgate",
+                    "vicinity": {
+                        "correlation": 0.44685274362564087,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Alta Vista",
+                    "vicinity": {
+                        "correlation": 0.4699997305870056,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Capital",
+                    "vicinity": {
+                        "correlation": 0.5514626502990723,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Kitchissippi",
+                    "vicinity": {
+                        "correlation": 0.6620801687240601,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Kanata South",
+                    "vicinity": {
+                        "correlation": 1.0,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }
+            ]
+        }, {
+            "cell_id": "West Carleton – March",
+            "neighborhood": [{
+                    "cell_id": "Knoxdale-Merivale",
+                    "vicinity": {
+                        "correlation": 0.4810459315776825,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "River",
+                    "vicinity": {
+                        "correlation": 0.41630399227142334,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Gloucester-South Nepean",
+                    "vicinity": {
+                        "correlation": 0.37343284487724304,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Kanata North",
+                    "vicinity": {
+                        "correlation": 0.7288881540298462,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Beacon Hill-Cyrville",
+                    "vicinity": {
+                        "correlation": 0.2816886305809021,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "College",
+                    "vicinity": {
+                        "correlation": 0.5739834904670715,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Bay",
+                    "vicinity": {
+                        "correlation": 0.6471196413040161,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Osgoode",
+                    "vicinity": {
+                        "correlation": 0.15095154941082,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "West Carleton – March",
+                    "vicinity": {
+                        "correlation": 1.0,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Barrhaven",
+                    "vicinity": {
+                        "correlation": 0.4826909899711609,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Rideau-Goulbourn",
+                    "vicinity": {
+                        "correlation": 0.4757532775402069,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Somerset",
+                    "vicinity": {
+                        "correlation": 0.4258410930633545,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Orléans",
+                    "vicinity": {
+                        "correlation": 0.13431058824062347,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Cumberland",
+                    "vicinity": {
+                        "correlation": 0.0,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Rideau-Rockcliffe",
+                    "vicinity": {
+                        "correlation": 0.3476535379886627,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Innes",
+                    "vicinity": {
+                        "correlation": 0.1992402821779251,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Stittsville",
+                    "vicinity": {
+                        "correlation": 0.6884043216705322,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Rideau-Vanier",
+                    "vicinity": {
+                        "correlation": 0.3840765058994293,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Gloucester-Southgate",
+                    "vicinity": {
+                        "correlation": 0.2982957661151886,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Alta Vista",
+                    "vicinity": {
+                        "correlation": 0.33492085337638855,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Capital",
+                    "vicinity": {
+                        "correlation": 0.3965241014957428,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Kitchissippi",
+                    "vicinity": {
+                        "correlation": 0.487068772315979,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Kanata South",
+                    "vicinity": {
+                        "correlation": 0.6502507328987122,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }
+            ]
+        }, {
+            "cell_id": "Gloucester-South Nepean",
+            "neighborhood": [{
+                    "cell_id": "Knoxdale-Merivale",
+                    "vicinity": {
+                        "correlation": 0.8220781087875366,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "River",
+                    "vicinity": {
+                        "correlation": 0.8226262927055359,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Gloucester-South Nepean",
+                    "vicinity": {
+                        "correlation": 1.0,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Kanata North",
+                    "vicinity": {
+                        "correlation": 0.4321809709072113,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Beacon Hill-Cyrville",
+                    "vicinity": {
+                        "correlation": 0.6073938012123108,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "College",
+                    "vicinity": {
+                        "correlation": 0.6788138151168823,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Bay",
+                    "vicinity": {
+                        "correlation": 0.5465596318244934,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Osgoode",
+                    "vicinity": {
+                        "correlation": 0.6393886208534241,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "West Carleton – March",
+                    "vicinity": {
+                        "correlation": 0.0,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Barrhaven",
+                    "vicinity": {
+                        "correlation": 0.8052431344985962,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Rideau-Goulbourn",
+                    "vicinity": {
+                        "correlation": 0.5292980074882507,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Somerset",
+                    "vicinity": {
+                        "correlation": 0.7040265202522278,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Orléans",
+                    "vicinity": {
+                        "correlation": 0.41436609625816345,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Cumberland",
+                    "vicinity": {
+                        "correlation": 0.32083579897880554,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Rideau-Rockcliffe",
+                    "vicinity": {
+                        "correlation": 0.636176347732544,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Innes",
+                    "vicinity": {
+                        "correlation": 0.5450536608695984,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Stittsville",
+                    "vicinity": {
+                        "correlation": 0.4581489562988281,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Rideau-Vanier",
+                    "vicinity": {
+                        "correlation": 0.6712017059326172,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Gloucester-Southgate",
+                    "vicinity": {
+                        "correlation": 0.7898291349411011,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Alta Vista",
+                    "vicinity": {
+                        "correlation": 0.7357960939407349,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Capital",
+                    "vicinity": {
+                        "correlation": 0.7510933876037598,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Kitchissippi",
+                    "vicinity": {
+                        "correlation": 0.7044194340705872,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Kanata South",
+                    "vicinity": {
+                        "correlation": 0.5463641285896301,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }
+            ]
+        }, {
+            "cell_id": "College",
+            "neighborhood": [{
+                    "cell_id": "Knoxdale-Merivale",
+                    "vicinity": {
+                        "correlation": 0.8424617052078247,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "River",
+                    "vicinity": {
+                        "correlation": 0.7099006175994873,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Gloucester-South Nepean",
+                    "vicinity": {
+                        "correlation": 0.6603909730911255,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Kanata North",
+                    "vicinity": {
+                        "correlation": 0.7356134653091431,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Beacon Hill-Cyrville",
+                    "vicinity": {
+                        "correlation": 0.42890384793281555,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "College",
+                    "vicinity": {
+                        "correlation": 1.0,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Bay",
+                    "vicinity": {
+                        "correlation": 0.8501341342926025,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Osgoode",
+                    "vicinity": {
+                        "correlation": 0.28076204657554626,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "West Carleton – March",
+                    "vicinity": {
+                        "correlation": 0.281078964471817,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Barrhaven",
+                    "vicinity": {
+                        "correlation": 0.8156793117523193,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Rideau-Goulbourn",
+                    "vicinity": {
+                        "correlation": 0.5578802824020386,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Somerset",
+                    "vicinity": {
+                        "correlation": 0.6664435863494873,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Orléans",
+                    "vicinity": {
+                        "correlation": 0.17761388421058655,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Cumberland",
+                    "vicinity": {
+                        "correlation": 0.0,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Rideau-Rockcliffe",
+                    "vicinity": {
+                        "correlation": 0.5223485827445984,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Innes",
+                    "vicinity": {
+                        "correlation": 0.30738112330436707,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Stittsville",
+                    "vicinity": {
+                        "correlation": 0.7248833179473877,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Rideau-Vanier",
+                    "vicinity": {
+                        "correlation": 0.5881415009498596,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Gloucester-Southgate",
+                    "vicinity": {
+                        "correlation": 0.519352376461029,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Alta Vista",
+                    "vicinity": {
+                        "correlation": 0.5518314242362976,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Capital",
+                    "vicinity": {
+                        "correlation": 0.6468576192855835,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Kitchissippi",
+                    "vicinity": {
+                        "correlation": 0.769214928150177,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Kanata South",
+                    "vicinity": {
+                        "correlation": 0.8302067518234253,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }
+            ]
+        }, {
+            "cell_id": "Cumberland",
+            "neighborhood": [{
+                    "cell_id": "Knoxdale-Merivale",
+                    "vicinity": {
+                        "correlation": 0.4963611662387848,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "River",
+                    "vicinity": {
+                        "correlation": 0.5782226920127869,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Gloucester-South Nepean",
+                    "vicinity": {
+                        "correlation": 0.5744580030441284,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Kanata North",
+                    "vicinity": {
+                        "correlation": 0.25520646572113037,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Beacon Hill-Cyrville",
+                    "vicinity": {
+                        "correlation": 0.7096017003059387,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "College",
+                    "vicinity": {
+                        "correlation": 0.40742236375808716,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Bay",
+                    "vicinity": {
+                        "correlation": 0.35037627816200256,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Osgoode",
+                    "vicinity": {
+                        "correlation": 0.6758031249046326,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "West Carleton – March",
+                    "vicinity": {
+                        "correlation": 0.0,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Barrhaven",
+                    "vicinity": {
+                        "correlation": 0.4548967182636261,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Rideau-Goulbourn",
+                    "vicinity": {
+                        "correlation": 0.2895285487174988,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Somerset",
+                    "vicinity": {
+                        "correlation": 0.573137640953064,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Orléans",
+                    "vicinity": {
+                        "correlation": 0.8243820667266846,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Cumberland",
+                    "vicinity": {
+                        "correlation": 1.0,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Rideau-Rockcliffe",
+                    "vicinity": {
+                        "correlation": 0.6435331702232361,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Innes",
+                    "vicinity": {
+                        "correlation": 0.7933375239372253,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Stittsville",
+                    "vicinity": {
+                        "correlation": 0.24860961735248566,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Rideau-Vanier",
+                    "vicinity": {
+                        "correlation": 0.611547589302063,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Gloucester-Southgate",
+                    "vicinity": {
+                        "correlation": 0.691238284111023,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Alta Vista",
+                    "vicinity": {
+                        "correlation": 0.665019154548645,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Capital",
+                    "vicinity": {
+                        "correlation": 0.6034494638442993,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Kitchissippi",
+                    "vicinity": {
+                        "correlation": 0.512942373752594,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Kanata South",
+                    "vicinity": {
+                        "correlation": 0.3093070983886719,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }
+            ]
+        }, {
+            "cell_id": "Osgoode",
+            "neighborhood": [{
+                    "cell_id": "Knoxdale-Merivale",
+                    "vicinity": {
+                        "correlation": 0.6026360392570496,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "River",
+                    "vicinity": {
+                        "correlation": 0.6367075443267822,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Gloucester-South Nepean",
+                    "vicinity": {
+                        "correlation": 0.7338817715644836,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Kanata North",
+                    "vicinity": {
+                        "correlation": 0.31925177574157715,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Beacon Hill-Cyrville",
+                    "vicinity": {
+                        "correlation": 0.6067342758178711,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "College",
+                    "vicinity": {
+                        "correlation": 0.4980211853981018,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Bay",
+                    "vicinity": {
+                        "correlation": 0.39925962686538696,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Osgoode",
+                    "vicinity": {
+                        "correlation": 1.0,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "West Carleton – March",
+                    "vicinity": {
+                        "correlation": 0.0,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Barrhaven",
+                    "vicinity": {
+                        "correlation": 0.6079595685005188,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Rideau-Goulbourn",
+                    "vicinity": {
+                        "correlation": 0.48964327573776245,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Somerset",
+                    "vicinity": {
+                        "correlation": 0.5668121576309204,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Orléans",
+                    "vicinity": {
+                        "correlation": 0.5644317269325256,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Cumberland",
+                    "vicinity": {
+                        "correlation": 0.6181644797325134,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Rideau-Rockcliffe",
+                    "vicinity": {
+                        "correlation": 0.5743292570114136,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Innes",
+                    "vicinity": {
+                        "correlation": 0.6344175338745117,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Stittsville",
+                    "vicinity": {
+                        "correlation": 0.3514421880245209,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Rideau-Vanier",
+                    "vicinity": {
+                        "correlation": 0.5726887583732605,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Gloucester-Southgate",
+                    "vicinity": {
+                        "correlation": 0.7372794151306152,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Alta Vista",
+                    "vicinity": {
+                        "correlation": 0.6552319526672363,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Capital",
+                    "vicinity": {
+                        "correlation": 0.613320529460907,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Kitchissippi",
+                    "vicinity": {
+                        "correlation": 0.5359513163566589,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Kanata South",
+                    "vicinity": {
+                        "correlation": 0.409490168094635,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }
+            ]
+        }, {
+            "cell_id": "Gloucester-Southgate",
+            "neighborhood": [{
+                    "cell_id": "Knoxdale-Merivale",
+                    "vicinity": {
+                        "correlation": 0.7222713232040405,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "River",
+                    "vicinity": {
+                        "correlation": 0.8317226767539978,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Gloucester-South Nepean",
+                    "vicinity": {
+                        "correlation": 0.8123338222503662,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Kanata North",
+                    "vicinity": {
+                        "correlation": 0.37394094467163086,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Beacon Hill-Cyrville",
+                    "vicinity": {
+                        "correlation": 0.8179894089698792,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "College",
+                    "vicinity": {
+                        "correlation": 0.594101071357727,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Bay",
+                    "vicinity": {
+                        "correlation": 0.5028899908065796,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Osgoode",
+                    "vicinity": {
+                        "correlation": 0.6821131706237793,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "West Carleton – March",
+                    "vicinity": {
+                        "correlation": 0.0,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Barrhaven",
+                    "vicinity": {
+                        "correlation": 0.6562749147415161,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Rideau-Goulbourn",
+                    "vicinity": {
+                        "correlation": 0.3922981321811676,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Somerset",
+                    "vicinity": {
+                        "correlation": 0.7813758850097656,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Orléans",
+                    "vicinity": {
+                        "correlation": 0.664687991142273,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Cumberland",
+                    "vicinity": {
+                        "correlation": 0.5599830746650696,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Rideau-Rockcliffe",
+                    "vicinity": {
+                        "correlation": 0.8014442920684814,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Innes",
+                    "vicinity": {
+                        "correlation": 0.781213641166687,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Stittsville",
+                    "vicinity": {
+                        "correlation": 0.3692089319229126,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Rideau-Vanier",
+                    "vicinity": {
+                        "correlation": 0.7997924089431763,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Gloucester-Southgate",
+                    "vicinity": {
+                        "correlation": 1.0,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Alta Vista",
+                    "vicinity": {
+                        "correlation": 0.900719404220581,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Capital",
+                    "vicinity": {
+                        "correlation": 0.837878406047821,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Kitchissippi",
+                    "vicinity": {
+                        "correlation": 0.7188948392868042,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Kanata South",
+                    "vicinity": {
+                        "correlation": 0.45553290843963623,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }
+            ]
+        }, {
+            "cell_id": "Innes",
+            "neighborhood": [{
+                    "cell_id": "Knoxdale-Merivale",
+                    "vicinity": {
+                        "correlation": 0.5871851444244385,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "River",
+                    "vicinity": {
+                        "correlation": 0.7001909613609314,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Gloucester-South Nepean",
+                    "vicinity": {
+                        "correlation": 0.6440200209617615,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Kanata North",
+                    "vicinity": {
+                        "correlation": 0.307113379240036,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Beacon Hill-Cyrville",
+                    "vicinity": {
+                        "correlation": 0.8949556946754456,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "College",
+                    "vicinity": {
+                        "correlation": 0.48744866251945496,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Bay",
+                    "vicinity": {
+                        "correlation": 0.43100491166114807,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Osgoode",
+                    "vicinity": {
+                        "correlation": 0.6123716235160828,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "West Carleton – March",
+                    "vicinity": {
+                        "correlation": 0.0,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Barrhaven",
+                    "vicinity": {
+                        "correlation": 0.5150399208068848,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Rideau-Goulbourn",
+                    "vicinity": {
+                        "correlation": 0.27660682797431946,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Somerset",
+                    "vicinity": {
+                        "correlation": 0.7163922190666199,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Orléans",
+                    "vicinity": {
+                        "correlation": 0.8975216150283813,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Cumberland",
+                    "vicinity": {
+                        "correlation": 0.7419169545173645,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Rideau-Rockcliffe",
+                    "vicinity": {
+                        "correlation": 0.8117954134941101,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Innes",
+                    "vicinity": {
+                        "correlation": 1.0,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Stittsville",
+                    "vicinity": {
+                        "correlation": 0.2841092348098755,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Rideau-Vanier",
+                    "vicinity": {
+                        "correlation": 0.768900990486145,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Gloucester-Southgate",
+                    "vicinity": {
+                        "correlation": 0.80827796459198,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Alta Vista",
+                    "vicinity": {
+                        "correlation": 0.8189985752105713,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Capital",
+                    "vicinity": {
+                        "correlation": 0.7465725541114807,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Kitchissippi",
+                    "vicinity": {
+                        "correlation": 0.6372313499450684,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Kanata South",
+                    "vicinity": {
+                        "correlation": 0.36189258098602295,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }
+            ]
+        }, {
+            "cell_id": "Rideau-Vanier",
+            "neighborhood": [{
+                    "cell_id": "Knoxdale-Merivale",
+                    "vicinity": {
+                        "correlation": 0.6980209946632385,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "River",
+                    "vicinity": {
+                        "correlation": 0.8331170678138733,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Gloucester-South Nepean",
+                    "vicinity": {
+                        "correlation": 0.6655198335647583,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Kanata North",
+                    "vicinity": {
+                        "correlation": 0.3894311487674713,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Beacon Hill-Cyrville",
+                    "vicinity": {
+                        "correlation": 0.8334706425666809,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "College",
+                    "vicinity": {
+                        "correlation": 0.6037524938583374,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Bay",
+                    "vicinity": {
+                        "correlation": 0.5539283752441406,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Osgoode",
+                    "vicinity": {
+                        "correlation": 0.4109528958797455,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "West Carleton – March",
+                    "vicinity": {
+                        "correlation": 0.0,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Barrhaven",
+                    "vicinity": {
+                        "correlation": 0.5789270997047424,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Rideau-Goulbourn",
+                    "vicinity": {
+                        "correlation": 0.24946117401123047,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Somerset",
+                    "vicinity": {
+                        "correlation": 0.9242234230041504,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Orléans",
+                    "vicinity": {
+                        "correlation": 0.5906113386154175,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Cumberland",
+                    "vicinity": {
+                        "correlation": 0.36931711435317993,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Rideau-Rockcliffe",
+                    "vicinity": {
+                        "correlation": 0.9361345171928406,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Innes",
+                    "vicinity": {
+                        "correlation": 0.6995490789413452,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Stittsville",
+                    "vicinity": {
+                        "correlation": 0.3421677052974701,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Rideau-Vanier",
+                    "vicinity": {
+                        "correlation": 1.0,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Gloucester-Southgate",
+                    "vicinity": {
+                        "correlation": 0.7719091773033142,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Alta Vista",
+                    "vicinity": {
+                        "correlation": 0.8827678561210632,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Capital",
+                    "vicinity": {
+                        "correlation": 0.9171193838119507,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Kitchissippi",
+                    "vicinity": {
+                        "correlation": 0.8196566700935364,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Kanata South",
+                    "vicinity": {
+                        "correlation": 0.4430280327796936,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }
+            ]
+        }, {
+            "cell_id": "Beacon Hill-Cyrville",
+            "neighborhood": [{
+                    "cell_id": "Knoxdale-Merivale",
+                    "vicinity": {
+                        "correlation": 0.6289122700691223,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "River",
+                    "vicinity": {
+                        "correlation": 0.7568166255950928,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Gloucester-South Nepean",
+                    "vicinity": {
+                        "correlation": 0.6575382947921753,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Kanata North",
+                    "vicinity": {
+                        "correlation": 0.3358888030052185,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Beacon Hill-Cyrville",
+                    "vicinity": {
+                        "correlation": 1.0,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "College",
+                    "vicinity": {
+                        "correlation": 0.5288689136505127,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Bay",
+                    "vicinity": {
+                        "correlation": 0.4759714901447296,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Osgoode",
+                    "vicinity": {
+                        "correlation": 0.5351575016975403,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "West Carleton – March",
+                    "vicinity": {
+                        "correlation": 0.0,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Barrhaven",
+                    "vicinity": {
+                        "correlation": 0.5375174880027771,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Rideau-Goulbourn",
+                    "vicinity": {
+                        "correlation": 0.26051634550094604,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Somerset",
+                    "vicinity": {
+                        "correlation": 0.7954638600349426,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Orléans",
+                    "vicinity": {
+                        "correlation": 0.7905714511871338,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Cumberland",
+                    "vicinity": {
+                        "correlation": 0.5957208871841431,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Rideau-Rockcliffe",
+                    "vicinity": {
+                        "correlation": 0.9071652889251709,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Innes",
+                    "vicinity": {
+                        "correlation": 0.8828986287117004,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Stittsville",
+                    "vicinity": {
+                        "correlation": 0.30216526985168457,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Rideau-Vanier",
+                    "vicinity": {
+                        "correlation": 0.857207715511322,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Gloucester-Southgate",
+                    "vicinity": {
+                        "correlation": 0.822197437286377,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Alta Vista",
+                    "vicinity": {
+                        "correlation": 0.8846996426582336,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Capital",
+                    "vicinity": {
+                        "correlation": 0.819949746131897,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Kitchissippi",
+                    "vicinity": {
+                        "correlation": 0.7055663466453552,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }, {
+                    "cell_id": "Kanata South",
+                    "vicinity": {
+                        "correlation": 0.38908806443214417,
+                        "infection_correction_factors": {
+                            "0.5": [0.1, 0.5]
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}
