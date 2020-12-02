@@ -5,6 +5,10 @@ export default class Map extends Evented {
 	get OL() {
 		return this._ol;
 	}
+	
+	get Layers() {
+		return this.layers;
+	}
 		
 	constructor(container, basemaps) {
 		super(); 

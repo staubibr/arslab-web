@@ -54,9 +54,8 @@ export default class Main extends Templated {
 			d.name = config.id;
 			
 			var layer = this.map.AddGeoJsonLayer(config.id, d);
-			var style = this.config.styles.find(s => s.id == config.style);
-						
-			layer.setStyle(Style.GetStyleFunction(config.type, style));
+			
+			layer.set('visible', false);
 		});
 		
 		var parser = new Parser();
@@ -84,6 +83,8 @@ export default class Main extends Templated {
 		
 		this.simulation.On("Jump", this.onSimulation_Jump.bind(this));
 		this.simulation.On("Move", this.onSimulation_Move.bind(this));
+		
+		for (var id in this.map.Layers) this.map.Layers[id].set('visible', true);
 		
 		this.Draw(this.simulation.state.data);
 	}
