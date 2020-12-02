@@ -84,6 +84,8 @@ export default class Main extends Templated {
 		
 		this.simulation.On("Jump", this.onSimulation_Jump.bind(this));
 		this.simulation.On("Move", this.onSimulation_Move.bind(this));
+		
+		this.Draw(this.simulation.state.data);
 	}
 	
 	PrepareSimulationVisualization() {
