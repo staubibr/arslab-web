@@ -5,6 +5,7 @@ import Parser from "./parser.js";
 import Settings from "../components/settings.js";
 import SimulationDEVS from "../simulation/simulationDEVS.js";
 import SimulationCA from "../simulation/simulationCA.js";
+import SimulationIRR from "../simulation/simulationIRR.js";
 import Model from "../simulation/model.js";
 
 export default class Standardized extends Parser { 
@@ -28,7 +29,7 @@ export default class Standardized extends Parser {
 			
 			var type = this.structure.info.type;
 			
-			if (type == "DEVS" && !diagram) return d.Reject(new Error("Unable to parse the diagram (.svg) file."));
+			// if (type == "DEVS" && !diagram) return d.Reject(new Error("Unable to parse the diagram (.svg) file."));
 			
 			var p1 = this.ReadByChunk(messages, this.ParseLogChunk.bind(this));
 			var p2 = this.Read(diagram, (content) => content);
@@ -41,6 +42,7 @@ export default class Standardized extends Parser {
 				
 				if (type == "DEVS") simulation = SimulationDEVS.FromJson(this.structure, data[0], data[1]);
 				if (type == "Cell-DEVS") simulation = SimulationCA.FromJson(this.structure, data[0]);
+				if (type == "Irregular Cell-DEVS") simulation = SimulationIRR.FromJson(this.structure, data[0]);
 				
 				var oFiles = { structure:structure, messages:messages }
 				
@@ -102,17 +104,23 @@ export default class Standardized extends Parser {
 			
 			for (var i = 1; i < messages.length; i++) {
 				var v = messages[i].split(",");
-					
-				if (v.length == 2) {
-					var p = this.structure.ports[v[0]];
-					
-					parsed.push({ time:messages[0], model:p.model, port:p.name, value:v[1] });
-				}
-				else if (v.length == 5) {
+				var x = this.structure;	
+				
+				if (this.structure.info.type == "Cell-DEVS") {
 					var c = [v[0],v[1],v[2]];
 					var p = this.structure.ports[v[3]];
 					
 					parsed.push({ time:messages[0], coord:c, model:p.model, port:p.name, value:v[4] });
+				}
+				else if (this.structure.info.type == "Irregular Cell-DEVS") {
+					var m = this.structure.models[v[0]];
+					
+					parsed.push({ time:messages[0], model:m.name, port:null, value:v.slice(1).join(",").trim() });
+				}
+				else if (this.structure.info.type != "Cell-DEVS") {
+					var p = this.structure.ports[v[0]];
+					
+					parsed.push({ time:messages[0], model:p.model, port:p.name, value:v.slice(1).join(",").trim() });
 				}
 				else {
 					throw new Error("Message format not recognized.");

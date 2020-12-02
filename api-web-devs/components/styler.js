@@ -41,8 +41,8 @@ export default class Styler extends Evented {
 	static FromJson(json) {
 		var styler = new Styler();		
 		
-		json.forEach(classes => {
-			var scale = new Scale(classes);
+		json.forEach(layer => {
+			var scale = new Scale(layer.buckets);
 			
 			styler.AddScale(scale);
 		});
@@ -50,7 +50,16 @@ export default class Styler extends Evented {
 		return styler;
 	}
 	
+	static Default() {
+		var bucket = { start:-Infinity, end:Infinity, color:[0,0,0] };
+		var scale = new Scale([bucket]);
+		
+		return new Styler([scale]);	
+	}
+	
 	ToJson() {
-		return this.scales.map(s => s.ToJson());
+		return this.scales.map(s => { 
+			return { buckets:s.ToJson() } 
+		});
 	}
 }

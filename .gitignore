@@ -14,3 +14,9 @@ devs-logs-old
 /web.config
 app-gis/data/pandemic_state.txt.tar.gz
 app-gis/data/pandemic_state 2.txt
+/app-gis-v2/data/aidan/OttawaWards/Wards.cpg
+/app-gis-v2/data/aidan/OttawaWards/Wards.dbf
+/app-gis-v2/data/aidan/OttawaWards/Wards.prj
+/app-gis-v2/data/aidan/OttawaWards/Wards.shp
+/app-gis-v2/data/aidan/OttawaWards/Wards.shx
+/app-gis-v2/data/DA_Ottawa.old.geojson

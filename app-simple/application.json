@@ -1,0 +1,6 @@
+{
+	"parsing" : "http://localhost:8080/parser/auto",
+	"parsing.ec2" : "http://ec2-3-235-245-192.compute-1.amazonaws.com:8080/sim.services/parser/auto",
+	"rise" : "http://localhost:82/devs-logs",
+	"rise.ec2" : "http://ec2-3-235-245-192.compute-1.amazonaws.com:8080/devs-viewer/devs-logs"
+}

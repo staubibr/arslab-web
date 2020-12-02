@@ -3,7 +3,7 @@
 import Core from '../tools/core.js';
 import Evented from './evented.js';
 
-const CHUNK_SIZE = 2097152;
+const CHUNK_SIZE = 8388608;
 
 export default class ChunkReader extends Evented { 
 	

@@ -71,7 +71,7 @@ export default Core.Templatable("Widget.Settings.Styles", class Styles extends T
 		
 		this.items = [];
 		
-		this.styles[style].forEach(c => this.AddStyleClass(c));
+		this.styles[style].buckets.forEach(c => this.AddStyleClass(c));
 	}
 	
 	AddStyleClass(c) {
@@ -136,7 +136,7 @@ export default Core.Templatable("Widget.Settings.Styles", class Styles extends T
 		var i = this.Widget('addStyle').value;
 		var c = { start:0, end:0, color:[255, 255, 255] };
 		
-		this.styles[i].push(c);
+		this.styles[i].buckets.push(c);
 	
 		this.AddStyleClass(c);
 		
@@ -171,7 +171,7 @@ export default Core.Templatable("Widget.Settings.Styles", class Styles extends T
 		var i = this.Widget('addStyle').value;
 		var j = this.items.indexOf(item);
 		
-		this.styles[i].splice(j, 1);
+		this.styles[i].buckets.splice(j, 1);
 		this.items.splice(j, 1);
 		
 		Dom.Remove(item.row, this.Elem("body"));

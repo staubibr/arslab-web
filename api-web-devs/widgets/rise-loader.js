@@ -10,16 +10,9 @@ export default Core.Templatable("Widget.RiseList", class RiseLoader extends Temp
     constructor(id) {
         super(id);
 		
-		//var path = location.href.split("/");
-		
-		//path.pop();
-		//path.pop();
+        if (!Core.ConfigCheck("rise")) throw new Error("Config Error: rise url not defined in application configuration.");
 
-	    // path.push('http://localhost:82/devs-logs');
-	    
-		//path = path.join("/");
-		
-		var path = 'http://localhost:82/devs-logs';
+		var path = Core.config.rise;
 		
 		// TODO : This is temporary, just to showcase how we could read from RISE. We need
 		// to fix a bunch of issues with RISE before we can fully implement this.
@@ -34,7 +27,7 @@ export default Core.Templatable("Widget.RiseList", class RiseLoader extends Temp
 			}, {
 				"name": "Classroom CO2",
 				"type" : "Cell-DEVS",
-				"url": path + "/Classroom CO2/"
+				"url": path + "/CO2/"
 			}, {
 				"name": "COVID (TR 0.4, DR 0.01)",
 				"type" : "Cell-DEVS",
@@ -102,7 +95,7 @@ export default Core.Templatable("Widget.RiseList", class RiseLoader extends Temp
 			}, {
 				"name": "Worm Spread",
 				"type" : "Cell-DEVS",
-				"url": path + "/Worm Spread/"
+				"url": path + "/Worm Spreading/"
 			}
 		]
 		
@@ -128,12 +121,13 @@ export default Core.Templatable("Widget.RiseList", class RiseLoader extends Temp
 
 		var p1 = Net.Request(`${model.url}structure.json`, null, 'blob');
 		var p2 = Net.Request(`${model.url}messages.log`, null, 'blob');
-		var p3 = Net.Request(`${model.url}options.json`, null, 'blob');
+		
+		if (model.type == "Cell-DEVS") var p3 = Net.Request(`${model.url}style.json`, null, 'blob');
+		
+		if (model.type == "DEVS") var p3 = Net.Request(`${model.url}diagram.svg`, null, 'blob');
 
 		var defs = [p1, p2, p3];
-
-		if (model.type == "DEVS") defs.push(Net.Request(`${model.url}diagram.svg`, null, 'blob'));
-
+		
 		var success = function(responses) {	
 			Dom.AddCss(this.Elem("wait"), "hidden");	
 			
@@ -143,9 +137,9 @@ export default Core.Templatable("Widget.RiseList", class RiseLoader extends Temp
 			
 			files.push(new File([responses[0]], 'structure.json'));
 			files.push(new File([responses[1]], 'messages.log'));
-			files.push(new File([responses[2]], 'options.json'));
+			if (model.type == "Cell-DEVS") files.push(new File([responses[2]], 'style.json'));
 			
-			if (model.type == "DEVS") files.push(new File([responses[3]], 'diagram.svg'));
+			if (model.type == "DEVS") files.push(new File([responses[2]], 'diagram.svg'));
 			
 			this.Emit("filesready", { files : files });
 		}.bind(this);

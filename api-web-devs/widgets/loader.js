@@ -27,11 +27,13 @@ export default Core.Templatable("Widget.Loader", class Loader extends Templated 
 	}
 
 	static get URL() {
-		return "http://ec2-100-25-4-105.compute-1.amazonaws.com:8080/rise-ext/parser/auto";
+		return Core.config.parsing;
 	}
 	
 	constructor(node) {		
 		super(node);
+		
+        if (!Core.ConfigCheck("parsing")) throw new Error("Config Error: parsing url not defined in application configuration.");
 				
 		this.Node("parse").On("click", this.onParseButton_Click.bind(this));
 		this.Node("clear").On("click", this.onClearButton_Click.bind(this));
@@ -101,18 +103,31 @@ export default Core.Templatable("Widget.Loader", class Loader extends Templated 
 		
 		var diagram = files.find(f => f.name.match(/.svg/i)) || null;
 		
-		var p = fetch(Loader.URL, { method: 'POST', body: form });
+		var p = this.Request(Loader.URL, { method: 'POST', body: form });
 		
 		p.then(this.onAuto_Parsed.bind(this, d, diagram), (error) => { d.Reject(error); });
 		
 		return d.promise;
 	}
 	
-	onAuto_Parsed(d, diagram, response) {
-		if (response.status !== 200) {
-			return this.OnError(new Error(response.status + " something went wrong."));
+	Request(url, options){
+		var d = Core.Defer();
+		var p = fetch(Loader.URL, options);
+		
+		p.then((response) => {
+			if (response.status == 200) d.Resolve(response);
+			
+			else response.text().then((tesxt) => fail(new Error(text)), fail);
+		}, fail);
+		
+		function fail(error) {
+			d.Reject(error);
 		}
 		
+		return d.promise;
+	}
+	
+	onAuto_Parsed(d, diagram, response) {
 		response.blob().then(blob => {			
 			Zip.LoadZip(blob).then(this.OnZip_Read.bind(this, d, diagram), (error) => { d.Reject(error); });
 		}, (error) => { d.Reject(error); });
@@ -128,7 +143,7 @@ export default Core.Templatable("Widget.Loader", class Loader extends Templated 
 		this.ParseStandardized(response.files).then(result => d.Resolve(result), (error) => d.Reject(error));
 	}
 	
-	OnStandardized_Progress(ev) {
+	OnStandardized_Progress(ev) {		
 		// TODO : Should use variable css colors			
 		var c1 = "#198CFF";
 		var c2 = "#0051A3";
@@ -141,9 +156,19 @@ export default Core.Templatable("Widget.Loader", class Loader extends Templated 
 	OnStandardized_Parsed(responses) {	
 		this.Finish();
 
+		var simulation = responses[0].simulation;
+
+		if (simulation.Type == "DEVS" && !simulation.Diagram) {
+			alert("Diagram not found for DEVS simulation. Please provide a diagram.svg file and reload the simulation.");
+		} 
+
 		var options = responses[1] ? oSettings.FromJson(responses[1]) : oSettings.FromSimulation(responses[0].simulation);
 
-		if (!options.styler && responses[0].style) options.styler = Styler.FromJson(responses[0].style);
+		if (!options.styler) {
+			if (responses[0].style) options.styler = Styler.FromJson(responses[0].style);
+			
+			else options.styler = Styler.Default();
+		} 
 		
 		var output = {
 			files: responses[0].files,

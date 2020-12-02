@@ -9,9 +9,13 @@ export default class Simulation extends Evented {
 	
 	get Name() { return this.name; }
 	
+	get Type() { return this.type; }
+	
 	get State() { return this.state; }
 
 	get Selected() { return this.selected; }
+	
+	get Frames() { return this.frames; }
 	
 	// TODO : Should vary in a SimulationCA class
 	get Ratio() { 

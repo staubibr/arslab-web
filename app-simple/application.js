@@ -56,7 +56,9 @@ export default class Main extends Templated {
 		this.Elem("btnDownload").disabled = false;
 		
 		this.simulation.Initialize(this.settings.Get("playback", "cache"));
+		
 		this.ShowDropzone(false);	
+		
 		this.Widget("playback").Initialize(this.simulation, this.settings);
 		this.Widget('multi').Initialize(this.simulation, this.settings);	
 		this.Widget('settings').Initialize(this.simulation, this.settings);	

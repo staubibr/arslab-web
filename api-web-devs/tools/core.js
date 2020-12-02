@@ -232,4 +232,8 @@ export default class Core {
 		
 		return d.promise;
 	}
+	
+	static ConfigCheck(field) {
+		return Core.config[field] != undefined;
+	}
 }

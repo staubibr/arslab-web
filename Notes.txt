@@ -1,0 +1,48 @@
+Notes
+
+DEVS Specification
+
+	time;port,value;port,value;port,value;port,value
+	time;port,value
+	time;port,value;port,value;port,value;port,value;port,value;port,value;port,value;port,value;port,value
+	
+Cell DEVS Specification
+
+	time;x,y,z,port,value;x,y,z,port,value;x,y,z,port,value;x,y,z,port,value
+	time;x,y,z,port,value
+	time;x,y,z,port,value;x,y,z,port,value;x,y,z,port,value;x,y,z,port,value;x,y,z,port,value;x,y,z,port,value;x,y,z,port,value;x,y,z,port,value;x,y,z,port,value
+
+Removing destination and origin model.
+
+Distinguish model state message from output message
+
+Discuss overhead
+
+Why keep ports in the log rather than links?
+
+	- A single port can be linked to multiple other ports in a 1 to many relationship. By storing only the outgoing port for a given message, we can easily identify, from the structure file, each link in the output path. 
+	- Ports are also necessary for CA based visualization. Individual cells in a CA model can emit a message on multiple ports. Having the port information allows us to visualize these ports as individual layers. Storing link information would've led to deduplication of  messages in the log file. For example in a Cell-DEVS model with regular neighborhood, each cell can be linked to either 4 cells (Von Neumann neighborhood) or 8 cells (Moore neighborhood)
+	
+Why sacrifice readability for minimal size?
+
+	- Since we are aiming for a web-based visualization and analysis platform, files transferred should always be kept at a minimal size. It doesn't make sense to transfer a 1GB file when it can be 20 times smaller. The user experience will be significantly improved.
+	
+Why not combine ports for each message?
+
+	- In cases where a model mostly outputs on one port (very likely in CA models), that would be a lot of wasted space to store each message when reconstructing templates
+	
+Why use template for message format?
+
+	- Some formalisms, some simulators do not about simple values. Values can be integers, floats, strings but, they can also be complex objects with nested objects. 
+	
+TODO :
+	
+	- Eliminate duplicate messages for multiple messages going out from same port
+	- Loop backwards step by step bug
+	- loop backwards wrong state of cells
+	- Style DEVS models, each model different colors
+	- Move icons from left to right
+	- Eye and File buttons as one toggle button
+	- Show clear button only when files are added, clear same sized as load
+	- Zoom on canvas
+	- backwards playback issue, 99, 98, 98, 97, ..., 0

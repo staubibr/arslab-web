@@ -18,13 +18,14 @@ export default class Model {
 	
 	get SVG() { return this.svg; }
 
-	constructor(name, type, submodels, ports, links, svg) {
+	constructor(name, type, submodels, ports, links, svg, template) {
         this.name = name;
         this.type = type;
         this.submodels = submodels || [];
         this.ports = ports || [];
         this.links = links || [];
         this.svg = svg || [];
+        this.template = template || null;
 		
 		this.ports.forEach(p => p.svg = p.svg || []);
 		this.links.forEach(l => l.svg = l.svg || []);
@@ -64,35 +65,11 @@ export default class Model {
 		
 		return svg;
 	}
-	/*
-	toJSON() {		
-		return {
-			name: this.Name,
-			type : this.Type,
-			svg : this.SVG,
-			submodels : this.submodels.map(s => s.name),
-			ports : this.ports.map(p => {
-				return {
-					name : p.name,
-					type : p.type,
-					svg : p.svg || []
-				}
-			}),
-			links : this.links.map(l => {
-				return {
-					portA : l.portA && l.portA.name,
-					portB : l.portB && l.portB.name,
-					modelB : l.modelB.name,
-					svg : l.svg || []
-				}
-			})
-		}
-	}
-	*/
+
 	static FromJson(json) {
 		if (json.ports) var ports = json.ports.map(p => Port.FromJson(p));
 		if (json.links) var links = json.links.map(l => Link.FromJson(l));
 		
-		return new Model(json.name, json.type, json.submodels, ports, links, json.svg);
+		return new Model(json.name, json.type, json.submodels, ports, links, json.svg, json.template);
 	}
 }

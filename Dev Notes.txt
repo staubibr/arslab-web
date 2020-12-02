@@ -64,6 +64,14 @@ History
 		- Brought back an automated parser
 		- Updated app code to reflect these changes, simpler loading process (for users)
 
+	2020 August:
+		- Shreya added database for Rise Ext
+
+	2020 September:
+		- Added Cadmium parsing services
+		- Integrated Shreya's rise extension
+		- Moved app and database to AWS
+
  
 
 

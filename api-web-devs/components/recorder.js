@@ -13,13 +13,22 @@ export default class Recorder {
 		this.chunks = null;
 		this.recording = false;
 		
-		var options = { mimeType: 'video/webm;codecs=vp9' };
+		var options;
+		
+		if (MediaRecorder.isTypeSupported('video/webm;codecs=vp9')) {
+			options = { mimeType: 'video/webm; codecs=vp9' };
+		} 
+		else {
+			options = { mimeType: 'video/webm; codecs=vp8' };
+		} 
 		
 		this.recorder = new MediaRecorder(canvas.captureStream(), options); // init the recorder
 		
 		// every time the recorder has new data, we will store it in our array
 		this.recorder.ondataavailable = (function(ev) {
-			this.chunks.push(ev.data);
+			if (event.data && event.data.size > 0) {
+				this.chunks.push(ev.data);
+			}
 		}).bind(this);
 	}	
 	
