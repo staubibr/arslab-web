@@ -11,7 +11,7 @@ var p1 = Net.JSON(`../api-web-devs/nls.json`);
 var p2 = Net.JSON(`./nls.json`);
 var p3 = Net.JSON(`./data/${path}/visualization.json`);
 var p4 = Net.Request(`./data/${path}/structure.json`, null, 'blob');
-var p5 = Net.Request(`./data/${path}/messages.log`, null, 'blob');
+var p5 = Net.Request(`./data/${path}/messages.log?v=1`, null, 'blob');
 var p6 = Core.WaitForDocument();
 
 Promise.all([p1, p2, p3, p4, p5, p6]).then(Start, Fail);
