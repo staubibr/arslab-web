@@ -67,3 +67,10 @@ html, body, select, .popup {
 	display:none;
 }
 
+.variableSelector {
+    width: auto;
+    height: auto;
+    border-radius: 10px;
+    margin-left: 40px;
+    margin-top: 10px;
+  }
