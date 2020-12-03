@@ -16,14 +16,17 @@ html, body, select, .popup {
 	cursor: pointer;
 }
 
+.playback, .custom-control {
+    background: rgba(255,255,255,.8);
+    border-radius: 4px;
+}
+
 .playback {
 	position: absolute;
     bottom: 8px;
     left: 50%;
     transform: translate(-50%,0);
     padding: 2px;
-    background: rgba(255,255,255,.8);
-    border-radius: 4px;
 }
 
 .playback button {
@@ -65,5 +68,15 @@ html, body, select, .popup {
 .ol-layerswitcher .panel .ol-layer-group .layerswitcher-opacity,
 .ol-layerswitcher .panel .ol-layer-tile .layerswitcher-opacity {
 	display:none;
+}
+
+.variable-select-container {
+    position: absolute;
+    left: 40px;
+    top: 10px;
+}
+
+.variable-select-container > * {
+	margin: 4px;
 }
 

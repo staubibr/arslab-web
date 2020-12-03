@@ -63,6 +63,14 @@ export default class Map extends Evented {
 		return this.layers[id];
 	}
 	
+	AddControl(control, options) {
+		options = options || {};
+		
+		options.map = this.OL;
+		
+		this.OL.addControl(control);
+	}
+	
 	AddLayer(id, layer) {
 		this.OL.addLayer(layer);
 		

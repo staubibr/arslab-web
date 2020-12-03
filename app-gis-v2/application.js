@@ -61,6 +61,32 @@ export default class Main extends Templated {
 		var parser = new Parser();
 		
 		parser.Parse(this.files).then(this.onSimulation_Loaded.bind(this), this.onApplication_Error.bind(this));
+		
+		
+		this.AddSelector();
+	}
+
+	AddSelector() {
+		var control = new ol.control.Control({
+			element: this.Elem("variable-select-container")
+		});
+		
+		this.config.simulation.forEach((s, i) => {
+			var option = Dom.Create("option", { "text":s.name, "value":i });
+			
+			this.Elem("variable-select").add(option);
+		});
+		
+		this.map.AddControl(control);
+
+		this.Node("variable-select").On("change", this.onVariableSelect_Change.bind(this));
+	}
+
+	onVariableSelect_Change(ev){
+		// Change to the style of the newly selected variable
+		this.current = this.styles[ev.target.value];
+		
+		this.Draw(this.simulation.state.data);
 	}
 		
 	onSimulation_Loaded(ev) {
@@ -73,8 +99,12 @@ export default class Main extends Templated {
 		
 		this.simulation.Initialize(n);
 		
+		// Prepare simulation styles, set first one as currently selected, 
+		// update the variable selector to reflect the current property being coloured
 		this.styles = this.PrepareSimulationVisualization();
 		this.current = this.styles[0];
+
+		this.Node("variable-select").selectedIndex = 0;
 		
 		var canvas = this.Elem("map").querySelector(".ol-layer").firstChild;
 		
@@ -85,7 +115,7 @@ export default class Main extends Templated {
 		this.simulation.On("Move", this.onSimulation_Move.bind(this));
 		
 		for (var id in this.map.Layers) this.map.Layers[id].set('visible', true);
-		
+
 		this.Draw(this.simulation.state.data);
 	}
 	
@@ -118,6 +148,7 @@ export default class Main extends Templated {
 	}
 	
 	Draw(data) {
+		
 		var layer = this.map.Layer(this.current.layer);
 		var features = layer.getSource().getFeatures();
 		
@@ -180,6 +211,11 @@ export default class Main extends Templated {
 		return	"<main handle='main'>" +
 					"<div handle='map' class='map'></div>" +
 					"<div handle='playback' widget='Widget.Playback'></div>" +
+					
+					"<div handle='variable-select-container' class='variable-select-container custom-control'>" + 
+						"<label>nls(label_variable_select)</label>" +
+						"<select handle='variable-select' title=nls(title_variable_select)></select></div>" +
+					"</div>" +
 				"</main>";
 	}
 }
