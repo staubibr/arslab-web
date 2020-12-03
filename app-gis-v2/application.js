@@ -53,8 +53,6 @@ export default class Main extends Templated {
 		var layers = data.map((d, i) => {	
 			var config = this.config.layers[i];	
 			
-			this.variablesToDropdown(config.fields)
-			
 			d.name = config.id;
 			
 			var layer = this.map.AddGeoJsonLayer(config.id, d);
@@ -67,31 +65,7 @@ export default class Main extends Templated {
 		parser.Parse(this.files).then(this.onSimulation_Loaded.bind(this), this.onApplication_Error.bind(this));
 	}
 
-	variablesToDropdown(fields){
-		this.fields = fields
-		this.select = document.getElementById("variableSelect");
-		
-		for (let index = 0; index < fields.length; index++) {
-			var option = document.createElement("option");
-			option.text = fields[index];
 
-			var v = this.config.simulation.filter(order => (order.fill.property === fields[index]));
-
-			// Disable all variables that don't have style
-			if(v.length != 1){
-				option.disabled = true;
-			}
-
-			this.select.add(option);
-		}
-	}
-
-	variableChange(ev){
-		// Change to the style of the newly selected variable
-		var v = this.config.simulation.filter(order => (order.fill.property === ev.target.value));
-		this.current = v[0]
-		this.Draw(this.simulation.state.data);
-	}
 		
 	onSimulation_Loaded(ev) {
 		this.settings = new oSettings();
@@ -104,10 +78,9 @@ export default class Main extends Templated {
 		this.simulation.Initialize(n);
 		
 		this.styles = this.PrepareSimulationVisualization();
-		this.current = this.styles[0];		
+		this.current = this.styles[1];		
 
-		// Update the variable selector to reflect the current property being coloured
-		this.select.selectedIndex = this.fields.indexOf(this.current.fill.property);
+		this.variablesToDropdown()
 		
 		var canvas = this.Elem("map").querySelector(".ol-layer").firstChild;
 		
@@ -136,6 +109,26 @@ export default class Main extends Templated {
 		});
 		
 		return this.config.simulation;
+	}
+
+	variablesToDropdown(){
+		var select = document.getElementById("variableSelect");
+		
+		for (let index = 0; index < this.styles.length; index++) {
+			var option = document.createElement("option");
+			option.text = this.styles[index].fill.property;
+			select.add(option);
+		}
+
+		// Update the variable selector to reflect the current property being coloured
+		select.selectedIndex = this.styles.indexOf(this.current);
+	}
+
+	variableChange(ev){
+		// Change to the style of the newly selected variable
+		var v = this.config.simulation.filter(order => (order.fill.property === ev.target.value));
+		this.current = v[0]
+		this.Draw(this.simulation.state.data);
 	}
 	
 	onSimulation_Jump(ev) {
