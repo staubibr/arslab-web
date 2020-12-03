@@ -57,6 +57,8 @@ export default class Main extends Templated {
 			
 			var layer = this.map.AddGeoJsonLayer(config.id, d);
 			
+			// Add points here
+			
 			layer.set('visible', false);
 		});
 		
@@ -147,13 +149,57 @@ export default class Main extends Templated {
 		
 		var layer = this.map.Layer(this.current.layer);
 		var features = layer.getSource().getFeatures();
+
+		var styles = {
+			'10': new ol.style.Style({
+			  image: new ol.style.Circle({
+				radius: 5,
+				fill: new ol.style.Fill({color: '#666666'}),
+				stroke: new ol.style.Stroke({color: '#bada55', width: 1}),
+			  }),
+			}),
+			'20': new ol.style.Style({
+			  image: new ol.style.Circle({
+				radius: 10,
+				fill: new ol.style.Fill({color: '#666666'}),
+				stroke: new ol.style.Stroke({color: '#bada55', width: 1}),
+			  }),
+			}),
+		  };
 		
 		features.forEach(f => {
 			var id = f.getProperties()[this.config.join];
 			var d = data[id];
 			var symbol = this.current.style.Symbol(d);
-			
+
 			f.setStyle(symbol);
+
+			// Get center of the feature
+			var e = f.getGeometry().getExtent()
+			var c = ol.extent.getCenter(e)
+
+			var features = new ol.Feature({
+					'geometry': new ol.geom.Point([
+					c[0],
+					c[1] ]),
+					'index': 1,
+					'size': 1 % 2 ? 10 : 20,
+				});
+			
+			var vectorSource = new ol.source.Vector({
+				features: [features],
+				wrapX: false,
+			  });
+			  var vector = new ol.layer.Vector({
+				source: vectorSource,
+				style: function (feature) {
+				  return styles[feature.get('size')];
+				},
+			  });
+
+			//debugger;
+			this.map.OL.addLayer(vector)
+		
 		});
 	}
 	
