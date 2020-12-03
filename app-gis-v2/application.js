@@ -74,7 +74,7 @@ export default class Main extends Templated {
 		this.simulation.Initialize(n);
 		
 		this.styles = this.PrepareSimulationVisualization();
-		this.current = this.styles[0];		
+		this.current = this.styles[0];
 		
 		var canvas = this.Elem("map").querySelector(".ol-layer").firstChild;
 		
