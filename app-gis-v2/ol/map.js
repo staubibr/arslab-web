@@ -15,21 +15,9 @@ export default class Map extends Evented {
 		
 		this.layers = {};
 		
-		var Selector = function (opt_options) {
-			var options = opt_options || {};
-
-			var elem = document.querySelector(".variableSelector");
-			elem.className = 'variableSelector';
-			ol.control.Control.call(this, { element: elem });
-		  };
-		ol.inherits(Selector, ol.control.Control);
-		
-		var se = new Selector();
 		var sl = new ol.control.ScaleLine();
 		var fs = new ol.control.FullScreen();
 		var ls = new ol.control.LayerSwitcher({ groupSelectStyle: "group" });
-
-		
 	  	
 		this.basemaps = basemaps;
 		
@@ -39,7 +27,7 @@ export default class Map extends Evented {
 				title: 'Basemaps',
 				layers: basemaps
 			})],
-			controls: ol.control.defaults().extend([fs, sl, ls, se]),
+			controls: ol.control.defaults({ attributionOptions: { collapsible: true } }).extend([fs, sl, ls]),
 		});
 		
 		this._ol.on("click", (ev) => {
@@ -73,6 +61,14 @@ export default class Map extends Evented {
 	
 	Layer(id) {
 		return this.layers[id];
+	}
+
+	AddControl(control, options) {
+		options = options || {};
+		
+		options.map = this.OL;
+		
+		this.OL.addControl(control);
 	}
 	
 	AddLayer(id, layer) {
@@ -126,5 +122,11 @@ export default class Map extends Evented {
 			visible: !!visible,
 			baseLayer: true
 		});
+	}
+
+	removeLastControl(){
+		var controlsArray = this.OL.getControls()["array_"]
+		var lastControl = controlsArray[controlsArray.length - 1]
+		this.OL.removeControl(lastControl)
 	}
 }

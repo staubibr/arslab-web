@@ -45,8 +45,6 @@ export default class Main extends Templated {
 		});
 		
 		Promise.all(defs).then(this.onData_Loaded.bind(this));
-
-		this.Node("variableSelect").On("change", this.variableChange.bind(this));
 	}
 	
 	onData_Loaded(data) {	
@@ -65,10 +63,10 @@ export default class Main extends Templated {
 		var parser = new Parser();
 		
 		parser.Parse(this.files).then(this.onSimulation_Loaded.bind(this), this.onApplication_Error.bind(this));
+
+		this.AddSelector();
 	}
 
-
-		
 	onSimulation_Loaded(ev) {
 		this.settings = new oSettings();
 		this.simulation = ev.simulation;
@@ -80,9 +78,7 @@ export default class Main extends Templated {
 		this.simulation.Initialize(n);
 		
 		this.styles = this.PrepareSimulationVisualization();
-		this.current = this.styles[1];		
-
-		this.variablesToDropdown()
+		this.current = this.styles[0];		
 		
 		var canvas = this.Elem("map").querySelector(".ol-layer").firstChild;
 		
@@ -94,7 +90,56 @@ export default class Main extends Templated {
 		
 		for (var id in this.map.Layers) this.map.Layers[id].set('visible', true);
 
+		this.extractAndDrawCentroids(this.simulation.state.data)
+
 		this.Draw(this.simulation.state.data);
+		  
+		this.AddLegend(this.current.style.fill)
+
+		
+	}
+
+	extractAndDrawCentroids(data){
+		var layer = this.map.Layer(this.current.layer);
+		var features = layer.getSource().getFeatures();
+
+		let centroids = [];
+		features.forEach(f => {
+			// Get center of the feature
+			var e = f.getGeometry().getExtent()
+			var c = ol.extent.getCenter(e)
+
+			var id = f.getProperties()[this.config.join];
+			var d = data[id];
+
+			var feature = new ol.Feature({
+				'geometry': new ol.geom.Point(
+				// Coordinates
+				[c[0],c[1]]),
+				'id': id,
+			});
+			centroids.push(feature)
+		});
+		var vectorSource = new ol.source.Vector({
+			features: centroids,
+			wrapX: false,
+			
+		});
+		  var vector = new ol.layer.Vector({
+			source: vectorSource,
+			title: "centroids",
+			style: function (feature) {
+			  return new ol.style.Style({
+				image: new ol.style.Circle({
+				  radius: 5,
+				  fill: new ol.style.Fill({color: '#0000FF'}),
+				  stroke: new ol.style.Stroke({color: '#000000', width: 1}),
+				}),
+			  })
+			},
+		});
+
+		this.map.OL.addLayer(vector)
 	}
 	
 	PrepareSimulationVisualization() {
@@ -113,24 +158,68 @@ export default class Main extends Templated {
 		return this.config.simulation;
 	}
 
-	variablesToDropdown(){
-		var select = document.getElementById("variableSelect");
+	AddSelector() {
+		var control = new ol.control.Control({
+			element: this.Elem("variable-select-container")
+		});
 		
-		for (let index = 0; index < this.styles.length; index++) {
-			var option = document.createElement("option");
-			option.text = this.styles[index].fill.property;
-			select.add(option);
-		}
+		this.config.simulation.forEach((s, i) => {
+			var option = Dom.Create("option", { "text":s.name, "value":i });
+			
+			this.Elem("variable-select").add(option);
+		});
+		
+		this.map.AddControl(control);
 
-		// Update the variable selector to reflect the current property being coloured
-		select.selectedIndex = this.styles.indexOf(this.current);
+		this.Node("variable-select").On("change", this.onVariableSelect_Change.bind(this));
 	}
 
-	variableChange(ev){
+	AddLegend(fill){	
+		var buckets = fill.buckets;
+		var colors = fill.colors;
+		var type = fill.type;
+
+		var legend = new ol.control.Legend({
+		title: `Legend (${type})`,
+		margin: 5,
+		collapsed: false,
+		});
+
+		//   this.OL.getControls()["array_"][7].element.style.cssText =
+		//   "bottom: 0px; left: 0px; pointer-events: auto;";
+
+		for (let i = 0; i < buckets.length; i++) {
+			let title;
+
+			if (i == 0) { title = `0 - ${buckets[i].toString()}`; } 
+			else { title = `${buckets[i - 1].toString()} - ${buckets[i].toString()}`; }
+
+			legend.addRow({
+				title: title,
+				typeGeom: "Point",
+				style: new ol.style.Style({
+				image: new ol.style.RegularShape({
+					points: 11,
+					radius: 15,
+					stroke: new ol.style.Stroke({ color: [0, 0, 0, 1], width: 1.5 }),
+					fill: new ol.style.Fill({ color: colors[i] }),
+				}),
+				}),
+			});
+		}
+
+		this.map.AddControl(legend);
+	}
+
+	onVariableSelect_Change(ev){
 		// Change to the style of the newly selected variable
-		var v = this.config.simulation.filter(order => (order.fill.property === ev.target.value));
-		this.current = v[0]
+		this.current = this.styles[ev.target.value];
+		
 		this.Draw(this.simulation.state.data);
+
+		this.map.removeLastControl()
+		this.AddLegend(this.current.style.fill)
+		
 	}
 	
 	onSimulation_Jump(ev) {
@@ -146,60 +235,36 @@ export default class Main extends Templated {
 	}
 	
 	Draw(data) {
-		
 		var layer = this.map.Layer(this.current.layer);
 		var features = layer.getSource().getFeatures();
-
-		var styles = {
-			'10': new ol.style.Style({
-			  image: new ol.style.Circle({
-				radius: 5,
-				fill: new ol.style.Fill({color: '#666666'}),
-				stroke: new ol.style.Stroke({color: '#bada55', width: 1}),
-			  }),
-			}),
-			'20': new ol.style.Style({
-			  image: new ol.style.Circle({
-				radius: 10,
-				fill: new ol.style.Fill({color: '#666666'}),
-				stroke: new ol.style.Stroke({color: '#bada55', width: 1}),
-			  }),
-			}),
-		  };
 		
 		features.forEach(f => {
 			var id = f.getProperties()[this.config.join];
 			var d = data[id];
 			var symbol = this.current.style.Symbol(d);
-
 			f.setStyle(symbol);
 
-			// Get center of the feature
-			var e = f.getGeometry().getExtent()
-			var c = ol.extent.getCenter(e)
+		});
+		this.updateCentroids(data)
+	}
 
-			var features = new ol.Feature({
-					'geometry': new ol.geom.Point([
-					c[0],
-					c[1] ]),
-					'index': 1,
-					'size': 1 % 2 ? 10 : 20,
-				});
+	updateCentroids(data){
+		var layersArray = this.map.OL.getLayers()["array_"];
+		var lastLayer = layersArray[layersArray.length - 1]
+		var features = lastLayer.getSource().getFeatures();
+		let maxSize = 20
+
+		features.forEach(f => {
+			let deaths = data[f.values_.id]["Deaths(accumulative)"]
+			let r = ((deaths / 1) * maxSize)
 			
-			var vectorSource = new ol.source.Vector({
-				features: [features],
-				wrapX: false,
-			  });
-			  var vector = new ol.layer.Vector({
-				source: vectorSource,
-				style: function (feature) {
-				  return styles[feature.get('size')];
-				},
-			  });
-
-			//debugger;
-			this.map.OL.addLayer(vector)
-		
+			f.setStyle(new ol.style.Style({
+				image: new ol.style.Circle({
+				  radius: r,
+				  fill: new ol.style.Fill({color: '#0000FF'}),
+				  stroke: new ol.style.Stroke({color: '#000000', width: 1}),
+				}),
+			  }));
 		});
 	}
 	
@@ -238,6 +303,8 @@ export default class Main extends Templated {
 			var props = this.simulation.state.GetValue(id);
 			
 			var content = "<ul>";
+
+			content += `<li>${this.config.join}: ${id}</li>`
 			
 			this.config.popup.fields.forEach(f => content += `<li>${f}: ${props[f]}</li>`);
 			
@@ -253,8 +320,10 @@ export default class Main extends Templated {
 		return	"<main handle='main'>" +
 					"<div handle='map' class='map'></div>" +
 					"<div handle='playback' widget='Widget.Playback'></div>" +
-					"<div id='variableSelector' class='variableSelector'><label for='class-select'></label>" +
-					"<select handle = 'variableSelect' id='variableSelect'></select></div>" +
+					"<div handle='variable-select-container' class='variable-select-container custom-control'>" + 
+						"<label>nls(label_variable_select)</label>" +
+						"<select handle='variable-select' title=nls(title_variable_select)></select></div>" +
+					"</div>" +
 				"</main>";
 	}
 }
