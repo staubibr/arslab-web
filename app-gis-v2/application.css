@@ -102,8 +102,8 @@ button:hover {
 
 .variable-select-container {
     position: absolute;
-    left: 40px;
-    top: 10px;
+    left: 3em;
+    top: .5em;
 }
 
 .variable-select-container > * {
