@@ -147,13 +147,6 @@ export default class Main extends Templated {
 
 		this.map.AddControl(legend);
 	}
-
-	onVariableSelect_Change(ev){
-		// Change to the style of the newly selected variable
-		this.current = this.styles[ev.target.value];
-		
-		this.Draw(this.simulation.state.data);
-	}
 	
 	PrepareSimulationVisualization() {
 		var stats = Style.Statistics(this.simulation);
@@ -177,8 +170,8 @@ export default class Main extends Templated {
 		
 		this.Draw(this.simulation.state.data);
 
-		this.map.removeLastControl()
-		this.AddLegend(this.current.style.fill)
+		this.map.removeLastControl();
+		this.AddLegend(this.current.style.fill);
 	}
 	
 	onSimulation_Jump(ev) {
