@@ -18,6 +18,8 @@ import Style from "./utils/style.js";
 import Point from "./style/point.js";
 import Polygon from "./style/polygon.js";
 
+import Geometry from "./utils/geometry.js"
+
 export default class Main extends Templated { 
 
 	constructor(node, config, files) {		
@@ -43,10 +45,21 @@ export default class Main extends Templated {
 			var config = this.config.layers[i];	
 			
 			d.name = config.id;
-			
+
 			var layer = this.map.AddGeoJsonLayer(config.id, d);
+
+			Geometry.convertPolygonToPoint(layer)
+
+			// "type": "user-defined",
+			// "radius": [12,15,20],
+			// "buckets": [0.1, 0.2, 0.3],
+
+			// "type": "quantile",
+            //     "min": 5,
+            //     "max": 10,
 			
 			layer.set('visible', false);
+
 		});
 	}
 		
@@ -134,11 +147,28 @@ export default class Main extends Templated {
 
 	AddLegend(){	
 		this.map.RemoveControl(this.legend);
+
+		// Style function
+		function getFeatureStyle (feature) {
+			return [
+			  new ol.style.Style ({
+				image: new ol.style.Circle({
+				  radius: feature.get('size'), 
+				  fill: null,
+				  stroke: new ol.style.Stroke ({
+					width: 1,
+					color: [0,0,0],
+				  })
+				}),
+				geometry: new ol.geom.Point( ol.extent.getCenter (feature.getGeometry().getExtent() ))
+			  })
+			];
+		  }
 		
 		var prev = null;
 		var style = this.current.style;
 		this.legend = new ol.control.Legend({ title: `Legend (${style.fill.type})`, margin: 5, collapsed: false });
-
+	
 		style.fill.buckets.forEach((b, i) => {
 			var curr = b.toFixed(4).toString();
 			var title = (prev) ? `${prev} - ${curr}` : `0 - ${curr}`;
@@ -155,6 +185,31 @@ export default class Main extends Templated {
 		});
 
 		this.map.AddControl(this.legend);
+
+		if(style.radius != undefined){
+			this.legend2 = new ol.control.Legend({ 
+				title: `Legend (${style.radius.type})`, 
+				style: getFeatureStyle,
+				margin: 5, 
+				collapsed: false, 
+				//size: [a, b],
+				target: this.legend.element});
+
+			style.radius.radii.forEach((b, i) =>  {
+				var len = style.radius.radii.length
+				//this.legend2.addRow({ title: b.toFixed(2).toString() });
+				this.legend2.addRow({ 
+					title:b.toFixed(2).toString(), 
+					properties: { size: style.radius.radii[i] }, 
+					typeGeom: 'Point'})
+			})
+			this.legend2.addRow();
+			this.legend2.addRow();
+			this.legend2.addRow();
+				
+
+			this.map.AddControl(this.legend2);
+		}
 	}
 	
 	AddLayerSwitcher() {
@@ -165,6 +220,7 @@ export default class Main extends Templated {
 	
 	PrepareSimulationVisualization() {
 		var stats = Style.Statistics(this.simulation);
+		// Continuous scale for points
 		
 		this.config.simulation.forEach(s => {
 			var layer = this.config.layers.find(l => l.id == s.layer);
@@ -207,6 +263,7 @@ export default class Main extends Templated {
 		features.forEach(f => {
 			var id = f.getProperties()[this.config.join];
 			var symbol = this.current.style.Symbol(data[id]);
+			
 			
 			f.setStyle(symbol);
 		});

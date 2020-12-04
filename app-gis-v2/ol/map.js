@@ -58,14 +58,6 @@ export default class Map extends Evented {
 		this.OL.addControl(control);
 	}
 	
-	AddControl(control, options) {
-		options = options || {};
-		
-		options.map = this.OL;
-		
-		this.OL.addControl(control);
-	}
-	
 	RemoveControl(control) {
 		this.OL.removeControl(control);
 	}
@@ -80,7 +72,7 @@ export default class Map extends Evented {
 	
 	AddGeoJsonLayer(id, json) {			
 		var format = new ol.format.GeoJSON({ featureProjection : this.projection });
-		
+
 		var vs = new ol.source.Vector({features: format.readFeatures(json)});
 		
 		return this.AddLayer(id, new ol.layer.Vector({ source: vs, title: json.name  }));
@@ -90,7 +82,7 @@ export default class Map extends Evented {
 		// TODO: Not sure about the wrapX thing.
 		var source = new ol.source.Vector({ features:features, wrapX:false });
 		
-		var vector = new ol.layer.Vector({ source:source, title:title, style:style });
+		var vector = new ol.layer.Vector({ source:source, title:id, style:style });
 
 		return this.AddLayer(id, vector);
 	}

@@ -4,19 +4,20 @@ import Style from "../utils/style.js";
 export default class BucketRadius {
 
 	get Length() {
-		return this.colors.length;
+		return this.classes;
 	}
 	
 	get Classification() {
 		return this.classification;
 	}
 
-	constructor(property, radii, type) {
+	constructor(property, classes, radii, type, buckets) {
+		this.property = property;
+		this.classes = classes;
+		this.radii = radii;
 		this.type = type;
 		this.attribute = "radius";
-		this.property = property;
-		this.radii = radii;
-		this.buckets = null;
+		this.buckets = buckets;
 	}
 	
 	Symbol(value) {
@@ -29,8 +30,10 @@ export default class BucketRadius {
 	
 	Bucketize(type, stats) {
 		var n = this.classes;
-		
-		if (type == "quantile_classes") {
+
+		if(type == "user-defined"){
+			return
+		}else if (type == "quantile_classes") {
 			this.buckets = Style.QuantileBuckets(stats[this.property].sorted, n);
 		}
 		else if (type == "equivalent_classes") {
@@ -39,8 +42,14 @@ export default class BucketRadius {
 	}
 	
 	static FromJson(json) {
-		var radii = Style.EquivalentBuckets(json.min, json.max, json.classes);
-		
-		return new BucketRadius(json.property, radii, json.type);
+		let radii
+		if(json.type == "user-defined"){
+			var i = json.radius.length - 1
+			radii = Style.EquivalentBuckets(json.radius[0], json.radius[i], json.classes);
+			this.buckets = json.buckets
+		}else{
+			radii = Style.EquivalentBuckets(json.min, json.max, json.classes);
+		}
+		return new BucketRadius(json.property, json.classes, radii, json.type, this.buckets);
 	}
 }

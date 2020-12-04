@@ -153,20 +153,26 @@ export default class Style {
 	}
 	
 	static FillStyleFromJson(json) {
-		if (json.type == "equivalent" || json.type == "quantile") return BucketFill.FromJson(json);
-		
+		if (json.type == "equivalent" || json.type == "quantile" || json.type == "user-defined") {
+			return BucketFill.FromJson(json);
+		}
+
 		if (json.type == "static") return Fill.FromJson(json);
 	}
 	
 	static StrokeStyleFromJson(json) {
-		if (json.type == "equivalent" || json.type == "quantile") return BucketStroke.FromJson(json);
+		if (json.type == "equivalent" || json.type == "quantile" || json.type == "user-defined") {
+			return BucketStroke.FromJson(json);
+		}
 		
 		if (json.type == "static") return Stroke.FromJson(json);
 	}
 	
 	static RadiusStyleFromJson(json) {
-		if (json.type == "equivalent" || json.type == "quantile") return BucketRadius.FromJson(json);
+		if (json.type == "equivalent" || json.type == "quantile" || json.type == "user-defined") {
+			return BucketRadius.FromJson(json);
+		}
 		
-		if (json.type == "static") return Radius.FromJson(json.radius);
+		if (json.type == "static") return Radius.FromJson(json.radius);	
 	}
 }
