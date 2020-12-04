@@ -92,6 +92,7 @@ export default class Main extends Templated {
 		// Add map widgets, some of them require everything to be ready
 		this.AddSelector();
 		this.AddLegend();
+		this.AddLayerSwitcher();
 	}
 	
 	LoadMap() {	
@@ -152,6 +153,12 @@ export default class Main extends Templated {
 		});
 
 		this.map.AddControl(legend);
+	}
+	
+	AddLayerSwitcher() {
+		var ls = new ol.control.LayerSwitcher({ groupSelectStyle: "group" });
+		
+		this.map.AddControl(ls);
 	}
 	
 	PrepareSimulationVisualization() {

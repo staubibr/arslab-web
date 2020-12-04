@@ -114,10 +114,25 @@ button:hover {
 	cursor:pointer;
 }
 
+.ol-control.ol-full-screen {
+	left: .5em;
+    top: 4.5em;
+	right: unset;
+	bottom: unset;
+	
+}
+
+.ol-control.ol-layerswitcher {
+    left: .5em;
+    bottom: 2.5em;
+    top: unset;
+    right: unset;
+}
+
 .ol-control.ol-legend {
 	bottom: unset;
     left: unset;
-    top: 5.5em;
+    top: .5em;
     right: .5em;
 }
 

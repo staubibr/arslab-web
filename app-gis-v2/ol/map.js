@@ -17,7 +17,6 @@ export default class Map extends Evented {
 		
 		var sl = new ol.control.ScaleLine();
 		var fs = new ol.control.FullScreen();
-		var ls = new ol.control.LayerSwitcher({ groupSelectStyle: "group" });
 	  	
 		this.basemaps = basemaps;
 		
@@ -27,7 +26,7 @@ export default class Map extends Evented {
 				title: 'Basemaps',
 				layers: basemaps
 			})],
-			controls: ol.control.defaults({ attributionOptions: { collapsible: true } }).extend([fs, sl, ls]),
+			controls: ol.control.defaults({ attributionOptions: { collapsible: true } }).extend([fs, sl]),
 		});
 		
 		this._ol.on("click", (ev) => {
