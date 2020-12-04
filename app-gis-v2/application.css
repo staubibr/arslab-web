@@ -12,6 +12,24 @@ html, body, select, .popup {
     font-size: 11pt;
 }
 
+.ol-control.ol-layerswitcher:not(.ol-collapsed), 
+.ol-control.ol-layerswitcher:not(.ol-collapsed):hover{
+	background-color: rgba(255,255,255,0.85);
+}
+
+.ol-control.ol-layerswitcher .panel {
+	background-color:transparent;
+}
+
+.ol-scale-line, 
+button {
+	background-color: rgba(0,60,136,.5);
+}
+
+button:hover {
+	background-color: rgba(0,60,136,.7);
+}
+
 .ol-viewport, .ol-control button {
 	cursor: pointer;
 }
@@ -32,7 +50,6 @@ html, body, select, .popup {
 .playback button {
 	height: 30px;
     width: 30px;
-    background-color: rgba(0,60,136,.5);
     color: #eee;
     font-size: 15px;
     border: none;
@@ -80,3 +97,6 @@ html, body, select, .popup {
 	margin: 4px;
 }
 
+.variable-select-container select {
+	cursor:pointer;
+}
