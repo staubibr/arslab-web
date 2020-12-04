@@ -66,6 +66,11 @@ button:hover {
     cursor: pointer;
 }
 
+.playback button:disabled {
+	background-color:lightgray;
+    border-bottom: solid 2px darkgray;
+}
+
 .playback .controls button:not(:last-child) {
     border-right-color: #eee;
 }

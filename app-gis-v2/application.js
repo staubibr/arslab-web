@@ -62,12 +62,18 @@ export default class Main extends Templated {
 		this.simulation.Initialize(n);
 	}
 
-	onApplication_Ready(ev) {
+	onApplication_Ready(ev) {		
 		// Initialize simulation widgets
 		var canvas = this.Elem("map").querySelector(".ol-layer").firstChild;
 		
 		this.Widget("playback").Initialize(this.simulation, this.settings);
 		this.Widget("playback").Recorder = new Recorder(canvas);
+		
+		// TODO: There's an issue with play backwards with the GIS version, needs to be fixed
+		this.Widget("playback").Elem("stepBack").disabled = true;
+		this.Widget("playback").Elem("rewind").disabled = true;
+		this.Widget("playback").Elem("stepBack").title = Core.Nls("sorry_unavailable");
+		this.Widget("playback").Elem("rewind").title = Core.Nls("sorry_unavailable");
 		
 		// Hook simulation events for the playback bar
 		this.simulation.On("Jump", this.onSimulation_Jump.bind(this));
