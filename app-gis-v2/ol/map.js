@@ -66,6 +66,10 @@ export default class Map extends Evented {
 		this.OL.addControl(control);
 	}
 	
+	RemoveControl(control) {
+		this.OL.removeControl(control);
+	}
+	
 	AddLayer(id, layer) {
 		this.OL.addLayer(layer);
 		
@@ -126,11 +130,5 @@ export default class Map extends Evented {
 			visible: !!visible,
 			baseLayer: true
 		});
-	}
-
-	removeLastControl(){
-		var controlsArray = this.OL.getControls()["array_"]
-		var lastControl = controlsArray[controlsArray.length - 1]
-		this.OL.removeControl(lastControl)
 	}
 }

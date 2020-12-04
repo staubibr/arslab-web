@@ -133,9 +133,11 @@ export default class Main extends Templated {
 	}
 
 	AddLegend(){	
+		this.map.RemoveControl(this.legend);
+		
 		var prev = null;
 		var style = this.current.style;
-		var legend = new ol.control.Legend({ title: `Legend (${style.fill.type})`, margin: 5, collapsed: false });
+		this.legend = new ol.control.Legend({ title: `Legend (${style.fill.type})`, margin: 5, collapsed: false });
 
 		style.fill.buckets.forEach((b, i) => {
 			var curr = b.toFixed(4).toString();
@@ -147,12 +149,12 @@ export default class Main extends Templated {
 				fill: { color: style.fill.colors[i] }
 			}
 			
-			legend.addRow({ title:title, size:[40,40], typeGeom:"Point", style:Style.PointStyle(json) });
+			this.legend.addRow({ title:title, size:[40,40], typeGeom:"Point", style:Style.PointStyle(json) });
 			
 			prev = curr;
 		});
 
-		this.map.AddControl(legend);
+		this.map.AddControl(this.legend);
 	}
 	
 	AddLayerSwitcher() {
@@ -183,7 +185,6 @@ export default class Main extends Templated {
 		
 		this.Draw(this.simulation.state.data);
 
-		this.map.removeLastControl();
 		this.AddLegend(this.current.style.fill);
 	}
 	
