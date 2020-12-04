@@ -1,5 +1,5 @@
 
-import Style from "./style.js";
+import Style from "../utils/style.js";
 
 export default class Polygon {
 

@@ -1,10 +1,10 @@
 
-import BucketFill from "./bucketFill.js";
-import BucketRadius from "./bucketRadius.js";
-import BucketStroke from "./bucketStroke.js";
-import Fill from "./fill.js";
-import Radius from "./radius.js";
-import Stroke from "./stroke.js";
+import BucketFill from "../style/bucketFill.js";
+import BucketRadius from "../style/bucketRadius.js";
+import BucketStroke from "../style/bucketStroke.js";
+import Fill from "../style/fill.js";
+import Radius from "../style/radius.js";
+import Stroke from "../style/stroke.js";
 
 export default class Style {
 	static GetBucketStyleFunction(type, json, stats) {

@@ -15,39 +15,30 @@ import Parser from '../api-web-devs/parsers/standardized.js';
 import Map from './ol/map.js';
 
 import Style from "./utils/style.js";
-import Point from "./utils/point.js";
-import Polygon from "./utils/polygon.js";
+import Point from "./style/point.js";
+import Polygon from "./style/polygon.js";
 
 export default class Main extends Templated { 
 
 	constructor(node, config, files) {		
 		super(node);
 		
+		this.selected = null;
 		this.config = config;
 		this.files = files;
 		
-		var baseLayers = [Map.BasemapOSM(true), Map.BasemapSatellite()];
-	
-		this.map = new Map(this.Elem("map"), baseLayers);
+		// Load the simulation data
+		var parser = new Parser();
 		
-		this.map.SetView([-75.7, 45.3], 10);
-
-		this.selected = null;
-
-		this.map.On("click", this.onMap_Click.bind(this));
+		var p1 = parser.Parse(this.files).then(this.onSimulation_Loaded.bind(this), this.onApplication_Error.bind(this));
 		
-		var defs = this.config.layers.map(l => {
-			var base = location.href.split("/").slice(0,-1);
-			
-			base.push(l.url);
-			
-			return Net.JSON(base.join("/"));			
-		});
+		var p2 = this.LoadMap().then(this.onData_Loaded.bind(this));
 		
-		Promise.all(defs).then(this.onData_Loaded.bind(this));
+		Promise.all([p1, p2]).then(this.onApplication_Ready.bind(this));
 	}
 	
 	onData_Loaded(data) {	
+		// Add layers to the map according to the loaded geojson data
 		var layers = data.map((d, i) => {	
 			var config = this.config.layers[i];	
 			
@@ -57,13 +48,63 @@ export default class Main extends Templated {
 			
 			layer.set('visible', false);
 		});
+	}
 		
-		var parser = new Parser();
+	onSimulation_Loaded(ev) {
+		// Initialize simulation and simulation settings
+		this.settings = new oSettings();
+		this.simulation = ev.simulation;
 		
-		parser.Parse(this.files).then(this.onSimulation_Loaded.bind(this), this.onApplication_Error.bind(this));
+		this.settings.json.playback.speed = 10;
 		
+		var n = Math.ceil(this.simulation.frames.length / 10);
 		
+		this.simulation.Initialize(n);
+	}
+
+	onApplication_Ready(ev) {
+		// Initialize simulation widgets
+		var canvas = this.Elem("map").querySelector(".ol-layer").firstChild;
+		
+		this.Widget("playback").Initialize(this.simulation, this.settings);
+		this.Widget("playback").Recorder = new Recorder(canvas);
+		
+		// Hook simulation events for the playback bar
+		this.simulation.On("Jump", this.onSimulation_Jump.bind(this));
+		this.simulation.On("Move", this.onSimulation_Move.bind(this));
+		
+		// Show geo layers and draw simulation state
+		for (var id in this.map.Layers) this.map.Layers[id].set('visible', true);
+		
+		// Prepare simulation styles, set first one as currently selected, 
+		// update the variable selector to reflect the current property being coloured
+		this.styles = this.PrepareSimulationVisualization();
+		this.current = this.styles[0];
+		
+		this.Draw(this.simulation.state.data);
+
+		// Add map widgets, some of them require everything to be ready
 		this.AddSelector();
+		this.AddLegend();
+	}
+	
+	LoadMap() {	
+		this.map = new Map(this.Elem("map"), [Map.BasemapOSM(true), Map.BasemapSatellite()]);
+		
+		this.map.SetView([-75.7, 45.3], 10);
+
+		this.map.On("click", this.onMap_Click.bind(this));
+		
+		// Load all geojson data layers contained in visualization.json
+		var defs = this.config.layers.map(l => {
+			var base = location.href.split("/").slice(0,-1);
+			
+			base.push(l.url);
+			
+			return Net.JSON(base.join("/"));			
+		});
+		
+		return Promise.all(defs);
 	}
 
 	AddSelector() {
@@ -77,45 +118,40 @@ export default class Main extends Templated {
 			this.Elem("variable-select").add(option);
 		});
 		
+		this.Elem("variable-select").selectedIndex = 0;
+		
 		this.map.AddControl(control);
 
 		this.Node("variable-select").On("change", this.onVariableSelect_Change.bind(this));
+	}
+
+	AddLegend(){	
+		var prev = null;
+		var style = this.current.style;
+		var legend = new ol.control.Legend({ title: `Legend (${style.fill.type})`, margin: 5, collapsed: false });
+
+		style.fill.buckets.forEach((b, i) => {
+			var curr = b.toFixed(4).toString();
+			var title = (prev) ? `${prev} - ${curr}` : `0 - ${curr}`;
+
+			var json = {
+				radius : 8, 
+				stroke: { color: "#000", width: 1 } ,
+				fill: { color: style.fill.colors[i] }
+			}
+			
+			legend.addRow({ title:title, size:[40,40], typeGeom:"Point", style:Style.PointStyle(json) });
+			
+			prev = curr;
+		});
+
+		this.map.AddControl(legend);
 	}
 
 	onVariableSelect_Change(ev){
 		// Change to the style of the newly selected variable
 		this.current = this.styles[ev.target.value];
 		
-		this.Draw(this.simulation.state.data);
-	}
-		
-	onSimulation_Loaded(ev) {
-		this.settings = new oSettings();
-		this.simulation = ev.simulation;
-		
-		this.settings.json.playback.speed = 10;
-		
-		var n = Math.ceil(this.simulation.frames.length / 10);
-		
-		this.simulation.Initialize(n);
-		
-		// Prepare simulation styles, set first one as currently selected, 
-		// update the variable selector to reflect the current property being coloured
-		this.styles = this.PrepareSimulationVisualization();
-		this.current = this.styles[0];
-
-		this.Node("variable-select").selectedIndex = 0;
-		
-		var canvas = this.Elem("map").querySelector(".ol-layer").firstChild;
-		
-		this.Widget("playback").Initialize(this.simulation, this.settings);
-		this.Widget("playback").Recorder = new Recorder(canvas);
-		
-		this.simulation.On("Jump", this.onSimulation_Jump.bind(this));
-		this.simulation.On("Move", this.onSimulation_Move.bind(this));
-		
-		for (var id in this.map.Layers) this.map.Layers[id].set('visible', true);
-
 		this.Draw(this.simulation.state.data);
 	}
 	
@@ -134,6 +170,16 @@ export default class Main extends Templated {
 		
 		return this.config.simulation;
 	}
+
+	onVariableSelect_Change(ev){
+		// Change to the style of the newly selected variable
+		this.current = this.styles[ev.target.value];
+		
+		this.Draw(this.simulation.state.data);
+
+		this.map.removeLastControl()
+		this.AddLegend(this.current.style.fill)
+	}
 	
 	onSimulation_Jump(ev) {
 		this.Draw(ev.state.data);
@@ -148,14 +194,12 @@ export default class Main extends Templated {
 	}
 	
 	Draw(data) {
-		
 		var layer = this.map.Layer(this.current.layer);
 		var features = layer.getSource().getFeatures();
 		
 		features.forEach(f => {
 			var id = f.getProperties()[this.config.join];
-			var d = data[id];
-			var symbol = this.current.style.Symbol(d);
+			var symbol = this.current.style.Symbol(data[id]);
 			
 			f.setStyle(symbol);
 		});
@@ -196,6 +240,8 @@ export default class Main extends Templated {
 			var props = this.simulation.state.GetValue(id);
 			
 			var content = "<ul>";
+
+			content += `<li>${this.config.join}: ${id}</li>`
 			
 			this.config.popup.fields.forEach(f => content += `<li>${f}: ${props[f]}</li>`);
 			

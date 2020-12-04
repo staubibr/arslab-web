@@ -27,7 +27,7 @@ export default class Map extends Evented {
 				title: 'Basemaps',
 				layers: basemaps
 			})],
-			controls: ol.control.defaults().extend([fs, sl, ls]),
+			controls: ol.control.defaults({ attributionOptions: { collapsible: true } }).extend([fs, sl, ls]),
 		});
 		
 		this._ol.on("click", (ev) => {
@@ -40,18 +40,6 @@ export default class Map extends Evented {
 			this.Emit("click", { "features" : features, "coordinates" : ev.coordinate });
 		})
 		
-		/*
-		var select = new ol.interaction.Select();
-	
-		this.OL.addInteraction(select);
-		
-		select.on("select", ev => { 
-			var features = select.getFeatures().getArray();
-			var coord = ev.mapBrowserEvent.coordinate;
-
-			this.Emit("click", { "features" : features, "coordinates" : coord });
-		});
-		*/
 		this.projection = basemaps[0].getSource().getProjection();
 		
 		this.popup = new ol.Overlay.Popup();
@@ -61,6 +49,14 @@ export default class Map extends Evented {
 	
 	Layer(id) {
 		return this.layers[id];
+	}
+
+	AddControl(control, options) {
+		options = options || {};
+		
+		options.map = this.OL;
+		
+		this.OL.addControl(control);
 	}
 	
 	AddControl(control, options) {
@@ -85,6 +81,15 @@ export default class Map extends Evented {
 		var vs = new ol.source.Vector({features: format.readFeatures(json)});
 		
 		return this.AddLayer(id, new ol.layer.Vector({ source: vs, title: json.name  }));
+	}
+	
+	AddVectorLayer(id, features, title, style) {
+		// TODO: Not sure about the wrapX thing.
+		var source = new ol.source.Vector({ features:features, wrapX:false });
+		
+		var vector = new ol.layer.Vector({ source:source, title:title, style:style });
+
+		return this.AddLayer(id, vector);
 	}
 	
 	SetView(coord, zoom) {
@@ -122,5 +127,11 @@ export default class Map extends Evented {
 			visible: !!visible,
 			baseLayer: true
 		});
+	}
+
+	removeLastControl(){
+		var controlsArray = this.OL.getControls()["array_"]
+		var lastControl = controlsArray[controlsArray.length - 1]
+		this.OL.removeControl(lastControl)
 	}
 }

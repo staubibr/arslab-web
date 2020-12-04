@@ -1,6 +1,4 @@
 
-import Style from "./style.js";
-
 export default class BucketStroke {
 
 	get Length() {
