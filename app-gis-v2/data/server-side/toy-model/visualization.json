@@ -7,7 +7,7 @@
     "layers": [{
             "id": "toy-model",
             "type": "polygon",
-			"url": "http://localhost:81/app-gis-v2/data/server-side/toy-model/toy-model.geojson",
+			"url": "./data/server-side/toy-model/toy-model.geojson",
             "label": "Toy Model",
             "style": "default",
             "model": "pandemic"

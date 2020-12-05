@@ -7,7 +7,7 @@
     "layers": [{
             "id": "wards",
             "type": "polygon",
-            "url": "http://localhost:81/app-gis-v2/data/server-side/wards-pandemic/wards.geojson",
+            "url": "./data/server-side/wards-pandemic/wards.geojson",
             "label": "Ottawa Wards",
             "style": "default",
             "model": "pandemic"

@@ -7,14 +7,14 @@
     "layers": [{
             "id": "wards",
             "type": "polygon",
-            "url": "http://localhost:81/app-gis-v2/data/server-side/wards-pandemic-centroids/wards.geojson",
+            "url": "./data/server-side/wards-pandemic-centroids/wards.geojson",
             "label": "Ottawa Wards",
             "style": "default",
             "model": "pandemic"
         }, {
             "id": "wards_centroids",
             "type": "point",
-            "url": "http://localhost:81/app-gis-v2/data/server-side/wards-pandemic-centroids/wards_centroids.geojson",
+            "url": "./data/server-side/wards-pandemic-centroids/wards_centroids.geojson",
             "label": "Ottawa Wards Centroids",
             "style": "default",
             "model": "pandemic"
