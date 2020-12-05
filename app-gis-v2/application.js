@@ -89,7 +89,7 @@ export default class Main extends Templated {
 	
 		this.map = new Map(this.Elem("map"), [Map.BasemapOSM(true), Map.BasemapSatellite()]);
 		
-		this.map.SetView(this.config.view.center, this.config.view.zoom);
+		if (this.config.view) this.map.SetView(this.config.view.center, this.config.view.zoom);
 
 		this.map.On("click", this.onMap_Click.bind(this));
 		this.map.On("rendercomplete", (ev) => d.Resolve());
