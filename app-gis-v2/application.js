@@ -102,6 +102,10 @@ export default class Main extends Templated {
 			var layer = this.map.AddGeoJsonLayer(config.id, d);
 			
 			layer.set('visible', false);
+						
+			var style = Style.FromJson(config.type, config.style);
+						
+			layer.setStyle(style.Symbol());
 		});
 				
 		return d.promise;
@@ -162,9 +166,7 @@ export default class Main extends Templated {
 		this.config.simulation.forEach(s => {
 			var layer = this.config.layers.find(l => l.id == s.layer);
 			
-			if (layer.type == "polygon") s.style = Polygon.FromJson(s);
-			
-			if (layer.type == "point") s.style = Point.FromJson(s);
+			s.style = Style.FromJson(layer.type, s);
 			
 			s.style.Bucketize(stats);
 		});

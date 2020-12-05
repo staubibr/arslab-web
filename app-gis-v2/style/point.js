@@ -14,7 +14,7 @@ export default class Point {
 	constructor(radius, fill, stroke) {
 		this.type = "point";
 		this.radius = radius;
-		this.fill = stroke;
+		this.fill = fill;
 		this.stroke = stroke;
 	}
 	
@@ -34,7 +34,7 @@ export default class Point {
 		});
 	}
 		
-	static FromJSON(json) {
+	static FromJson(json) {
 		var radius = json.radius ? Style.RadiusStyleFromJson(json.radius) : Style.DefaultRadius();
 		
 		var fill = json.fill ? Style.FillStyleFromJson(json.fill) : Style.DefaultFill();

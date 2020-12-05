@@ -5,6 +5,8 @@ import BucketStroke from "../style/bucketStroke.js";
 import Fill from "../style/fill.js";
 import Radius from "../style/radius.js";
 import Stroke from "../style/stroke.js";
+import Polygon from "../style/polygon.js";
+import Point from "../style/point.js";
 
 export default class Style {
 	static GetBucketStyleFunction(type, json, stats) {
@@ -133,7 +135,7 @@ export default class Style {
 		
 		var interval = (max - min) / n;
 		
-		for (var i = 1; i < n; i++) buckets.push(i * interval);
+		for (var i = 1; i < n; i++) buckets.push(min + i * interval);
 		
 		buckets.push(max);
 		
@@ -168,5 +170,11 @@ export default class Style {
 		if (json.type == "equivalent" || json.type == "quantile") return BucketRadius.FromJson(json);
 		
 		if (json.type == "static") return Radius.FromJson(json.radius);
+	}
+	
+	static FromJson(type, json) {
+		if (type == "polygon") return Polygon.FromJson(json);
+		
+		if (type == "point") return Point.FromJson(json);
 	}
 }
