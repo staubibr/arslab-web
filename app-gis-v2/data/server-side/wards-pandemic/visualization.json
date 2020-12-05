@@ -1,4 +1,8 @@
 {
+	"view" : {
+		"center": [-75.7, 45.3],
+		"zoom" : 10
+	},
     "basemap": "openstreetmap",
     "layers": [{
             "id": "wards",

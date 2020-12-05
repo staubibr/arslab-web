@@ -44,6 +44,7 @@ export default class Main extends Templated {
 		this.simulation = ev.simulation;
 		
 		this.settings.json.playback.speed = 10;
+		this.settings.json.playback.loop = true;
 		
 		var n = Math.ceil(this.simulation.frames.length / 10);
 		
@@ -88,7 +89,7 @@ export default class Main extends Templated {
 	
 		this.map = new Map(this.Elem("map"), [Map.BasemapOSM(true), Map.BasemapSatellite()]);
 		
-		this.map.SetView([-75.7, 45.3], 10);
+		this.map.SetView(this.config.view.center, this.config.view.zoom);
 
 		this.map.On("click", this.onMap_Click.bind(this));
 		this.map.On("rendercomplete", (ev) => d.Resolve());
@@ -201,6 +202,10 @@ export default class Main extends Templated {
 		
 		features.forEach(f => {
 			var id = f.getProperties()[this.config.join];
+			var d = data[id];
+			
+			if (!d) return;
+			
 			var symbol = this.current.style.Symbol(data[id]);
 			
 			f.setStyle(symbol);
