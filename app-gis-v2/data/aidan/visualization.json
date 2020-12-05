@@ -3,7 +3,7 @@
     "layers": [{
             "id": "wards",
             "type": "polygon",
-            "url": "./data/server-side/wards-pandemic/wards.geojson",
+            "url": "./data/aidan/wards.geojson",
             "label": "Ottawa Wards",
             "style": "default",
             "model": "pandemic"
