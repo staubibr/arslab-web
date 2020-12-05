@@ -39,6 +39,10 @@ export default class Map extends Evented {
 			this.Emit("click", { "features" : features, "coordinates" : ev.coordinate });
 		})
 		
+		this._ol.on("rendercomplete", (ev) => {
+			this.Emit("rendercomplete", null);
+		});
+		
 		this.projection = basemaps[0].getSource().getProjection();
 		
 		this.popup = new ol.Overlay.Popup();
@@ -52,14 +56,6 @@ export default class Map extends Evented {
 
 	AddControl(control, options) {
 		options = options || {};
-		
-		options.map = this.OL;
-		
-		this.OL.addControl(control);
-	}
-	
-	AddControl(control, options) {
-		options = options || {};
 		
 		options.map = this.OL;
 		

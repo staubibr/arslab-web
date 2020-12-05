@@ -20,36 +20,24 @@ import Polygon from "./style/polygon.js";
 
 export default class Main extends Templated { 
 
-	constructor(node, config, files) {		
+	constructor(node, files, config, data) {		
 		super(node);
 		
 		this.selected = null;
-		this.config = config;
 		this.files = files;
+		this.config = config;
+		this.data = data;
 		
 		// Load the simulation data
 		var parser = new Parser();
 		
 		var p1 = parser.Parse(this.files).then(this.onSimulation_Loaded.bind(this), this.onApplication_Error.bind(this));
 		
-		var p2 = this.LoadMap().then(this.onData_Loaded.bind(this));
+		var p2 = this.LoadMap();
 		
 		Promise.all([p1, p2]).then(this.onApplication_Ready.bind(this));
 	}
-	
-	onData_Loaded(data) {	
-		// Add layers to the map according to the loaded geojson data
-		var layers = data.map((d, i) => {	
-			var config = this.config.layers[i];	
 			
-			d.name = config.id;
-			
-			var layer = this.map.AddGeoJsonLayer(config.id, d);
-			
-			layer.set('visible', false);
-		});
-	}
-		
 	onSimulation_Loaded(ev) {
 		// Initialize simulation and simulation settings
 		this.settings = new oSettings();
@@ -96,22 +84,27 @@ export default class Main extends Templated {
 	}
 	
 	LoadMap() {	
+		var d = Core.Defer();
+	
 		this.map = new Map(this.Elem("map"), [Map.BasemapOSM(true), Map.BasemapSatellite()]);
 		
 		this.map.SetView([-75.7, 45.3], 10);
 
 		this.map.On("click", this.onMap_Click.bind(this));
+		this.map.On("rendercomplete", (ev) => d.Resolve());
 		
-		// Load all geojson data layers contained in visualization.json
-		var defs = this.config.layers.map(l => {
-			var base = location.href.split("/").slice(0,-1);
+		// Add layers to the map according to the loaded geojson data
+		var layers = this.data.map((d, i) => {	
+			var config = this.config.layers[i];	
 			
-			base.push(l.url);
+			d.name = config.id;
 			
-			return Net.JSON(base.join("/"));			
+			var layer = this.map.AddGeoJsonLayer(config.id, d);
+			
+			layer.set('visible', false);
 		});
-		
-		return Promise.all(defs);
+				
+		return d.promise;
 	}
 
 	AddSelector() {
@@ -263,8 +256,8 @@ export default class Main extends Templated {
 	Template() {
 		return	"<main handle='main'>" +
 					"<div handle='map' class='map'></div>" +
-					"<div handle='playback' widget='Widget.Playback'></div>" +
-					
+					"<div handle='playback' widget='Widget.Playback'></div>" +					
+						   
 					"<div handle='variable-select-container' class='variable-select-container custom-control'>" + 
 						"<label>nls(label_variable_select)</label>" +
 						"<select handle='variable-select' title=nls(title_variable_select)></select></div>" +
