@@ -27,7 +27,7 @@ function onNls_Loaded(responses) {
 	else {
 		var p1 = Net.File(`./data/${path}/visualization.json`, "visualization.json");
 		var p2 = Net.File(`./data/${path}/structure.json`, "structure.json");
-		var p3 = Net.File(`./data/${path}/messages.log?v=1`, "messages.log");
+		var p3 = Net.File(`./data/${path}/messages.log?v=0`, "messages.log");
 		
 		var defs = [p1, p2, p3];
 		
