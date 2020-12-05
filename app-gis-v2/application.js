@@ -91,6 +91,8 @@ export default class Main extends Templated {
 		
 		if (this.config.view) this.map.SetView(this.config.view.center, this.config.view.zoom);
 
+		else this.map.SetView([-75.7, 45.3], 10);
+
 		this.map.On("click", this.onMap_Click.bind(this));
 		this.map.On("rendercomplete", (ev) => d.Resolve());
 		
