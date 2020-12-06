@@ -251,7 +251,7 @@ export default class Main extends Templated {
 
 			content += `<li>${this.current.layer.join}: ${id}</li>`
 			
-			this.config.popup.fields.forEach(f => content += `<li>${f}: ${props[f]}</li>`);
+			for (var p in props) content += `<li>${p}: ${props[p]}</li>`
 			
 			content += "</ul>";
 			
