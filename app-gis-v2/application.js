@@ -167,9 +167,8 @@ export default class Main extends Templated {
 		var stats = Style.Statistics(this.simulation);
 		
 		this.config.simulation.forEach(s => {
-			var layer = this.config.layers.find(l => l.id == s.layer);
-			
-			s.style = Style.FromJson(layer.type, s);
+			s.layer = this.config.layers.find(l => l.id == s.layer);
+			s.style = Style.FromJson(s.layer.type, s);
 			
 			s.style.Bucketize(stats);
 		});
@@ -199,11 +198,11 @@ export default class Main extends Templated {
 	}
 	
 	Draw(data) {
-		var layer = this.map.Layer(this.current.layer);
+		var layer = this.map.Layer(this.current.layer.id);
 		var features = layer.getSource().getFeatures();
 		
 		features.forEach(f => {
-			var id = f.getProperties()[this.config.join];
+			var id = f.getProperties()[this.current.layer.join];
 			var d = data[id];
 			
 			if (!d) return;
@@ -221,7 +220,7 @@ export default class Main extends Templated {
 	ResetSelected() {
 		if (!this.selected) return;
 		
-		var id = this.selected.feature.getProperties()[this.config.join];
+		var id = this.selected.feature.getProperties()[this.current.layer.join];
 		var data = this.simulation.state.GetValue(id);
 		var style = this.current.style.Symbol(data);
 		
@@ -245,12 +244,12 @@ export default class Main extends Templated {
 		if (this.selected) {
 			this.HighlightSelected();
 						
-			var id = this.selected.feature.getProperties()[this.config.join];
+			var id = this.selected.feature.getProperties()[this.current.layer.join];
 			var props = this.simulation.state.GetValue(id);
 			
 			var content = "<ul>";
 
-			content += `<li>${this.config.join}: ${id}</li>`
+			content += `<li>${this.current.layer.join}: ${id}</li>`
 			
 			this.config.popup.fields.forEach(f => content += `<li>${f}: ${props[f]}</li>`);
 			

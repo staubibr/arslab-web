@@ -1,19 +1,19 @@
 {
+    "basemap": "openstreetmap",
 	"view" : {
 		"center": [-75.7, 52.3],
 		"zoom" : 5
 	},
-    "basemap": "openstreetmap",
     "layers": [{
             "id": "toy-model",
             "type": "polygon",
             "file": "toy-model.geojson",
             "label": "Toy Model",
             "style": "default",
-            "model": "pandemic"
+            "model": "pandemic",
+			"join": "toy"
         }
     ],
-	"join": "toy",
     "simulation": [{
 			"name" : "Toy-Model 1",
             "layer": "toy-model",
@@ -41,32 +41,5 @@
                 "color": "rgba(0,0,0,1)"
             }
         }
-    ],
-    "styles": [{
-            "id": "default",
-            "fill": {
-                "type": "static",
-                "color": "rgba(100,100,180,0.7)"
-            },
-            "stroke": {
-                "type": "static",
-                "width": 1,
-                "color": "rgba(255,255,255,1)"
-            }
-        }, {
-            "id": "highlight",
-            "fill": {
-                "type": "static",
-                "color": "rgba(0,200,200,0.6)"
-            },
-            "stroke": {
-                "type": "static",
-                "width": 1,
-                "color": "rgba(255,255,255,1)"
-            }
-        }
-    ],
-    "popup": {
-        "fields": ["field_1", "field_2", "field_3", "field_4"]
-    }
+    ]
 }
