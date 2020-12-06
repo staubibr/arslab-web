@@ -89,9 +89,10 @@ export default class Style {
 			}
 		});
 		
-		for (var f in values) values[f] = values[f].sort((a, b) => {
-			return (a < b) ? -1 : 1;
-		});
+		for (var f in values) {
+			values[f] = values[f].filter(v => !isNaN(v));
+			values[f] = values[f].sort((a, b) => (a < b) ? -1 : 1);
+		} 
 		
 		var stats = {};
 		
