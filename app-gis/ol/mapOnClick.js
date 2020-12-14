@@ -92,7 +92,6 @@ export const mapOnClick = (data, map, title, currentCycle, scale, SIR) => {
       } else {
         AddToOverLayNoData(coord);
       }
-      //}
     }
   });
 
@@ -127,19 +126,25 @@ export const mapOnClick = (data, map, title, currentCycle, scale, SIR) => {
   }
 
   function AddToOverLay(coord, clickedDauid, population) {
-    popup.show(
-      coord,
-      `<div><h2>Census Subdivision: ${clickedDauid}</h2>` +
-        `<p>Current Simulation: ${title}</p>` +
-        `<p>Current Cycle: ${currentCycle}</p>` +
-        `<p>Initial Population: ${population}</p>` +
-        `<p>Current Population: ${data[clickedDauid].Population}</p>` +
-        `<p>Fatalities this cycle:  ${data[clickedDauid].Fatalities}</p>` +
-        `<p>Proportion Susceptible:  ${data[clickedDauid].Susceptible}</p>` +
-        `<p>Proportion Infected:  ${data[clickedDauid].Infected}</p>` +
-        `<p>Proportion Recovered:  ${data[clickedDauid].Recovered}</p>` +
-        "</div>"
-    );
+    var content = "<div>";
+
+    content += `<h2>Polygon ID: ${clickedDauid}</h2>`
+    content += `<p>Current Simulation: ${title}</p>`
+    content += `<p>Current Cycle: ${currentCycle}</p>`
+    content += `<p>Initial Population: ${population}</p>`
+
+    Object.keys(data[clickedDauid]).forEach(function (f){
+      // In case the population is between 0 and 1
+      if(f == "Population" && data[clickedDauid][f] <= 1){
+        content += `<p>${f}: ${parseInt(population) * data[clickedDauid][f]}</p>`
+      }else{
+        content += `<p>${f}: ${data[clickedDauid][f]}</p>`
+      }
+    })
+
+    content += "</div>";
+	
+    popup.show(coord, content);
   }
 
   function AddToOverLayNoData(coord) {

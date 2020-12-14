@@ -198,8 +198,6 @@ export default class Main extends Templated {
 		this.map.AddControl(this.legend2);
 	}
 
-
-	
 	AddLayerSwitcher() {
 		var ls = new ol.control.LayerSwitcher({ groupSelectStyle: "group" });
 		

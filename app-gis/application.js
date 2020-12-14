@@ -7,22 +7,21 @@ import Templated from "../api-web-devs/components/templated.js";
 import Playback from "../api-web-devs/widgets/playback.js";
 import Recorder from '../api-web-devs/components/recorder.js';
 import oSettings from '../api-web-devs/components/settings.js';
-import Map from "./widgets/map.js";
+import Map from "./ol/map.js";
 import Box from "../api-web-devs/ui/box-input-files.js";
-import VectorLayer from "./classes/vectorLayer.js";
-import GetScale from "./classes/getScale.js";
+import VectorLayer from "./ol/vectorLayer.js";
+import GetScale from "./utils/getScale.js";
 import CustomParser from "./parsers/customParser.js";
-import CreateCSV from "./classes/createCSV.js";
+import CreateCSV from "./export/createCSV.js";
 import Evented from "../api-web-devs/components/evented.js";
 import Port from "../api-web-devs/simulation/port.js";
-import ColorLegend from "./widgets/colorLegend.js";
+import ColorLegend from "./utils/colorLegend.js";
 
-import { mapOnClick } from "./widgets/mapOnClick.js";
-import { simulationToTransition } from "./functions/simulationToTransition.js";
-import { sortPandemicData } from "../app-gis/functions/sortPandemicData.js";
+import { mapOnClick } from "./ol/mapOnClick.js";
+import { simulationToTransition } from "./dataHandling/simulationToTransition.js";
+import { sortPandemicData } from "./dataHandling/sortPandemicData.js";
 import { simAndCycleSelect } from "./ui/simAndCycleSelect.js";
-import { filterFiles } from "./functions/filterFiles.js";
-import { createSimulationObject } from "./functions/simulationObject.js";
+import { createSimulationObject } from "./dataHandling/simulationObject.js";
 
 export default class Application extends Templated {
   constructor(node) {
@@ -35,10 +34,10 @@ export default class Application extends Templated {
 
     this.hideLegend = true;
 
-    this.currentSIR = "Susceptible"
-
     // For creating simulation object and changing SIR in HTML
     this.ports = ["Susceptible", "Infected", "Recovered", "newInfected"]
+
+    this.currentSIR = this.ports[0]
 
     // Initial legend settings 
     this.currentNumberOfClasses = 4;
@@ -78,46 +77,51 @@ export default class Application extends Templated {
 
   }
 
+  /**
+   * @description Check if user file input is valid. If the input is 
+   * valid then they can load simulation. Otherwise clear the files.
+   * @param {event} ev - change 
+   */
   OnUpload_Change(ev){
-    var numFilesBeforeFilter = this.Widget("upload").files.length;
+    var userFiles = this.Widget("upload").files
+    var numUserFiles = userFiles.length;
 
-    // Remove files that are not in the correct format
-    this.Widget("upload").files = filterFiles(this.Widget("upload").files)
-    
-    this.files = this.Widget("upload").files;
+    userFiles = userFiles.filter(function (item) {
+      var temp = item.name;
+      var ext = temp.split(".").pop();
+      // Accepted file formats
+      if (ext === "txt" || ext === "geojson") {
+        return true;
+      } else {
+        var Dom = document.querySelector(".files-container").children;
+        for (let index = 0; index < Dom.length; index++) {
+          if (Dom[index].outerText == temp) {
+            Dom[index].remove();
+          }
+        }
+        return false;
+      }
+    });
 
-    if(numFilesBeforeFilter != this.files.length){
-      // Swap thumbs-up icon
-      document
-        .getElementById("upload")
-        .getElementsByTagName("div")[1]
-        .querySelector("i").className = "fas fa-file-upload";
+    this.Widget("upload").files = userFiles
+    this.files = userFiles
+
+    if(userFiles.length > 2 || numUserFiles != userFiles.length){
+      this.clearUploadedFiles()
 
       alert(
-        "One or more invalid files have been removed.\nThe only accepted file formats are:\n .txt\n .geojson."
+        "Invalid File Entry.\n" +
+        "Stick to inserting no more than 2 files.\n" +
+        "The only accepted file formats are:\n - .txt\n - .geojson."
       );
     }
-
-    // Accept the files if they're valid
-    if (this.files.length > 2) {
-      alert(
-        "You've entered an invalid number of files. All files have been removed."
-      );
-      // Should probably deal with this a better way
-      this.OnClear_Click(null);
-      return;
-    }
-    if (
-      this.files.length == 2 &&
-      this.files.filter((d) => d.name.split(".").pop() == "geojson").length == 1 &&
-      this.files.filter((d) => d.name.split(".").pop() == "txt").length == 1
-    ) {
-      // Remove zip files if they show up
+    else {
       this.Elem("load").disabled = false;
       this.Elem("clear").disabled = false;
 
       var Dom = document.querySelector(".files-container")
       let self = this;
+
       Dom.addEventListener("click", function () {
         if(Dom.children.length < 2 ){
           self.Elem("load").disabled = true;
@@ -127,20 +131,32 @@ export default class Application extends Templated {
     }
   }
 
-  // Google Chrome only supports 500mb blobs. The uploaded simulation result file is uploaded to the app in chunks.
-  // File chunking
+    /**
+   * @description When the user wishes to load the simulation,
+   * read data in as blobs and then begin the data handling process.
+   * The text file and geojson file are declared here. 
+   * @param {event} ev - load  
+   */
   OnLoad_Click(ev) {
     this.Elem("wait").hidden = false;
 
-    this.fileTXT = this.files.filter(d => d.name.split(".").pop() == "txt")
-    this.fileGeoJSON = this.files.filter(d => d.name.split(".").pop() == "geojson")
+    var txtFile  = this.files.filter(d => d.name.split(".").pop() == "txt")
+    var fileGeoJSON = this.files.filter(d => d.name.split(".").pop() == "geojson")
 
+    // Google Chrome only supports 500mb blobs. 
+    // The uploaded simulation result file is uploaded to the app in chunks.
+    // File chunking
     let self = this,
       parser = new CustomParser();
-
-    parser.Parse(self.fileTXT[0]).then(function (data) { self.OnLoad_DataHandler(data); })
+      
+    parser.Parse(txtFile[0]).then(function (data) { self.OnLoad_DataHandler(data, fileGeoJSON); })
   }
   
+   /**
+   * @description On clear click, remove all user entries and 
+   * disable some DOMs
+   * @param {*} ev - clear 
+   */
   OnClear_Click(ev){
     this.clearUploadedFiles()
   }
@@ -165,11 +181,17 @@ export default class Application extends Templated {
     this.Elem("clear").disabled = true;
   }
 
-  OnLoad_DataHandler(data) {
+  /**
+   * @description Sort the simulation data and draw the layer
+   * onto the map.
+   * @param {*} data - Array composed of text
+   * @param {*} layer - GeoJSON Vector file contents
+   */
+  OnLoad_DataHandler(data, layer) {
     this.tempData = data;
 
     let self = this,
-      f = self.fileGeoJSON[0], 
+      f = layer[0], 
         fileReader = new FileReader();
 
     fileReader.onload = function (event) {
@@ -435,6 +457,8 @@ export default class Application extends Templated {
     let data = sortPandemicData(this.tempData);
     this.data = data;
 
+    this.simulation = createSimulationObject(features, this.ports, data);
+
     simAndCycleSelect(this.currentSimulationTitle, data.length-1)
     this.KeepTrackOfSubmittedUserFiles(data, 
       this.currentSimulationTitle, 
@@ -442,15 +466,10 @@ export default class Application extends Templated {
       this.currentNumberOfClasses, 
       this.currentColor, 
       0, 
-      this.currentSIR
+      this.currentSIR,
+      simulationToTransition(this.simulation.frames)
     )
     
-
-    this.simulation = createSimulationObject(features, this.ports, data);
-
-    this.transitions = simulationToTransition(this.simulation.frames)
-
-    this.ArrayOfTransitions(this.transitions, this.currentSimulationTitle)
 
     // Let the download button be clickable
     this.Elem("btnDownload").disabled = false;
@@ -459,7 +478,7 @@ export default class Application extends Templated {
 
   OnButtonDownload_Click(ev) {
     var index = document.getElementById('sim-download').selectedIndex
-    new CreateCSV(this.allTransitions[index].transitionData);
+    new CreateCSV(this.DataFromFiles[index].transitions);
   }
 
   /*
@@ -469,7 +488,7 @@ export default class Application extends Templated {
       - GeoJSON layer file content...
     - The array length increases as the user adds more simulations to the webpage
   */
-  KeepTrackOfSubmittedUserFiles(data, title, layerFile, classNum, color, cycle, SIR){
+  KeepTrackOfSubmittedUserFiles(data, title, layerFile, classNum, color, cycle, SIR, transitions){
     if(this.DataFromFiles == undefined){ this.DataFromFiles = new Array; }
     this.DataFromFiles.push({
         simulation: title, 
@@ -478,14 +497,9 @@ export default class Application extends Templated {
         layerClasses: classNum, 
         layerColor: color, 
         layerCycle: cycle,
-        layerSIR: SIR});
-  }
-
-  //  From simulation object, we store created transitions in this method via array
-  //  Used for letting users download a CSV of the currently selected simulation
-  ArrayOfTransitions(data, title){
-    if(this.allTransitions == undefined){ this.allTransitions = new Array; }
-    this.allTransitions.push({simulation: title, transitionData: data});
+        layerSIR: SIR,
+        transitions: transitions
+      });
   }
 
   CurrentColorScale(scale) { this.currentColorScale = scale; }

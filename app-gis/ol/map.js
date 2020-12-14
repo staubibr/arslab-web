@@ -2,7 +2,7 @@
 
 import Core from "../../api-web-devs/tools/core.js";
 import Templated from "../../api-web-devs/components/templated.js";
-import InitialLayer from "../classes/InitialLayer.js";
+import InitialLayer from "./InitialLayer.js";
 
 export default Core.Templatable("Widget.Map", class Map extends Templated {
     get Map() { return this.map; }
