@@ -40,6 +40,17 @@ export default class Style {
 		});
 	}
 
+	static RadiusStyle (feature) {
+		return new ol.style.Style ({
+			image: new ol.style.Circle({
+			  radius: feature.get('size'), 
+			  fill: null,
+			  stroke: new ol.style.Stroke ({ width: 1, color: [0,0,0] })
+			}),
+			geometry: new ol.geom.Point( ol.extent.getCenter (feature.getGeometry().getExtent() ))
+		  })
+	  }
+
 	static PolygonStyle(json) {
 		return new ol.style.Style({
 			stroke: new ol.style.Stroke({
@@ -108,7 +119,18 @@ export default class Style {
 	}
 	
 	static BucketizeStyle(style, stats) {
-		if (style.type == "quantile") {		
+		if(style.type == "user-defined"){
+			
+			if(style.radii != undefined){
+				return
+			}else{
+				style.buckets = Style.EquivalentBuckets(stats[style.property].min, stats[style.property].max, style.buckets.length);
+				return
+			}
+			
+			
+		}
+		else if (style.type == "quantile") {	
 			style.buckets = Style.QuantileBuckets(stats[style.property].sorted, style.Length);
 		}
 		else if (style.type == "equivalent") {
@@ -120,6 +142,7 @@ export default class Style {
 		var buckets = [];
 		
 		var interval = Math.floor(values.length / n);
+		
 		
 		for (var i = 1; i < n; i++) buckets.push(values[i * interval]);
 		

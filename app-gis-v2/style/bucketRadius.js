@@ -32,7 +32,7 @@ export default class BucketRadius {
 		var n = this.classes;
 
 		if(type == "user-defined"){
-			return
+			this.buckets = Style.UserDefinedBuckets(stats[this.property].sorted, n);
 		}else if (type == "quantile_classes") {
 			this.buckets = Style.QuantileBuckets(stats[this.property].sorted, n);
 		}

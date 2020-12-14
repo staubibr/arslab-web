@@ -49,14 +49,6 @@ export default class Main extends Templated {
 			var layer = this.map.AddGeoJsonLayer(config.id, d);
 
 			Geometry.convertPolygonToPoint(layer)
-
-			// "type": "user-defined",
-			// "radius": [12,15,20],
-			// "buckets": [0.1, 0.2, 0.3],
-
-			// "type": "quantile",
-            //     "min": 5,
-            //     "max": 10,
 			
 			layer.set('visible', false);
 
@@ -148,25 +140,18 @@ export default class Main extends Templated {
 	AddLegend(){	
 		this.map.RemoveControl(this.legend);
 
-		// Style function
-		function getFeatureStyle (feature) {
-			return [
-			  new ol.style.Style ({
-				image: new ol.style.Circle({
-				  radius: feature.get('size'), 
-				  fill: null,
-				  stroke: new ol.style.Stroke ({
-					width: 1,
-					color: [0,0,0],
-				  })
-				}),
-				geometry: new ol.geom.Point( ol.extent.getCenter (feature.getGeometry().getExtent() ))
-			  })
-			];
-		  }
-		
+		var style = this.current.style
+
+		var rowsAdded = this.addFillLegend(style)
+
+		if(style.radius != undefined && style.radius.type == "user-defined"){
+			this.addRadiusLegend(style, rowsAdded)
+		}
+	}
+
+	addFillLegend(style){
 		var prev = null;
-		var style = this.current.style;
+		var rowsAdded = 0;
 		this.legend = new ol.control.Legend({ title: `Legend (${style.fill.type})`, margin: 5, collapsed: false });
 	
 		style.fill.buckets.forEach((b, i) => {
@@ -179,38 +164,41 @@ export default class Main extends Templated {
 				fill: { color: style.fill.colors[i] }
 			}
 			
-			this.legend.addRow({ title:title, size:[40,40], typeGeom:"Point", style:Style.PointStyle(json) });
-			
+			this.legend.addRow({ title:title, size:[40,40], typeGeom:"Point", style: Style.PointStyle(json) });
+			rowsAdded++;
 			prev = curr;
 		});
 
 		this.map.AddControl(this.legend);
-
-		if(style.radius != undefined){
-			this.legend2 = new ol.control.Legend({ 
-				title: `Legend (${style.radius.type})`, 
-				style: getFeatureStyle,
-				margin: 5, 
-				collapsed: false, 
-				//size: [a, b],
-				target: this.legend.element});
-
-			style.radius.radii.forEach((b, i) =>  {
-				var len = style.radius.radii.length
-				//this.legend2.addRow({ title: b.toFixed(2).toString() });
-				this.legend2.addRow({ 
-					title:b.toFixed(2).toString(), 
-					properties: { size: style.radius.radii[i] }, 
-					typeGeom: 'Point'})
-			})
-			this.legend2.addRow();
-			this.legend2.addRow();
-			this.legend2.addRow();
-				
-
-			this.map.AddControl(this.legend2);
-		}
+		return rowsAdded
 	}
+
+	addRadiusLegend(style, rowsAdded){
+		this.legend2 = new ol.control.Legend({ 
+			title: `Legend (${style.radius.type})`, 
+			style: Style.RadiusStyle,
+			margin: 5, 
+			//size: [35, 5],
+			target: this.legend.element
+		});
+
+		style.radius.radii.forEach((b, i) =>  {
+			this.legend2.addRow({ 
+				title:b.toFixed(2).toString(), 
+				properties: { size: style.radius.radii[i] }, 
+				typeGeom: 'Point'
+			})
+		})
+
+		var len = style.radius.radii.length
+		while(len < rowsAdded){
+			this.legend2.addRow();
+			len++;
+		}
+		this.map.AddControl(this.legend2);
+	}
+
+
 	
 	AddLayerSwitcher() {
 		var ls = new ol.control.LayerSwitcher({ groupSelectStyle: "group" });
