@@ -1,5 +1,7 @@
 ## Background (Draft)
 
+Large scale geospatial simulations, at the municipal, provincial or higher levels, typically generate massive volumes of data. Presenting these data in a comprehensive, intuitive way for non-expert users requires adequate visual support. In the case of geospatial data, web-based geographic information systems (GIS) have become well established platforms to do so. The DEVS-GIS Simulation Explorer we developed relies on OpenLayers, one of the more established Open Source Web GIS libraries and the OpenStreetMap database to contextualize simulation results. As a case study, we use the results of the disease spread simulation model, for the City of Ottawa at the Dissemination Area (DA) level and for the province of Ontario at the Census Subdivision (CSD) level. The application allows users to build choropleth maps that display the boundary polygons classified by color according to different variables produced by the simulation (infected, susceptible, deaths, recovered, etc.) Users can also animate the map to visualize each time step of the simulation and interact with individual geometries to explore the detailed results of the simulation.
+
 Changes to be made:
 - Remove the part about COVID, needs to be more generic to apply to anything
 - Include a bit about map-based visualization (MBV)

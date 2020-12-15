@@ -7,7 +7,7 @@ Build a GIS environment based visualization for large scale spatial simulations 
 ## Getting Started:
 
 ### Users
-[![gif](/app-gis/demo.gif)](https://www.youtube.com/watch?v=eAaeGtoMDUQ)
+[![gif](./img/demo.gif)](https://youtu.be/iBGA77LImYE)
 - Open the [GIS Simulation Explorer](https://staubibr.github.io/arslab-web/app-gis/index.html) in Chrome 
 - OpenStreetMap will automatically load the world map
 - Before Loading Simulations
@@ -42,22 +42,35 @@ Build a GIS environment based visualization for large scale spatial simulations 
   - This will give you the ability to record the Application as it goes through simulation cycles
 
 ### Developers
+
+[![Video Tutorial for Developers](./img/tutorial.gif)](https://www.youtube.com/watch?v=gsbRyvQ_8Ys)
+
 ##### Essentials:
-- Download [Web Server for Chrome](https://chrome.google.com/webstore/detail/web-server-for-chrome/ofhbbkphhbklhfoeikjpcbhemlocgigb)
-- Open [app-gis](https://github.com/staubibr/arslab-dev/tree/master/app-gis) in your preferred text editor 
+- Download [Web Server for Chrome](https://chrome.google.com/webstore/detail/web-server-for-chrome/ofhbbkphhbklhfoeikjpcbhemlocgigb) or [Live Server in VSCode](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer)
+- Open [app-gis](https://github.com/staubibr/arslab-web/tree/master/app-gis) in your preferred text editor 
 - Use [Chrome DevTools](https://developers.google.com/web/tools/chrome-devtools/) for debugging
   - Ensure that cache is disabled in DevTools
 
-##### Running the local server:
+##### Running the local server (Web Server Chrome):
 > Open Chrome and go to Apps
 
 >> Click Web Server
 
->>> Set the current folder to /arslab-dev 
+>>> Set the current folder to /arslab-web 
 
 >>>> Open Web Server for Chrome by clicking the Web Server URL
 
 ![Web Server.](/app-gis/img/webserver.png "Web Server image.")
+
+##### Running the local server (Live Server in VSCode):
+
+> Open VS Code and set the current folder to /arslab-web 
+
+>> Click Go Live on the bottom right corner of VS Code 
+
+>>> In your default web browser, localhost should open
+
+>>>> In the web browser's listing directory, click /app-gis
 
 ##### Development:
 
@@ -91,31 +104,27 @@ Features:
 
 ## TODO:
 1. General bug fixes, UI changes, and code refactoring 
-2. Update instructional video demo 
-3. Fix mapOnClick
+2. Fix mapOnClick
    - Code gets wanky when layers are on top of each other
    - The issue could likely be fixed by looking at the layer switcher
-4. Let users title their simulation 
-5. Let users choose what their simulation object will contain
-6. Add options to the Settings tab
+3. Let users title their simulation 
+4. Let users choose what their simulation object will contain
+5. Add options to the Settings tab
    - Support for multiple languages 
-7. Allow geopackage files as an accepted file format
+6. Allow geopackage files as an accepted file format
    - Look into [GeoPackage JS](https://github.com/ngageoint/geopackage-js)
    - For now use [MyGeodata Converter](https://mygeodata.cloud/converter/gpkg-to-geojson) or QGIS to convert .gpkg to .geojson
    - Could also create a [Python script](https://www.geodose.com/2020/06/pyqgis-tutorial-shapefile-conversion.html) for the time being?
-8. Fix GeoCoder so it does not add itself as a layer
-   - Also maybe use a different GeoCoder? The current one seems to break often if using AdBlock
-9. Integrate with DEVS Web Viewer
+7. Add a GeoCoder
+8. Integrate with DEVS Web Viewer
    - Incorporate library of models w/ backend
-10. Introduce spatial analysis tools
+9.  Introduce spatial analysis tools
 
 ## Credits and Acknowledgements
 
 [Carleton University - ARSLab](https://arslab.sce.carleton.ca/)
 
 [Tobias Bieniek - Sidebar-v2](https://github.com/Turbo87/sidebar-v2)
-
-[Jonatas Walker - OpenLayers Control Geocoder](https://github.com/jonataswalker/ol-geocoder)
 
 [Jean-Marc Viglino - OpenLayers Extension](https://github.com/Viglino/ol-ext)
 
@@ -127,9 +136,7 @@ Features:
 
 ## Resources:
 
-#### D3JS
-
-[D3 Legend](https://github.com/susielu/d3-legend)  
+#### D3JS 
 
 [D3 Scale](https://github.com/d3/d3-scale)
 
@@ -143,8 +150,6 @@ Features:
 
 **Note:** Coordinate format is Longitude / Latitude. 
 
-OpenLayers can be easily bundled with GIS applications through Rollup, Webpack, etc. 
-
 [ol.Map](https://openlayers.org/en/latest/apidoc/module-ol_Map-Map.html)  
 
 [ol.layer.Vector](https://openlayers.org/en/latest/apidoc/module-ol_layer_Vector-VectorLayer.html)
@@ -152,8 +157,6 @@ OpenLayers can be easily bundled with GIS applications through Rollup, Webpack, 
 [ol.OverLay](https://openlayers.org/en/latest/apidoc/module-ol_Overlay-Overlay.html)
 
 [ol.layerswitcher](https://github.com/walkermatt/ol-layerswitcher)
-
-[ol.geocoder](https://github.com/jonataswalker/ol-geocoder)
 
 [ol.control.Sidebar](https://github.com/Turbo87/sidebar-v2/blob/master/doc/usage.md)
 

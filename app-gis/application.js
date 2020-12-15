@@ -15,13 +15,14 @@ import CustomParser from "./parsers/customParser.js";
 import CreateCSV from "./export/createCSV.js";
 import Evented from "../api-web-devs/components/evented.js";
 import Port from "../api-web-devs/simulation/port.js";
-import ColorLegend from "./utils/colorLegend.js";
+import Style from "./utils/style.js";
 
 import { mapOnClick } from "./ol/mapOnClick.js";
 import { simulationToTransition } from "./dataHandling/simulationToTransition.js";
 import { sortPandemicData } from "./dataHandling/sortPandemicData.js";
-import { simAndCycleSelect } from "./ui/simAndCycleSelect.js";
+import { simAndCycleSelect } from "./utils/simAndCycleSelect.js";
 import { createSimulationObject } from "./dataHandling/simulationObject.js";
+import { updateVariableSelect } from "./utils/updateVariableSelect.js";
 
 export default class Application extends Templated {
   constructor(node) {
@@ -32,49 +33,38 @@ export default class Application extends Templated {
 
     this.simulation = null;
 
-    this.hideLegend = true;
-
-    // For creating simulation object and changing SIR in HTML
-    this.ports = ["Susceptible", "Infected", "Recovered", "newInfected"]
-
-    this.currentSIR = this.ports[0]
+    // For creating simulation object and changing variables in HTML
+    this.variables = ["Susceptible", "Infected", "Recovered", "newInfected"]
+    this.currentVariableSelection = this.variables[0]
+    updateVariableSelect(this.variables)
+    
 
     // Initial legend settings 
     this.currentNumberOfClasses = 4;
     this.currentColor = "#FF0000";
     this.currentColorScale = new GetScale(this.currentColor, this.currentNumberOfClasses);
-    this.AppLegend = new ColorLegend();
 
     // Create map container (canvas, sidebar, search, zoom, layer switcher, etc.)
     this.Widget("map").InitLayer();
 
-    // The legend is hidden by default
-    this.CreateLegend(Core.Nls("App_Legend_Title"), "translate(8,4)");
-    
-    // User uploads data to the program
+    // Legend properties selector
+    this.Node("colorSelect").On("change", this.RecreateLegendColor.bind(this));
+    this.Node("selectClasses").On("change", this.RecreateLegendClass.bind(this));
+
+    // User upload, load, and clear files to the program
     this.Node('upload').On("change", this.OnUpload_Change.bind(this));
-
-    // User loads data into the program 
     this.Node('load').On("click", this.OnLoad_Click.bind(this));
-
-    // Clear uploaded files
     this.Node('clear').On("click", this.OnClear_Click.bind(this));
     
-    // Change which simulation users wish to manipulate 
+    // User selection (simulation, cycle, and port)
     this.Node('selectSimulation').On("change", this.OnSimulationSelectChange.bind(this))
-
-    // Modify an existing vector layer depending on the simulation cycle selector's current value
     this.Node("cycle").On("change", this.OnCycle_Change.bind(this));
+    this.Node("variable-select").On("change", this.OnVariableChange.bind(this));
 
     // For downloading transitions 
     this.Node("btnDownload").On("click", this.OnButtonDownload_Click.bind(this));
 
-    // Check if user wants to visualize susceptible or infected or recovered
-    this.Node("SIR-select").On("change", this.OnSIRchange.bind(this));
-
-    // Record visualization
     this.Widget("playback").Recorder = new Recorder(this.Node("map").Elem("canvas.ol-unselectable"));
-
   }
 
   /**
@@ -131,7 +121,7 @@ export default class Application extends Templated {
     }
   }
 
-    /**
+  /**
    * @description When the user wishes to load the simulation,
    * read data in as blobs and then begin the data handling process.
    * The text file and geojson file are declared here. 
@@ -152,7 +142,7 @@ export default class Application extends Templated {
     parser.Parse(txtFile[0]).then(function (data) { self.OnLoad_DataHandler(data, fileGeoJSON); })
   }
   
-   /**
+  /**
    * @description On clear click, remove all user entries and 
    * disable some DOMs
    * @param {*} ev - clear 
@@ -196,230 +186,217 @@ export default class Application extends Templated {
 
     fileReader.onload = function (event) {
       let title = f.name.substring(0, f.name.indexOf(".")),
-            simNum = (self.DataFromFiles == undefined) ? 0 : self.DataFromFiles.length,
+            simNum = (self.collection == undefined) ? 0 : self.collection.length,
               newTitle = "simulation" + simNum + "_" + title;
 
       // Current simulation settings
-      self.currentSimulationTitle = newTitle
-      self.currentSimulationLayerGeoJSON = event.target.result;
-      self.currentSIR = (self.currentSIR == undefined) ? "Susceptible" : self.currentSIR;
-      self.currentSimulationCycle = 0;
+      self.titleOfCurrentSimulation = newTitle;
+
+      self.currentVariableSelection = (self.currentVariableSelection == undefined) ? "Susceptible" : self.currentVariableSelection;
+      self.cycleNumberOfCurrentSimulation = 0;
       
-      self.AddVectorLayerToMapCollection();
+      self.layer = new VectorLayer(event.target.result, self.titleOfCurrentSimulation); 
+    
+      // add vector layer onto world map
+      self.Widget("map").AddLayer(self.titleOfCurrentSimulation, self.layer);
+
+      // Creates the simulaiton object
+      self.layer.OL.getSource().once("change", self.OnLayerCreation_Handler.bind(self)); 
     };
     fileReader.readAsDataURL(f); 
   }
 
-  AddVectorLayerToMapCollection() {
-    this.layer = new VectorLayer(this.currentSimulationLayerGeoJSON, this.currentSimulationTitle); 
-    
-    // add vector layer onto world map
-    this.Widget("map").AddLayer(this.currentSimulationTitle, this.layer);
-
-    // Creates the simulaiton object
-    this.layer.OL.getSource().once("change", this.OnLayerCreation_Handler.bind(this)); 
-  }
-
+  // TODO: Improve mapOnClick
   RedrawLayerOnMap(index){
-    this.layer = this.Widget("map").Layer(this.currentSimulationTitle);
-    this.layer.ColorLayer(this.currentColorScale, this.data[index].messages, this.currentSIR);
+    this.layer = this.Widget("map").Layer(this.titleOfCurrentSimulation);
+    this.layer.ColorLayer(this.currentColorScale, this.data[index].messages, this.currentVariableSelection);
     mapOnClick(
       this.data[index].messages,
       this.Widget("map").map.OL,
-      this.currentSimulationTitle,
-      this.currentSimulationCycle,
+      this.titleOfCurrentSimulation,
+      this.cycleNumberOfCurrentSimulation,
       this.currentColorScale,
-      this.currentSIR
+      this.currentVariableSelection
     );
   }
 
-  /*
-  Purpose: 
-  Paramters:
-    title - Name of the legend 
-    translate - Where on the webpage the legend will appear
-  */
-  CreateLegend(title, translate) {
-    this.AppLegend.hideLegend()
+  /**
+   * @description Clear existing legend and define a new one
+   */
+  UpdateLegend(){
+    this.Widget("map").RemoveControl(this.legend);
     
-    // Legend listeners
-    this.RecreateLegendColor(title, translate);
-    this.RecreateLegendClass(title, translate);
-    this.hideOrShowlegend(title, translate);
-  }
+    var domain = [], index = 0; 
 
-  RecreateLegendColor(title, translate) {
-    let self = this;
-    
-    // Recreate the legend if a color change is issued
-    d3.select("#colorOne").on("change", function () {
+    while(index <= 1){
+      domain.push(index.toFixed(2));
+      index += (1 / this.currentNumberOfClasses);
+    }
+
+    var prev = null;
+    index = 0;
+
+    while(index < domain.length){
+
+      var curr = domain[index];
+
+      if (curr == "0.00") {
+        this.legend = new ol.control.Legend({ 
+          title: `${this.currentVariableSelection}`,
+          margin: 5, 
+          collapsed: false 
+        });
+      }
       
-      var val = d3.select(this).node().value;
-      self.currentColor = val;
+      else {
+        var title = (prev) ? `${prev} - ${curr}` : `0 - ${curr}`;
+        var color = this.currentColorScale.d3Scale(domain[index-1]);
 
-      if(self.DataFromFiles != undefined){
-        var currentDataFileIndex = document.getElementById('sim-select').selectedIndex;
-        self.DataFromFiles[currentDataFileIndex].layerColor = val;
-      }   
-      
-      // Get current number of classes for scale
-      let classes = (self.currentClass == undefined) ? 4 : self.currentClass;
+        this.legend.addRow({ 
+          title: title, 
+          size:[40,40], 
+          typeGeom:"Point",  
+          style: Style.PointStyle(color) 
+        });
+      }
 
-      self.currentColorScale = new GetScale(val, classes);
+      index++;
+      prev = curr;
+    }
 
-      self.AppLegend.showLegend( title, translate, self.currentColorScale, self.currentSIR);
-
-
-      self.RecolorLayer();
-    }, false);
+    this.Widget("map").AddControl(this.legend);
   }
 
-  RecreateLegendClass(title, translate) {
-    let self = this;
+  /**
+   * @description Activates When a user changes the color property of the legend.
+   * If a simulation exists, it will also be recoloured. 
+   * @param {*} ev 
+   */
+  RecreateLegendColor(ev) {
+    this.currentColor = ev.target.value;
 
-    // Recreate the legend if a class change is issued
-    d3.select("#class-select").on(
-      "change",
-      function () {
-        self.currentClass = d3.select(this).node().value;
-        self.currentNumberOfClasses = self.currentClass;
-        self.currentColorScale = new GetScale( self.currentColor, self.currentClass );
-        self.AppLegend.showLegend( title, translate, self.currentColorScale, self.currentSIR);
+    if(this.collection != undefined){
+      var currentDataFileIndex = document.getElementById('sim-select').selectedIndex;
+      this.collection[currentDataFileIndex].visualProperties.layerColor = this.currentColor;
+    }   
 
-        if (self.DataFromFiles != undefined) {
-          var currentDataFileIndex = document.getElementById("sim-select")
-            .selectedIndex;
+    this.currentColorScale = new GetScale(this.currentColor, this.currentNumberOfClasses);
 
-          self.DataFromFiles[currentDataFileIndex].layerClasses =
-            self.currentClass;
-        }
+    this.UpdateLegend();
 
-        self.RecolorLayer();
-      },
-      false
-    );
+    this.RecolorLayer();
   }
 
-  hideOrShowlegend(title, translate){
+  /**
+   * @description Activates When a user changes the class property of the legend.
+   * If a simulation exists, it will also be recoloured based on the new classification. 
+   * @param {*} ev 
+   */
+  RecreateLegendClass(ev) {
+    this.currentNumberOfClasses = ev.target.value;
+    this.currentColorScale = new GetScale( this.currentColor, this.currentNumberOfClasses );
 
-    let self = this;
+    if (this.collection != undefined) {
+      var currentDataFileIndex = document.getElementById("sim-select")
+        .selectedIndex;
 
-    document
-      .querySelector(".legend-svg")
-      .addEventListener("click", function () {
+      this.collection[currentDataFileIndex].visualProperties.classNum =
+      this.currentNumberOfClasses;
+    }
 
-        self.AppLegend.hideOrShowLegend(
-          title,
-          translate,
-          self.currentColorScale,
-          self.hideLegend,
-          self.currentSIR
-        );
+    this.UpdateLegend();
 
-        if (self.hideLegend == false) { self.hideLegend = true; } 
-        else { self.hideLegend = false; }
-      });
-
+    this.RecolorLayer();
   }
 
   RecolorLayer() {
-    if (this.currentSimulationLayerGeoJSON != undefined) {
-      this.RedrawLayerOnMap(this.currentSimulationCycle);
+    if (this.titleOfCurrentSimulation != undefined) {
+      this.RedrawLayerOnMap(this.cycleNumberOfCurrentSimulation);
     }
   }
 
-  /*
-  Purpose: 
-    - Change the current simulation being manipulated 
-  Paramters:
-    event - event.target.value would tell us which simulation we selected
-  Information leaving the method:
-    - Change previous simulation information to the current one
-    - An updated color scale, number of classes, and legend
-    - Simulation cycle set to the correct cycle
+  /**
+  * @description Change the simulation being manipulated and update legend color, 
+  * legend classes, and simulation cycle.
+  * @param {*} ev - event.target.value would tell us which simulation we selected
   */
   OnSimulationSelectChange(ev){
+    // Switch simulations to manipulate 
     this.PreviousSimulationToCurrentSimulation(document.getElementById('sim-select').selectedIndex);
-    this.UpdateLegendToCurrentSimulation(Core.Nls("App_Legend_Title"), "translate(8,4)");
-    this.UpdateSimulationCycleSelectorToCurrentSimulation();
+    
+    // Update legend
+    this.UpdateLegendToCurrentSimulation();
+
+    // Update simulation cycle
+    this.Elem("cycle").setAttribute("max", this.data.length - 1);
+    this.Elem("output").textContent = this.cycleNumberOfCurrentSimulation;
+    document.getElementById("cycle").value = this.cycleNumberOfCurrentSimulation;
   }
 
   PreviousSimulationToCurrentSimulation(index){
-    var element = this.DataFromFiles[index];
-    this.currentSimulationTitle = element.simulation;
-    this.data = element.simulationData;
-    this.currentSimulationLayerGeoJSON = element.GeoJSON;
-    this.currentSimulationCycle = element.layerCycle;
-    this.currentNumberOfClasses = element.layerClasses;
-    this.currentColor = element.layerColor;
-    this.currentSIR = element.layerSIR;
+    var element = this.collection[index];
+    this.titleOfCurrentSimulation = element.title;
+    this.data = element.data;
+    this.cycleNumberOfCurrentSimulation = element.visualProperties.cycleNum;
+    this.currentNumberOfClasses = element.visualProperties.classNum;
+    this.currentColor = element.visualProperties.layerColor;
+    this.currentVariableSelection = element.visualProperties.variable;
   }
 
-  UpdateLegendToCurrentSimulation(title, translate){
+  UpdateLegendToCurrentSimulation(){
     this.currentColorScale = new GetScale(this.currentColor, this.currentNumberOfClasses);
 
-    this.RedrawLayerOnMap(this.currentSimulationCycle);
+    this.RedrawLayerOnMap(this.cycleNumberOfCurrentSimulation);
 
-    document.getElementById('colorOne').value = this.currentColor
+    document.getElementById('colorSelect').value = this.currentColor;
 
-    for (let index = 0; index < this.ports.length; index++) {
-      if(this.currentSIR == ports[index]){
-        document.getElementById("SIR-select").selectedIndex = index;
+    for (let index = 0; index < this.variables.length; index++) {
+      if(this.currentVariableSelection == this.variables[index]){
+        document.getElementById("variable-select").selectedIndex = index;
       }
     }
 
-    document.getElementById('class-select').selectedIndex = this.currentNumberOfClasses == 5 ? 1 : 0
+    document.getElementById('class-select').selectedIndex = this.currentNumberOfClasses == 5 ? 1 : 0;
 
-    this.AppLegend.showLegend(title, translate, this.currentColorScale, this.currentSIR)
-  }
-
-  UpdateSimulationCycleSelectorToCurrentSimulation(){
-    this.Elem("cycle").setAttribute("max", this.data.length - 1);
-    this.Elem("output").textContent = this.currentSimulationCycle;
-    document.getElementById("cycle").value = this.currentSimulationCycle;
+    this.UpdateLegend();
   }
   
-  /*
-  Purpose: 
-    - Change the current simulation cycle
-    - Display the updated vectory layer based on simulation cycle
-  Paramters:
-    event - To find which simulation cycle user selected
+  /**
+  * @description Change the current simulation cycle and display 
+  * the updated simulation based on simulation cycle
+  * @param {*} ev - To find which simulation cycle user selected
   */
   OnCycle_Change(ev) {
     // Let the user know what cycle theyre on
     this.Elem("output").textContent = ev.target.value;
 
     // Update the current cycle
-    this.currentSimulationCycle = ev.target.value;
+    this.cycleNumberOfCurrentSimulation = ev.target.value;
     var currentDataFileIndex = document.getElementById('sim-select').selectedIndex;
-    this.DataFromFiles[currentDataFileIndex].layerCycle = ev.target.value;
+    this.collection[currentDataFileIndex].visualProperties.cycleNum = ev.target.value;
 
     // Recolor the current layer accordingly
     this.RedrawLayerOnMap(ev.target.value);
   }
 
-  OnSIRchange(ev){
-    this.currentSIR = ev.target.value;
+  OnVariableChange(ev){
+    this.currentVariableSelection = ev.target.value;
     var currentDataFileIndex = document.getElementById('sim-select').selectedIndex;
 
     // Change layer if there is one
-    if(this.currentSimulationTitle != undefined){
-      this.DataFromFiles[currentDataFileIndex].layerSIR = ev.target.value;
-      this.RedrawLayerOnMap(this.currentSimulationCycle);
+    if(this.titleOfCurrentSimulation != undefined){
+      this.collection[currentDataFileIndex].visualProperties.variable = ev.target.value;
+      this.RedrawLayerOnMap(this.cycleNumberOfCurrentSimulation);
     }
 
-    // This is to prevent us from changing the svg legend "button"
-    if(document.getElementById("legend-svg").style.width== "120px"){
-      document.getElementById("legend-svg").firstChild.textContent = this.currentSIR;
-    }
-
-    // Change SIR select
-    for (let index = 0; index < this.ports.length; index++) {
-      if(this.currentSIR == this.ports[index]){
-        document.getElementById("SIR-select").selectedIndex = index;
+    // Change variable select
+    for (let index = 0; index < this.variables.length; index++) {
+      if(this.currentVariableSelection == this.variables[index]){
+        document.getElementById("variable-select").selectedIndex = index;
       }
     }
+
+    this.UpdateLegend();
   }
   
   // Create the simulation object when the simulation is first introduced
@@ -427,17 +404,22 @@ export default class Application extends Templated {
     var features = ev.target.getFeatures();
     this.CreateSimulation(features);
 
-    this.RedrawLayerOnMap(this.currentSimulationCycle)
+    this.RedrawLayerOnMap(this.cycleNumberOfCurrentSimulation);
+    this.UpdateLegend();
     this.Elem("wait").hidden = true;
-    this.Widget("playback").Enable(true)
+    this.Widget("playback").Enable(true);
 
-    this.simulation.On("Move", this.OnSimulation_Move.bind(this))
-    this.simulation.On("Jump", this.OnSimulation_Jump.bind(this))
-    this.Widget("playback").Initialize(this.simulation, this.settings)
+    this.simulation.On("Move", this.OnSimulation_Move.bind(this));
+    this.simulation.On("Jump", this.OnSimulation_Jump.bind(this));
+    this.Widget("playback").Initialize(this.simulation, this.settings);
   }
 
   OnSimulation_Jump(ev){
-    this.layer.ColorLayer(this.currentColorScale, this.data[this.simulation.state.i].messages, this.currentSIR);
+    this.layer.ColorLayer(
+      this.currentColorScale, 
+      this.data[this.simulation.state.i].messages, 
+      this.currentVariableSelection
+    );
   }
 
   OnSimulation_Move(ev){
@@ -449,62 +431,64 @@ export default class Application extends Templated {
 
     // Until the above error is solved
     if( this.data[this.simulation.state.i] != undefined ){
-      this.layer.ColorLayer(this.currentColorScale, this.data[this.simulation.state.i].messages, this.currentSIR);
+      this.layer.ColorLayer(
+        this.currentColorScale, 
+        this.data[this.simulation.state.i].messages, 
+        this.currentVariableSelection
+      );
     }    
   }
 
   CreateSimulation(features) {
-    let data = sortPandemicData(this.tempData);
-    this.data = data;
+    this.data = sortPandemicData(this.tempData);
 
-    this.simulation = createSimulationObject(features, this.ports, data);
+    // TODO: Try this with simulations that have a different number of cycles
+    simAndCycleSelect(this.titleOfCurrentSimulation, this.data.length-1);
 
-    simAndCycleSelect(this.currentSimulationTitle, data.length-1)
-    this.KeepTrackOfSubmittedUserFiles(data, 
-      this.currentSimulationTitle, 
-      this.currentSimulationLayerGeoJSON, 
-      this.currentNumberOfClasses, 
-      this.currentColor, 
-      0, 
-      this.currentSIR,
-      simulationToTransition(this.simulation.frames)
-    )
-    
+    this.simulation = createSimulationObject(features, this.variables, this.data);
+
+    this.collectionOfSimulations(
+      this.data, 
+      this.titleOfCurrentSimulation, 
+      simulationToTransition(this.simulation.frames),
+      {
+        classNum : this.currentNumberOfClasses, 
+        layerColor: this.currentColor, 
+        cycleNum : this.cycleNumberOfCurrentSimulation, 
+        variable : this.currentVariableSelection
+      }
+    );
 
     // Let the download button be clickable
     this.Elem("btnDownload").disabled = false;
-    this.clearUploadedFiles()
+    this.clearUploadedFiles();
   }
 
+  /**
+   * @description Create CSV and make downloadable
+   * @param {*} ev 
+   */
   OnButtonDownload_Click(ev) {
-    var index = document.getElementById('sim-download').selectedIndex
-    new CreateCSV(this.DataFromFiles[index].transitions);
+    var index = document.getElementById('sim-download').selectedIndex;
+    new CreateCSV(this.collection[index].transitions);
   }
 
-  /*
-    - When a user finishes inserted their files, we get an array composed of an object holding:
-      - Simulation title
-      - Simulation data
-      - GeoJSON layer file content...
-    - The array length increases as the user adds more simulations to the webpage
-  */
-  KeepTrackOfSubmittedUserFiles(data, title, layerFile, classNum, color, cycle, SIR, transitions){
-    if(this.DataFromFiles == undefined){ this.DataFromFiles = new Array; }
-    this.DataFromFiles.push({
-        simulation: title, 
-        simulationData: data, 
-        GeoJSON: layerFile, 
-        layerClasses: classNum, 
-        layerColor: color, 
-        layerCycle: cycle,
-        layerSIR: SIR,
-        transitions: transitions
-      });
+  /**
+   * @description Collection of all the simulations the user has entered
+   * @param {*} data - data for visualization 
+   * @param {*} title - Title of the simulation
+   * @param {*} transitions - Data for CSV file download
+   * @param {*} visualProperties - [classNum, layerColor, cycleNum, variable]
+   */
+  collectionOfSimulations(data, title, transitions, visualProperties){
+    if(this.collection == undefined) {this.collection = new Array; }
+    this.collection.push({
+      data : data, 
+      title : title, 
+      transitions : transitions,
+      visualProperties : visualProperties
+    }) 
   }
-
-  CurrentColorScale(scale) { this.currentColorScale = scale; }
-
-  CurrentSIRselected(SIR){ this.currentSIR = SIR; }
 
   Template() {
     return (
@@ -546,7 +530,7 @@ export default class Application extends Templated {
         // Color select
         "<div>" +
           "<label for='favcolor'>Select colour scale: </label>" +
-          "<input type='color' id='colorOne' name='favcolor' value='#ff0000'><br>" +
+          "<input type='color' handle='colorSelect' id='colorSelect' name='favcolor' value='#ff0000'><br>" +
         "</div>" +
 
         // Classes select (4 or 5)
@@ -557,19 +541,9 @@ export default class Application extends Templated {
         "</select></div>" +
 
         // Simulation select
-        "<br><div id='SIRControls'><label for='class-select'>Choose what to visualize: </label>" +
-        "<select handle = 'SIR-select' id='SIR-select'>" +
-          "<option>Susceptible</option>" +
-          "<option>Infected</option>" +
-          "<option>Recovered</option>" +
-          "<option>newInfected</option>" +
+        "<br><div id='variableControls'><label for='class-select'>Choose what to visualize: </label>" +
+        "<select handle = 'variable-select' id='variable-select'>" +
         "</select></div>" +
-        
-        // Legend 
-        "<legend id='legend-svg' class='svg-div'>Place Holder" +
-        "<svg id='svg' class='svg' handle='svg' width = '150px' height = '120px'></svg>" +
-        "</legend>" +
-      "</div>" +
 
       // Video
       "<div class='playbackApp' id='playbackApp'>" +
