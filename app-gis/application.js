@@ -33,12 +33,6 @@ export default class Application extends Templated {
 
     this.simulation = null;
 
-    // For creating simulation object and changing variables in HTML
-    this.variables = ["Susceptible", "Infected", "Recovered", "newInfected"]
-    this.currentVariableSelection = this.variables[0]
-    updateVariableSelect(this.variables)
-    
-
     // Initial legend settings 
     this.currentNumberOfClasses = 4;
     this.currentColor = "#FF0000";
@@ -91,14 +85,10 @@ export default class Application extends Templated {
         }
         return false;
       }
-    });
-
-    this.Widget("upload").files = userFiles
-    this.files = userFiles
+    });  
 
     if(userFiles.length > 2 || numUserFiles != userFiles.length){
       this.clearUploadedFiles()
-
       alert(
         "Invalid File Entry.\n" +
         "Stick to inserting no more than 2 files.\n" +
@@ -106,6 +96,9 @@ export default class Application extends Templated {
       );
     }
     else {
+      this.Widget("upload").files = userFiles
+      this.files = userFiles
+
       this.Elem("load").disabled = false;
       this.Elem("clear").disabled = false;
 
@@ -135,7 +128,6 @@ export default class Application extends Templated {
 
     // Google Chrome only supports 500mb blobs. 
     // The uploaded simulation result file is uploaded to the app in chunks.
-    // File chunking
     let self = this,
       parser = new CustomParser();
       
@@ -180,14 +172,13 @@ export default class Application extends Templated {
   OnLoad_DataHandler(data, layer) {
     this.tempData = data;
 
-    let self = this,
-      f = layer[0], 
-        fileReader = new FileReader();
+    let self = this;
+    let fileReader = new FileReader();
 
     fileReader.onload = function (event) {
-      let title = f.name.substring(0, f.name.indexOf(".")),
-            simNum = (self.collection == undefined) ? 0 : self.collection.length,
-              newTitle = "simulation" + simNum + "_" + title;
+      let title = layer[0].name.substring(0, layer[0].name.indexOf("."));
+      let simNum = (self.collection == undefined) ? 0 : self.collection.length;
+      let newTitle = "simulation" + simNum + "_" + title;
 
       // Current simulation settings
       self.titleOfCurrentSimulation = newTitle;
@@ -203,7 +194,7 @@ export default class Application extends Templated {
       // Creates the simulaiton object
       self.layer.OL.getSource().once("change", self.OnLayerCreation_Handler.bind(self)); 
     };
-    fileReader.readAsDataURL(f); 
+    fileReader.readAsDataURL(layer[0]); 
   }
 
   // TODO: Improve mapOnClick
@@ -224,47 +215,50 @@ export default class Application extends Templated {
    * @description Clear existing legend and define a new one
    */
   UpdateLegend(){
-    this.Widget("map").RemoveControl(this.legend);
+    if(this.data != undefined){
+      this.Widget("map").RemoveControl(this.legend);
     
-    var domain = [], index = 0; 
+      var domain = [], index = 0; 
 
-    while(index <= 1){
-      domain.push(index.toFixed(2));
-      index += (1 / this.currentNumberOfClasses);
-    }
-
-    var prev = null;
-    index = 0;
-
-    while(index < domain.length){
-
-      var curr = domain[index];
-
-      if (curr == "0.00") {
-        this.legend = new ol.control.Legend({ 
-          title: `${this.currentVariableSelection}`,
-          margin: 5, 
-          collapsed: false 
-        });
-      }
-      
-      else {
-        var title = (prev) ? `${prev} - ${curr}` : `0 - ${curr}`;
-        var color = this.currentColorScale.d3Scale(domain[index-1]);
-
-        this.legend.addRow({ 
-          title: title, 
-          size:[40,40], 
-          typeGeom:"Point",  
-          style: Style.PointStyle(color) 
-        });
+      while(index <= 1){
+        domain.push(index.toFixed(2));
+        index += (1 / this.currentNumberOfClasses);
       }
 
-      index++;
-      prev = curr;
-    }
+      var prev = null;
+      index = 0;
 
-    this.Widget("map").AddControl(this.legend);
+      while(index < domain.length){
+
+        var curr = domain[index];
+
+        if (curr == "0.00") {
+          this.legend = new ol.control.Legend({ 
+            title: `${this.currentVariableSelection}`,
+            margin: 5, 
+            collapsed: false 
+          });
+        }
+        
+        else {
+          var title = (prev) ? `${prev} - ${curr}` : `0 - ${curr}`;
+          var color = this.currentColorScale.d3Scale(domain[index-1]);
+
+          this.legend.addRow({ 
+            title: title, 
+            size:[40,40], 
+            typeGeom:"Point",  
+            style: Style.PointStyle(color) 
+          });
+        }
+
+        index++;
+        prev = curr;
+      }
+
+      this.Widget("map").AddControl(this.legend);
+    }
+    
   }
 
   /**
@@ -317,12 +311,15 @@ export default class Application extends Templated {
 
   /**
   * @description Change the simulation being manipulated and update legend color, 
-  * legend classes, and simulation cycle.
+  * legend classes, variable select, and simulation cycle.
   * @param {*} ev - event.target.value would tell us which simulation we selected
   */
   OnSimulationSelectChange(ev){
     // Switch simulations to manipulate 
     this.PreviousSimulationToCurrentSimulation(document.getElementById('sim-select').selectedIndex);
+
+    // Update variable select
+    updateVariableSelect(this.variables);
     
     // Update legend
     this.UpdateLegendToCurrentSimulation();
@@ -341,6 +338,8 @@ export default class Application extends Templated {
     this.currentNumberOfClasses = element.visualProperties.classNum;
     this.currentColor = element.visualProperties.layerColor;
     this.currentVariableSelection = element.visualProperties.variable;
+    this.variables = element.visualProperties.variables;
+
   }
 
   UpdateLegendToCurrentSimulation(){
@@ -442,6 +441,8 @@ export default class Application extends Templated {
   CreateSimulation(features) {
     this.data = sortPandemicData(this.tempData);
 
+    this.updateVariables();
+
     // TODO: Try this with simulations that have a different number of cycles
     simAndCycleSelect(this.titleOfCurrentSimulation, this.data.length-1);
 
@@ -455,13 +456,26 @@ export default class Application extends Templated {
         classNum : this.currentNumberOfClasses, 
         layerColor: this.currentColor, 
         cycleNum : this.cycleNumberOfCurrentSimulation, 
-        variable : this.currentVariableSelection
+        variable : this.currentVariableSelection,
+        variables: this.variables
       }
     );
 
     // Let the download button be clickable
     this.Elem("btnDownload").disabled = false;
     this.clearUploadedFiles();
+  }
+
+  updateVariables(){
+    for (var firstKey in this.data[0]["messages"]) break;
+    // For creating simulation object
+    this.variables = Object.keys(this.data[0].messages[firstKey]);
+    // Population is always [0], remove it since it is does not have a domain of [0,1]
+    // Comment this line of code out if your population is in proportion [0,1]
+    this.variables.shift();
+    this.currentVariableSelection = this.variables[0];
+    // Update variables in HTML
+    updateVariableSelect(this.variables);
   }
 
   /**
@@ -478,7 +492,7 @@ export default class Application extends Templated {
    * @param {*} data - data for visualization 
    * @param {*} title - Title of the simulation
    * @param {*} transitions - Data for CSV file download
-   * @param {*} visualProperties - [classNum, layerColor, cycleNum, variable]
+   * @param {*} visualProperties - [classNum, layerColor, cycleNum, variable, variables]
    */
   collectionOfSimulations(data, title, transitions, visualProperties){
     if(this.collection == undefined) {this.collection = new Array; }

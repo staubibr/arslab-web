@@ -7,7 +7,7 @@ Build a GIS environment based visualization for large scale spatial simulations 
 ## Getting Started:
 
 ### Users
-[![gif](./img/demo.gif)](https://youtu.be/iBGA77LImYE)
+[![Video Tutorial for Users](./img/demo.gif)](https://youtu.be/iBGA77LImYE)
 - Open the [GIS Simulation Explorer](https://staubibr.github.io/arslab-web/app-gis/index.html) in Chrome 
 - OpenStreetMap will automatically load the world map
 - Before Loading Simulations
@@ -16,25 +16,26 @@ Build a GIS environment based visualization for large scale spatial simulations 
   1. Click the database icon in the map's sidebar
   2. Drag and Drop your simulation results (.txt) and layer (.geojson)
   3. Click the `Load Simulation` button
-  4. OPTIONAL: Repeat step 2 to 3
+  4. **OPTIONAL**: Repeat step 2 to 3 to load more simulations
 - Manipulating Simulations
   - Click the filter icon in the sidebar
   - By default, the current simulation to be manipulated is the most recently loaded one
   - The current simulation can be selected which will allow you to:
     - Download simulation object as a csv file
-    - Cycle through different timestamps of the SIR simulation
-    - Change legend
-    - Change color
+    - Cycle through different timestamps of the simulation
+    - Change legend properties (color and classification)
+    - Change color and classification of the simulation
 - Download Simulation
   - Click the download icon in the sidebar
   - Choose which simulation to download
   - Click the `Download` button
 - Interacting with Simulations Shown on Map
-    - View attributes by clicking census subdivisions
+    - View attributes by clicking on polygons
+      - Will appear as a popup
 - Layer switcher 
   - Click the second icon in the top right corner of the Application
   - Use this for changing between simulations (view-only)
-- Search 
+- Search **(currently unavailable)**
   - Click the search icon shown in the Application
   - You can move anywhere on the map by typing in a location
 - Playback 
@@ -47,7 +48,7 @@ Build a GIS environment based visualization for large scale spatial simulations 
 
 ##### Essentials:
 - Download [Web Server for Chrome](https://chrome.google.com/webstore/detail/web-server-for-chrome/ofhbbkphhbklhfoeikjpcbhemlocgigb) or [Live Server in VSCode](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer)
-- Open [app-gis](https://github.com/staubibr/arslab-web/tree/master/app-gis) in your preferred text editor 
+- Open [app-gis](https://github.com/staubibr/arslab-web/tree/master/app-gis) in your preferred text editor if using Web Server for Chrome, otherwise use VSCode
 - Use [Chrome DevTools](https://developers.google.com/web/tools/chrome-devtools/) for debugging
   - Ensure that cache is disabled in DevTools
 
@@ -78,20 +79,24 @@ Features:
   - OpenStreetMap as base layer / canvas
     - Zoom in/out
     - Layer Switcher
-    - Search bar
+    - Search bar (**unavailable**)
     - Sidebar 
       - Home 
       - Load Simulation 
       - Manipulating Simulations
+        - Select simulation
         - Color
         - Classes
-        - SIR
+        - Variables
       - Download Simulation
       - Playback
     - Legend
-    - Interacting with Simulations Shown on Map
+    - Interacting with Simulations Shown on Map (popup)
 
 ##### Structure of Simulation Results Text File:
+
+If the structure of your text file is different, then be sure to reflect these changes in `/sortPandemicData.js`
+
     State for model _DAUID is <population, number of susceptible, number of infected, number of recovered, number of new infected, number new recovered, number fatalities>
     
     Note:
@@ -108,17 +113,15 @@ Features:
    - Code gets wanky when layers are on top of each other
    - The issue could likely be fixed by looking at the layer switcher
 3. Let users title their simulation 
-4. Let users choose what their simulation object will contain
+4. Allow non-proportional data
 5. Add options to the Settings tab
    - Support for multiple languages 
-6. Allow geopackage files as an accepted file format
+6. Allow GeoPackage files as an accepted file format
    - Look into [GeoPackage JS](https://github.com/ngageoint/geopackage-js)
    - For now use [MyGeodata Converter](https://mygeodata.cloud/converter/gpkg-to-geojson) or QGIS to convert .gpkg to .geojson
    - Could also create a [Python script](https://www.geodose.com/2020/06/pyqgis-tutorial-shapefile-conversion.html) for the time being?
+     - **NOTE**: Ensure you use an acceptable CRS when converting a file to GeoJSON
 7. Add a GeoCoder
-8. Integrate with DEVS Web Viewer
-   - Incorporate library of models w/ backend
-9.  Introduce spatial analysis tools
 
 ## Credits and Acknowledgements
 
