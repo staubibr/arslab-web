@@ -13,11 +13,9 @@ import Recorder from '../api-web-devs/components/recorder.js';
 import Parser from '../api-web-devs/parsers/standardized.js';
 
 import Map from './ol/map.js';
-
 import Style from "./utils/style.js";
 import Point from "./style/point.js";
 import Polygon from "./style/polygon.js";
-
 import Geometry from "./utils/geometry.js"
 
 export default class Main extends Templated { 

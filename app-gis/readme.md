@@ -2,6 +2,12 @@
 
 ## Purpose
 
+Find examples based on GIS Simulations (cell-DEVS, DEVS, cellular automata)
+
+Find literature (summarize into sub topics)
+
+Min / Max color for heatmap
+
 Build a GIS environment based visualization for large scale spatial simulations on the web. 
 
 ## Getting Started:
@@ -122,6 +128,10 @@ If the structure of your text file is different, then be sure to reflect these c
    - Could also create a [Python script](https://www.geodose.com/2020/06/pyqgis-tutorial-shapefile-conversion.html) for the time being?
      - **NOTE**: Ensure you use an acceptable CRS when converting a file to GeoJSON
 7. Add a GeoCoder
+
+## Important Link
+
+[Geography-Based-Model developed by ARSLab](https://github.com/omarkawach/Geography-Based-Model)
 
 ## Credits and Acknowledgements
 

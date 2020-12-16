@@ -1,15 +1,28 @@
 ## Background (Draft)
 
-Large scale geospatial simulations, at the municipal, provincial or higher levels, typically generate massive volumes of data. Presenting these data in a comprehensive, intuitive way for non-expert users requires adequate visual support. In the case of geospatial data, web-based geographic information systems (GIS) have become well established platforms to do so. The DEVS-GIS Simulation Explorer we developed relies on OpenLayers, one of the more established Open Source Web GIS libraries and the OpenStreetMap database to contextualize simulation results. As a case study, we use the results of the disease spread simulation model, for the City of Ottawa at the Dissemination Area (DA) level and for the province of Ontario at the Census Subdivision (CSD) level. The application allows users to build choropleth maps that display the boundary polygons classified by color according to different variables produced by the simulation (infected, susceptible, deaths, recovered, etc.) Users can also animate the map to visualize each time step of the simulation and interact with individual geometries to explore the detailed results of the simulation.
+Large scale geospatial simulations, at the municipal, provincial or higher levels, typically generate massive volumes of data. Presenting these data in a comprehensive, intuitive way for non-expert users requires adequate visual support. In the case of geospatial data, web-based geographic information systems (GIS) have become well established platforms to do so. For example, modern Open Source Web GIS libraries, such as OpenLayers, provide developers with the necessary tools to load and display data into dynamic map-based web applications.OpenLayers is well-established, entirely free, easy to customize, and supports vector data rendering. There also existing other web-mapping libraries such as D3JS (limited mapping capability) which can be incorporated to support further data visualization. The DEVS-GIS Simulation Explorer we developed relies on OpenLayers, and the OpenStreetMap database to contextualize simulation results. The DEVS-GIS Simulation Explorer offers a unique opportunity for interdisciplinary studies and remote collaboration. As a case study, we use the results of the [disease spread simulation model](https://github.com/omarkawach/Geography-Based-Model), for the City of Ottawa at the Dissemination Area (DA) level and for the province of Ontario at the Census Subdivision (CSD) level. The application allows users to build choropleth maps that display the boundary polygons classified by color according to different variables produced by the simulation (infected, susceptible, deaths, recovered, etc.) Users can also animate the map to visualize each time step of the simulation and interact with individual geometries to explore the detailed results of the simulation. By analyzing the output seen in the DEVS-GIS Simulation Explorer, users may recognize high risk geographical regions which may be susceptible to outbreaks or further disease spreading. **Disucss future application (V2) and potnetial improvements**...
 
-Changes to be made:
-- Remove the part about COVID, needs to be more generic to apply to anything
-- Include a bit about map-based visualization (MBV)
+###### Related Work?
+https://geodacenter.github.io/covid/map.html
+https://geodacenter.github.io/covid/index.html
+
+###### Might be useful? 
+- https://www.cmaj.ca/content/192/37/E1074 
+- [Use of GIS Mapping as a Public Health Tool—From Cholera to Cancer](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4089751/)
+
+##### Map-Based Visualization (MBV)
+
+The use of data visualization as a means of supporting decision-making by creating easily digestible content
+
+- Resources:
   - https://dl.acm.org/doi/abs/10.1145/3206505.3206516
   - https://dl.acm.org/doi/10.1145/1998076.1998169
   - https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7177515/
   - https://www.tandfonline.com/doi/full/10.1080/23729333.2017.1288534
   - https://www.frontiersin.org/articles/10.3389/fcomp.2020.00032/full
+
+##### Symbology 
+
 - Reference symbology guru Jacques Bertin (1967 / 1970)
   - He wrote on visual variables (different ways to view geospatial data)
   - Related to simulation and how we can use it with simulation results 
@@ -31,7 +44,6 @@ Changes to be made:
 
 What is it? What can it do?
 
-
 What can GIS reveal in data? 
 
 In Geography, there are various forms of thematic mapping. For the sake of this paper, the focus will be on choropleth maps as the thematic map for presenting the COVID-19 spread model from simulation results. By shading affected regions by proportion or other statistical variables, users can recognize the impact of COVID-19 within a geographic region. 
@@ -42,9 +54,12 @@ In Geography, there are various forms of thematic mapping. For the sake of this 
   - Their use cases
 
 
+
 ##### Evolution of GIS and GIS Web Applications
 
 As any experienced geographer today would know, spatio-temporal analysis involves the inquiry into the relationship between space and time. In 1854, epidemiologist Dr. John Snow was the first to exemplify this phenomena by creating a spatial risk model that listed incidences of cholera outbreak ([Caplan, et al., 2020](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7105112/#:~:text=John%20Snow%20was%20an%20epidemiologist,the%20cholera%20outbreak%20in%201854.https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7105112/#:~:text=John%20Snow%20was%20an%20epidemiologist,the%20cholera%20outbreak%20in%201854.)). As the 19th century lagged in advanced qualitative methods that many now take for granted, this is what would be known as the dark ages of Geographic Information Systems (GIS) ([All Answers Ltd., 2018](https://ukdiss.com/examples/geographic-information-system.php) & [Ali, 2020](https://www.researchgate.net/publication/340182760_Geographic_Information_System_GIS_Definition_Development_Applications_Components)). Only a near hundred years later did GIS come out of the dark ages when Rogers Tomlinson, the father of GIS, computerized the way field experts work with and analyze spatial data ([ESRI, n.d.](https://esripress.esri.com/storage/esripress/images/188/115391_webgis_chapter01.pdf)). Shortly afterwards, American Geographer Waldo Tobler conceived what would be hailed as Tobler's first law of geography (TFL). The creation of TFL emphasized the influence of location where near things are more related than distant things ([Foresman, Luscombe, 2016](https://www.tandfonline.com/doi/abs/10.1080/17538947.2016.1275830)) Even with all the advances that were taking place in the field of GIS, many of the applications used were standalone until 1993 when Xerox developed the first Web-based map viewer. Having GIS on the web opened many doors to mass sharing of information on a global-scale, new user experiences, cross-platform compatibility, and other geospatial services ([ESRI, n.d.](https://esripress.esri.com/storage/esripress/images/188/115391_webgis_chapter01.pdf)). The appeal to use Web-based GIS applications does not only apply to Geographers. In many forms of interdisciplinary research, the diverse field of Geography proves most useful. Through use of GIS, researchers can utilize web GIS platforms and software to better analyze, conceptualize, and interpret information. Regardless of the discipline research is being conducted in, [Regardless of the discipline in which research is conducted] if the research data contains spatial components then GIS will be there as a major facilitator in some form ([Rickles, et al., 2017](https://rgs-ibg.onlinelibrary.wiley.com/doi/full/10.1002/geo2.46)). 
+
+### If the content below isn't useful, maybe find a use for it elsewhere?
 
 ##### The COVID-19 Pandemic and the Move to Remote Work
 
@@ -55,33 +70,4 @@ The new normal of working from home may allow employers to focus more on merits 
 
 Since the inception of TFL, researchers in the GIS community have employed such a concept to describe spatial dependence ([Leitner et al., 2018](https://www.researchgate.net/publication/323419139_Laws_of_Geography)). In the field of epidemiology, one could apply TFL to synthetically simulate the spread of infectious diseases in a geographical environment based on spatial weighting ([Zhong et al., 2009](https://www.researchgate.net/profile/Song_Dunjiang/publication/226204125_Simulation_of_the_spread_of_infectious_diseases_in_a_geographical_environment/links/00b495316b307a20ab000000/Simulation-of-the-spread-of-infectious-diseases-in-a-geographical-environment.pdf)). Such an application can play a vital role in disease prevention and control when coupled with modern spatio-temporal analysis techniques ([Watkins et al., 2007](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1805744/)). When supplementing existing research on virus spread models, geographical tracking and mapping of pandemic data through the application of GIS has been proven to be a powerful system for disease monitoring and planning ([Buolos & Geraghty, 2020](https://ij-healthgeographics.biomedcentral.com/articles/10.1186/s12942-020-00202-8)). Such a system allows researchers to present large volumes of data in an intuitive way. For one, web-based mapping has created an environment for accessible remote collaboration between decision makers ([Franch-Pardo et al., 2020](https://www.sciencedirect.com/science/article/pii/S0048969720335531)). By integrating simulation models into map-based web applications, researchers can also highlight spatio-temporal trends in various scenarios. Highlighting spatio-temporal trends would mean that researcher can observe the spatial distribution of COVID-19 cases to drive better policy decisions ([Shariati, et al., 2020](https://link.springer.com/article/10.1007/s40201-020-00565-x)).
 
-##### Application of the GIS Simulation Explorer 
 
-Modern open-source GIS libraries, such as OpenLayers, provide developers with the necessary tools to load and display data into dynamic map-based web applications. OpenLayers is entirely free, easy to customize, and supports vector data rendering. D3JS, a lightweight data visualization library, also has some limited mapping capability that could be incorporated into a map-based web application. These web mapping libraries were used to develop the GIS Simulation Explorer application to support current studies of COVID-19 (as well as future pandemics) through remote collaboration. In the application's current state, simulation results are mapped to vector files, and then displayed for observation. 
-
-OpenStreetMap...
-
-Load files and they get read through openlayers 
-
-what does it do 
-why and how is it useful 
-what is it 
-future applications and improvements 
-
-Given the unprecedented amount of data surrounding the COVID-19 pandemic, local / national / global real-time, non-real-time, or simulated disease cases must be carefully analyzed to recognize high risk geographical regions which may be susceptible to outbreaks or further disease spreading.
-
-
-(summarize the points to maybe show why software such as this is useful if implemented on a global scale?)
-
-- Where do we fit in? How did we accomplish it?
-
-
-###### Might be useful? 
-- https://www.cmaj.ca/content/192/37/E1074 
-- [Use of GIS Mapping as a Public Health Tool—From Cholera to Cancer](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4089751/)
-
-##### Related Work
-
-https://geodacenter.github.io/covid/map.html
-
-https://geodacenter.github.io/covid/index.html

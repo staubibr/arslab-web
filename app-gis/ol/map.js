@@ -28,9 +28,9 @@ export default Core.Templatable("Widget.Map", class Map extends Templated {
     LayerForBaseMap(){
       return new ol.layer.Tile({
         source: new ol.source.OSM(),
-        noWrap: true,
-        wrapX: false,
         title: "OpenStreetMap",
+        visible: true,
+        //baseLayer: true
       });
     }
 
@@ -88,10 +88,6 @@ export default Core.Templatable("Widget.Map", class Map extends Templated {
                   '<li><a href="#downloadDataSidebar" role="tab"><i class="fa fa-download"></i></a></li>'+
                 '</ul>'+
 
-                // Lowest sidebar tab (settings)
-                '<ul role="tablist">'+
-                  '<li><a href="#settings" role="tab"><i class="fa fa-gear"></i></a></li>'+
-                '</ul>'+
               '</div>'+
 
               // Sidebar content
@@ -123,11 +119,7 @@ export default Core.Templatable("Widget.Map", class Map extends Templated {
                   '<h1 class="sidebar-header">Download Data (as CSV)<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>'+
                   '<p></p>' +
                 '</div>'+
-          
-                '<div class="sidebar-pane" id="settings">'+
-                  '<h1 class="sidebar-header">Settings<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>'+
-                  '<p>No settings yet<br/></p>'+
-                '</div>'+
+        
 
               '</div>'+
             '</div>'+

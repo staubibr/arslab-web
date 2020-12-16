@@ -14,11 +14,7 @@ export default class BucketFill {
 		this.attribute = "fill";
 		this.property = property;
 		this.colors = colors;
-		if(type == "user-defined"){
-			this.buckets = buckets
-		}else{
-			this.buckets = null;
-		}
+		this.buckets = buckets
 	}
 	
 	Symbol(value) {		
@@ -30,6 +26,7 @@ export default class BucketFill {
 	}
 	
 	static FromJson(json) {
-		return new BucketFill(json.property, json.colors, json.type, json.buckets);
+		var buckets = json.type == "user-defined" ? json.buckets : null;
+		return new BucketFill(json.property, json.colors, json.type, buckets);
 	}
 }

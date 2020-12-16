@@ -6,6 +6,8 @@ This project is under development.
 
 Build a GIS environment based visualization for large scale spatial simulations on the web. 
 
+https://staubibr.github.io/arslab-web/app-gis-v2/index.html
+
 ## Features
 
 - Unlike [V1 of the GIS Simulation Explorer](https://staubibr.github.io/arslab-web/app-gis/index.html), V2 does the data fetching from the server side

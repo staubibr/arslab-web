@@ -119,18 +119,7 @@ export default class Style {
 	}
 	
 	static BucketizeStyle(style, stats) {
-		if(style.type == "user-defined"){
-			
-			if(style.radii != undefined){
-				return
-			}else{
-				style.buckets = Style.EquivalentBuckets(stats[style.property].min, stats[style.property].max, style.buckets.length);
-				return
-			}
-			
-			
-		}
-		else if (style.type == "quantile") {	
+		if (style.type == "quantile") {	
 			style.buckets = Style.QuantileBuckets(stats[style.property].sorted, style.Length);
 		}
 		else if (style.type == "equivalent") {

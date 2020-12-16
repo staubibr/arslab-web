@@ -33,10 +33,10 @@ export default class Application extends Templated {
 
     this.simulation = null;
 
-    // Initial legend settings 
-    this.currentNumberOfClasses = 4;
+    // Initial legend settings
+    this.classNumberOfCurrentSimulation = 4;
     this.currentColor = "#FF0000";
-    this.currentColorScale = new GetScale(this.currentColor, this.currentNumberOfClasses);
+    this.currentColorScale = new GetScale(this.currentColor, this.classNumberOfCurrentSimulation);
 
     // Create map container (canvas, sidebar, search, zoom, layer switcher, etc.)
     this.Widget("map").InitLayer();
@@ -222,7 +222,7 @@ export default class Application extends Templated {
 
       while(index <= 1){
         domain.push(index.toFixed(2));
-        index += (1 / this.currentNumberOfClasses);
+        index += (1 / this.classNumberOfCurrentSimulation);
       }
 
       var prev = null;
@@ -274,7 +274,7 @@ export default class Application extends Templated {
       this.collection[currentDataFileIndex].visualProperties.layerColor = this.currentColor;
     }   
 
-    this.currentColorScale = new GetScale(this.currentColor, this.currentNumberOfClasses);
+    this.currentColorScale = new GetScale(this.currentColor, this.classNumberOfCurrentSimulation);
 
     this.UpdateLegend();
 
@@ -287,15 +287,15 @@ export default class Application extends Templated {
    * @param {*} ev 
    */
   RecreateLegendClass(ev) {
-    this.currentNumberOfClasses = ev.target.value;
-    this.currentColorScale = new GetScale( this.currentColor, this.currentNumberOfClasses );
+    this.classNumberOfCurrentSimulation = ev.target.value;
+    this.currentColorScale = new GetScale( this.currentColor, this.classNumberOfCurrentSimulation );
 
     if (this.collection != undefined) {
       var currentDataFileIndex = document.getElementById("sim-select")
         .selectedIndex;
 
       this.collection[currentDataFileIndex].visualProperties.classNum =
-      this.currentNumberOfClasses;
+      this.classNumberOfCurrentSimulation;
     }
 
     this.UpdateLegend();
@@ -304,7 +304,7 @@ export default class Application extends Templated {
   }
 
   RecolorLayer() {
-    if (this.titleOfCurrentSimulation != undefined) {
+    if (this.data != undefined) {
       this.RedrawLayerOnMap(this.cycleNumberOfCurrentSimulation);
     }
   }
@@ -328,22 +328,37 @@ export default class Application extends Templated {
     this.Elem("cycle").setAttribute("max", this.data.length - 1);
     this.Elem("output").textContent = this.cycleNumberOfCurrentSimulation;
     document.getElementById("cycle").value = this.cycleNumberOfCurrentSimulation;
+
+    // Update video playback to current simulation object
+    this.simulation.On("Move", this.OnSimulation_Move.bind(this));
+    this.simulation.On("Jump", this.OnSimulation_Jump.bind(this));
+    this.Widget("playback").Initialize(this.simulation, this.settings);
   }
 
+  /**
+   * @description When the user swaps between simulations, update
+   * existing configurations
+   * @param {*} index - The selected simulation
+   */
   PreviousSimulationToCurrentSimulation(index){
     var element = this.collection[index];
     this.titleOfCurrentSimulation = element.title;
+    this.simulation = element.simulationObject;
     this.data = element.data;
     this.cycleNumberOfCurrentSimulation = element.visualProperties.cycleNum;
-    this.currentNumberOfClasses = element.visualProperties.classNum;
+    this.classNumberOfCurrentSimulation = element.visualProperties.classNum;
     this.currentColor = element.visualProperties.layerColor;
     this.currentVariableSelection = element.visualProperties.variable;
     this.variables = element.visualProperties.variables;
-
   }
 
+  /**
+   * @description Visual Properties are saved for each simulation, 
+   * this function will update the color of the simulation's layer
+   * and update the legend
+   */
   UpdateLegendToCurrentSimulation(){
-    this.currentColorScale = new GetScale(this.currentColor, this.currentNumberOfClasses);
+    this.currentColorScale = new GetScale(this.currentColor, this.classNumberOfCurrentSimulation);
 
     this.RedrawLayerOnMap(this.cycleNumberOfCurrentSimulation);
 
@@ -355,7 +370,7 @@ export default class Application extends Templated {
       }
     }
 
-    document.getElementById('class-select').selectedIndex = this.currentNumberOfClasses == 5 ? 1 : 0;
+    document.getElementById('class-select').selectedIndex = this.classNumberOfCurrentSimulation == 5 ? 1 : 0;
 
     this.UpdateLegend();
   }
@@ -378,6 +393,12 @@ export default class Application extends Templated {
     this.RedrawLayerOnMap(ev.target.value);
   }
 
+  /**
+   * @description Change the colouring of the simulation's layer on variable change 
+   * and update HTML 
+   * @param {*} ev - ev.target.value will tell use which 
+   * variable the user changed to
+   */
   OnVariableChange(ev){
     this.currentVariableSelection = ev.target.value;
     var currentDataFileIndex = document.getElementById('sim-select').selectedIndex;
@@ -398,7 +419,13 @@ export default class Application extends Templated {
     this.UpdateLegend();
   }
   
-  // Create the simulation object when the simulation is first introduced
+  /**
+   * @description create simulation object, draw simulation layer on map, 
+   * create legend for the simulation, set up playback feature 
+   * and up some HTML elements
+   * @param {*} ev - ev.target.getFeatures() are all the polygons 
+   * in a simulation layer
+   */
   OnLayerCreation_Handler(ev) {
     var features = ev.target.getFeatures();
     this.CreateSimulation(features);
@@ -438,6 +465,7 @@ export default class Application extends Templated {
     }    
   }
 
+  // TODO: Switch this.data to simulation object 
   CreateSimulation(features) {
     this.data = sortPandemicData(this.tempData);
 
@@ -449,11 +477,12 @@ export default class Application extends Templated {
     this.simulation = createSimulationObject(features, this.variables, this.data);
 
     this.collectionOfSimulations(
+      this.simulation,
       this.data, 
       this.titleOfCurrentSimulation, 
       simulationToTransition(this.simulation.frames),
       {
-        classNum : this.currentNumberOfClasses, 
+        classNum : this.classNumberOfCurrentSimulation, 
         layerColor: this.currentColor, 
         cycleNum : this.cycleNumberOfCurrentSimulation, 
         variable : this.currentVariableSelection,
@@ -489,14 +518,16 @@ export default class Application extends Templated {
 
   /**
    * @description Collection of all the simulations the user has entered
+   * @param {*} simulation - simulation object 
    * @param {*} data - data for visualization 
    * @param {*} title - Title of the simulation
    * @param {*} transitions - Data for CSV file download
    * @param {*} visualProperties - [classNum, layerColor, cycleNum, variable, variables]
    */
-  collectionOfSimulations(data, title, transitions, visualProperties){
+  collectionOfSimulations(simulation, data, title, transitions, visualProperties){
     if(this.collection == undefined) {this.collection = new Array; }
     this.collection.push({
+      simulationObject: simulation,
       data : data, 
       title : title, 
       transitions : transitions,
@@ -520,7 +551,6 @@ export default class Application extends Templated {
         // Loading Icon
         "<div id='wait' handle='wait' class='wait' hidden><img src='./assets/loading.gif'></div>" + 
       "</div>" +
-      
 
       // Download data
       "<div id='downloadDataApp'>" +
