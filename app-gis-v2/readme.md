@@ -6,8 +6,6 @@ This project is under development.
 
 Build a GIS environment based visualization for large scale spatial simulations on the web. 
 
-https://staubibr.github.io/arslab-web/app-gis-v2/index.html
-
 ## Features
 
 - Unlike [V1 of the GIS Simulation Explorer](https://staubibr.github.io/arslab-web/app-gis/index.html), V2 does the data fetching from the server side
@@ -23,11 +21,29 @@ https://staubibr.github.io/arslab-web/app-gis-v2/index.html
   - Map scale
   - Full screen mode
 
-## Getting Started:
+## Getting Started
+
+### Users 
+- Open to the [file upload page](https://staubibr.github.io/arslab-web/app-gis-v2/index.html) in Chrome
+- Upload 4 files
+  - .GeoJSON
+  - messages.log
+  - structure.json
+  - visualization.json
+
+### Developers
 
 - Download [Web Server for Chrome](https://chrome.google.com/webstore/detail/web-server-for-chrome/ofhbbkphhbklhfoeikjpcbhemlocgigb)
 - Use [Chrome DevTools](https://developers.google.com/web/tools/chrome-devtools/) for debugging
   - Ensure that cache is disabled in DevTools
+
+## TODO
+- Min / Max color for heatmap
+  - https://openlayers.org/en/latest/examples/heatmap-earthquakes.html
+  - https://openlayers.org/en/latest/apidoc/module-ol_layer_Heatmap-Heatmap.html 
+  - https://www.programmersought.com/article/37314464534/
+- Layer for each variable 
+- General bug fixes, UI changes, and code refactoring 
 
 ## Credits and Acknowledgements
 

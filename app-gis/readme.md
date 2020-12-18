@@ -2,15 +2,9 @@
 
 ## Purpose
 
-Find examples based on GIS Simulations (cell-DEVS, DEVS, cellular automata)
-
-Find literature (summarize into sub topics)
-
-Min / Max color for heatmap
-
 Build a GIS environment based visualization for large scale spatial simulations on the web. 
 
-## Getting Started:
+## Getting Started
 
 ### Users
 [![Video Tutorial for Users](./img/demo.gif)](https://youtu.be/iBGA77LImYE)
@@ -101,7 +95,8 @@ Features:
 
 ##### Structure of Simulation Results Text File:
 
-If the structure of your text file is different, then be sure to reflect these changes in `/sortPandemicData.js`
+If the structure of your text file is different, then be sure to reflect these changes in `/sortPandemicData.js`.
+Also, if your population data has a domain of [0,1] then be sure to comment out the `this.variables.shift()` line in `/application.js`.
 
     State for model _DAUID is <population, number of susceptible, number of infected, number of recovered, number of new infected, number new recovered, number fatalities>
     
@@ -113,7 +108,7 @@ If the structure of your text file is different, then be sure to reflect these c
     
     - The population formula is (population - population * fatalities)
 
-## TODO:
+## TODO
 1. General bug fixes, UI changes, and code refactoring 
 2. Fix mapOnClick
    - Code gets wanky when layers are on top of each other
@@ -126,7 +121,7 @@ If the structure of your text file is different, then be sure to reflect these c
    - Look into [GeoPackage JS](https://github.com/ngageoint/geopackage-js)
    - For now use [MyGeodata Converter](https://mygeodata.cloud/converter/gpkg-to-geojson) or QGIS to convert .gpkg to .geojson
    - Could also create a [Python script](https://www.geodose.com/2020/06/pyqgis-tutorial-shapefile-conversion.html) for the time being?
-     - **NOTE**: Ensure you use an acceptable CRS when converting a file to GeoJSON
+     - **NOTE**: Ensure you use an acceptable CRS (E.g.EPSG:4326) when converting a file to GeoJSON
 7. Add a GeoCoder
 
 ## Important Link
@@ -147,7 +142,7 @@ If the structure of your text file is different, then be sure to reflect these c
 
 [D3JS](https://d3js.org/)
 
-## Resources:
+## Resources
 
 #### D3JS 
 

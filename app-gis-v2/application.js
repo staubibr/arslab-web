@@ -46,11 +46,12 @@ export default class Main extends Templated {
 
 			var layer = this.map.AddGeoJsonLayer(config.id, d);
 
-			Geometry.convertPolygonToPoint(layer)
+			if(config.type == "point") Geometry.convertPolygonToPoint(layer);
 			
 			layer.set('visible', false);
 
 		});
+
 	}
 		
 	onSimulation_Loaded(ev) {
@@ -247,8 +248,7 @@ export default class Main extends Templated {
 		features.forEach(f => {
 			var id = f.getProperties()[this.config.join];
 			var symbol = this.current.style.Symbol(data[id]);
-			
-			
+
 			f.setStyle(symbol);
 		});
 	}

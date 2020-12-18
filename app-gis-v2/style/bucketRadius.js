@@ -41,13 +41,13 @@ export default class BucketRadius {
 	
 	static FromJson(json) {
 		let radii
+		var buckets = json.type == "user-defined" ? json.buckets : null;
+		
 		if(json.type == "user-defined"){
-			var i = json.radius.length - 1
-			radii = Style.EquivalentBuckets(json.radius[0], json.radius[i], json.classes);
-			this.buckets = json.buckets
+			radii = json.radius
 		}else{
 			radii = Style.EquivalentBuckets(json.min, json.max, json.classes);
 		}
-		return new BucketRadius(json.property, json.classes, radii, json.type, this.buckets);
+		return new BucketRadius(json.property, json.classes, radii, json.type, buckets);
 	}
 }

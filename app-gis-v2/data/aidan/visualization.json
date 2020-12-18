@@ -16,9 +16,9 @@
             "radius": {
                 "property": "Infected(accumulative)",
                 "type": "user-defined",
-                "radius": [5,10,15,20],
-                "buckets": [0, 0.25, 0.5, 1],
-                "classes": "6"
+                "radius": [4, 6, 8, 12, 14, 16],
+                "buckets": [0, 0.1, 0.2, 0.2, 0.5, 1],
+                "classes": "7"
             },
             "fill": {
                 "type": "quantile",
@@ -49,7 +49,7 @@
 			"name" : "Wards - Recovered (accumulative)",
             "layer": "wards",
             "fill": {
-                "type": "quantile",
+                "type": "equivalent",
                 "property": "Recovered(accumulative)",
                 "colors": ["rgba(255,255,229,0.85)","rgba(255,247,188,0.85)","rgba(254,227,145,0.85)","rgba(254,196,79,0.85)","rgba(254,153,41,0.85)","rgba(236,112,20,0.85)","rgba(204,76,2,0.85)","rgba(153,52,4,0.85)","rgba(102,37,6,0.85)"]
             },

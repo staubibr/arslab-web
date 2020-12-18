@@ -124,6 +124,7 @@ export default class Style {
 		}
 		else if (style.type == "equivalent") {
 			style.buckets = Style.EquivalentBuckets(stats[style.property].min, stats[style.property].max, style.Length);
+			//style.buckets = Style.ContinuousBuckets(stats[style.property].sorted, stats[style.property].min, stats[style.property].max, style.Length);
 		}
 	}
 	
@@ -136,6 +137,12 @@ export default class Style {
 		for (var i = 1; i < n; i++) buckets.push(values[i * interval]);
 		
 		buckets.push(values[values.length - 1]);
+		
+		return buckets;
+	}
+
+	static ContinuousBuckets(values, min, max, n) {
+		var buckets = [];
 		
 		return buckets;
 	}

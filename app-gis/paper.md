@@ -1,6 +1,12 @@
+## Literature Review Research (DRAFT)
+
+Find examples based on GIS Simulations (cell-DEVS, DEVS, cellular automata)
+
+Find literature (summarize into sub topics)
+
 ## Background (Draft)
 
-Large scale geospatial simulations, at the municipal, provincial or higher levels, typically generate massive volumes of data. Presenting these data in a comprehensive, intuitive way for non-expert users requires adequate visual support. In the case of geospatial data, web-based geographic information systems (GIS) have become well established platforms to do so. For example, modern Open Source Web GIS libraries, such as OpenLayers, provide developers with the necessary tools to load and display data into dynamic map-based web applications.OpenLayers is well-established, entirely free, easy to customize, and supports vector data rendering. There also existing other web-mapping libraries such as D3JS (limited mapping capability) which can be incorporated to support further data visualization. The DEVS-GIS Simulation Explorer we developed relies on OpenLayers, and the OpenStreetMap database to contextualize simulation results. The DEVS-GIS Simulation Explorer offers a unique opportunity for interdisciplinary studies and remote collaboration. As a case study, we use the results of the [disease spread simulation model](https://github.com/omarkawach/Geography-Based-Model), for the City of Ottawa at the Dissemination Area (DA) level and for the province of Ontario at the Census Subdivision (CSD) level. The application allows users to build choropleth maps that display the boundary polygons classified by color according to different variables produced by the simulation (infected, susceptible, deaths, recovered, etc.) Users can also animate the map to visualize each time step of the simulation and interact with individual geometries to explore the detailed results of the simulation. By analyzing the output seen in the DEVS-GIS Simulation Explorer, users may recognize high risk geographical regions which may be susceptible to outbreaks or further disease spreading. **Disucss future application (V2) and potnetial improvements**...
+Large scale geospatial simulations, at the municipal, provincial or higher levels, typically generate massive volumes of data. Presenting these data in a comprehensive, intuitive way for non-expert users requires adequate visual support. In the case of geospatial data, web-based geographic information systems (GIS) have become well established platforms to do so. For example, modern Open Source Web GIS libraries, such as OpenLayers, provide developers with the necessary tools to load and display data into dynamic map-based web applications. OpenLayers is well-established, entirely free, easy to customize, and supports vector data rendering. There also existing other web-mapping libraries such as D3JS (limited mapping capability) which can be incorporated to support further data visualization. The DEVS-GIS Simulation Explorer we developed relies on OpenLayers, and the OpenStreetMap database to contextualize simulation results. The DEVS-GIS Simulation Explorer offers a unique opportunity for interdisciplinary studies and remote collaboration. As a case study, we use the results of the [disease spread simulation model](https://github.com/omarkawach/Geography-Based-Model), for the City of Ottawa at the Dissemination Area (DA) level and for the province of Ontario at the Census Subdivision (CSD) level. The application allows users to build choropleth maps that display the boundary polygons classified by color according to different variables produced by the simulation (infected, susceptible, deaths, recovered, etc.) Users can also animate the map to visualize each time step of the simulation and interact with individual geometries to explore the detailed results of the simulation. By analyzing the output seen in the DEVS-GIS Simulation Explorer, users may recognize high risk geographical regions which may be susceptible to outbreaks or further disease spreading.
 
 ###### Related Work?
 https://geodacenter.github.io/covid/map.html
@@ -15,6 +21,7 @@ https://geodacenter.github.io/covid/index.html
 The use of data visualization as a means of supporting decision-making by creating easily digestible content
 
 - Resources:
+  - Good writer https://www.researchgate.net/profile/Olga_Buchel
   - https://dl.acm.org/doi/abs/10.1145/3206505.3206516
   - https://dl.acm.org/doi/10.1145/1998076.1998169
   - https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7177515/
@@ -52,8 +59,6 @@ In Geography, there are various forms of thematic mapping. For the sake of this 
     - Thematic mapping
   - Why have they become so useful now?
   - Their use cases
-
-
 
 ##### Evolution of GIS and GIS Web Applications
 

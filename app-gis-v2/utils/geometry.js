@@ -12,6 +12,7 @@ export default class Geometry {
 
 			return new ol.Feature({ 'geometry': new ol.geom.Point([c[0], c[1]]), 'id':id });
 		});
+		return centroids;
 	}
 	static convertPolygonToPoint(layer){
 		var features = layer.getSource().getFeatures();
