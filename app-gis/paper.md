@@ -4,6 +4,34 @@ Find examples based on GIS Simulations (cell-DEVS, DEVS, cellular automata)
 
 Find literature (summarize into sub topics)
 
+http://simulation.su/uploads/files/default/2015-sahoo-mani.pdf
+
+http://www.cnp.pitt.edu/certificate/papers/agentpaper.pdf
+
+https://www.sciencedirect.com/science/article/abs/pii/S0360835219300269
+
+https://www.simulationaustralasia.com/files/upload/pdf/research/019-2000.pdf
+
+https://www.researchgate.net/publication/266402801_SIMPLIFYING_GIS_DATA_USE_INSIDE_DISCRETE_EVENT_SIMULATION_MODEL_THROUGH_MN-AC_CELLULAR_AUTOMATON
+
+https://www.sciencedirect.com/science/article/abs/pii/0169204694900655
+
+http://www.dpi.inpe.br/gilberto/cursos/papers/Yassemi2008.pdf
+
+http://www-personal.umich.edu/~danbrown/papers/jgs_proof.pdf
+
+http://www.unice.fr/coquillard/pdf/Muzy%20et%20al%202008.pdf
+
+DES:
+
+https://core.ac.uk/download/pdf/62919299.pdf
+
+Prof. Wainer:
+- https://journals.sagepub.com/doi/10.1177/0037549706073698 
+
+A PowerPoint:
+-http://www.inf.ed.ac.uk/teaching/courses/cmgcr/lectures/CA-ABM-Ecosys.pdf
+
 ## Background (Draft)
 
 Large scale geospatial simulations, at the municipal, provincial or higher levels, typically generate massive volumes of data. Presenting these data in a comprehensive, intuitive way for non-expert users requires adequate visual support. In the case of geospatial data, web-based geographic information systems (GIS) have become well established platforms to do so. For example, modern Open Source Web GIS libraries, such as OpenLayers, provide developers with the necessary tools to load and display data into dynamic map-based web applications. OpenLayers is well-established, entirely free, easy to customize, and supports vector data rendering. There also existing other web-mapping libraries such as D3JS (limited mapping capability) which can be incorporated to support further data visualization. The DEVS-GIS Simulation Explorer we developed relies on OpenLayers, and the OpenStreetMap database to contextualize simulation results. The DEVS-GIS Simulation Explorer offers a unique opportunity for interdisciplinary studies and remote collaboration. As a case study, we use the results of the [disease spread simulation model](https://github.com/omarkawach/Geography-Based-Model), for the City of Ottawa at the Dissemination Area (DA) level and for the province of Ontario at the Census Subdivision (CSD) level. The application allows users to build choropleth maps that display the boundary polygons classified by color according to different variables produced by the simulation (infected, susceptible, deaths, recovered, etc.) Users can also animate the map to visualize each time step of the simulation and interact with individual geometries to explore the detailed results of the simulation. By analyzing the output seen in the DEVS-GIS Simulation Explorer, users may recognize high risk geographical regions which may be susceptible to outbreaks or further disease spreading.
@@ -12,11 +40,12 @@ Large scale geospatial simulations, at the municipal, provincial or higher level
 https://geodacenter.github.io/covid/map.html
 https://geodacenter.github.io/covid/index.html
 
-###### Might be useful? 
-- https://www.cmaj.ca/content/192/37/E1074 
+###### Might be useful somewhere? 
 - [Use of GIS Mapping as a Public Health Tool—From Cholera to Cancer](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4089751/)
 
-##### Map-Based Visualization (MBV)
+##### Map-Based Decision Making and Visualization 
+
+
 
 The use of data visualization as a means of supporting decision-making by creating easily digestible content
 
@@ -28,32 +57,31 @@ The use of data visualization as a means of supporting decision-making by creati
   - https://www.tandfonline.com/doi/full/10.1080/23729333.2017.1288534
   - https://www.frontiersin.org/articles/10.3389/fcomp.2020.00032/full
 
-##### Symbology 
+##### Symbology and Semiotics
+
+- Symbology is the study / use of symbols
+- Semiotics is the study of symbols as a means of communication
+
+From 1967, French cartographer Jacques Bertin brought forth impactful theories (describe here?). Til this day the same theories are applied to the science, art, and technology involved in cartography. As maps are a form of communication, maps must be easily understood non-verbally through quick observation since geospatial data can be rather complex. When making maps and / or manipulating maps, the use of visual variables is imperative. Bertin had developed various visual variables, such as position, size, value, color, orientation, and texture ([Morita, 2013](https://www.tandfonline.com/doi/full/10.1179/000870411X13038059668604?needAccess=true)). 
+
+What does each variable tell us?..
+
+
+
 
 - Reference symbology guru Jacques Bertin (1967 / 1970)
-  - He wrote on visual variables (different ways to view geospatial data)
-  - Related to simulation and how we can use it with simulation results 
+  - Relate to simulation and how we can use it with simulation results 
   - Ex. The more cases we have at a hospital, the larger the circle becomes
   - Resources:
     - https://gistbok.ucgis.org/bok-topics/symbolization-and-visual-variables#:~:text=Jacques%20Bertin%20(1967%2F2010),quantitative%20characteristics%20into%20each%20symbol
-    - https://www.axismaps.com/guide/visual-variables
-    - https://www.researchgate.net/publication/317266613_Visual_Variables
-  - visual variables: 
-    - position
-    - size
-    - shape
-    - value
-    - color
-    - orientation
-    - texture.
+
+Maybe also mention Joel Morrison and Alan MacEachren? (https://www.axismaps.com/guide/visual-variables and https://www.researchgate.net/publication/317266613_Visual_Variables)
 
 ##### GIS
 
 What is it? What can it do?
 
 What can GIS reveal in data? 
-
-In Geography, there are various forms of thematic mapping. For the sake of this paper, the focus will be on choropleth maps as the thematic map for presenting the COVID-19 spread model from simulation results. By shading affected regions by proportion or other statistical variables, users can recognize the impact of COVID-19 within a geographic region. 
 
   - Tools available
     - Thematic mapping

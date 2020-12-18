@@ -123,7 +123,7 @@ export default class Application extends Templated {
   OnLoad_Click(ev) {
     this.Elem("wait").hidden = false;
 
-    var txtFile  = this.files.filter(d => d.name.split(".").pop() == "txt")
+    var textFile  = this.files.filter(d => d.name.split(".").pop() == "txt")
     var fileGeoJSON = this.files.filter(d => d.name.split(".").pop() == "geojson")
 
     // Google Chrome only supports 500mb blobs. 
@@ -131,7 +131,7 @@ export default class Application extends Templated {
     let self = this,
       parser = new CustomParser();
       
-    parser.Parse(txtFile[0]).then(function (data) { self.OnLoad_DataHandler(data, fileGeoJSON); })
+    parser.Parse(textFile[0]).then(function (data) { self.OnLoad_DataHandler(data, textFile, fileGeoJSON); })
   }
   
   /**
@@ -169,7 +169,7 @@ export default class Application extends Templated {
    * @param {*} data - Array composed of text
    * @param {*} layer - GeoJSON Vector file contents
    */
-  OnLoad_DataHandler(data, layer) {
+  OnLoad_DataHandler(data, textFile, layer) {
     this.tempData = data;
 
     let self = this;
@@ -178,7 +178,7 @@ export default class Application extends Templated {
     fileReader.onload = function (event) {
       let title = layer[0].name.substring(0, layer[0].name.indexOf("."));
       let simNum = (self.collection == undefined) ? 0 : self.collection.length;
-      let newTitle = "simulation" + simNum + "_" + title;
+      let newTitle = title + " & " + textFile[0].name.substring(0, textFile[0].name.indexOf(".")) + " Viz" + simNum ;
 
       // Current simulation settings
       self.titleOfCurrentSimulation = newTitle;

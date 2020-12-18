@@ -24,12 +24,16 @@ Build a GIS environment based visualization for large scale spatial simulations 
 ## Getting Started
 
 ### Users 
+[![Video Tutorial for Users](./v2.gif)]()
 - Open to the [file upload page](https://staubibr.github.io/arslab-web/app-gis-v2/index.html) in Chrome
 - Upload 4 files
   - .GeoJSON
   - messages.log
   - structure.json
   - visualization.json
+- Load the simulation
+- Select a variable you'd like to visualize
+- Press play and record
 
 ### Developers
 

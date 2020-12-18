@@ -4,6 +4,30 @@
 
 Build a GIS environment based visualization for large scale spatial simulations on the web. 
 
+## Table of Contents 
+
+(add direct hyperlinks after merging to master)
+
+###### Getting Started
+Click the GIFs for video tutorials
+- Users
+- Developers
+  - Essentials
+  - Running the local server
+  - Structure of Simulation Results (.txt)
+  
+###### TODO List
+
+###### Important Links
+
+###### Credits and Acknowledgements
+
+###### Resources
+  - D3JS
+  - GIS
+  - OpenLayers
+  - JavaScript
+
 ## Getting Started
 
 ### Users
@@ -14,7 +38,7 @@ Build a GIS environment based visualization for large scale spatial simulations 
   - You can change the number of classes and color scale
 - Load Simulation 
   1. Click the database icon in the map's sidebar
-  2. Drag and Drop your simulation results (.txt) and layer (.geojson)
+  2. Drag and drop your simulation results (.txt) and layer (.geojson)
   3. Click the `Load Simulation` button
   4. **OPTIONAL**: Repeat step 2 to 3 to load more simulations
 - Manipulating Simulations
@@ -26,9 +50,9 @@ Build a GIS environment based visualization for large scale spatial simulations 
     - Change legend properties (color and classification)
     - Change color and classification of the simulation
 - Download Simulation
-  - Click the download icon in the sidebar
-  - Choose which simulation to download
-  - Click the `Download` button
+  1. Click the download icon in the sidebar
+  2. Choose which simulation to download
+  3. Click the `Download` button
 - Interacting with Simulations Shown on Map
     - View attributes by clicking on polygons
       - Will appear as a popup
@@ -47,12 +71,16 @@ Build a GIS environment based visualization for large scale spatial simulations 
 [![Video Tutorial for Developers](./img/tutorial.gif)](https://www.youtube.com/watch?v=gsbRyvQ_8Ys)
 
 ##### Essentials:
+- Clone the repo to your desired file directory
 - Download [Web Server for Chrome](https://chrome.google.com/webstore/detail/web-server-for-chrome/ofhbbkphhbklhfoeikjpcbhemlocgigb) or [Live Server in VSCode](https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer)
 - Open [app-gis](https://github.com/staubibr/arslab-web/tree/master/app-gis) in your preferred text editor if using Web Server for Chrome, otherwise use VSCode
 - Use [Chrome DevTools](https://developers.google.com/web/tools/chrome-devtools/) for debugging
   - Ensure that cache is disabled in DevTools
+- Ensure the languages you work with are included in the system PATH
 
-##### Running the local server (Web Server Chrome):
+##### Running the local server:
+
+###### Web Server Chrome
 > Open Chrome and go to Apps
 
 >> Click Web Server
@@ -61,9 +89,7 @@ Build a GIS environment based visualization for large scale spatial simulations 
 
 >>>> Open Web Server for Chrome by clicking the Web Server URL
 
-![Web Server.](/app-gis/img/webserver.png "Web Server image.")
-
-##### Running the local server (Live Server in VSCode):
+###### Live Server in VSCode       
 
 > Open VS Code and set the current folder to /arslab-web 
 
@@ -73,58 +99,38 @@ Build a GIS environment based visualization for large scale spatial simulations 
 
 >>>> In the web browser's listing directory, click /app-gis
 
-##### Development:
+##### Structure of Simulation Results (.txt):
 
-Features: 
-  - OpenStreetMap as base layer / canvas
-    - Zoom in/out
-    - Layer Switcher
-    - Search bar (**unavailable**)
-    - Sidebar 
-      - Home 
-      - Load Simulation 
-      - Manipulating Simulations
-        - Select simulation
-        - Color
-        - Classes
-        - Variables
-      - Download Simulation
-      - Playback
-    - Legend
-    - Interacting with Simulations Shown on Map (popup)
+If the structure of your text file is different, then be sure to reflect these changes in `/sortPandemicData.js` or create a new file entirely for sorting your results.
 
-##### Structure of Simulation Results Text File:
-
-If the structure of your text file is different, then be sure to reflect these changes in `/sortPandemicData.js`.
 Also, if your population data has a domain of [0,1] then be sure to comment out the `this.variables.shift()` line in `/application.js`.
 
-    State for model _DAUID is <population, number of susceptible, number of infected, number of recovered, number of new infected, number new recovered, number fatalities>
+    State for model _DAUID is <pop, # susceptible, # infected, # recovered, # new infected, # new recovered, # fatalities>
     
     Note:
 
     - The population changes throughout the results file. 
 
-    - The geojson file you loaded would likely have the initial population for the census subdivision.
+    - The geojson file you loaded would also likely have initial population data.
     
-    - The population formula is (population - population * fatalities)
+    - The population formula is (initial population - (population * fatalities))
 
-## TODO
+## TODO List
 1. General bug fixes, UI changes, and code refactoring 
 2. Fix mapOnClick
    - Code gets wanky when layers are on top of each other
    - The issue could likely be fixed by looking at the layer switcher
-3. Let users title their simulation 
-4. Allow non-proportional data
-5. Add options to the Settings tab
-   - Support for multiple languages 
-6. Allow GeoPackage files as an accepted file format
+3. Allow non-proportional data to be mapped (therefore update the D3 scale)
+4. Support for multiple languages 
+5. Allow GeoPackage files as an accepted file format
    - Look into [GeoPackage JS](https://github.com/ngageoint/geopackage-js)
-   - For now use [MyGeodata Converter](https://mygeodata.cloud/converter/gpkg-to-geojson) or QGIS to convert .gpkg to .geojson
+   - For now use [MyGeodata Converter](https://mygeodata.cloud/converter/gpkg-to-geojson) or QGIS  to convert .gpkg to .geojson
+     - E.g. [How to convert shapefile to GeoJSON in QGIS](https://gist.github.com/YKCzoli/b7f5ff0e0f641faba0f47fa5d16c4d8d) (applies to GeoPackages as well)
    - Could also create a [Python script](https://www.geodose.com/2020/06/pyqgis-tutorial-shapefile-conversion.html) for the time being?
      - **NOTE**: Ensure you use an acceptable CRS (E.g.EPSG:4326) when converting a file to GeoJSON
-7. Add a GeoCoder
+6. Add a GeoCoder search bar (removed the old one since it was no longer working)
 
-## Important Link
+## Important Link(s)
 
 [Geography-Based-Model developed by ARSLab](https://github.com/omarkawach/Geography-Based-Model)
 

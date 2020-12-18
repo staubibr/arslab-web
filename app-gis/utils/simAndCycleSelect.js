@@ -2,9 +2,7 @@ export const simAndCycleSelect = (title, length) => {
   
   // For manipulate data simulation selector
   var elem = document.createElement("option");
-  var elemText = document.createTextNode(
-    title + " with " + length + " cycle(s)"
-  );
+  var elemText = document.createTextNode(title);
 
   elem.appendChild(elemText);
   var foo = document.getElementById("sim-select");
@@ -15,9 +13,10 @@ export const simAndCycleSelect = (title, length) => {
   // For download data simulation selector
   // Don't remove the next 3 lines
   elem = document.createElement("option");
-  elemText = document.createTextNode(title + " with " + length + " cycles");
+  elemText = document.createTextNode(title);
   elem.appendChild(elemText);
   var bar = document.getElementById("sim-download");
+  
   bar.appendChild(elem);
   bar.selectedIndex = bar.options.length - 1;
 
