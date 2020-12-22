@@ -4,17 +4,74 @@ Find examples based on GIS Simulations (cell-DEVS, DEVS, cellular automata)
 
 Find literature (summarize into sub topics)
 
-http://simulation.su/uploads/files/default/2015-sahoo-mani.pdf
+#### Agriculture 
 
-http://www.cnp.pitt.edu/certificate/papers/agentpaper.pdf
+[GIS BASED DISCRETE EVENT MODELING AND SIMULATION OF BIOMASS SUPPLY CHAIN, 2015 Winter Sim](http://simulation.su/uploads/files/default/2015-sahoo-mani.pdf)
 
-https://www.sciencedirect.com/science/article/abs/pii/S0360835219300269
+Develop biomass supply chain modelling framework (in a discrete event simulation platform called ExtendSIM) coupled with GIS for evaluating spatio-temporal variability of Miscanthus grass yield (good source of fibre for animals) and total cost of delivery to a biorefinery. ArcGIS was used to find suitable available lands for specific crop cultivation and estimate biomass availability. Multi-criteria inclusion & exclusion model was developed to find possible plants and storage locations. See Figure 2 for workflow. 
 
-https://www.simulationaustralasia.com/files/upload/pdf/research/019-2000.pdf
+Simulation modelling approach: Modules representing specific tasks or operations and decisions for the supply chain. 
 
-https://www.researchgate.net/publication/266402801_SIMPLIFYING_GIS_DATA_USE_INSIDE_DISCRETE_EVENT_SIMULATION_MODEL_THROUGH_MN-AC_CELLULAR_AUTOMATON
+Key modules: Information management & decision (IM&D), biomass establishment and management, harvesting and collection, transport, and storage.
 
-https://www.sciencedirect.com/science/article/abs/pii/0169204694900655
+Model inputs / details: 
+- Time frame: 10yrs (life cycle of the energy crop)
+- Iterations: 20
+- Plant (factory?) running time, downtime, logistical operation (time of day and # of days), harvesting window (4 months)
+- Plant storage capacity 
+- Annual biomass yield
+
+Conclusion: The model estimated the total cost of delivering biomass to the plant. The findings were that biomass yield does not have a large impact on delivery cost. Future research will incorporate new variables (energy use, soil and water quality, greenhouse gas emissions, etc.). 
+
+#### Hydrology & Ecology
+
+[Integrating Dynamic Spatial Models with Discrete Event Simulation](https://www.simulationaustralasia.com/files/upload/pdf/research/019-2000.pdf)
+
+**Don't think this paper will be of much use.**
+
+Paper models hydrological surface water run-off. Uses map algebra to construct spatial simulation models. 
+
+Dynamic spatial modelling: 
+- Address computational aspects of space-time process modelling
+  - Commonly for Earth and biological studies such as, hydrology and ecology
+- Drawbacks
+  - Not flexible
+  - No support for cellular automata 
+
+GIS lacks the capability to perform dynamic modelling. The paper describes a prototype for a spatial modelling component that may be incorporated in GIS and computer simulation software. 
+
+Geographical phenomena can be conceptualised from two perspective:
+1. Continuously varying field
+2. Set of discretely bounded objects
+
+[Simulating spatial dynamics: cellular automata theory](https://www.sciencedirect.com/science/article/abs/pii/0169204694900655)
+
+Grid-based GIS system specified within the CA framework. Simulation of vole population dynamics. "cellular automata models implemented on computers may serve as a framework for modelling complex natural phenomena
+in a way that is conceptually clearer, more accurate, and more complete than conventional
+mathematical systems."
+
+Generalized CA in GIS:
+- Space need not be infinite (spatial units can be can take many shapes)
+- Neighbourhood does not need to be defined the same way for each local component 
+  - Neighbourhood also doesn't need to be composed of adjacent spatial units 
+- Transition functions can be implemented using existing GIS operators 
+  - Transition function: Defines change in state of the cellular automation from its current state to next time step
+  - GIS operators (or map algebra): Boolean, arithmetic, spatial proximity, etc.
+- Grid based GISs are discrete which limits the number of states a cell can have, though this capability can be added
+- 3 classes of neighbors in GIS
+  - Cell-based GIS are defined by the cell and its immediate neighbours 
+- 
+
+
+#### General
+
+###### Cellular automation
+
+[SIMPLIFYING GIS DATA USE INSIDE DISCRETE EVENT SIMULATION MODEL THROUGH M:N-AC CELLULAR AUTOMATON](https://www.researchgate.net/publication/266402801_SIMPLIFYING_GIS_DATA_USE_INSIDE_DISCRETE_EVENT_SIMULATION_MODEL_THROUGH_MN-AC_CELLULAR_AUTOMATON)
+
+GIS data in a simulation model can be simplified using a generalized CA structure. 
+
+ 
 
 http://www.dpi.inpe.br/gilberto/cursos/papers/Yassemi2008.pdf
 
@@ -22,7 +79,40 @@ http://www-personal.umich.edu/~danbrown/papers/jgs_proof.pdf
 
 http://www.unice.fr/coquillard/pdf/Muzy%20et%20al%202008.pdf
 
-DES:
+#### Disaster Planning:
+
+[Agent-based discrete-event simulation model for no-notice natural disaster evacuation planning](https://www.sciencedirect.com/science/article/abs/pii/S0360835219300269)
+
+GIS-based ABDES modelling framework to provide insight into traffic assignment and configuring resources for evacuation vehicles and relief facilities. The proposed evacuation simulation model works for both categories of disaster. 
+
+Disasters are two categories (FEMA might have more information on this):
+- Depends on lead time or preparation time prior to occurrence of disaster 
+1. Short notice 
+2. No notice 
+     - Should be prepared for way ahead of time
+
+Literature then begins going into cellular automata, DEVS, ABDES and existing evacuation simulation models. Recent years have seen more attempts at integrating simulation models with GIS as decision support tools. See Figure 3 for more. 
+
+Model parameters: 
+- Initial number of evacuees / households or the location of staging areas ()
+- Traffic network
+- Condition of facilities such as non-functional shelters 
+- Decision rules for evacuation 
+- Evacuee priority 
+
+
+[Agent-based Discrete Event Simulation Modeling for Disaster Responses, 2008](http://www.cnp.pitt.edu/certificate/papers/agentpaper.pdf)
+
+U of Pittsburgh developed a decision support system to simulate large-scale disaster responses. The framework integrates an agent-based simulation (ABS) model, GIS, databases, rule base systems for responders (Figure 3) and modules. The GIS can feed data to the simulator to make results more realistic to a specific area, especially for routing first responders. ABS is used so responders can make changes inside and outside of the simulator depending on GIS data. Operates in real time. 
+
+Input parameters to control event (from interface): 
+- Type of event
+- Size of event
+- Time of event 
+
+#### Discrete Event Simulation (DES):
+
+
 
 https://core.ac.uk/download/pdf/62919299.pdf
 
@@ -45,17 +135,13 @@ https://geodacenter.github.io/covid/index.html
 
 ##### Map-Based Decision Making and Visualization 
 
-
-
-The use of data visualization as a means of supporting decision-making by creating easily digestible content
+As data visualization becomes more commonplace, complex content must be made easily digestible for experts and non-experts in an effort to support decision making ([Talk about uncertainty in maps for decision making?](https://www.frontiersin.org/articles/10.3389/fcomp.2020.00032/full)). Concerning the field of geography, geospatial information can be presented on paper maps, digital static maps, and digital interactive maps. Recent mapping services appear to favour the digital interactivity route as clients increasingly become treated as map users, not map readers. Something about why users, not readers blah blah interdisciplinary ([cartography](https://www.tandfonline.com/doi/full/10.1080/23729333.2017.1288534))
 
 - Resources:
   - Good writer https://www.researchgate.net/profile/Olga_Buchel
   - https://dl.acm.org/doi/abs/10.1145/3206505.3206516
   - https://dl.acm.org/doi/10.1145/1998076.1998169
   - https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7177515/
-  - https://www.tandfonline.com/doi/full/10.1080/23729333.2017.1288534
-  - https://www.frontiersin.org/articles/10.3389/fcomp.2020.00032/full
 
 ##### Symbology and Semiotics
 
