@@ -44,7 +44,16 @@ Geographical phenomena can be conceptualised from two perspective:
 1. Continuously varying field
 2. Set of discretely bounded objects
 
-[Simulating spatial dynamics: cellular automata theory](https://www.sciencedirect.com/science/article/abs/pii/0169204694900655)
+
+
+
+#### General
+
+###### Cellular automation
+
+[Simulating spatial dynamics: cellular automata theory, 1994](https://www.sciencedirect.com/science/article/abs/pii/0169204694900655)
+
+Author says at the end that much more work needs to be done but recent research has been promising (nearly 26 years ago)
 
 Grid-based GIS system specified within the CA framework. Simulation of vole population dynamics. "cellular automata models implemented on computers may serve as a framework for modelling complex natural phenomena
 in a way that is conceptually clearer, more accurate, and more complete than conventional
@@ -60,12 +69,11 @@ Generalized CA in GIS:
 - Grid based GISs are discrete which limits the number of states a cell can have, though this capability can be added
 - 3 classes of neighbors in GIS
   - Cell-based GIS are defined by the cell and its immediate neighbours 
-- 
+- Downside: Complex, sensitivity to initial state, requires aid of a computer
+- Upside: "They do not predict changes in the real world, but have considerable validity and utility in learning about the real world."
 
-
-#### General
-
-###### Cellular automation
+Conclusion: The model outcome was not a test of vole population dynamics but to show the principles of CA in being able to explain complex behaviour recursively across space and time. "Cellular automata theory, because of its close
+relationship to existing GIS methods and its great potential for modelling complex spatial dynamics, presents a great challenge and opportunity for the environmental planning community."
 
 [SIMPLIFYING GIS DATA USE INSIDE DISCRETE EVENT SIMULATION MODEL THROUGH M:N-AC CELLULAR AUTOMATON](https://www.researchgate.net/publication/266402801_SIMPLIFYING_GIS_DATA_USE_INSIDE_DISCRETE_EVENT_SIMULATION_MODEL_THROUGH_MN-AC_CELLULAR_AUTOMATON)
 
