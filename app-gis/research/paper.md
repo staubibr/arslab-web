@@ -7,38 +7,31 @@ Large scale geospatial simulations, at the municipal, provincial or higher level
 As data visualization becomes more commonplace, complex content must be made easily digestible for experts and non-experts in an effort to support decision making ([Talk about uncertainty in maps for decision making?](https://www.frontiersin.org/articles/10.3389/fcomp.2020.00032/full)). Concerning the field of geography, geospatial information can be presented on paper maps, digital static maps, and digital interactive maps. Recent mapping services appear to favour the digital interactivity route as clients increasingly become treated as map users, not map readers. Something about why users, not readers blah blah interdisciplinary ([cartography](https://www.tandfonline.com/doi/full/10.1080/23729333.2017.1288534))
 
 - Resources:
-  - https://dl.acm.org/doi/abs/10.1145/3206505.3206516
-  - https://dl.acm.org/doi/10.1145/1998076.1998169
-  - https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7177515/
+  - [Map-based visualization of 2D/3D spatial data via stylization and tuning of information emphasis](https://dl.acm.org/doi/abs/10.1145/3206505.3206516)
+  - [Designing map-based visualizations for collection understanding](https://dl.acm.org/doi/10.1145/1998076.1998169)
+  - [Web-Based Visualization of Scientific Research Findings: National-Scale Distribution of Air Pollution in South Korea](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7177515/)
+  - Be careful with choropleth maps 
+    - [Land doesn't vote, people do](https://github.com/zumbov2/votemapswitzerland)
 
 ##### Symbology and Semiotics
-
 
 Paraphrased Definitions from Wikipedia
 - Symbology is the study / use of symbols
 - Semiotics is the study of symbols as a means of communication
 
-From 1967, French cartographer Jacques Bertin brought forth impactful theories (describe some theories here?). Til this day the same theories are applied to the science, art, and technology involved in cartography. As maps are a form of communication, maps must be easily understood non-verbally through quick observation since geospatial data can be rather complex. When making maps and / or manipulating maps, the use of visual variables is imperative. Bertin had developed various visual variables, such as position, size, value, color, orientation, and texture ([Morita, 2013](https://www.tandfonline.com/doi/full/10.1179/000870411X13038059668604?needAccess=true)). By using these visual variables, map makers can easily communicate the measurement of a statistical variable. Eventually came Alan MacEachern, Joel Morrison and Robert Roth who introduced additional visual variables ([Axis Maps, N.D.](https://www.axismaps.com/guide/visual-variables)). 
+From 1967, French cartographer Jacques Bertin brought forth impactful theories (describe some theories here?). Til this day the same theories are applied to the science, art, and technology involved in cartography. As maps are a form of communication, maps must be easily understood non-verbally through quick observation since geospatial data can be rather complex. When making maps and / or manipulating maps, the use of visual variables is imperative. Bertin had developed various visual variables, such as position, size, value, color, orientation, and texture ([Morita, 2013](https://www.tandfonline.com/doi/full/10.1179/000870411X13038059668604?needAccess=true)). By using these visual variables, map makers can easily communicate the measurement of a statistical variable. Eventually came Joel Morrison (1974) and Alan MacEachern (1995) who introduced additional visual variables. Joel Morrison brought forth the idea of color saturation and arrangement to be used in regular cartographic design whereas Alan MacEachern's visual variables crispness, resolution, and transparency are more suited for the digital realm ([Roth, 2017](https://www.researchgate.net/publication/317266613_Visual_Variables) or [direct link to pdf](https://geography.wisc.edu/cartography/research/publications/Roth_2015_EG.pdf) ).
 
-Alan (90s)
-- Crispness / Fuzziness
-- Resolution
-- Transparency
 
-Robert (2017) and Joel (1974)
-- Color saturation
-- Arrangement 
-
-What does each variable tell us?..
+What does each variable tell us?...
 
 - Next steps
   - Quick background https://en.wikipedia.org/wiki/Visual_variable 
   - Relate to simulation and how we can use symbology with simulation results 
     - Ex. The more cases we have at a hospital, the larger the circle becomes
-  - Resource on the visual variable syste,:
+  - Resource on the visual variable system:
     - https://gistbok.ucgis.org/bok-topics/symbolization-and-visual-variables#:~:text=Jacques%20Bertin%20(1967%2F2010),quantitative%20characteristics%20into%20each%20symbol
+  - [Axis Maps](https://www.axismaps.com/guide/visual-variables) - Visual Variables
 
-Maybe also mention Joel Morrison and Alan MacEachren?  and https://www.researchgate.net/publication/317266613_Visual_Variables (use this source instead https://geography.wisc.edu/cartography/research/publications/Roth_2015_EG.pdf))
 
 ##### GIS
 

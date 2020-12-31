@@ -8,6 +8,18 @@ Look into spatial analysis to build models (relationship)
 
 See [Olga Buchel](https://www.researchgate.net/profile/Olga_Buchel) for lots of visualization literature 
 
+[Interactive Visualizations as “Decision Support Tools” in Developing Nations: The Case of Vector-Borne Diseases](https://www.researchgate.net/publication/279446552_Interactive_Visualizations_as_Decision_Support_Tools_in_Developing_Nations_The_Case_of_Vector-Borne_Diseases_In_Transforming_Public_Health_in_Developing_Nations_eds_SheikhM_Mahamoud_A_Househ_M_Hershey)
+
+"This chapter is meant to draw attention to interactive visualization tools that allow stakeholders to control the flow of
+information, manipulate visual representations, and perform analytical tasks"
+
+"Geographical information systems (GIS) and geovisualization tools are geographic support tools. GIS are
+information systems which keep track of events, activities, other phenomena, and where they all happen
+or exist"
+
+"GIS tools with limited actions (e.g., having only zooming and panning) are not well suited for making informed decisions in a spatial context. These limitations have led researchers to recognize the need for tools that support the use of interactive and dynamically alterable thematic maps which can facilitate “visual thinking” about spatially referenced data"
+
+
 [Integrating GIS, simulation models, and visualization in traffic impact analysis](https://www.sciencedirect.com/science/article/pii/S0198971504000031)
 
 Focus is on GIS, simulation models, and computer visualization to support planning and decision making processes. 
@@ -49,6 +61,20 @@ Simulations used for
 - Environmental health studies and assessments 
 - Informing policy and planning strategies 
 - Analysing complex phenomena 
+
+[A Tightly Coupled GIS and Spatiotemporal Modeling for Methane Emission Simulation in the Underground Coal Mine System](https://www.mdpi.com/2076-3417/9/9/1931/htm)
+
+Use of LrGIS (a professional coal mine GIS platform) suitable for GIS-numerical model integration. Probably not useful.
+
+[Introductory Chapter: Spatial Analysis, Modelling, and Planning](https://www.intechopen.com/books/spatial-analysis-modelling-and-planning/introductory-chapter-spatial-analysis-modelling-and-planning)
+
+[Modeling and Simulation in Geographic Information Science: Integrated Models and Grand Challenges](https://core.ac.uk/download/pdf/82319633.pdf)
+
+"However, as policy has begun to respond to much bigger ‘grand’ challenges such as climate change, urbanization, aging, migration, security, energy and so on, there is now a need for coupling together larger-scale models to form integrated assessments of such impacts across a range of spatial and temporal scales"
+
+[Dynamic simulation and visualisation of coastal erosion](https://www.sciencedirect.com/science/article/pii/S0198971505000591)
+
+Also includes GIS. 
 
 
 #### DEVS / CELL-DEVS / CA / GIS
@@ -258,5 +284,6 @@ A PowerPoint:
 - http://www.inf.ed.ac.uk/teaching/courses/cmgcr/lectures/CA-ABM-Ecosys.pdf
 
 Came across spacetime cubes. Doubt they'll be helpful but pretty cool:
-- https://desktop.arcgis.com/en/arcmap/10.3/tools/space-time-pattern-mining-toolbox/visualizing-cube-data.htm#:~:text=The%20Create%20Space%20Time%20Cube,the%20time%2Dstep%20interval%20specified.
-- https://support.esri.com/en/technical-article/000017460#:~:text=Creating%20a%20space%20time%20cube,time%20cube%20on%20the%20map. 
+- [Visualizing the Space Time Cube](https://desktop.arcgis.com/en/arcmap/10.3/tools/space-time-pattern-mining-toolbox/visualizing-cube-data.htm#:~:text=The%20Create%20Space%20Time%20Cube,the%20time%2Dstep%20interval%20specified.)
+- [How To: Create a space time cube from a CSV file in ArcGIS Pro](https://support.esri.com/en/technical-article/000017460#:~:text=Creating%20a%20space%20time%20cube,time%20cube%20on%20the%20map)
+- [GIS and Big Data Visualization](https://www.intechopen.com/books/geographic-information-systems-and-science/gis-and-big-data-visualization)
