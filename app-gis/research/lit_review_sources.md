@@ -6,6 +6,8 @@ The literature may help find the need for user-defined models instead of using e
 
 Look into spatial analysis to build models (relationship)
 
+See [Olga Buchel](https://www.researchgate.net/profile/Olga_Buchel) for lots of visualization literature 
+
 [Integrating GIS, simulation models, and visualization in traffic impact analysis](https://www.sciencedirect.com/science/article/pii/S0198971504000031)
 
 Focus is on GIS, simulation models, and computer visualization to support planning and decision making processes. 

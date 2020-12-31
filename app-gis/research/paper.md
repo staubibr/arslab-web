@@ -2,35 +2,43 @@
 
 Large scale geospatial simulations, at the municipal, provincial or higher levels, typically generate massive volumes of data. Presenting these data in a comprehensive, intuitive way for non-expert users requires adequate visual support. In the case of geospatial data, web-based geographic information systems (GIS) have become well established platforms to do so. For example, modern Open Source Web GIS libraries, such as OpenLayers, provide developers with the necessary tools to load and display data into dynamic map-based web applications. OpenLayers is well-established, entirely free, easy to customize, and supports vector data rendering. There also existing other web-mapping libraries such as D3JS (limited mapping capability) which can be incorporated to support further data visualization. The DEVS-GIS Simulation Explorer we developed relies on OpenLayers, and the OpenStreetMap database to contextualize simulation results. The DEVS-GIS Simulation Explorer offers a unique opportunity for interdisciplinary studies and remote collaboration. As a case study, we use the results of the [disease spread simulation model](https://github.com/omarkawach/Geography-Based-Model), for the City of Ottawa at the Dissemination Area (DA) level and for the province of Ontario at the Census Subdivision (CSD) level. The application allows users to build choropleth maps that display the boundary polygons classified by color according to different variables produced by the simulation (infected, susceptible, deaths, recovered, etc.) Users can also animate the map to visualize each time step of the simulation and interact with individual geometries to explore the detailed results of the simulation. By analyzing the output seen in the DEVS-GIS Simulation Explorer, users may recognize high risk geographical regions which may be susceptible to outbreaks or further disease spreading.
 
-###### Might be useful somewhere? 
-- [Use of GIS Mapping as a Public Health Tool—From Cholera to Cancer](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4089751/)
-
 ##### Map-Based Decision Making and Visualization 
 
 As data visualization becomes more commonplace, complex content must be made easily digestible for experts and non-experts in an effort to support decision making ([Talk about uncertainty in maps for decision making?](https://www.frontiersin.org/articles/10.3389/fcomp.2020.00032/full)). Concerning the field of geography, geospatial information can be presented on paper maps, digital static maps, and digital interactive maps. Recent mapping services appear to favour the digital interactivity route as clients increasingly become treated as map users, not map readers. Something about why users, not readers blah blah interdisciplinary ([cartography](https://www.tandfonline.com/doi/full/10.1080/23729333.2017.1288534))
 
 - Resources:
-  - Good writer https://www.researchgate.net/profile/Olga_Buchel
   - https://dl.acm.org/doi/abs/10.1145/3206505.3206516
   - https://dl.acm.org/doi/10.1145/1998076.1998169
   - https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7177515/
 
 ##### Symbology and Semiotics
 
+
+Paraphrased Definitions from Wikipedia
 - Symbology is the study / use of symbols
 - Semiotics is the study of symbols as a means of communication
 
-From 1967, French cartographer Jacques Bertin brought forth impactful theories (describe here?). Til this day the same theories are applied to the science, art, and technology involved in cartography. As maps are a form of communication, maps must be easily understood non-verbally through quick observation since geospatial data can be rather complex. When making maps and / or manipulating maps, the use of visual variables is imperative. Bertin had developed various visual variables, such as position, size, value, color, orientation, and texture ([Morita, 2013](https://www.tandfonline.com/doi/full/10.1179/000870411X13038059668604?needAccess=true)). 
+From 1967, French cartographer Jacques Bertin brought forth impactful theories (describe some theories here?). Til this day the same theories are applied to the science, art, and technology involved in cartography. As maps are a form of communication, maps must be easily understood non-verbally through quick observation since geospatial data can be rather complex. When making maps and / or manipulating maps, the use of visual variables is imperative. Bertin had developed various visual variables, such as position, size, value, color, orientation, and texture ([Morita, 2013](https://www.tandfonline.com/doi/full/10.1179/000870411X13038059668604?needAccess=true)). By using these visual variables, map makers can easily communicate the measurement of a statistical variable. Eventually came Alan MacEachern, Joel Morrison and Robert Roth who introduced additional visual variables ([Axis Maps, N.D.](https://www.axismaps.com/guide/visual-variables)). 
+
+Alan (90s)
+- Crispness / Fuzziness
+- Resolution
+- Transparency
+
+Robert (2017) and Joel (1974)
+- Color saturation
+- Arrangement 
 
 What does each variable tell us?..
 
-- Reference symbology guru Jacques Bertin (1967 / 1970)
-  - Relate to simulation and how we can use it with simulation results 
-  - Ex. The more cases we have at a hospital, the larger the circle becomes
-  - Resources:
+- Next steps
+  - Quick background https://en.wikipedia.org/wiki/Visual_variable 
+  - Relate to simulation and how we can use symbology with simulation results 
+    - Ex. The more cases we have at a hospital, the larger the circle becomes
+  - Resource on the visual variable syste,:
     - https://gistbok.ucgis.org/bok-topics/symbolization-and-visual-variables#:~:text=Jacques%20Bertin%20(1967%2F2010),quantitative%20characteristics%20into%20each%20symbol
 
-Maybe also mention Joel Morrison and Alan MacEachren? (https://www.axismaps.com/guide/visual-variables and https://www.researchgate.net/publication/317266613_Visual_Variables)
+Maybe also mention Joel Morrison and Alan MacEachren?  and https://www.researchgate.net/publication/317266613_Visual_Variables (use this source instead https://geography.wisc.edu/cartography/research/publications/Roth_2015_EG.pdf))
 
 ##### GIS
 
@@ -46,8 +54,11 @@ What can GIS reveal in data?
 ##### Evolution of GIS and GIS Web Applications
 
 ###### Related Work?
-https://geodacenter.github.io/covid/map.html
-https://geodacenter.github.io/covid/index.html
+
+US COVID Atlas: 
+- https://github.com/GeoDaCenter/covid
+- https://geodacenter.github.io/covid/map.html
+- https://geodacenter.github.io/covid/index.html
 
 As any experienced geographer today would know, spatio-temporal analysis involves the inquiry into the relationship between space and time. In 1854, epidemiologist Dr. John Snow was the first to exemplify this phenomena by creating a spatial risk model that listed incidences of cholera outbreak ([Caplan, et al., 2020](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7105112/#:~:text=John%20Snow%20was%20an%20epidemiologist,the%20cholera%20outbreak%20in%201854.https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7105112/#:~:text=John%20Snow%20was%20an%20epidemiologist,the%20cholera%20outbreak%20in%201854.)). As the 19th century lagged in advanced qualitative methods that many now take for granted, this is what would be known as the dark ages of Geographic Information Systems (GIS) ([All Answers Ltd., 2018](https://ukdiss.com/examples/geographic-information-system.php) & [Ali, 2020](https://www.researchgate.net/publication/340182760_Geographic_Information_System_GIS_Definition_Development_Applications_Components)). Only a near hundred years later did GIS come out of the dark ages when Rogers Tomlinson, the father of GIS, computerized the way field experts work with and analyze spatial data ([ESRI, n.d.](https://esripress.esri.com/storage/esripress/images/188/115391_webgis_chapter01.pdf)). Shortly afterwards, American Geographer Waldo Tobler conceived what would be hailed as Tobler's first law of geography (TFL). The creation of TFL emphasized the influence of location where near things are more related than distant things ([Foresman, Luscombe, 2016](https://www.tandfonline.com/doi/abs/10.1080/17538947.2016.1275830)) Even with all the advances that were taking place in the field of GIS, many of the applications used were standalone until 1993 when Xerox developed the first Web-based map viewer. Having GIS on the web opened many doors to mass sharing of information on a global-scale, new user experiences, cross-platform compatibility, and other geospatial services ([ESRI, n.d.](https://esripress.esri.com/storage/esripress/images/188/115391_webgis_chapter01.pdf)). The appeal to use Web-based GIS applications does not only apply to Geographers. In many forms of interdisciplinary research, the diverse field of Geography proves most useful. Through use of GIS, researchers can utilize web GIS platforms and software to better analyze, conceptualize, and interpret information. Regardless of the discipline research is being conducted in, [Regardless of the discipline in which research is conducted] if the research data contains spatial components then GIS will be there as a major facilitator in some form ([Rickles, et al., 2017](https://rgs-ibg.onlinelibrary.wiley.com/doi/full/10.1002/geo2.46)). 
 
@@ -62,4 +73,6 @@ The new normal of working from home may allow employers to focus more on merits 
 
 Since the inception of TFL, researchers in the GIS community have employed such a concept to describe spatial dependence ([Leitner et al., 2018](https://www.researchgate.net/publication/323419139_Laws_of_Geography)). In the field of epidemiology, one could apply TFL to synthetically simulate the spread of infectious diseases in a geographical environment based on spatial weighting ([Zhong et al., 2009](https://www.researchgate.net/profile/Song_Dunjiang/publication/226204125_Simulation_of_the_spread_of_infectious_diseases_in_a_geographical_environment/links/00b495316b307a20ab000000/Simulation-of-the-spread-of-infectious-diseases-in-a-geographical-environment.pdf)). Such an application can play a vital role in disease prevention and control when coupled with modern spatio-temporal analysis techniques ([Watkins et al., 2007](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1805744/)). When supplementing existing research on virus spread models, geographical tracking and mapping of pandemic data through the application of GIS has been proven to be a powerful system for disease monitoring and planning ([Buolos & Geraghty, 2020](https://ij-healthgeographics.biomedcentral.com/articles/10.1186/s12942-020-00202-8)). Such a system allows researchers to present large volumes of data in an intuitive way. For one, web-based mapping has created an environment for accessible remote collaboration between decision makers ([Franch-Pardo et al., 2020](https://www.sciencedirect.com/science/article/pii/S0048969720335531)). By integrating simulation models into map-based web applications, researchers can also highlight spatio-temporal trends in various scenarios. Highlighting spatio-temporal trends would mean that researcher can observe the spatial distribution of COVID-19 cases to drive better policy decisions ([Shariati, et al., 2020](https://link.springer.com/article/10.1007/s40201-020-00565-x)).
 
-
+###### Might be useful somewhere? 
+- [Use of GIS Mapping as a Public Health Tool—From Cholera to Cancer](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4089751/)
+  - "While traditional uses of GIS in public health are static and lacking real-time components, implementing a space-time animation in these instruments will be monumental as technology and data continue to grow."
