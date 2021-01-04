@@ -10,10 +10,10 @@
             "file": "wards.geojson",
             "label": "Ottawa Wards",
             "style": "default",
-            "model": "pandemic"
+            "model": "pandemic",
+			"join": "WARD_NAME_",
         }
     ],
-	"join": "WARD_NAME_",
     "simulation": [{
 			"name" : "Wards - Infected (accumulative)",
             "layer": "wards",
