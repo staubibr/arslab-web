@@ -9,8 +9,6 @@ import BoxInput from '../../api-web-devs/ui/box-input-files.js';
 import Standardized from '../../api-web-devs/parsers/standardized.js';
 import SimulationIRR from '../../api-web-devs/simulation/simulationIRR.js';
 
-
-// A lot of async going on, sorry.
 export default Core.Templatable("Widget.Loader", class Loader extends Templated { 
 	
 	get Files() {

@@ -9,12 +9,12 @@ export default class BucketFill {
 		return this.classification;
 	}
 
-	constructor(property, colors, type) {
+	constructor(property, colors, type, buckets) {
 		this.type = type;
 		this.attribute = "fill";
 		this.property = property;
 		this.colors = colors;
-		this.buckets = null;
+		this.buckets = buckets || null
 	}
 	
 	Symbol(value) {		
@@ -26,6 +26,6 @@ export default class BucketFill {
 	}
 	
 	static FromJson(json) {
-		return new BucketFill(json.property, json.colors, json.type);
+		return new BucketFill(json.property, json.colors, json.type, json.buckets);
 	}
 }

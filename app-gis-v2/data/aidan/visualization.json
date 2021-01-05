@@ -6,16 +6,23 @@
             "url": "./data/aidan/wards.geojson",
             "label": "Ottawa Wards",
             "style": "default",
-            "model": "pandemic"
+            "model": "pandemic",
+			"join": "WARD_NAME_"
         }
     ],
-	"join": "WARD_NAME_",
     "simulation": [{
 			"name" : "Wards - Infected (accumulative)",
             "layer": "wards",
+            "radius": {
+                "property": "Infected(accumulative)",
+                "type": "user-defined",
+                "radius": [4, 6, 8, 12, 14, 16],
+                "buckets": [0, 0.1, 0.2, 0.2, 0.5, 1],
+                "classes": "7"
+            },
             "fill": {
-                "type": "equivalent",
-                "property": "Susceptible(accumulative)",
+                "type": "quantile",
+                "property": "Infected(accumulative)",
                 "colors": ["rgba(215,48,39,0.85)","rgba(244,109,67,0.85)","rgba(253,174,97,0.85)","rgba(254,224,144,0.85)","rgba(255,255,191,0.85)","rgba(224,243,248,0.85)","rgba(171,217,233,0.85)","rgba(116,173,209,0.85)","rgba(69,117,180,0.85)"]
             },
             "stroke": {
@@ -27,9 +34,11 @@
 			"name" : "Wards - Susceptible (accumulative)",
             "layer": "wards",
             "fill": {
-                "type": "quantile",
-                "property": "Infected(accumulative)",
-                "colors": ["rgba(247,252,240,0.85)","rgba(224,243,219,0.85)","rgba(204,235,197,0.85)","rgba(168,221,181,0.85)","rgba(123,204,196,0.85)","rgba(78,179,211,0.85)","rgba(43,140,190,0.85)","rgba(8,104,172,0.85)","rgba(8,64,129,0.85)"]
+                "type": "user-defined",
+                "buckets": [0, 0.2, 0.4, 0.6, 0.8, 1],
+                "classes": "4",
+                "property": "Susceptible(accumulative)",
+                "colors": ["rgba(215,48,39,0.85)","rgba(253,174,97,0.85)","rgba(255,255,191,0.85)","rgba(171,217,233,0.85)","rgba(116,173,209,0.85)","rgba(69,117,180,0.85)"]
             },
             "stroke": {
                 "type": "static",
@@ -40,7 +49,7 @@
 			"name" : "Wards - Recovered (accumulative)",
             "layer": "wards",
             "fill": {
-                "type": "quantile",
+                "type": "equivalent",
                 "property": "Recovered(accumulative)",
                 "colors": ["rgba(255,255,229,0.85)","rgba(255,247,188,0.85)","rgba(254,227,145,0.85)","rgba(254,196,79,0.85)","rgba(254,153,41,0.85)","rgba(236,112,20,0.85)","rgba(204,76,2,0.85)","rgba(153,52,4,0.85)","rgba(102,37,6,0.85)"]
             },

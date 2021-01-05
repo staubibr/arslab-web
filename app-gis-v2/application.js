@@ -13,10 +13,11 @@ import Recorder from '../api-web-devs/components/recorder.js';
 import Parser from '../api-web-devs/parsers/standardized.js';
 
 import Map from './ol/map.js';
-
 import Style from "./utils/style.js";
 import Point from "./style/point.js";
 import Polygon from "./style/polygon.js";
+
+import Legend from "./ol/legend.js";
 
 export default class Main extends Templated { 
 
@@ -133,30 +134,13 @@ export default class Main extends Templated {
 	}
 
 	AddLegend(){	
-		this.map.RemoveControl(this.legend);
+		if (this.legend) this.map.RemoveControl(this.legend.OL);
+
+		this.legend = new Legend(this.current.style);
 		
-		var prev = null;
-		var style = this.current.style;
-		this.legend = new ol.control.Legend({ title: `Legend (${style.fill.type})`, margin: 5, collapsed: false });
-
-		style.fill.buckets.forEach((b, i) => {
-			var curr = b.toFixed(4).toString();
-			var title = (prev) ? `${prev} - ${curr}` : `0 - ${curr}`;
-
-			var json = {
-				radius : 8, 
-				stroke: { color: "#000", width: 1 } ,
-				fill: { color: style.fill.colors[i] }
-			}
-			
-			this.legend.addRow({ title:title, size:[40,40], typeGeom:"Point", style:Style.PointStyle(json) });
-			
-			prev = curr;
-		});
-
-		this.map.AddControl(this.legend);
+		this.map.AddControl(this.legend.OL);
 	}
-	
+
 	AddLayerSwitcher() {
 		var ls = new ol.control.LayerSwitcher({ groupSelectStyle: "group" });
 		
@@ -169,7 +153,7 @@ export default class Main extends Templated {
 		this.config.simulation.forEach(s => {
 			s.layer = this.config.layers.find(l => l.id == s.layer);
 			s.style = Style.FromJson(s.layer.type, s);
-			
+
 			s.style.Bucketize(stats);
 		});
 		
@@ -208,7 +192,7 @@ export default class Main extends Templated {
 			if (!d) return;
 			
 			var symbol = this.current.style.Symbol(data[id]);
-			
+
 			f.setStyle(symbol);
 		});
 	}

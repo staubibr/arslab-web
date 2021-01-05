@@ -11,7 +11,7 @@
             "label": "Ottawa Wards",
             "style": "default",
             "model": "pandemic",
-			"join": "WARD_NAME_",
+			"join": "WARD_NAME_"
         }
     ],
     "simulation": [{

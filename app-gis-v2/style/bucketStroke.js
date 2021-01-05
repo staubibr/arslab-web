@@ -9,13 +9,13 @@ export default class BucketStroke {
 		return this.classification;
 	}
 
-	constructor(property, colors, width, type) {
+	constructor(property, colors, width, type, buckets) {
 		this.type = type;
 		this.attribute = "stroke";
 		this.property = property;
 		this.colors = colors;
 		this.width = width;
-		this.buckets = null;
+		this.buckets = buckets || null
 		
 		// TODO: Doesn't support widths yet. Because it would have to support one or the other, or both.
 	}
@@ -29,6 +29,6 @@ export default class BucketStroke {
 	}
 	
 	static FromJson(json) {
-		return new BucketStroke(json.property, json.colors, json.width, json.type);
+		return new BucketStroke(json.property, json.colors, json.width, json.type, json.buckets);
 	}
 }

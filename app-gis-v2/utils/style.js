@@ -1,24 +1,78 @@
-
 import BucketFill from "../style/bucketFill.js";
 import BucketRadius from "../style/bucketRadius.js";
 import BucketStroke from "../style/bucketStroke.js";
-import Fill from "../style/fill.js";
-import Radius from "../style/radius.js";
-import Stroke from "../style/stroke.js";
+import StaticFill from "../style/staticFill.js";
+import StaticRadius from "../style/staticRadius.js";
+import StaticStroke from "../style/staticStroke.js";
 import Polygon from "../style/polygon.js";
 import Point from "../style/point.js";
 
 export default class Style {
-	static GetBucketStyleFunction(type, json, stats) {
-		if (type == "point") return this.PointBucketStyleFn(json, stats);
+	
+	static Statistics(simulation) {		
+		var values = {};
 		
-		if (type == "polygon") return this.PolygonBucketStyleFn(json, stats);
+		simulation.EachTransition((t, f) => {			
+			for (var f in t.Value) {
+				if (!values[f]) values[f] = [];
+				
+				values[f].push(t.Value[f]);
+			}
+		});
+		
+		for (var f in values) {
+			values[f] = values[f].filter(v => !isNaN(v));
+			values[f] = values[f].sort((a, b) => (a < b) ? -1 : 1);
+		} 
+		
+		var stats = {};
+		
+		for (var f in values) {
+			var length = values[f].length;
+			
+			stats[f] = {
+				sorted: values[f],
+				length: length,
+				min: values[f][0],
+				max: values[f][length - 1]
+			}
+		}
+		
+		return stats;
 	}
 	
-	static GetStyleFunction(type, json) {
-		if (type == "point") return this.PointStyleFn(json);
+	static BucketizeStyle(style, stats) {
+		if (style.type == "quantile") {	
+			style.buckets = Style.QuantileBuckets(stats[style.property].sorted, style.Length);
+		}
+		else if (style.type == "equivalent") {
+			style.buckets = Style.EquivalentBuckets(stats[style.property].min, stats[style.property].max, style.Length);
+		}
+	}
+	
+	static QuantileBuckets(values, n) {
+		var buckets = [];
 		
-		if (type == "polygon") return this.PolygonStyleFn(json);
+		var interval = Math.floor(values.length / n);
+		
+		
+		for (var i = 1; i < n; i++) buckets.push(values[i * interval]);
+		
+		buckets.push(values[values.length - 1]);
+		
+		return buckets;
+	}
+	
+	static EquivalentBuckets(min, max, n) {
+		var buckets = [];
+		
+		var interval = (max - min) / n;
+		
+		for (var i = 1; i < n; i++) buckets.push(min + i * interval);
+		
+		buckets.push(max);
+		
+		return buckets;
 	}
 	
 	static GetStyle(type, json) {
@@ -54,123 +108,40 @@ export default class Style {
 		});
 	}
 	
-	static PointStyleFn(json) {
-		return (f) => {
-			return this.PointStyle(json);
-		}
-	}
-	
-	static PolygonStyleFn(json) {
-		return (f) => {
-			return this.PolygonStyle(json);
-		}
-	}
-	
-	static PointBucketStyleFn(json, stats) {
-		return (f) => {
-			return this.PointStyle(json);
-		}
-	}
-	
-	static PolygonBucketStyleFn(json, stats) {
-		return (f) => {
-			return this.PolygonStyle(json);
-		}
-	}
-	
-	static Statistics(simulation) {		
-		var values = {};
-		
-		simulation.EachTransition((t, f) => {			
-			for (var f in t.Value) {
-				if (!values[f]) values[f] = [];
-				
-				values[f].push(t.Value[f]);
-			}
-		});
-		
-		for (var f in values) {
-			values[f] = values[f].filter(v => !isNaN(v));
-			values[f] = values[f].sort((a, b) => (a < b) ? -1 : 1);
-		} 
-		
-		var stats = {};
-		
-		for (var f in values) {
-			var length = values[f].length;
-			
-			stats[f] = {
-				sorted: values[f],
-				length: length,
-				min: values[f][0],
-				max: values[f][length - 1]
-			}
-		}
-		
-		return stats;
-	}
-	
-	static BucketizeStyle(style, stats) {
-		if (style.type == "quantile") {		
-			style.buckets = Style.QuantileBuckets(stats[style.property].sorted, style.Length);
-		}
-		else if (style.type == "equivalent") {
-			style.buckets = Style.EquivalentBuckets(stats[style.property].min, stats[style.property].max, style.Length);
-		}
-	}
-	
-	static QuantileBuckets(values, n) {
-		var buckets = [];
-		
-		var interval = Math.floor(values.length / n);
-		
-		for (var i = 1; i < n; i++) buckets.push(values[i * interval]);
-		
-		buckets.push(values[values.length - 1]);
-		
-		return buckets;
-	}
-	
-	static EquivalentBuckets(min, max, n) {
-		var buckets = [];
-		
-		var interval = (max - min) / n;
-		
-		for (var i = 1; i < n; i++) buckets.push(min + i * interval);
-		
-		buckets.push(max);
-		
-		return buckets;
-	}
-	
 	static DefaultFill() {
-		return new Fill('rgba(50,100,200,0.6)');
+		return new StaticFill('rgba(50,100,200,0.6)');
 	}
 	
 	static DefaultStroke() {
-		return new Stroke('rgba(0,0,0,1)', 1);
+		return new StaticStroke('rgba(0,0,0,1)', 1);
 	}
 	
 	static DefaultRadius() {
-		return new Radius(4);
+		return new StaticRadius(4);
 	}
 	
 	static FillStyleFromJson(json) {
-		if (json.type == "equivalent" || json.type == "quantile") return BucketFill.FromJson(json);
-		
-		if (json.type == "static") return Fill.FromJson(json);
+		if (json.type == "equivalent" || json.type == "quantile" || json.type == "user-defined") {
+			return BucketFill.FromJson(json);
+		}
+
+		if (json.type == "static") return StaticFill.FromJson(json);
 	}
 	
 	static StrokeStyleFromJson(json) {
-		if (json.type == "equivalent" || json.type == "quantile") return BucketStroke.FromJson(json);
+		if (json.type == "equivalent" || json.type == "quantile" || json.type == "user-defined") {
+			return BucketStroke.FromJson(json);
+		}
 		
-		if (json.type == "static") return Stroke.FromJson(json);
+		if (json.type == "static") return StaticStroke.FromJson(json);
 	}
 	
 	static RadiusStyleFromJson(json) {
-		if (json.type == "equivalent" || json.type == "quantile") return BucketRadius.FromJson(json);
+		if (json.type == "equivalent" || json.type == "quantile" || json.type == "user-defined") {
+			return BucketRadius.FromJson(json);
+		}
 		
-		if (json.type == "static") return Radius.FromJson(json.radius);
+		if (json.type == "static") return StaticRadius.FromJson(json.radius);	
 	}
 	
 	static FromJson(type, json) {

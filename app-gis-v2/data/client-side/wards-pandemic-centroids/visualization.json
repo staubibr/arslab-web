@@ -10,14 +10,16 @@
             "file": "wards.geojson",
             "label": "Ottawa Wards",
             "style": "default",
-            "model": "pandemic"
+            "model": "pandemic",
+			"join": "WARD_NAME_"
         }, {
             "id": "wards_centroids",
             "type": "point",
             "file": "wards_centroids.geojson",
             "label": "Ottawa Wards Centroids",
             "style": "default",
-            "model": "pandemic"
+            "model": "pandemic",
+			"join": "WARD_NAME_"
         }
     ],
 	"join": "WARD_NAME_",

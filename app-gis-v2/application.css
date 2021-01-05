@@ -136,6 +136,11 @@ button:hover {
     right: .5em;
 }
 
+.ol-control.ol-legend ul {
+	display: block;
+}
+
+
 .ol-control.ol-legend .ol-legendImg {
 	pointer-events:none;	
 }

@@ -54,16 +54,16 @@ export default class Map extends Evented {
 		return this.layers[id];
 	}
 
-	AddControl(control, options) {
-		options = options || {};
+	AddControl(controls, options) {
+		if (!Array.isArray(controls)) controls = [controls];
 		
-		options.map = this.OL;
-		
-		this.OL.addControl(control);
+		controls.forEach(c => this.OL.addControl(c));
 	}
 	
-	RemoveControl(control) {
-		this.OL.removeControl(control);
+	RemoveControl(controls) {
+		if (!Array.isArray(controls)) controls = [controls];
+		
+		controls.forEach(c => this.OL.removeControl(c));
 	}
 	
 	AddLayer(id, layer) {
@@ -76,7 +76,6 @@ export default class Map extends Evented {
 	
 	AddGeoJsonLayer(id, json) {			
 		var format = new ol.format.GeoJSON({ featureProjection : this.projection });
-		
 		var vs = new ol.source.Vector({features: format.readFeatures(json)});
 		
 		return this.AddLayer(id, new ol.layer.Vector({ source: vs, title: json.name  }));

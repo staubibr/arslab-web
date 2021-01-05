@@ -11,13 +11,13 @@ export default class BucketRadius {
 		return this.classification;
 	}
 
-	constructor(property, classes, radii, type) {
+	constructor(property, classes, radii, type, buckets) {
 		this.type = type;
 		this.attribute = "radius";
 		this.property = property;
 		this.classes = classes;
 		this.radii = radii;
-		this.buckets = null;
+		this.buckets = buckets || null
 	}
 	
 	Symbol(value) {
@@ -28,20 +28,11 @@ export default class BucketRadius {
 		return this.radii[i];
 	}
 	
-	Bucketize(type, stats) {
-		var n = this.classes;
-		
-		if (type == "quantile_classes") {
-			this.buckets = Style.QuantileBuckets(stats[this.property].sorted, n);
-		}
-		else if (type == "equivalent_classes") {
-			this.buckets = Style.EquivalentBuckets(stats[this.property].min, stats[this.property].max, n);
-		}
-	}
-	
 	static FromJson(json) {
-		var radii = Style.EquivalentBuckets(json.min, json.max, json.classes);
+		if (json.type == "user-defined") var radii = json.radius;
+
+		else var radii = Style.EquivalentBuckets(json.min, json.max, json.classes);
 		
-		return new BucketRadius(json.property, json.classes, radii, json.type);
+		return new BucketRadius(json.property, json.classes, radii, json.type, json.buckets);
 	}
 }
