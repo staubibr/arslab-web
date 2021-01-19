@@ -3,12 +3,12 @@
 import Frame from './frame.js';
 
 export default class FrameDEVS extends Frame { 
-		
-	Reverse () {
-		var reverse = new FrameDEVS(this.time);
-		
-		this.transitions.forEach((t) => reverse.AddTransition(t.Reverse()));
-		
-		return reverse;
+	
+	MakeFrame(time) {
+		return new FrameDEVS(time);
+	}
+	
+	GetValue(state, t) {
+		return state.GetValue(t.Id, t.Port);
 	}
 }

@@ -12,7 +12,7 @@ export default class StateDEVS extends State {
 		var clone = new StateDEVS([]);
 		
 		clone.i = this.i;
-		clone.models = JSON.parse(JSON.stringify(this.models));
+		clone.models = this.models.map(m => m.Clone());
 		clone.data = JSON.parse(JSON.stringify(this.data));
 
 		return clone;
@@ -23,11 +23,11 @@ export default class StateDEVS extends State {
 		
 		return this.data[id][port] || null;
 	}
-	
-	SetValue(id, port, value) {
-		if (!this.data.hasOwnProperty(id)) return;
+
+	ApplyTransition(t) {
+		if (!this.data.hasOwnProperty(t.Id)) return;
 		
-		this.data[id][port] = value;
+		for (var f in t.Value) this.data[t.Id][t.Port][f] = t.Value[f];
 	}
 		
 	Reset() {
@@ -37,8 +37,14 @@ export default class StateDEVS extends State {
 			this.data[m.name] = {};
 			
 			m.ports.forEach(p => {
-				if (p.type == "output") this.data[m.name][p] = 0;
-			}) 
+				var d = {};
+				
+				if (p.type != "output") return;
+				
+				p.template.forEach(f => d[f] = 0);
+				
+				this.data[m.name][p.name] = d;
+			});
 		});
 	}
 }

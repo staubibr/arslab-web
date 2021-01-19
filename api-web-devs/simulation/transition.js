@@ -19,7 +19,15 @@ export default class Transition {
 	get Diff() { return this.diff; }
 	
 	set Diff(value) { this.diff = value; }
-	
+
+	GetDiff() {
+		var d = {};
+		
+		for (var f in this.value) d[f] = this.value[f] - this.diff[f];
+		
+		return d;
+	}
+
 	Reverse() {
 		throw new Error("function Reverse must be defined in child class.");
 	}

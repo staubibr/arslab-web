@@ -17,21 +17,37 @@ export default class FrameCA {
 		return t;
 	}
 	
-	Reverse() {
-		throw new Error("function Reverse must be defined in child class.");
+	MakeFrame(time) {
+		throw new Error("function MakeFrame must be defined in child class.");
+	}
+	
+	GetValue(state, t) {
+		throw new Error("function MakeFrame must be defined in child class.");
+	}
+	
+	Reverse () {
+		var reverse = this.MakeFrame(this.time);
+		
+		for (var i = 0; i < this.transitions.length; i++) {			
+			reverse.AddTransition(this.transitions[i].Reverse());
+		}
+		
+		return reverse;
 	}
 	
 	Difference(state) {
 		for (var i = 0; i < this.transitions.length; i++) {
 			var t = this.transitions[i];
 			
-			var v = state.GetValue(t.Id, t.Port);
+			var v = this.GetValue(state, t);
 			
 			if (v === undefined) continue;
 			
-			t.diff = t.value - v;
+			t.diff = {};
 			
-			state.SetValue(t.Id, t.Port, t.Value);
+			for (var f in t.value) t.diff[f] = t.value[f] - v[f];
+						
+			state.ApplyTransition(t);
 		}
 	}
 }

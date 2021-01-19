@@ -139,7 +139,7 @@ export default class Settings extends Evented {
 		
 		for (var i = 0; i < maxZ; i++) {
 			ports.forEach(p => {				
-				layers.push({ z:i, ports:[p], style:0 });
+				layers.push({ z:i, ports:[p], style:0, position:layers.length });
 			});
 		}
 		

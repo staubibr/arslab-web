@@ -26,13 +26,8 @@ export default class TransitionCA extends Transition {
 		return this.coord[2];
 	}
 	
-	Reverse() {
-		return new TransitionCA(this.model, this.coord, this.port, this.value - this.diff);
-		
-		// Not sure about this
-		t.diff = this.diff;
-		
-		return t;
+	Reverse() {			
+		return new TransitionCA(this.model, this.coord, this.port, this.GetDiff());
 	}
 	
 	static FromCsv(csv) {

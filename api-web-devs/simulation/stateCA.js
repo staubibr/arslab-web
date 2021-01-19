@@ -13,20 +13,20 @@ export default class StateCA extends State {
 		
 		clone.i = this.i;
 		clone.size = JSON.parse(JSON.stringify(this.size));
-		clone.models = JSON.parse(JSON.stringify(this.models));		
+		clone.models = this.models.map(m => m.Clone());
 		clone.data = JSON.parse(JSON.stringify(this.data));
 		
 		return clone;
 	}
 	
-	GetValue(coord, port) {
-		return this.data[coord[0]][coord[1]][coord[2]][port];
+	GetValue(coord) {
+		return this.data[coord[0]][coord[1]][coord[2]];
 	}
-	
-	SetValue(coord, port, value) {
-		this.data[coord[0]][coord[1]][coord[2]][port] = value;
+
+	ApplyTransition(t) {		
+		for (var f in t.Value) this.data[t.X][t.Y][t.Z][f] = t.Value[f];
 	}
-	
+		
 	Reset() {
 		this.data = [];
 		
@@ -40,14 +40,11 @@ export default class StateCA extends State {
 				this.data[x][y] = [];
 				
 				for (var z = 0; z < this.size[2]; z++) {
-					var ports = {};
+					var d = {};
 					
-					m.ports.forEach(p => {
-						if (p.type == "output") ports[p] = 0;
-					}) 
+					m.template.forEach(f => d[f] = 0);
 					
-					this.data[x][y][z] = ports;
-					
+					this.data[x][y][z] = d;
 				}
 			}
 		}

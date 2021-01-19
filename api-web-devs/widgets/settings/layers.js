@@ -127,11 +127,12 @@ export default Core.Templatable("Widget.Settings.Layers", class Layers extends T
 	}
 	
 	OnButtonApply_Click(ev) {
-		var layers = this.items.map(item => {
+		var layers = this.items.map((item, i) => {
 			return {
 				z : item.z.value,
 				ports : item.ports.value,
-				style : item.style.value
+				style : item.style.value,
+				position : i
 			}
 		});
 		

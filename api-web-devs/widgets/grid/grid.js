@@ -17,7 +17,21 @@ export default Core.Templatable("Widgets.Grid", class Grid extends Templated {
 	
 	set Spacing(value) { this.spacing = value; }
 	
-	set Layers(value) { this.layers = value; }
+	set Layers(value) { 
+		this.layers = value; 
+		this.index = {};
+		
+		this.layers.forEach((l, i) => {			
+			if (!this.index.hasOwnProperty(l.z)) this.index[l.z] = {};
+				
+			l.ports.forEach(p => {
+				if (!this.index[l.z].hasOwnProperty(p)) this.index[l.z][p] = [];
+				
+				
+				this.index[l.z][p].push(l);
+			});
+		});
+	}
 	
 	set Styler(value) { this.styler = value; }
 
@@ -48,11 +62,11 @@ export default Core.Templatable("Widgets.Grid", class Grid extends Templated {
 				  "</div>" + 
 			   "</div>";
 	}
-	
+	/*
 	AddLayer(z, port) {
 		this.layers.push({ z:z, port:port });
 	}
-	
+	*/
 	GetRows(columns, layers) {
 		return Math.ceil(layers.length / columns) ;
 	}
@@ -127,16 +141,17 @@ export default Core.Templatable("Widgets.Grid", class Grid extends Templated {
 	
 	// TODO : grid shouldn't use simulation object maybe?
 	DrawState(state, simulation) {
-		for (var i = 0; i < this.layers.length; i++) {
+		for (var i = 0; i < this.layers.length; i++) {
 			var l = this.layers[i];
 			var scale = this.styler.GetScale(l.style);
 			
 			for (var x = 0; x < this.dimensions.x; x++) {
 				for (var y = 0; y < this.dimensions.y; y++) {
 					for (var p = 0; p < l.ports.length; p++) {
-						var v = state.GetValue([x, y, l.z], l.ports[p]); // value of cell to draw
-						 
-						var color = scale.GetColor(v) || 'rgb(200, 200, 200)';
+						var v = state.GetValue([x, y, l.z]); // value of cell to draw
+						var f = l.ports[p]; 
+						
+						var color = scale.GetColor(v[f]) || 'rgb(200, 200, 200)';
 						
 						this.DrawCell(x, y, i, color);
 					}
@@ -151,20 +166,23 @@ export default Core.Templatable("Widgets.Grid", class Grid extends Templated {
 	
 	// TODO : grid shouldn't use simulation object maybe?
 	DrawChanges(frame, simulation) {
-		this.layers.forEach((l, i) => {
-			var l = this.layers[i];
-			var scale = this.styler.GetScale(l.style);
+		for (var i = 0; i < frame.Transitions.length; i++) {
+			var t = frame.Transitions[i];
 			
-			l.ports.forEach(p => {
-				frame.TransitionsByIndex(l.z, p).forEach((t) => {
-					var color = scale.GetColor(t.Value) || 'rgb(200, 200, 200)';
-						
-					this.DrawCell(t.X, t.Y, i, color);
+			for (var f in t.Value) {
+				var layers = this.index[t.Z] && this.index[t.Z][f] || [];
+				var v = t.Value[f];
+				
+				for (var j = 0; j < layers.length; j++) {
+					var l = layers[j];
+					var scale = this.styler.GetScale(l.style);
+			
+					this.DrawCell(t.X, t.Y, l.position, scale.GetColor(v));
 					
 					if (simulation.IsSelected(t.Id.join("-"))) this.DrawCellBorder(t.X, t.Y, i, scale.SelectedColor);
-				});
-			});
-		});
+				}
+			}
+		}
 	}
 	
 	GetCell(clientX, clientY) {
@@ -185,7 +203,7 @@ export default Core.Templatable("Widgets.Grid", class Grid extends Templated {
 			break;
 		}
 		
-		if (!zero) return null;
+		if (!zero || zero.y2 == y) return null;
 		
 		x = x - zero.x1;
 		y = y - zero.y1;
@@ -193,7 +211,7 @@ export default Core.Templatable("Widgets.Grid", class Grid extends Templated {
 		// Find the new X, Y coordinates of the clicked cell
 		var pX = x - x % this.cell.w;
 		var pY = y - y % this.cell.h;
-				
+		
 		return { x:pX / this.cell.w, y:pY / this.cell.h, z:zero.z, k:k, layer:this.layers[k] };
 	}
 	

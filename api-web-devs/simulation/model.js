@@ -25,12 +25,21 @@ export default class Model {
         this.ports = ports || [];
         this.links = links || [];
         this.svg = svg || [];
-        this.template = template || null;
+        this.template = template || [];
 		
 		this.ports.forEach(p => p.svg = p.svg || []);
 		this.links.forEach(l => l.svg = l.svg || []);
     }
     
+	Clone() {
+		var ports = this.ports.map(p => p.Clone());
+		var links = this.links.map(l => l.Clone());
+		var submodels = this.submodels.map(s => s);
+		var template = this.template.map(t => t);
+		
+		return new Model(this.name, this.type, submodels, ports, links, this.svg, template);
+	}
+	
 	Port(name) {
 		return this.ports.find(p => p.name == name) || null;
 	}

@@ -117,7 +117,7 @@ export default Core.Templatable("Widget.Loader", class Loader extends Templated 
 		p.then((response) => {
 			if (response.status == 200) d.Resolve(response);
 			
-			else response.text().then((tesxt) => fail(new Error(text)), fail);
+			else response.text().then((text) => fail(new Error(text)), fail);
 		}, fail);
 		
 		function fail(error) {

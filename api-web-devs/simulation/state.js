@@ -10,13 +10,8 @@ export default class State {
 		
 		if (!models) return;
 		
-		this.models = models.map(m => {
-			return {
-				name : m.name,
-				ports : m.ports.map(p => p.name)
-			}
-		});
-		
+		this.models = models;
+			
 		this.Reset();
 	}
 	
@@ -33,19 +28,19 @@ export default class State {
 	}
 	
 	ApplyTransitions(frame) {
-		frame.transitions.forEach((t) => {
-			this.SetValue(t.Id, t.Port, t.Value);
-		});
+		for (var i = 0; i < frame.transitions.length; i++) {
+			this.ApplyTransition(frame.transitions[i]);
+		}
+	}
+	
+	Forward(frame) {
+		this.ApplyTransitions(frame);
 		
 		this.i++;
 	}
 	
-	RollbackTransitions(frame) {
-		frame.transitions.forEach((t) => {
-			var value = this.GetValue(t.Id, t.Port) - t.diff;
-			
-			this.SetValue(t.Id, t.Port, t.Value);
-		});
+	Backward(frame) {
+		this.ApplyTransitions(frame);
 		
 		this.i--;
 	}

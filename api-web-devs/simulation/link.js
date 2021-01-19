@@ -17,6 +17,10 @@ export default class Link {
 		this.modelB = modelB;
 		this.svg = svg || [];
 	}
+    
+	Clone() {
+		return new Link(this.portA, this.portB, this.modelB, this.svg);
+	}
 	
 	static FromJson(json) {
 		return new Link(json.portA, json.portB, json.modelB, json.svg);

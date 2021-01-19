@@ -22,36 +22,33 @@ export default class SimulationIRR extends Simulation {
 	}
 	
 	EachTransition(delegate) {
-		this.Frames.forEach(f => {
-			f.Transitions.forEach(t => {
+		for (var i = 0; i < this.Frames.length; i++) {
+			var f = this.Frames[i];
+			
+			for (var j = 0; j < f.Transitions.length; j++) {
+				var t = f.Transitions[j];
+				
 				delegate(t, f);
-			});
-		});
+			}
+		}
 	}
 	
 	static FromJson(json, messages, fields) {
 		var info = json.info;
 		var models = json.models.map(m => Model.FromJson(m));
 		var simulation = new SimulationIRR(info.name, info.simulator, info.type, models);
-		
-		simulation.Models.forEach(m => m.template = JSON.parse(m.template));
-		
+				
 		// Add frames from flat transitions list			
 		for (var i = 0; i < messages.length; i++) {
 			var m = messages[i];
-			var split = m.value.split(",").map(v => {
-				return isNaN(+v) ? v : +v; 
-			});
 			
-			var model = simulation.Model(m.model);
-			
-			if (model.template.length != split.length) throw new Error("length mismatch between fields and message content. This is a required temporary measure until Cadmium outputs message information.");
-			
-			var v = {};
-			
-			model.template.forEach((f, i) => v[f] = split[i]);
-			
-			var transition = new TransitionIRR(m.model, v);
+			for (var f in m.value) {
+				var v = m.value[f];
+				
+				m.value[f] = isNaN(+v) ? v : +v;
+			}
+
+			var transition = new TransitionIRR(m.model, m.value);
 						
 			simulation.AddTransition(m.time, transition);
 		}

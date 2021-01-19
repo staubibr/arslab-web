@@ -13,8 +13,8 @@ export default class Cache {
 		var state = zero;
 		
 		for (var i = 0; i < frames.length; i++) {
-			state.ApplyTransitions(frames[i]);
-
+			state.Forward(frames[i]);
+			
 			if (i % n === 0) this.AddState(state);
 		}
 		

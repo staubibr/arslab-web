@@ -60,7 +60,9 @@ export default class Simulation extends Evented {
 		
 		this.state.Reset();
 		
-		this.frames.forEach((f) => f.Difference(this.state));
+		for (var i = 0; i < this.frames.length; i++) {
+			this.frames[i].Difference(this.state);
+		}
 		
 		this.state = this.cache.First();
 	}
@@ -73,7 +75,7 @@ export default class Simulation extends Evented {
 		var cached = this.cache.GetClosest(i);
 		
 		for (var j = cached.i + 1; j <= i; j++) {
-			cached.ApplyTransitions(this.Frame(j));
+			cached.Forward(this.Frame(j));
 		}
 		
 		return cached;
@@ -126,18 +128,17 @@ export default class Simulation extends Evented {
 	GoToNextFrame() {
 		var frame = this.Frame(this.state.i + 1);
 		
-		this.state.ApplyTransitions(frame);
+		this.state.Forward(frame);
 		
 		this.Emit("Move", { frame : frame, direction:"next" });
 	}
 	
 	GoToPreviousFrame() {
-		var frame = this.Frame(this.state.i);
-		var reverse = frame.Reverse();
+		var frame = this.Frame(this.state.i).Reverse();
 		
-		this.state.RollbackTransitions(frame);
+		this.state.Backward(frame);
 		
-		this.Emit("Move", { frame : reverse, direction:"previous"});
+		this.Emit("Move", { frame : frame, direction:"previous"});
 	}
 	
 	Save() {

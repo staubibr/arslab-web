@@ -59,7 +59,6 @@ export default class Standardized extends Parser {
 	ParseStructure(file) {
 		var json = JSON.parse(file);
 		var index = {};
-		
 		var size;
 		
 		var models = json.nodes.map(n => {
@@ -72,6 +71,8 @@ export default class Standardized extends Parser {
 			
 			// TODO: This doesn't work, size can be per model but the API uses a single size for the whole simulation.
 			if (n.size) size = n.size;
+
+			if (n.template) n.template = JSON.parse(n.template);
 			
 			return index[n.name];
 		});
@@ -79,6 +80,8 @@ export default class Standardized extends Parser {
 		if (!size) size = models.length;
 		
 		if (json.ports) json.ports.forEach(p => {
+			if (p.template) p.template = JSON.parse(p.template);
+			
 			// When a DEVS model is connected to a Cell-DEVS model, there will be ports linked to the main model with coords, 
 			// these are not in the models list. It has to be fixed someday.
 			var model = index[p.model];
@@ -99,35 +102,56 @@ export default class Standardized extends Parser {
 	}
 	
 	ParseLogChunk(parsed, chunk) {
-		chunk.split("\n").forEach(l => {
-			var messages = l.split(";");
+		var t = null;
+		// If line has only one item, then it's a timestep. Otherwise, it's a simulation message, 
+		// the format then depends on the whether it's a DEVS, Cell-DEVS or Irregular model
+		var lines = chunk.split("\n");
+		
+		for (var i = 0; i < lines.length; i++) {
+			var l = lines[i];
+			var v = l.trim().split(",");
 			
-			for (var i = 1; i < messages.length; i++) {
-				var v = messages[i].split(",");
-				var x = this.structure;	
+			if (v.length == 1) t = v[0];
+			
+			else if (this.structure.info.type == "Cell-DEVS") {
+				var c = [+v[0],+v[1],+v[2]];
+				var p = this.structure.ports[0];
+				var m = this.structure.models[0];
+				var d = this.TemplateData(m.template, v.slice(3));
 				
-				if (this.structure.info.type == "Cell-DEVS") {
-					var c = [v[0],v[1],v[2]];
-					var p = this.structure.ports[v[3]];
-					
-					parsed.push({ time:messages[0], coord:c, model:p.model, port:p.name, value:v[4] });
-				}
-				else if (this.structure.info.type == "Irregular Cell-DEVS") {
-					var m = this.structure.models[v[0]];
-					
-					parsed.push({ time:messages[0], model:m.name, port:null, value:v.slice(1).join(",").trim() });
-				}
-				else if (this.structure.info.type != "Cell-DEVS") {
-					var p = this.structure.ports[v[0]];
-					
-					parsed.push({ time:messages[0], model:p.model, port:p.name, value:v.slice(1).join(",").trim() });
-				}
-				else {
-					throw new Error("Message format not recognized.");
-				}
+				// parsed.push({ time:t, coord:c, model:p.model, port:p.name, value:v.slice(1).join(",").trim() });
+				parsed.push({ time:t, coord:c, model:p.model, port:p.name, value:d });
 			}
-		});
+			else if (this.structure.info.type == "Irregular Cell-DEVS") {
+				var m = this.structure.models[v[0]];
+				var d = this.TemplateData(m.template, v.slice(1));
+				
+				// parsed.push({ time:t, model:m.name, port:null, value:v.slice(1).join(",").trim() });
+				parsed.push({ time:t, model:m.name, port:null, value:d });
+			}
+			else if (this.structure.info.type != "Cell-DEVS") {
+				var p = this.structure.ports[v[0]];
+				var d = this.TemplateData(p.template, v.slice(1));
+				
+				// parsed.push({ time:t, model:p.model, port:p.name, value:v.slice(1).join(",").trim() });
+				parsed.push({ time:t, model:p.model, port:p.name, value:d });
+			}
+		}
 		
 		return parsed;
+	}
+	
+	TemplateData(template, values) {
+		if (template.length != values.length) throw new Error("length mismatch between fields and message content. This is a required temporary measure until Cadmium outputs message information.");			
+			
+		var out = {};
+		
+		for (var i = 0; i < template.length; i++) {
+			var f = template[i];
+			
+			if (values[i] != "") out[f] = values[i];
+		}
+		
+		return out;
 	}
 }

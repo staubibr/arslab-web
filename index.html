@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="user-scalable=no" />
+		<meta name="description" content="This is just a homepage to reach the various DEVS visualization applications">
+		<meta name="author" content="Bruno St-Aubin">
+		
+		<title>DEVS Visualization | ARS Lab | Carleton University</title>
+		
+		<link rel='shortcut icon' href='app-gis-v2/assets/favicon.ico'>
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+		<link rel="stylesheet" href="./api-web-devs/api-web-devs.css">
+		<link rel="stylesheet" href="./app-simple/application.css">
+		<style>
+			p {
+				font-size: 1.1em;
+				line-height: 1.4em;
+				text-align: justify;
+			}
+
+			h2 {
+				color: #198CFF;
+			}
+			
+			ul {
+				padding: 0;
+				list-style-type: none;
+			}
+			
+			li {
+				display:table;
+				margin-top: 16px;
+				margin-bottom: 16px;
+			}
+			
+			li > * {
+				display:table-cell;
+			}
+			
+			li > *:first-child {
+				white-space: nowrap;
+				width: 230px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<main>
+			<h1 class='first-row'><a href='https://arslab.sce.carleton.ca/' target='_blank'>ARSLab</a></h1>
+			
+			<div class='second-row'>
+				<h2>DEVS Visualization Applications</h2>
+				
+				<div class='links-container'>
+					<a href='http://www.sce.carleton.ca/faculty/wainer/wbgraf/doku.php?id=model_samples:start' target='_blank'>&#9733; samples</a>
+					<a href='mailto:bruno.st-aubin@carleton.ca?Subject=[CellDEVSViewer][alpha]' target='_blank'>&#9749; report a problem</a>
+				</div>
+			</div>
+			
+			<br><br>			
+			<p>This page lists visualization applications for the discrete event systems specification (DEVS). These applications were developed at the Advanced Real-Time Laboratory in the context of research on visualization techniques for DEVS based simulation. The applications generally support the CD++ and Cadmium simulators, also developed at the laboratory. <br><br>Each application can be accessed by clicking on the name of the application.</p>
+				
+			<br>		
+			<ul><hr>
+				<li>
+					<h3><a href="http://206.12.94.204:8080/arslab-web/app-simple/index.html" target="_blank">DEVS Web Viewer</a></h3>
+					<p>The DEVS Web Viewer can be used to visualize regular DEVS models or Cell-DEVS models. A tutorial and instructions manual can be downloaded <a href="http://206.12.94.204:8080/arslab-web/app-simple/WebViewer Tutorial.zip" target="_blank">here</a>.</p>
+				</li>
+				<hr>
+				<li>
+					<h3><a href="http://206.12.94.204:8080/arslab-web/app-gis/index.html" target="_blank">DEVS GIS Web Viewer 1.0</a></h3>
+					<p>The first version of the DEVS GIS Web Viewer can be used to visualize results of the Cadmium Irregular Cell-DEVS simulator on a map. This application is not maintained anymore.</p>
+				</li>
+				<hr>
+				<li>
+					<h3><a href="http://206.12.94.204:8080/arslab-web/app-gis-v2/index.html" target="_blank">DEVS GIS Web Viewer 2.0</a></h3>
+					<p>The second version of the DEVS GIS Web Viewer can also be used to visualize results of the Cadmium Irregular Cell-DEVS simulator on a map.</p>
+				</li>
+				<hr>
+				<li>
+					<h3><a href="http://206.12.94.204:8080/arslab-logs/devs-logs/" target="_blank">DEVS Log Files</a></h3>
+					<p>This is folder where various simulation results can be downloaded for use in the DEVS Web Viewer.</p>
+				</li><hr>
+			</ul>
+			
+			<br>
+			<p>For any questons or comments, please contact <a href="mailto:staubin.bruno@gmail.com">Bruno St-Aubin</a></p>
+			<p>All code is available on my <a href="http://www.github.com/staubibr">GitHub page</a></p>
+			
+		</main>
+	</body>
+</html>

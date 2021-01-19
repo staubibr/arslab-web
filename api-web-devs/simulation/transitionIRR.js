@@ -11,16 +11,11 @@ export default class TransitionIRR extends Transition {
 	get Id() {
 		return this.model;
 	}
-
-	Reverse() {
-		return new TransitionIRR(this.model, this.value - this.diff);
-		
-		// Not sure about this
-		t.diff = this.diff;
-		
-		return t;
-	}
 	
+	Reverse() {			
+		return new TransitionIRR(this.model, this.GetDiff());
+	}
+
 	static FromCsv(csv) {
 		return new TransitionIRR(csv.model, csv.value);
 	}

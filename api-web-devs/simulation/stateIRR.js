@@ -12,7 +12,7 @@ export default class StateIRR extends State {
 		var clone = new StateIRR([]);
 		
 		clone.i = this.i;
-		clone.models = JSON.parse(JSON.stringify(this.models));
+		clone.models = this.models.map(m => m.Clone());
 		clone.data = JSON.parse(JSON.stringify(this.data));
 
 		return clone;
@@ -23,26 +23,22 @@ export default class StateIRR extends State {
 		
 		return this.data[id] || null;
 	}
-	
-	SetValue(id, value) {
-		if (!this.data.hasOwnProperty(id)) return;
+
+	ApplyTransition(t) {
+		if (!this.data.hasOwnProperty(t.Id)) return;
 		
-		this.data[id] = value;
+		for (var f in t.Value) this.data[t.Id][f] = t.Value[f];
 	}
-	
-	ApplyTransitions(frame) {
-		frame.transitions.forEach((t) => {
-			this.SetValue(t.Id, t.Value);
-		});
-		
-		this.i++;
-	}
-		
+			
 	Reset() {
 		this.data = {};
 		
 		this.models.forEach((m) => {
-			this.data[m.name] = {};
+			var d = {};
+						
+			m.template.forEach(f => d[f] = 0);
+			
+			this.data[m.name] = d;
 		});
 	}
 }
