@@ -134,8 +134,8 @@ export default class Main extends Templated {
 			this.chart.On("mouseout", this.OnChart_MouseOut.bind(this));
 		}
 		
-		var data = this.GetChartData(this.simulation.frames);
-		var dates = this.GetDates(this.simulation.frames);
+		var data = this.GetChartData(this.simulation.Frames);
+		var dates = this.GetDates(this.simulation.Frames);
 		var date = this.simulation.FirstFrame().time;
 		
 		this.chart.Update(data, dates, "count", date, Core.Nls("Chart_Y_Label"), true);

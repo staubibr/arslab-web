@@ -1,32 +1,24 @@
 'use strict';
 
-import Dom from '../tools/dom.js';
 import Simulation from './simulation.js';
-import FrameIRR from './frameIRR.js';
-import TransitionIRR from './transitionIRR.js';
-import StateIRR from './stateIRR.js';
+import Message from './message.js';
+import State from './state.js';
 import Model from './model.js';
 
 export default class SimulationIRR extends Simulation { 
 	
 	constructor(name, simulator, type, models) {
 		super(name, simulator, type, models);
-								
-		this.state = new StateIRR(this.Models);
-	}
-	
-	AddTransition(time, transition) {		
-		var f = this.Index(time) || this.AddFrame(new FrameIRR(time));	
 		
-		f.AddTransition(transition);
+		this.state = new State(this.Models);
 	}
 	
-	EachTransition(delegate) {
+	EachMessage(delegate) {
 		for (var i = 0; i < this.Frames.length; i++) {
 			var f = this.Frames[i];
 			
-			for (var j = 0; j < f.Transitions.length; j++) {
-				var t = f.Transitions[j];
+			for (var j = 0; j < f.StateMessages.length; j++) {
+				var t = f.StateMessages[j];
 				
 				delegate(t, f);
 			}
@@ -38,7 +30,7 @@ export default class SimulationIRR extends Simulation {
 		var models = json.models.map(m => Model.FromJson(m));
 		var simulation = new SimulationIRR(info.name, info.simulator, info.type, models);
 				
-		// Add frames from flat transitions list			
+		// Add frames from flat messages list			
 		for (var i = 0; i < messages.length; i++) {
 			var m = messages[i];
 			
@@ -48,9 +40,10 @@ export default class SimulationIRR extends Simulation {
 				m.value[f] = isNaN(+v) ? v : +v;
 			}
 
-			var transition = new TransitionIRR(m.model, m.value);
+			var emitter = simulation.Model(m.model);
+			var message = new Message(emitter, m.value);
 						
-			simulation.AddTransition(m.time, transition);
+			simulation.AddStateMessage(m.time, message);
 		}
 		
 		return simulation;		

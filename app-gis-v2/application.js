@@ -47,7 +47,7 @@ export default class Main extends Templated {
 		this.settings.json.playback.speed = 10;
 		this.settings.json.playback.loop = true;
 		
-		var n = Math.ceil(this.simulation.frames.length / 10);
+		var n = Math.ceil(this.simulation.Frames.length / 10);
 		
 		this.simulation.Initialize(n);
 	}
@@ -170,7 +170,7 @@ export default class Main extends Templated {
 	onSimulation_Move(ev) {
 		var data = {};
 		
-		ev.frame.Transitions.forEach(t => data[t.model] = t.Value);
+		ev.frame.StateMessages.forEach(t => data[t.Emitter.Name] = t.Value);
 		
 		this.Draw(data);
 	}
@@ -199,7 +199,8 @@ export default class Main extends Templated {
 		if (!this.selected) return;
 		
 		var id = this.selected.feature.getProperties()[this.current.layer.join];
-		var data = this.simulation.state.GetValue(id);
+		var emitter = this.simulation.Model(id);
+		var data = this.simulation.state.GetValue(emitter);
 		var style = this.current.style.Symbol(data);
 		
 		this.selected.feature.setStyle(style);
@@ -223,7 +224,8 @@ export default class Main extends Templated {
 			this.HighlightSelected();
 						
 			var id = this.selected.feature.getProperties()[this.current.layer.join];
-			var props = this.simulation.state.GetValue(id);
+			var emitter = this.simulation.Model(id);
+			var props = this.simulation.state.GetValue(emitter);
 			
 			var content = "<ul>";
 

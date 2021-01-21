@@ -480,7 +480,7 @@ export default class Application extends Templated {
       this.simulation,
       this.data, 
       this.titleOfCurrentSimulation, 
-      simulationToTransition(this.simulation.frames),
+      simulationToTransition(this.simulation.Frames),
       {
         classNum : this.classNumberOfCurrentSimulation, 
         layerColor: this.currentColor, 

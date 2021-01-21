@@ -29,9 +29,9 @@ export default Core.Templatable("Widget.RiseList", class RiseLoader extends Temp
 				"type" : "Cell-DEVS",
 				"url": path + "/CO2/"
 			}, {
-				"name": "COVID (TR 0.4, DR 0.01)",
+				"name": "COVID",
 				"type" : "Cell-DEVS",
-				"url": path + "/COVID/tr_0.4_dr_0.01/"
+				"url": path + "/COVID/"
 			}, {
 				"name": "Employee Behaviour",
 				"type" : "Cell-DEVS",

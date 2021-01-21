@@ -90,29 +90,29 @@ export default Core.Templatable("Widgets.Diagram", class Diagram extends Templat
 		img.src = url;
 	}
 	
-	Draw(transitions) {
+	Draw(messages) {
 		this.Reset();
 		
-		transitions.forEach((t) => {
-			this.DrawYTransition(t);
+		messages.forEach((m) => {
+			this.DrawYMessage(m);
 		});
 		
 		this.DrawToCanvas(this.Node('diagram').Elem("svg"));
 	}
 	
-	DrawYTransition(t) {  
-		var m = this.Simulation.Model(t.Id);
-		var p = m.Port(t.port);
-		
-		if (m) {
-			this.AddCss(m.OutputPath(t.port), ["highlighted"]);
+	DrawYMessage(message) {  
+		var p = message.Emitter;
+		var m = p && p.Model;
+
+		if (p) this.AddCss(p.SVG, ["origin"]);
 			
-			this.AddCss(m.svg, ["origin"]);
-		}
-		
-		if (p) this.AddCss(p.svg, ["origin"]);
+		if (m) {
+			this.AddCss(m.OutputPath(p), ["highlighted"]);
 				
-		m.PortLinks(p.name).forEach(l => this.AddCss(l.svg, ["origin"]));
+			this.AddCss(m.SVG, ["origin"]);
+		}
+					
+		m.PortLinks(p).forEach(l => this.AddCss(l.SVG, ["origin"]));
 	}
 
 	AddCss(nodes, css) {		

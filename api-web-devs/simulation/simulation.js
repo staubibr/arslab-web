@@ -7,82 +7,74 @@ import Model from './model.js';
 
 export default class Simulation extends Evented { 
 	
+	get TimeStep() { return this.State.i; }
+	
 	get Name() { return this.name; }
 	
 	get Type() { return this.type; }
 	
+	get Simulator() { return this.simulator; }
+	
 	get State() { return this.state; }
+	
+	set State(value) { this.state = value; }
+	
+	get Cache() { return this.cache; }
 
 	get Selected() { return this.selected; }
 	
 	get Frames() { return this.frames; }
+
+	get CurrentFrame() { return this.Frames[this.TimeStep]; }
 	
-	// TODO : Should vary in a SimulationCA class
+	get FirstFrame() { return this.Frames[0]; }
+			
+	get LastFrame() { return this.Frames[this.Frames.length - 1]; }
+	
+	get Models() { return this.models; }
+
+	get AtomicModels() { return this.Models.filter(m => m.Type == "atomic"); }
+
+	get CoupledModels() { return this.Models.filter(m => m.Type == "coupled"); }
+
+	get ModelNames() { return this.Models.map(m => m.name); }
+	
 	get Ratio() { 
 		throw new Error("get Ratio must be defined in child simulation class.");
 	}
 
-	get Models() {
-		return this.models;
-	}
-
-	get ModelNames() {
-		return this.Models.map(m => m.name);
-	}
-
-	get AtomicModels() {
-		return this.Models.filter(m => m.Type == "atomic");
-	}
-
-	get CoupledModels() {
-		return this.Models.filter(m => m.Type == "coupled");
-	}
-
-	constructor(name, simulator, type, models, transitions) {
+	constructor(name, simulator, type, models) {
 		super();
 		
-		this.frames = [];
-
+		// class variables with accessors
+		this.time = -1;
 		this.name = name || null;
-		this.simulator = simulator || null;
 		this.type = type || null;
-		this.models = models || [];
-		this.transitions = transitions || [];
-		this.index = {};
-		this.selected = [];
+		this.simulator = simulator || null;
+		this.state = null;
 		this.cache = new Cache();
+		this.selected = [];
+		this.frames = [];
+		this.models = models || [];
+		
+		// class variables meant to be private
+		this.index = {};
 	}
 	
+	// TODO REVIEW
 	Initialize(nCache) {
-		this.state.Reset();
+		this.State.Reset();
 		
-		this.cache.Build(nCache, this.frames, this.state);
+		this.Cache.Build(nCache, this.Frames, this.State);
 		
-		this.state.Reset();
+		this.State.Reset();
 		
-		for (var i = 0; i < this.frames.length; i++) {
-			this.frames[i].Difference(this.state);
+		for (var i = 0; i < this.Frames.length; i++) {
+			this.Frames[i].Difference(this.State);
+			this.State.ApplyMessages(this.Frames[i]);
 		}
 		
-		this.state = this.cache.First();
-	}
-	
-	GetState(i) {
-		if (i == this.frames.length - 1) return this.cache.Last();
-		
-		if (i == 0) return this.cache.First();
-		
-		var cached = this.cache.GetClosest(i);
-		
-		for (var j = cached.i + 1; j <= i; j++) {
-			cached.Forward(this.Frame(j));
-		}
-		
-		return cached;
-	}
-	
-	CurrentFrame() {
-		return this.frames[this.state.i];
+		this.State = this.Cache.First();
 	}
 
 	Model(name) {
@@ -103,87 +95,88 @@ export default class Simulation extends Evented {
 		return frame;
 	}
 	
-	Frame(i) {
-		return this.frames[i];
+	GetFrame(time) {
+		return this.index[time] || null;
 	}
 	
-	Index(id) {
-		return this.index[id];
+	AddMessage(time, message, type) {
+		var f = this.GetFrame(time) || this.AddFrame(new Frame(time));
+		
+		f.AddMessage(message, type);
 	}
 	
-	FirstFrame(i) {
-		return this.frames[0];
+	AddOutputMessage(time, message) {		
+		this.AddMessage(time, message, "output");
 	}
 	
-	LastFrame(i) {
-		return this.frames[this.frames.length - 1];
+	AddStateMessage(time, message) {		
+		this.AddMessage(time, message, "state");
+	}
+	
+	GetState(i) {
+		if (i == this.Frames.length - 1) return this.Cache.Last();
+		
+		if (i == 0) return this.Cache.First();
+		
+		var cached = this.Cache.GetClosest(i);
+		
+		for (var j = cached.i + 1; j <= i; j++) {
+			cached.Forward(this.Frames[j]);
+		}
+		
+		return cached;
 	}
 	
 	GoToFrame(i) {
-		this.state = this.GetState(i);
+		this.State = this.GetState(i);
 		
-		this.Emit("Jump", { state:this.state, i: i });
+		this.Emit("Jump", { state:this.State, i: i });
 	}
 	
 	GoToNextFrame() {
-		var frame = this.Frame(this.state.i + 1);
+		var frame = this.Frames[this.TimeStep + 1];
 		
-		this.state.Forward(frame);
+		this.State.Forward(frame);
 		
 		this.Emit("Move", { frame : frame, direction:"next" });
 	}
 	
 	GoToPreviousFrame() {
-		var frame = this.Frame(this.state.i).Reverse();
+		var frame = this.Frames[this.State.i].Reverse();
 		
-		this.state.Backward(frame);
+		this.State.Backward(frame);
 		
 		this.Emit("Move", { frame : frame, direction:"previous"});
 	}
 	
-	Save() {
-		return {
-			i : this.state.i,
-			selection : this.selected
-		}
-	}
-	
-	Load(config) {
-		this.GoToFrame(config.i);
-		
-		this.selected = config.selection;
-		
-		this.Emit("Session", { simulation:this });
-	}
-	
-	onSimulation_Error(message) {
-		this.Emit("Error", { error:new Error(message) });
-	}
-	
 	IsSelected(model) {
-		return this.selected.indexOf(model) > -1;
+		return this.Selected.indexOf(model) > -1;
 	}
 	
 	Select(model) {
-		var idx = this.selected.indexOf(model);
+		var idx = this.Selected.indexOf(model);
 		
 		// Already selected
 		if (idx != -1) return;
 		
-		this.selected.push(model);
+		this.Selected.push(model);
 		
 		this.Emit("Selected", { model:model, selected:true });
 	}
 	
 	Deselect(model) {
-		var idx = this.selected.indexOf(model);
+		var idx = this.Selected.indexOf(model);
 		
 		// Not in current selection
 		if (idx == -1) return;
 		
-		this.selected.splice(idx, 1);
+		this.Selected.splice(idx, 1);
 		
 		this.Emit("Selected", { model:model, selected:false });
+	}
+	
+	onSimulation_Error(message) {
+		this.Emit("Error", { error:new Error(message) });
 	}
 	
 	static FromJson(json) {

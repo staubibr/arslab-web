@@ -9,67 +9,57 @@ export default class Model {
 	get Name() { return this.name; }
 
 	get Type() { return this.type; }
-
-	get Submodels() { return this.submodels; }
 	
 	get Ports() { return this.ports; }
 	
 	get Links() { return this.links; }
 	
 	get SVG() { return this.svg; }
+	
+	set SVG(value) { this.svg = value; }
+	
+	get Template() { return this.template; }
 
-	constructor(name, type, submodels, ports, links, svg, template) {
+	constructor(name, type, ports, links, svg, template) {
         this.name = name;
         this.type = type;
-        this.submodels = submodels || [];
         this.ports = ports || [];
         this.links = links || [];
         this.svg = svg || [];
         this.template = template || [];
-		
-		this.ports.forEach(p => p.svg = p.svg || []);
-		this.links.forEach(l => l.svg = l.svg || []);
     }
     
 	Clone() {
-		var ports = this.ports.map(p => p.Clone());
-		var links = this.links.map(l => l.Clone());
-		var submodels = this.submodels.map(s => s);
-		var template = this.template.map(t => t);
+		var ports = this.Ports.map(p => p.Clone());
+		var links = this.Links.map(l => l.Clone());
+		var svg = this.SVG.map(s => s);
 		
-		return new Model(this.name, this.type, submodels, ports, links, this.svg, template);
+		return new Model(this.Name, this.Type, ports, links, svg, this.Template);
 	}
 	
 	Port(name) {
-		return this.ports.find(p => p.name == name) || null;
+		return this.Ports.find(p => p.Name == name) || null;
 	}
 	
 	PortLinks(port) {
-		return this.Links.filter(l => l.portA.name == port);
+		return this.Links.filter(l => l.PortA.Name == port.Name);
 	}
 	
 	OutputPath(port) {
-		var svg = [].concat(this.svg);
-		
-		var p = this.Port(port);
-		
-		if (!p) return svg;
-		
-		svg = svg.concat(p.svg);
-		
-		var links = this.PortLinks(p.name);
+		var svg = this.SVG.concat(port.SVG);
+		var links = this.PortLinks(port);
 		
 		for (var i = 0; i < links.length; i++) {
 			var l = links[i];
 			
-			svg = svg.concat(l.svg);
-			svg = svg.concat(l.portB.svg);			
-			svg = svg.concat(l.modelB.svg);
+			svg = svg.concat(l.SVG);
+			svg = svg.concat(l.PortB.SVG);			
+			svg = svg.concat(l.ModelB.SVG);
 			
-			if (l.modelB.Type == "atomic") continue;
+			if (l.ModelB.Type == "atomic") continue;
 			
 			// TODO : Not sure this works.
-			links = links.concat(l.modelB.PortLinks(l.portB.name));
+			links = links.concat(l.ModelB.PortLinks(l.PortB));
 		}
 		
 		return svg;
@@ -79,6 +69,6 @@ export default class Model {
 		if (json.ports) var ports = json.ports.map(p => Port.FromJson(p));
 		if (json.links) var links = json.links.map(l => Link.FromJson(l));
 		
-		return new Model(json.name, json.type, json.submodels, ports, links, json.svg, json.template);
+		return new Model(json.name, json.type, ports, links, json.svg, json.template);
 	}
 }

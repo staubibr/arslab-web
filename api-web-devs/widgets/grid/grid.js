@@ -166,20 +166,20 @@ export default Core.Templatable("Widgets.Grid", class Grid extends Templated {
 	
 	// TODO : grid shouldn't use simulation object maybe?
 	DrawChanges(frame, simulation) {
-		for (var i = 0; i < frame.Transitions.length; i++) {
-			var t = frame.Transitions[i];
+		for (var i = 0; i < frame.StateMessages.length; i++) {
+			var m = frame.StateMessages[i];
 			
-			for (var f in t.Value) {
-				var layers = this.index[t.Z] && this.index[t.Z][f] || [];
-				var v = t.Value[f];
+			for (var f in m.Value) {
+				var layers = this.index[m.Z] && this.index[m.Z][f] || [];
+				var v = m.Value[f];
 				
 				for (var j = 0; j < layers.length; j++) {
 					var l = layers[j];
 					var scale = this.styler.GetScale(l.style);
 			
-					this.DrawCell(t.X, t.Y, l.position, scale.GetColor(v));
+					this.DrawCell(m.X, m.Y, l.position, scale.GetColor(v));
 					
-					if (simulation.IsSelected(t.Id.join("-"))) this.DrawCellBorder(t.X, t.Y, i, scale.SelectedColor);
+					if (simulation.IsSelected(m.Emitter)) this.DrawCellBorder(m.X, m.Y, i, scale.SelectedColor);
 				}
 			}
 		}

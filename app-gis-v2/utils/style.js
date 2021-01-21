@@ -12,7 +12,7 @@ export default class Style {
 	static Statistics(simulation) {		
 		var values = {};
 		
-		simulation.EachTransition((t, f) => {			
+		simulation.EachMessage((t, f) => {			
 			for (var f in t.Value) {
 				if (!values[f]) values[f] = [];
 				

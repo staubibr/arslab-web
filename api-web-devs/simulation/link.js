@@ -3,13 +3,21 @@
 import Evented from '../components/evented.js';
 
 export default class Link { 
-	get PortA() { return this.svg; }
+	get PortA() { return this.portA; }
 	
-	get PortB() { return this.type; }
+	set PortA(value) { this.portA = value; }
 	
-	get ModelB() { return this.name; }
+	get PortB() { return this.portB; }
+	
+	set PortB(value) { this.portB = value; }
+	
+	get ModelB() { return this.modelB; }
+	
+	set ModelB(value) { this.modelB = value; }
 	
 	get SVG() { return this.svg; }
+	
+	set SVG(value) { this.svg = value; }
 
 	constructor(portA, portB, modelB, svg) {
 		this.portA = portA;
@@ -19,7 +27,9 @@ export default class Link {
 	}
     
 	Clone() {
-		return new Link(this.portA, this.portB, this.modelB, this.svg);
+		var svg = this.SVG.map(s => s);
+		
+		return new Link(this.PortA, this.PortB, this.ModelB, svg);
 	}
 	
 	static FromJson(json) {

@@ -14,7 +14,7 @@ export default Core.Templatable("Auto.Diagram", class AutoDiagram extends Automa
 		
 		this.Widget.SetDiagram(this.Simulation);
 		
-		this.Widget.Draw(this.Simulation.CurrentFrame().transitions);
+		this.Widget.Draw(this.Simulation.CurrentFrame.OutputMessages);
 		
 		this.selected = [];
 
@@ -32,9 +32,9 @@ export default Core.Templatable("Auto.Diagram", class AutoDiagram extends Automa
 		if (options.hoverEnabled != false) h.push(this.Widget.On("MouseOut", this.onMouseOut_Handler.bind(this)));
 		if (options.clickEnabled != false) h.push(this.Widget.On("Click", this.onClick_Handler.bind(this)));
 		
-		h.push(this.Simulation.On("Move", this.onSimulationMove_Handler.bind(this)));
-		h.push(this.Simulation.On("Jump", this.onSimulationJump_Handler.bind(this)));
-		h.push(this.Simulation.On("Selected", this.onSelected_Handler.bind(this)));
+		h.push(this.Simulation.On("Move", this.onSimulationChange_Handler.bind(this)));
+		h.push(this.Simulation.On("Jump", this.onSimulationChange_Handler.bind(this)));
+		h.push(this.Simulation.On("Selected", this.onSimulationChange_Handler.bind(this)));
 		
 		this.Handle(h);
 	}
@@ -47,38 +47,24 @@ export default Core.Templatable("Auto.Diagram", class AutoDiagram extends Automa
 		this.Widget.Resize();
 	}
 		
-	onSimulationJump_Handler(ev) {		
-		var f = this.Simulation.frames[ev.state.i];
+	onSimulationChange_Handler(ev) {		
+		var messages = this.simulation.CurrentFrame.OutputMessages;
 		
-		// Shouldn't pass transition objects, diagram should be agnostic to transitions maybe?
-		this.Widget.Draw(f.transitions);
-	}
-	
-	onSimulationMove_Handler(ev) {
-		var f = this.simulation.CurrentFrame();
-		
-		// Shouldn't pass transition objects, diagram should be agnostic to transitions maybe?
-		this.Widget.Draw(f.transitions);
-	}
-	
-	onSelected_Handler(ev) {
-		var f = this.Simulation.frames[ev.state.i];
-		
-		// Shouldn't pass transition objects, diagram should be agnostic to transitions maybe?
-		this.Widget.Draw(f.transitions);
+		this.Widget.Draw(messages);
 	}
 	
 	onMouseMove_Handler(ev) {
-		var f = this.Simulation.CurrentFrame();
+		var messages = this.Simulation.CurrentFrame.OutputMessages;
 		
 		Dom.Empty(this.tooltip.Elem("content"));
 		
-		var tY = f.transitions.filter(t => t.Model == ev.model.name);
+		var tY = messages.filter(t => t.Emitter.Model.Name == ev.model.Name);
 		
 		if (tY.length == 0) return;
 		
 		tY.forEach(t => {
-			var html = Core.Nls("Diagram_Tooltip_Y", [t.Model, t.Value, t.Port]);
+			var subs = [t.Emitter.Model.Name, t.Value.value, t.Emitter.Name];
+			var html = Core.Nls("Diagram_Tooltip_Y", subs);
 			
 			Dom.Create("div", { className:"tooltip-label", innerHTML:html }, this.tooltip.Elem("content"));
 		});

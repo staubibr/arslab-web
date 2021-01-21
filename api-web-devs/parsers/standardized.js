@@ -63,9 +63,7 @@ export default class Standardized extends Parser {
 		
 		var models = json.nodes.map(n => {
 			index[n.name] = n
-			
-			if (!n.submodels) n.submodels = [];
-			
+						
 			n.ports = [];
 			n.links = [];
 			
@@ -115,25 +113,28 @@ export default class Standardized extends Parser {
 			
 			else if (this.structure.info.type == "Cell-DEVS") {
 				var c = [+v[0],+v[1],+v[2]];
-				var p = this.structure.ports[0];
+				// var p = this.structure.ports[0];
 				var m = this.structure.models[0];
 				var d = this.TemplateData(m.template, v.slice(3));
 				
-				// parsed.push({ time:t, coord:c, model:p.model, port:p.name, value:v.slice(1).join(",").trim() });
-				parsed.push({ time:t, coord:c, model:p.model, port:p.name, value:d });
+				// StateChangeMessages
+				parsed.push({ time:t, cell:c, value:d });
+				// parsed.push({ time:t, coord:c, value:d });
 			}
 			else if (this.structure.info.type == "Irregular Cell-DEVS") {
 				var m = this.structure.models[v[0]];
 				var d = this.TemplateData(m.template, v.slice(1));
 				
-				// parsed.push({ time:t, model:m.name, port:null, value:v.slice(1).join(",").trim() });
-				parsed.push({ time:t, model:m.name, port:null, value:d });
+				// StateChangeMessages
+				// parsed.push({ time:t, model:m.name, port:null, value:d });
+				parsed.push({ time:t, model:m.name, value:d });
 			}
 			else if (this.structure.info.type != "Cell-DEVS") {
 				var p = this.structure.ports[v[0]];
 				var d = this.TemplateData(p.template, v.slice(1));
 				
-				// parsed.push({ time:t, model:p.model, port:p.name, value:v.slice(1).join(",").trim() });
+				// OutputMessages
+				// parsed.push({ time:t, model:p.model, port:p.name, value:d });
 				parsed.push({ time:t, model:p.model, port:p.name, value:d });
 			}
 		}

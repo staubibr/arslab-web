@@ -4,8 +4,10 @@ import State from "./state.js";
 
 export default class StateCA extends State { 
 
-	constructor(size, models) {
-		super(size, models);
+	constructor(models, size) {
+		super(models);
+		
+		this.size = size;
 	}
 	
 	Clone() {
@@ -19,18 +21,18 @@ export default class StateCA extends State {
 		return clone;
 	}
 	
-	GetValue(coord) {
-		return this.data[coord[0]][coord[1]][coord[2]];
+	GetValue(emitter) {
+		return this.data[emitter[0]][emitter[1]][emitter[2]];
 	}
 
-	ApplyTransition(t) {		
-		for (var f in t.Value) this.data[t.X][t.Y][t.Z][f] = t.Value[f];
+	ApplyMessage(m) {		
+		for (var f in m.Value) this.data[m.X][m.Y][m.Z][f] = m.Value[f];
 	}
 		
 	Reset() {
 		this.data = [];
 		
-		// TODO : Is this always 1?? Is there always only one model in Cell-DEVS?
+		// TODO : Is this always 0?? Is there always only one model in Cell-DEVS?
 		var m = this.models[0];
 		
 		for (var x = 0; x < this.size[0]; x++) {
@@ -42,7 +44,7 @@ export default class StateCA extends State {
 				for (var z = 0; z < this.size[2]; z++) {
 					var d = {};
 					
-					m.template.forEach(f => d[f] = 0);
+					m.Template.forEach(f => d[f] = 0);
 					
 					this.data[x][y][z] = d;
 				}

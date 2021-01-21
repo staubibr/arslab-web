@@ -1,8 +1,7 @@
 'use strict';
 
 import Simulation from './simulation.js';
-import FrameCA from './frameCA.js';
-import TransitionCA from './transitionCA.js';
+import MessageCA from './messageCA.js';
 import StateCA from './stateCA.js';
 import Model from './model.js';
 
@@ -10,13 +9,9 @@ export default class SimulationCA extends Simulation {
 	
 	get Size() { return this.size; }
 	
-	get Dimensions() { 
-		return { x:this.size[0], y:this.size[1], z:this.size[2] } 
-	}
+	get Dimensions() {  return { x:this.size[0], y:this.size[1], z:this.size[2] }}
 	
-	get Ratio() { 
-		return this.Dimensions.x / this.Dimensions.y;
-	}
+	get Ratio() { return this.Dimensions.x / this.Dimensions.y; }
 	
 	get MaxX() { return this.size[0] }
 	
@@ -29,36 +24,18 @@ export default class SimulationCA extends Simulation {
 		
 		this.size = size || null;
 		
-		this.state = new StateCA(size, this.Models);
-	}
-	
-	AddTransition(time, transition) {		
-		var f = this.Index(time) || this.AddFrame(new FrameCA(time));	
-		
-		f.AddTransition(transition);
+		this.state = new StateCA(this.Models, size);
 	}
 	
 	get Ports() {
 		// TODO : Is this always 0?? Is there always only one model in Cell-DEVS?
-		return this.models[0].ports.map(p => p.name);
+		return this.Models[0].Ports.map(p => p.Name);
 	}
 	
 	get Layers() {
 		var layers = [];
 		
-		for (var i = 0; i < this.Dimensions.z; i++) layers.push(i);
-		
-		return layers;
-	}
-	
-	LayersAndPorts() {
-		var layers = [];
-			
-		this.Layers.forEach(z => {
-			this.Ports.forEach(port => {
-				layers.push({ z:z, ports:[port] });
-			}); 
-		})
+		for (var i = 0; i < this.MaxZ; i++) layers.push(i);
 		
 		return layers;
 	}
@@ -67,16 +44,16 @@ export default class SimulationCA extends Simulation {
 		var info = json.info;
 		var models = json.models.map(m => Model.FromJson(m));
 		
-		// TODO : This is awkward, do Cell-DEVS models always have a single cell space?
+		// TODO : This is awkward, do Cell-DEVS models always have a single model?
 		var size = json.models[0].size;
 		var simulation = new SimulationCA(info.name, info.simulator, info.type, models, size);
 		
-		// Add frames from flat transitions list			
-		for (var i = 0; i < messages.length; i++) {
-			var m = messages[i];			
-			var transition = new TransitionCA(m.model, m.coord, m.port, m.value);
+		// Add frames from flat messages list			
+		for (var i = 0; i < messages.length; i++) {			
+			var m = messages[i];
+			var message = new MessageCA(m.cell, m.value);
 						
-			simulation.AddTransition(m.time, transition);
+			simulation.AddStateMessage(m.time, message);
 		}
 		
 		return simulation;

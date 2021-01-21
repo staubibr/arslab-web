@@ -81,7 +81,7 @@ export default Core.Templatable("Widget.MultiView", class MultiView extends Temp
 				clickEnabled:false,
 				columns:this.settings.Get("grid", "columns"), 
 				spacing:this.settings.Get("grid", "spacing"), 
-				layers:this.settings.Get("grid", "layers") || simulation.LayersAndPorts(), 
+				layers:this.settings.Get("grid", "layers") || this.LayersAndPorts(this.simulation), 
 				styler:this.settings.styler
 			}
 			
@@ -91,6 +91,18 @@ export default Core.Templatable("Widget.MultiView", class MultiView extends Temp
 			this.Elem("viz").style.width = null;
 			this.Elem("viz").style.height = null;
 		}
+	}
+	
+	LayersAndPorts(simulation) {
+		var layers = [];
+			
+		simulation.Layers.forEach(z => {
+			simulation.Ports.forEach(port => {
+				layers.push({ z:z, ports:[port] });
+			}); 
+		})
+		
+		return layers;
 	}
 	
 	OnSettings_Change(ev) {

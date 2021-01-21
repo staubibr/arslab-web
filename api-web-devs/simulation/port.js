@@ -8,6 +8,14 @@ export default class Port {
 	get Type() { return this.type; }
 	
 	get SVG() { return this.svg; }
+	
+	set SVG(value) { this.svg = value; }
+
+	get Model() { return this.model; }
+
+	set Model(value) { this.model = value; }
+
+	get Template() { return this.template; }
 
 	constructor(name, type, svg, template) {
 		this.name = name;
@@ -17,7 +25,9 @@ export default class Port {
 	}
     
 	Clone() {
-		return new Port(this.name, this.type, this.svg, this.template);
+		var svg = this.SVG.map(s => s);
+		
+		return new Port(this.Name, this.Type, svg, this.Template);
 	}
 	
 	static FromJson(json) {

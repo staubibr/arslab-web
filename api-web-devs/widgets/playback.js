@@ -45,7 +45,7 @@ export default Core.Templatable("Widget.Playback", class Playback extends Templa
 		
 		this.simulation.On("Session", this.onSimulationSession_Handler.bind(this));
 		
-		this.values = this.simulation.frames.map((f) => { return f.time; });
+		this.values = this.simulation.Frames.map((f) => { return f.time; });
 		
 		this.min = 0;
 		this.max = this.values.length - 1;

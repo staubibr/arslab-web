@@ -1,53 +1,54 @@
 'use strict';
 
-export default class FrameCA { 
+export default class Frame { 
 
-	get Transitions() { return this.transitions; }
+	get Messages() { return this.messages; }
+
+	get OutputMessages() { return this.Messages.output; }
+
+	get StateMessages() { return this.Messages.state; }
 	
 	get Time() { return this.time; }
 	
 	constructor(time) {
 		this.time = time;
-		this.transitions = [];
-	}
-	
-	AddTransition(t) {
-		this.transitions.push(t);
 		
-		return t;
+		this.messages = {
+			output : [],
+			state : []
+		}
 	}
 	
-	MakeFrame(time) {
-		throw new Error("function MakeFrame must be defined in child class.");
+	AddMessage(m, type) {
+		this.Messages[type].push(m);
 	}
 	
-	GetValue(state, t) {
-		throw new Error("function MakeFrame must be defined in child class.");
+	AddOutputMessage(m) {
+		return this.AddMessage(m, "output");
+	}
+	
+	AddStateMessage(m) {
+		return this.AddMessage(m, "state");
 	}
 	
 	Reverse () {
-		var reverse = this.MakeFrame(this.time);
+		var reverse = new Frame(this.time);
 		
-		for (var i = 0; i < this.transitions.length; i++) {			
-			reverse.AddTransition(this.transitions[i].Reverse());
+		for (var i = 0; i < this.StateMessages.length; i++) {
+			var m = this.StateMessages[i];
+			
+			reverse.AddStateMessage(m.Reverse());
 		}
 		
 		return reverse;
 	}
 	
 	Difference(state) {
-		for (var i = 0; i < this.transitions.length; i++) {
-			var t = this.transitions[i];
+		for (var i = 0; i < this.StateMessages.length; i++) {
+			var m = this.StateMessages[i];			
+			var v = state.GetValue(m.Emitter);
 			
-			var v = this.GetValue(state, t);
-			
-			if (v === undefined) continue;
-			
-			t.diff = {};
-			
-			for (var f in t.value) t.diff[f] = t.value[f] - v[f];
-						
-			state.ApplyTransition(t);
+			m.Difference(v);
 		}
 	}
 }
