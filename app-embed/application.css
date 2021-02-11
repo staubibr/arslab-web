@@ -1,0 +1,242 @@
+@import url(https://fonts.googleapis.com/css?family=Varela+Round);
+
+html, body, main, .GIS .view, .map, .map-container {
+	width: 100%;
+	height: 100%;    
+	padding: 0;
+    margin: 0;
+}
+
+html, body, select, .popup {
+	font-family: 'Varela Round', sans-serif;
+    font-size: 11pt;
+}
+
+button {
+	background-color: rgba(0,60,136,.5);
+}
+
+button:hover {
+	background-color: rgba(0,60,136,.7);
+}
+
+.playback, .custom-control {
+    background: rgba(255,255,255,.8);
+    border-radius: 4px;
+}
+
+.playback {
+	position: absolute;
+    left: 50%;
+    transform: translate(-50%,0);
+    padding: 2px;
+}
+
+.GIS .playback {
+    bottom: 8px;
+}
+
+.playback button {
+	height: 30px;
+    width: 30px;
+    color: #eee;
+    font-size: 15px;
+    border: none;
+    border-bottom: solid 2px #0051A3;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.playback button:disabled {
+	background-color:lightgray;
+    border-bottom: solid 2px darkgray;
+}
+
+.playback .controls button:not(:last-child) {
+    border-right-color: #eee;
+}
+
+/* TODO: THIS IS A LOT OF CSS FOR ONE WIDGET, SOME NEEDS TO MOVE TO API-WEB-DEVS */
+.loader {
+    position: absolute;
+    width: 60%;
+    height: 60%;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.loader > *,
+.loader .box,
+.loader .box-inner {
+	/*height : 100%;*/
+}
+
+.loader .box-inner {
+	height: 400px;
+}
+
+.loader .box i, 
+.loader .box label {
+    color: #0051A3;
+    font-weight: bold;
+}
+
+.loader .box .files-container .file:hover,
+.loader .box .box-inner:hover {
+	background: #eff7ff;
+}
+
+.loader .box .box-inner:hover {
+  border-color: #0051a3;
+  transition: all .2s ease;
+}
+
+.loader .box .box-inner {
+    background: #fff;
+	border-color: #198CFF;
+}
+
+.loader .box .box-inner label {
+	text-align: center;
+}
+
+.loader button{
+    height: 30px;
+    width: 30px;
+    color: #eee;
+    font-size: 15px;
+    border: none;
+    border-bottom: solid 2px #0051A3;
+    border-radius: 4px;
+	background-color: #198CFF;
+    cursor: pointer;
+}
+
+.loader button:disabled {
+    cursor: not-allowed;
+	background-color: #cacaca;
+    color: #7e7e7e;
+    border-color: #7e7e7e;
+}
+
+.loader button.clear {
+    border-bottom: solid 2px #980000;
+	background:#fd6e6e;
+    width: 29%;
+}
+
+.loader button.clear:hover {
+	background:#980000;
+}
+
+.loader button.parse {
+    width: 69%;
+	margin-top : 10px;
+	margin-left : 2%;
+}
+
+.view-container {
+    text-align: center;
+}
+
+.view {
+    display: inline-block;
+}
+
+/* GIS-DEVS stuff */
+
+.ol-control {
+	background-color: rgba(255,255,255,.7);
+}
+
+.ol-control:hover {
+	background-color: rgba(255,255,255,.9);
+}
+
+.ol-control.ol-layerswitcher:not(.ol-collapsed), 
+.ol-control.ol-layerswitcher:not(.ol-collapsed):hover{
+	background-color: rgba(255,255,255,0.85);
+}
+
+.ol-control.ol-layerswitcher .panel {
+	background-color:transparent;
+}
+
+.ol-scale-line {
+	background-color: rgba(0,60,136,.5);
+}
+
+.ol-viewport, .ol-control button {
+	cursor: pointer;
+}
+
+.ol-popup .ol-popup-content ul {
+    padding: 0;
+    margin: 4px;
+}
+
+.ol-layerswitcher>button {
+	background-color: rgba(0,60,136,.5);
+	font-size: 1.14em;
+}
+
+.ol-layerswitcher .panel label,
+.ol-layerswitcher .panel input {
+	cursor: pointer;
+}
+
+.ol-layerswitcher .panel .ol-layer-group {
+	padding-top : 8px;
+}
+
+.ol-layerswitcher .panel .layerup,
+.ol-layerswitcher .panel .ol-layer-group .layerswitcher-opacity,
+.ol-layerswitcher .panel .ol-layer-tile .layerswitcher-opacity {
+	display:none;
+}
+
+.variable-select-container {
+    position: absolute;
+    left: 3em;
+    top: .5em;
+}
+
+.variable-select-container > * {
+	margin: 4px;
+}
+
+.variable-select-container select {
+	cursor:pointer;
+}
+
+.ol-control.ol-full-screen {
+	left: .5em;
+    top: 4.5em;
+	right: unset;
+	bottom: unset;
+	
+}
+
+.ol-control.ol-layerswitcher {
+    left: .5em;
+    bottom: 2.5em;
+    top: unset;
+    right: unset;
+}
+
+.ol-control.ol-legend {
+	bottom: unset;
+    left: unset;
+    top: .5em;
+    right: .5em;
+}
+
+.ol-control.ol-legend ul {
+	display: block;
+}
+
+
+.ol-control.ol-legend .ol-legendImg {
+	pointer-events:none;	
+}

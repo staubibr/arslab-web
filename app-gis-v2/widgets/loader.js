@@ -2,11 +2,9 @@
 
 import Core from '../../api-web-devs/tools/core.js';
 import Dom from '../../api-web-devs/tools/dom.js';
-import oSettings from '../../api-web-devs/components/settings.js';
 import Templated from '../../api-web-devs/components/templated.js';
 import ChunkReader from '../../api-web-devs/components/chunkReader.js';
 import BoxInput from '../../api-web-devs/ui/box-input-files.js';
-import Standardized from '../../api-web-devs/parsers/standardized.js';
 import SimulationIRR from '../../api-web-devs/simulation/simulationIRR.js';
 
 export default Core.Templatable("Widget.Loader", class Loader extends Templated { 

@@ -1,7 +1,5 @@
 'use strict';
 
-import Evented from '../components/evented.js';
-
 export default class Link { 
 	get PortA() { return this.portA; }
 	

@@ -1,6 +1,5 @@
 'use strict';
 
-import Evented from '../components/evented.js';
 import Port from './port.js';
 import Link from './link.js';
 

@@ -236,11 +236,7 @@ main .dropzone-container {
 	display:none;
 }
 
-main .viz-container,
-main .diagram-widget-container,
-main .grid-widget-container {
-	width : 100%;
-	height : 100%;
+main .view {
 	display:inline-block;
 }
 

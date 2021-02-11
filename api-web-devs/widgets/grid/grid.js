@@ -3,6 +3,7 @@
 import Core from '../../tools/core.js';
 import Dom from '../../tools/dom.js';
 import Templated from '../../components/templated.js';
+import Styler from '../../components/styler.js';
 
 const STROKE_WIDTH = 2;
 const DEFAULT_COLOR = "#fff";
@@ -33,7 +34,11 @@ export default Core.Templatable("Widgets.Grid", class Grid extends Templated {
 		});
 	}
 	
-	set Styler(value) { this.styler = value; }
+	set Styles(value) { 
+		this.styler = Styler.FromJson(value);
+	}
+	
+	get Styler() { return this.styler; }
 
 	constructor(node) {
 		super(node);

@@ -4,13 +4,15 @@ import Core from '../tools/core.js';
 import Dom from '../tools/dom.js';
 import Evented from '../components/evented.js';
 
-export default class Automator { 
+export default class Automator extends Evented { 
 	
 	get Simulation() { return this.simulation; }
 	
 	get Widget() { return this.widget; }
 
-	constructor(widget, simulation) {		
+	constructor(widget, simulation) {
+		super();
+		
 		this.simulation = simulation;
 		this.widget = widget;
 		this.handles = [];

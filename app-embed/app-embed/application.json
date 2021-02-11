@@ -1,0 +1,4 @@
+{
+	"parsing" : "http://localhost:8080/parser/auto",
+	"root" : "http://localhost/Dev/arslab-logs/devs-logs"
+}

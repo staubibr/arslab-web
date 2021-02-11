@@ -52,6 +52,10 @@ export default class ChunkReader extends Evented {
 		return d.promise;
 	}
 	
+	ReadAsJson(file) {
+		return this.Read(file, (json) => JSON.parse(json));
+	}
+	
 	ReadByChunk(file, split, delegate) {
 		var position = 0;
 		var d = Core.Defer();
@@ -88,5 +92,17 @@ export default class ChunkReader extends Evented {
 		ReadChunk(CHUNK_SIZE);
 		
 		return d.promise;
+	}
+	
+	static Read(file, delegate) {
+		var reader = new ChunkReader();
+	
+		return reader.Read(file, delegate);
+	}
+	
+	static ReadByChunk(file, split, delegate) {
+		var reader = new ChunkReader();
+	
+		return reader.ReadByChunk(file, split, delegate);
 	}
 }

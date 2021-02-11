@@ -4,25 +4,29 @@ import Core from '../../tools/core.js';
 import Dom from '../../tools/dom.js';
 import Tooltip from '../../ui/tooltip.js';
 import Automator from '../../components/automator.js';
+import Styler from '../../components/styler.js';
+import Grid from '../grid/grid.js';
 
 export default Core.Templatable("Auto.Grid", class AutoGrid extends Automator { 
 
 	get Canvas() { return this.Widget.Canvas; }
 
-	constructor(grid, simulation, options) {
-		options = options || {};	// Default empty options if not provided
-
-		super(grid, simulation);
+	constructor(node, simulation, options) {
+		if (!options) throw new Error("No options provided for the Grid widget");
 		
-		this.AttachHandlers(options);
+		super(new Grid(node), simulation);
 		
-		this.BuildTooltip();
-		
+		this.options = options;
+				
 		this.Widget.Dimensions = this.simulation.Dimensions;
 		this.Widget.Columns = options.columns;
 		this.Widget.Spacing	= options.spacing;
 		this.Widget.Layers	= options.layers;
-		this.Widget.Styler	= options.styler;
+		this.Widget.Styles	= options.styles;
+		
+		this.AttachHandlers(options);
+		
+		this.BuildTooltip();
 	}
 	
 	AttachHandlers(options) {
@@ -35,7 +39,9 @@ export default Core.Templatable("Auto.Grid", class AutoGrid extends Automator {
 		h.push(this.Simulation.On("Move", this.onSimulationMove_Handler.bind(this)));
 		h.push(this.Simulation.On("Jump", this.onSimulationJump_Handler.bind(this)));
 		
-		h.push(options.styler.On("Change", this.onSimulationPaletteChanged_Handler.bind(this)));
+		h.push(this.Widget.Styler.On("Change", this.onSimulationPaletteChanged_Handler.bind(this)));
+		
+		options.On("Change", this.OnSettings_Change.bind(this));
 		
 		this.Handle(h);
 	}
@@ -46,12 +52,32 @@ export default Core.Templatable("Auto.Grid", class AutoGrid extends Automator {
 		this.tooltip.nodes.label = Dom.Create("div", { className:"tooltip-label" }, this.tooltip.Elem("content"));
 	}
 	
+	Resize() {
+		var n = this.Widget.layers.length;
+		var size = this.options.CanvasSize(this.Simulation, n);
+			
+		this.Widget.container.style.width = size.width + "px";
+		this.Widget.container.style.height = size.height + "px";	
+	}
+	
 	Redraw() {
 		this.Widget.Resize();
 		
-		var s = this.Simulation;
+		this.Widget.DrawState(this.Simulation.state, this.Simulation);
+	}
+	
+	OnSettings_Change(ev) {			
+		var check = ["height", "width", "columns", "spacing", "aspect", "layers"];
+
+		if (check.indexOf(ev.property) == -1) return;
 		
-		this.Widget.DrawState(s.state, s);
+		this.Widget.Columns = this.options.columns;
+		this.Widget.Spacing = this.options.spacing;
+		this.Widget.Layers = this.options.layers;
+		this.Widget.Styles = this.options.styles;
+			
+		this.Resize();
+		this.Redraw();
 	}
 	
 	onSimulationMove_Handler(ev) {		

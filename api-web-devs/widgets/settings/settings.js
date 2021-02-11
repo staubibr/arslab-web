@@ -24,21 +24,6 @@ export default Core.Templatable("Widget.Settings", class Settings extends Popup 
 		this.Widget("layers").On("close", this.OnLayers_Close.bind(this));
 		this.Widget("layers").On("apply", this.OnLayers_Apply.bind(this));
 		
-		// Link UI to setting parameters. Each item requires two delegates, setting is used to update 
-		// the settings object from the ui, ui is used to update the ui from the settings object
-		this.ui = [
-			{ group:"diagram", property:"height", node:"diagramHeight", setting: el => +el.value, ui: (el,v) => { el.value = v; }},
-			{ group:"diagram", property:"width", node:"diagramWidth", setting: el => +el.value, ui: (el,v) => { el.value = v; } },
-			{ group:"diagram", property:"aspect", node:"diagramAspect", setting: el => el.checked, ui: (el,v) => { el.checked = v; } },
-			{ group:"grid", property:"columns", node:"gridColumns", setting: el => +el.value, ui: (el,v) => { el.value = v; } },
-			{ group:"grid", property:"height", node:"gridHeight", setting: el => +el.value, ui: (el,v) => { el.value = v; } },
-			{ group:"grid", property:"width", node:"gridWidth", setting: el => +el.value, ui: (el,v) => { el.value = v; } },
-			{ group:"grid", property:"spacing", node:"gridSpacing", setting: el => +el.value, ui: (el,v) => { el.value = v; } },
-			{ group:"grid", property:"showGrid", node:"gridShowGrid", setting: el => el.checked, ui: (el,v) => { el.checked = v; } },
-			{ group:"grid", property:"aspect", node:"gridAspect", setting: el => el.checked, ui: (el,v) => { el.checked = v; } },
-			{ group:"playback", property:"speed", node:"playbackSpeed", setting: el => +el.value, ui: (el,v) => { el.value = v; } },
-			{ group:"playback", property:"loop", node:"playbackLoop", setting: el => el.checked, ui: (el,v) => { el.checked = v; } }
-		]
 		
 		this.Node("btnLayers").On("click", this.onLayers_Click.bind(this));
 	}
@@ -51,30 +36,65 @@ export default Core.Templatable("Widget.Settings", class Settings extends Popup 
 		this.simulation = simulation;
 		this.settings = settings;
 		
+		// Link UI to setting parameters. Each item requires two delegates, setting is used to update 
+		// the settings object from the ui, ui is used to update the ui from the settings object
+		this.ui = [
+			{ group:"playback", property:"speed", node:"playbackSpeed", setting: el => +el.value, ui: (el,v) => { el.value = v; } },
+			{ group:"playback", property:"loop", node:"playbackLoop", setting: el => el.checked, ui: (el,v) => { el.checked = v; } }
+		]
+		
+		if (simulation.Type == "DEVS") this.InitializeDEVS(settings);
+		
+		else if (simulation.Type == "Cell-DEVS") this.InitializeCellDEVS(settings);
+		
+		else if (simulation.Type == "Irregular Cell-DEVS") this.InitializeGisDEVS(settings);
+		
 		// Hook up change event for each ui element, when ui element changes, update corresponding setting
 		this.ui.forEach(u => {
 			this.Node(u.node).On("change", ev => {
-				this.settings.Set(u.group, u.property, u.setting(ev.target));
+				this.settings[u.group].Set(u.property, u.setting(ev.target));
 			});
 		})
-		
-		this.Elem(this.ui[0].node).disabled = this.settings.Get("diagram", "aspect");
-		this.Elem(this.ui[4].node).disabled = this.settings.Get("grid", "aspect");
-		
-		this.Node(this.ui[2].node).On("change", (ev) => {
-			this.Elem(this.ui[0].node).disabled = this.settings.Get("diagram", "aspect");
-		});
-		
-		this.Node(this.ui[8].node).On("change", (ev) => {
-			this.Elem(this.ui[4].node).disabled = this.settings.Get("grid", "aspect");
-		});
 		
 		this.UpdateUI();
 	}
 	
+	InitializeDEVS(settings) {
+		this.ui.push({ group:"diagram", property:"height", node:"diagramHeight", setting: el => +el.value, ui: (el,v) => { el.value = v; }});
+		this.ui.push({ group:"diagram", property:"width", node:"diagramWidth", setting: el => +el.value, ui: (el,v) => { el.value = v; } });
+		this.ui.push({ group:"diagram", property:"aspect", node:"diagramAspect", setting: el => el.checked, ui: (el,v) => { el.checked = v; }});
+		
+		this.Elem(this.ui[2].node).disabled = this.settings.diagram.aspect;
+		
+		this.Node(this.ui[4].node).On("change", (ev) => {
+			this.Elem(this.ui[2].node).disabled = this.settings.diagram.aspect;
+		});
+	}
+	
+	InitializeCellDEVS() {
+		// Link UI to setting parameters. Each item requires two delegates, setting is used to update 
+		// the settings object from the ui, ui is used to update the ui from the settings object
+		this.ui.push({ group:"grid", property:"columns", node:"gridColumns", setting: el => +el.value, ui: (el,v) => { el.value = v; }});
+		this.ui.push({ group:"grid", property:"height", node:"gridHeight", setting: el => +el.value, ui: (el,v) => { el.value = v; }});
+		this.ui.push({ group:"grid", property:"width", node:"gridWidth", setting: el => +el.value, ui: (el,v) => { el.value = v; }});
+		this.ui.push({ group:"grid", property:"spacing", node:"gridSpacing", setting: el => +el.value, ui: (el,v) => { el.value = v; }});
+		this.ui.push({ group:"grid", property:"showGrid", node:"gridShowGrid", setting: el => el.checked, ui: (el,v) => { el.checked = v; }});
+		this.ui.push({ group:"grid", property:"aspect", node:"gridAspect", setting: el => el.checked, ui: (el,v) => { el.checked = v; }});
+		
+		this.Elem(this.ui[3].node).disabled = this.settings.grid.aspect;
+		
+		this.Node(this.ui[7].node).On("change", (ev) => {
+			this.Elem(this.ui[3].node).disabled = this.settings.grid.aspect;
+		});
+	}
+	
+	InitializeGisDEVS() {
+		
+	}
+	
 	UpdateUI() {
 		this.ui.forEach(u => {			
-			var value = this.settings.Get(u.group, u.property);
+			var value = this.settings[u.group][u.property];
 			
 			u.ui(this.Elem(u.node), value);
 		});
@@ -91,7 +111,7 @@ export default Core.Templatable("Widget.Settings", class Settings extends Popup 
 	OnLayers_Apply(ev) {
 		this.Settings.styler = Styler.FromJson(ev.styles);
 		
-		this.Settings.Set("grid", "layers", ev.layers);
+		this.Settings.grid.Set("layers", ev.layers);
 	}
 	
 	OnLayers_Close(ev) {		

@@ -89,6 +89,49 @@ export default class Core {
 		
 		return defer;
 	}
+	/**
+	* A convenience function to get a rejected deffered object for asynchronous 
+	* processing. Removes one level of nesting when working with promises
+	*
+	* Parameters :
+	*	message: String, contains the error message
+	* Return : Object, an object with a Resolve and Reject function
+	*
+	* { 
+	*	promise: the promise object associated to the asynchronous process, 
+	*	Resolve: a function to resolve the promise, 
+	*	Reject: a function to reject the promise 
+	* }
+	*/
+	static Rejected(message) {
+		var d = Core.Defer();
+		
+		d.Reject(new Error(message));
+		
+		return d.promise;
+	}
+	
+	/**
+	* A convenience function to get a resolved deffered object for asynchronous 
+	* processing. Removes one level of nesting when working with promises
+	*
+	* Parameters :
+	*	result: Object, contains the result data
+	* Return : Object, an object with a Resolve and Reject function
+	*
+	* { 
+	*	promise: the promise object associated to the asynchronous process, 
+	*	Resolve: a function to resolve the promise, 
+	*	Reject: a function to reject the promise 
+	* }
+	*/
+	static Resolved(result) {
+		var d = Core.Defer();
+		
+		d.Resolve(result);
+		
+		return d.promise;
+	}
 	
 	/**
 	* Get or set a templated class definition, this is required to nest Templated UI 
@@ -212,6 +255,17 @@ export default class Core {
 			for (var i = 0; i < selection.length; i++) selection[i].disabled = disabled;
 		});
 	}	
+	
+	/**
+	* Writes a line to the console
+	*
+	* Parameters :
+	*	sender : String, the origin of the message
+	*	message : String, message to log in the console
+	*/
+	static Log(sender, message) {
+		console.log(`%c [${sender}] ${message}`, 'color: #33A1DE');
+	}
 	
 	static RgbToHex(rgb) {
 		return "#" + ((1 << 24) + (rgb[0] << 16) + (rgb[1] << 8) + rgb[2]).toString(16).slice(1);

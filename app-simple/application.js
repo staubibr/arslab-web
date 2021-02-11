@@ -2,20 +2,17 @@
 
 import Header from './widgets/header.js';
 import Core from '../api-web-devs/tools/core.js';
-import Net from '../api-web-devs/tools/net.js';
 import Dom from '../api-web-devs/tools/dom.js';
 import Templated from '../api-web-devs/components/templated.js';
-import oSettings from '../api-web-devs/components/settings.js';
-import BoxInput from '../api-web-devs/ui/box-input-files.js';
+import Configuration from '../api-web-devs/components/configuration/configuration.js';
+import Styler from '../api-web-devs/components/styler.js';
 import Popup from '../api-web-devs/ui/popup.js';
 import Loader from '../api-web-devs/widgets/loader.js';
 import Playback from '../api-web-devs/widgets/playback.js';
 import Rise from '../api-web-devs/widgets/rise-loader.js';
 import Settings from '../api-web-devs/widgets/settings/settings.js';
-import Standardized from '../api-web-devs/parsers/standardized.js'
-import SimulationDEVS from '../api-web-devs/simulation/simulationDEVS.js'
-import SimulationCA from '../api-web-devs/simulation/simulationCA.js'
-import MultiView from '../api-web-devs/widgets/multiView.js'
+import DiagramAuto from '../api-web-devs/widgets/diagram/auto.js'
+import GridAuto from '../api-web-devs/widgets/grid/auto.js'
 import Recorder from '../api-web-devs/components/recorder.js';
 import Zip from '../api-web-devs/tools/zip.js';
 
@@ -48,25 +45,22 @@ export default class Main extends Templated {
 	
 	OnUpload_Ready(ev) {							
 		this.simulation = ev.simulation;
-		this.settings = ev.options;
 		this.files = ev.files;
+		
+		this.Configure(ev.configuration, ev.style);
 		
 		this.Elem("btnViz").disabled = false;
 		this.Elem("btnSettings").disabled = false;
 		this.Elem("btnDownload").disabled = false;
 		
-		this.simulation.Initialize(this.settings.Get("playback", "cache"));
+		this.simulation.Initialize(this.settings.playback.cache);
 		
-		this.ShowDropzone(false);	
+		this.ShowDropzone(false);
+		this.ShowView(this.Elem("view"));
 		
-		this.Widget("playback").Initialize(this.simulation, this.settings);
-		this.Widget('multi').Initialize(this.simulation, this.settings);	
+		this.Widget("playback").Recorder = new Recorder(this.view.Widget.Canvas);
+		this.Widget("playback").Initialize(this.simulation, this.settings.playback);
 		this.Widget('settings').Initialize(this.simulation, this.settings);	
-		
-		this.Widget("playback").Recorder = new Recorder(this.Widget("multi").Canvas);
-		
-		this.Widget("multi").Resize();
-		this.Widget("multi").Redraw();
 	}
 	
 	OnButtonRise_Click(ev) {
@@ -86,10 +80,14 @@ export default class Main extends Templated {
 		this.Widget("settings").Show();
 	}
 	
-	OnButtonDownload_Click(ev) {		
-		var files = [this.files.structure, this.files.messages, this.settings.ToFile()];
+	OnButtonDownload_Click(ev) {
+		var structure = this.files.find(f => f.name == "structure.json");
+		var messages = this.files.find(f => f.name == "messages.log");
+		var diagram = this.files.find(f => f.name == "diagram.svg");
 		
-		if (this.files.diagram) files.push(this.files.diagram);
+		var files = [structure, messages, this.settings.ToFile()];
+		
+		if (diagram) files.push(diagram);
 				
 		Zip.SaveZipStream(this.simulation.name, files);
 	}
@@ -97,18 +95,50 @@ export default class Main extends Templated {
 	OnFiles_Loaded(ev) {
 		this.HidePopup();
 
-		// TODO: This is kinda weird. Rise-Loader shouldn't rely on Loader to parse its files. 
-		// They could inherit the same class but implement a different UI.
-		this.Widget("upload").Parse(ev.files);
+		this.Widget("upload").Widget("dropzone").files = ev.files;
+		this.Widget("upload").Load();
 	}
 	
 	OnWidget_Error(ev) {
 		alert (ev.error);
 	}
 	
+	Configure(config, style) {
+		if (config) this.settings = Configuration.FromJson(config);
+		
+		else this.settings = Configuration.FromSimulation(this.simulation);
+		
+		if (this.simulation.Type == "Cell-DEVS" && style) this.settings.grid.styles = style;
+	}
+	
 	ShowDropzone(visible) {
 		Dom.ToggleCss(this.Elem("dropzone"), "hidden", !visible);
 		Dom.ToggleCss(this.Elem("views"), "hidden", visible);
+	}
+	
+	ShowView(container) {
+		this.Clear();
+		
+		if (this.simulation.Type == "DEVS") {			
+			this.view = new DiagramAuto(container, this.simulation, this.settings.diagram);
+		}
+		else if (this.simulation.Type === "Cell-DEVS") {
+			this.view = new GridAuto(container, this.simulation, this.settings.grid);
+		}
+		
+		if (!this.view) throw new Error("Unable to create a view widget from simulation object.");
+		
+		this.view.Resize();
+		this.view.Redraw();
+	}
+	
+	Clear() {
+		if (!this.view) return;		
+		
+		Dom.Empty(this.Elem("view"));
+		
+		this.view.Destroy();
+		this.view = null;
 	}
 	
 	ShowPopup(title, content, css) {
@@ -137,7 +167,7 @@ export default class Main extends Templated {
 							   "<div handle='upload' widget='Widget.Loader'></div>" +
 						   "</div>" +
 						   "<div handle='views' class='hidden'>" +
-							   "<div handle='multi' widget='Widget.MultiView'></div>" +
+							   "<div handle='view' class='view'></div>" +
 							   "<div handle='playback' widget='Widget.Playback'></div>" +
 						   "</div>" +
 						"</div>" +

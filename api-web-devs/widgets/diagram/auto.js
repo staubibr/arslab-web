@@ -4,13 +4,16 @@ import Core from '../../tools/core.js';
 import Dom from '../../tools/dom.js';
 import Tooltip from '../../ui/tooltip.js';
 import Automator from '../../components/automator.js';
+import Diagram from '../diagram/diagram.js';
 
 export default Core.Templatable("Auto.Diagram", class AutoDiagram extends Automator { 
 
-	constructor(diagram, simulation, options) {
-		options = options || {};	// Default empty options if not provided
+	constructor(node, simulation, options) {
+		if (!options) throw new Error("No options provided for the Diagram widget");
 		
-		super(diagram, simulation);
+		super(new Diagram(node), simulation);
+		
+		this.options = options;
 		
 		this.Widget.SetDiagram(this.Simulation);
 		
@@ -36,6 +39,8 @@ export default Core.Templatable("Auto.Diagram", class AutoDiagram extends Automa
 		h.push(this.Simulation.On("Jump", this.onSimulationChange_Handler.bind(this)));
 		h.push(this.Simulation.On("Selected", this.onSimulationChange_Handler.bind(this)));
 		
+		options.On("Change", this.OnSettings_Change.bind(this));
+		
 		this.Handle(h);
 	}
 	
@@ -43,8 +48,22 @@ export default Core.Templatable("Auto.Diagram", class AutoDiagram extends Automa
 		this.selected = this.Simulation.Selected;
 	}
 	
+	Resize() {
+		var size = this.options.DiagramSize(this.simulation);
+		
+		this.Widget.container.style.width = size.width + "px";
+		this.Widget.container.style.height = size.height + "px";	
+	}
+	
 	Redraw() {
 		this.Widget.Resize();
+	}
+	
+	OnSettings_Change(ev) {
+		if (["height", "width", "aspect"].indexOf(ev.property) == -1) return;
+
+		this.Resize();
+		this.Redraw();
 	}
 		
 	onSimulationChange_Handler(ev) {		

@@ -6,9 +6,9 @@ import Templated from '../components/templated.js';
 
 export default Core.Templatable("Widget.Playback", class Playback extends Templated { 
 
-	get IsLooping() { return this.settings.Get("playback", "loop"); } 
+	get IsLooping() { return this.settings.loop;; } 
 	
-	get Interval() { return 1000 / this.settings.Get("playback", "speed") }
+	get Interval() { return 1000 / this.settings.speed; }
 
 	set Recorder(value) {
 		this.recorder = value;

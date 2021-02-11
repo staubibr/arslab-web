@@ -1,0 +1,14 @@
+{
+	"label_variable_select" : {
+		"en": "Select a variable:",
+		"fr": "Choisissez une variable:"
+	},
+	"title_variable_select" : {
+		"en": "Select a simulation variable to display on the map",
+		"fr": "Choisissez une variable de simulation à afficher sur la carte"
+	},
+	"sorry_unavailable" : {
+		"en": "There's currently an issue with backwards playback for GIS-DEVS visualizations.",
+		"fr": "Il y a présentement un problème avec le parcours à l'envers pour les visualisations GIS-DEVS."
+	}
+}

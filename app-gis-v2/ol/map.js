@@ -39,7 +39,7 @@ export default class Map extends Evented {
 			this.Emit("click", { "features" : features, "coordinates" : ev.coordinate });
 		})
 		
-		this._ol.on("rendercomplete", (ev) => {
+		this._ol.once("rendercomplete", (ev) => {
 			this.Emit("rendercomplete", null);
 		});
 		

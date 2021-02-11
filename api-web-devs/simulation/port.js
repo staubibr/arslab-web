@@ -1,7 +1,5 @@
 'use strict';
 
-import Evented from '../components/evented.js';
-
 export default class Port { 
 	get Name() { return this.name; }
 	

@@ -10,15 +10,20 @@ export default class Net {
 	* Return : none
 	*
 	* TODO : This should return a promise object but (ie11)
+	* TODO : Convert to fetch
+	* TODO : Uniform error handling
 	*
 	*/
-	static Request(url, headers, responseType) {
+	
+	static Request(url, headers, responseType, optional) {
 		var d = Core.Defer();
 		
 		var xhttp = new XMLHttpRequest();
 		
 		xhttp.onreadystatechange = function() {
 			if (this.readyState != 4) return;
+		
+			if (this.status == 404 && !!optional) d.Resolve(null);
 		
 			if (this.status == 200) d.Resolve(this.response);
 			
@@ -38,21 +43,66 @@ export default class Net {
 		return d.promise;
 	}
 	
-	static JSON(url) {
+	static Fetch(url, options){
+		var d = Core.Defer();
+		var p = fetch(url, options);
+		
+		p.then((response) => {
+			if (response.status == 200) d.Resolve(response);
+			
+			else response.text().then((text) => fail(new Error(text)), fail);
+		}, fail);
+		
+		function fail(error) {
+			d.Reject(error);
+		}
+		
+		return d.promise;
+	}
+	
+	static FetchBlob(url, options) {
 		var d = Core.Defer();
 		
-		Net.Request(url).then(r => d.Resolve(JSON.parse(r)), d.Reject);
+		this.Fetch(url, options).then(response => {
+			response.blob().then(blob => d.Resolve(blob), error => d.Reject(error));
+		}, error => d.Reject(error));
+		
+		return d.promise;
+	}
+	
+	static FetchText(url, options) {
+		var d = Core.Defer();
+		
+		this.Fetch(url, options).then(response => {
+			response.text().then(text => d.Resolve(text), error => d.Reject(error));
+		}, error => d.Reject(error));
+		
+		return d.promise;
+	}
+	
+	static FetchJson(url, options) {
+		var d = Core.Defer();
+		
+		this.FetchText(url, options).then(text => d.Resolve(JSON.parse(text), error => d.Reject(error)));
+		
+		return d.promise;
+	}
+	
+	static JSON(url, optional) {
+		var d = Core.Defer();
+		
+		Net.Request(url, null, null, optional).then(r => d.Resolve(JSON.parse(r)), d.Reject);
 				
 		return d.promise;
 	}
 	
-	static File(url, name) {
+	static File(url, name, optional) {
 		var d = Core.Defer();
 		
-		Net.Request(url, null, 'blob').then(b => {			
-			d.Resolve(new File([b], name));
+		Net.Request(url, null, 'blob', optional).then(b => {			
+			d.Resolve(b ? new File([b], name) : null);
 		}, d.Reject);
-				
+		
 		return d.promise;
 	}
 	

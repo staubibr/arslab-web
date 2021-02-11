@@ -52,7 +52,7 @@ function onViz_Ready(config, files, viz) {
 	Core.Mixin(viz, config);
 	
 	// Load all geojson data layers contained in visualization.json
-	var defs = viz.layers.map(l => {
+	var defs = viz.gis.layers.map(l => {
 		if (l.file) {
 			var f = files.find((f) => f.name == l.file);
 		

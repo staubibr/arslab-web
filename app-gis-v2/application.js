@@ -5,12 +5,11 @@ import Dom from '../api-web-devs/tools/dom.js';
 import Net from '../api-web-devs/tools/net.js';
 import Templated from '../api-web-devs/components/templated.js';
 import Tooltip from '../api-web-devs/ui/tooltip.js';
-import oSettings from '../api-web-devs/components/settings.js';
-import Standardized from '../api-web-devs/parsers/standardized.js';
+import Configuration from '../api-web-devs/components/configuration/configuration.js';
 import SimulationDEVS from '../api-web-devs/simulation/simulationDEVS.js';
 import Playback from '../api-web-devs/widgets/playback.js';
 import Recorder from '../api-web-devs/components/recorder.js';
-import Parser from '../api-web-devs/parsers/standardized.js';
+import Parser from '../api-web-devs/components/parser.js';
 
 import Map from './ol/map.js';
 import Style from "./utils/style.js";
@@ -36,18 +35,26 @@ export default class Main extends Templated {
 		
 		var p2 = this.LoadMap();
 		
+		// Initialize simulation and simulation settings
+		this.settings = Configuration.FromJson(config);
+		
 		Promise.all([p1, p2]).then(this.onApplication_Ready.bind(this));
 	}
 			
 	onSimulation_Loaded(ev) {
-		// Initialize simulation and simulation settings
-		this.settings = new oSettings();
+		
+		var pb = this.config.playback;
+		
+		// overwrite default settings if required
+		if (pb) {
+			if (pb.speed) this.settings.gis.Set("speed", +pb.speed);
+			if (pb.loop) this.settings.gis.Set("loop", pb.loop);
+			if (pb.cache) this.settings.gis.Set("cache", +pb.cache);
+		}
+		
 		this.simulation = ev.simulation;
 		
-		this.settings.json.playback.speed = 10;
-		this.settings.json.playback.loop = true;
-		
-		var n = Math.ceil(this.simulation.Frames.length / 10);
+		var n = Math.ceil(this.simulation.Frames.length / this.settings.playback.cache);
 		
 		this.simulation.Initialize(n);
 	}
@@ -84,7 +91,7 @@ export default class Main extends Templated {
 	
 		this.map = new Map(this.Elem("map"), [Map.BasemapOSM(true), Map.BasemapSatellite()]);
 		
-		if (this.config.view) this.map.SetView(this.config.view.center, this.config.view.zoom);
+		if (this.config.gis.view) this.map.SetView(this.config.gis.view.center, this.config.gis.view.zoom);
 
 		else this.map.SetView([-75.7, 45.3], 10);
 
@@ -93,7 +100,7 @@ export default class Main extends Templated {
 		
 		// Add layers to the map according to the loaded geojson data
 		var layers = this.data.map((d, i) => {	
-			var config = this.config.layers[i];	
+			var config = this.config.gis.layers[i];	
 			
 			d.name = config.id;
 			
@@ -114,7 +121,7 @@ export default class Main extends Templated {
 			element: this.Elem("variable-select-container")
 		});
 		
-		this.config.simulation.forEach((s, i) => {
+		this.config.gis.simulation.forEach((s, i) => {
 			var option = Dom.Create("option", { "text":s.name, "value":i });
 			
 			this.Elem("variable-select").add(option);
@@ -144,14 +151,14 @@ export default class Main extends Templated {
 	PrepareSimulationVisualization() {
 		var stats = Style.Statistics(this.simulation);
 		
-		this.config.simulation.forEach(s => {
-			s.layer = this.config.layers.find(l => l.id == s.layer);
+		this.config.gis.simulation.forEach(s => {
+			s.layer = this.config.gis.layers.find(l => l.id == s.layer);
 			s.style = Style.FromJson(s.layer.type, s);
 
 			s.style.Bucketize(stats);
 		});
 		
-		return this.config.simulation;
+		return this.config.gis.simulation;
 	}
 
 	onVariableSelect_Change(ev){
@@ -209,7 +216,7 @@ export default class Main extends Templated {
 	HighlightSelected() {		
 		if (!this.selected) return;
 		
-		var json = this.config.styles.find(s => s.id == "highlight");
+		var json = this.config.gis.styles.find(s => s.id == "highlight");
 		var style = Style.GetStyle("polygon", json);
 		
 		this.selected.feature.setStyle(style);
