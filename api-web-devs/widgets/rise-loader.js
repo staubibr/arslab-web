@@ -119,32 +119,21 @@ export default Core.Templatable("Widget.RiseList", class RiseLoader extends Temp
     getRiseModel(model){
 		Dom.RemoveCss(this.Elem("wait"), "hidden");
 
-		var p1 = Net.Request(`${model.url}structure.json`, null, 'blob');
-		var p2 = Net.Request(`${model.url}messages.log`, null, 'blob');
+		var p1 = Net.File(`${model.url}structure.json`, 'structure.json');
+		var p2 = Net.File(`${model.url}messages.log`, 'messages.log');
+		var p3 = Net.File(`${model.url}style.json`, 'style.json', true);
+		var p4 = Net.File(`${model.url}diagram.svg`, 'diagram.svg', true);
+		var p5 = Net.File(`${model.url}visualization.json`, 'visualization.json', true);
 		
-		if (model.type == "Cell-DEVS") var p3 = Net.Request(`${model.url}style.json`, null, 'blob');
-		
-		if (model.type == "DEVS") var p3 = Net.Request(`${model.url}diagram.svg`, null, 'blob');
-
-		var defs = [p1, p2, p3];
-		
-		var success = function(responses) {	
+		var success = function(files) {			
 			Dom.AddCss(this.Elem("wait"), "hidden");	
 			
-			var options = responses[2];
-	
-			var files = [];
-			
-			files.push(new File([responses[0]], 'structure.json'));
-			files.push(new File([responses[1]], 'messages.log'));
-			if (model.type == "Cell-DEVS") files.push(new File([responses[2]], 'style.json'));
-			
-			if (model.type == "DEVS") files.push(new File([responses[2]], 'diagram.svg'));
+			files = files.filter(f => f != null);
 			
 			this.Emit("filesready", { files : files });
 		}.bind(this);
 
-		Promise.all(defs).then(success, this.onError_Handler.bind(this));
+		Promise.all([p1, p2, p3, p4, p5]).then(success, this.onError_Handler.bind(this));
     }
 
 	onError_Handler(error) {

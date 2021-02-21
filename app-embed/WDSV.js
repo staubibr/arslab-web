@@ -43,12 +43,12 @@ export default class Main extends Evented {
 		this.loader = new Loader(this.node);
 		
 		this.loader.On("ready", this.OnLoader_Ready.bind(this));
-		this.loader.On("error", this.OnWDSV_Failure.bind(this));
+		this.loader.On("error", this.OnLoader_Failure.bind(this));
 		
 		if (this.id != null) {
 			Core.config.files = [Core.config.files, this.id].join("/");
 			
-			Net.FetchJson(Core.config.files + "?v=0").then(files => this.LoadFiles(files));
+			Net.JSON(Core.config.files + "?v=0").then(files => this.LoadFiles(files));
 		}
 		
 		else if (this.path) {
@@ -88,13 +88,13 @@ export default class Main extends Evented {
 		this.Emit("Ready", { application:app });
 	}
 	
+	OnLoader_Failure(ev) {
+		this.OnWDSV_Failure(ev.error);
+	}
+	
 	OnWDSV_Failure(error) {
-		var message = "Unable to load application.";
+		console.error(error);
 		
-		if (response.type === "error") message = response.error.toString();
-		
-		this.Emit("Error", { error:new Error(message) });
-		
-		throw(new Error(message));
+		this.Emit("Error", { error:error });
 	}
 }

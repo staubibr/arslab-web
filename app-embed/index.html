@@ -34,7 +34,19 @@
 		<script src="../api-web-devs/references/StreamSaver/zip-stream.js"></script>
 		<script src="../api-web-devs/references/ol/ol.js" type="text/javascript" ></script>
 		<script src="../api-web-devs/references/ol/ol-ext.min.js" type="text/javascript"></script>
-		<script src="./main.js" type='module'></script>
+		<script type='module'>
+			import WDSV from 'http://206.12.94.204:8080/arslab-web/1.4/app-embed/WDSV.js';
+			import Net from '../api-web-devs/tools/net.js';
+
+			var params = { 
+				id : Net.GetUrlParameter("id"),
+				path: Net.GetUrlParameter("path")
+			}
+
+			var viewer = new WDSV(document.body, params);
+
+			viewer.On("Error", (ev) => alert(ev.error.toString()));
+		</script>
 	</head>
 	<body style="display:none;"></body>
 </html>

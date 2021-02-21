@@ -1,5 +1,6 @@
 {
 	"parsing" : "http://localhost:8080/parser/auto",
+	"base": "http://206.12.94.204:8080/arslab-web/1.4/app-embed",
 	"root" : "http://206.12.94.204:8080/arslab-logs/devs-logs/1.4",
 	"files" : "http://arslab-services.herokuapp.com/get/model/simulation"
 }

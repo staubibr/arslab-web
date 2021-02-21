@@ -10,98 +10,63 @@ export default class Net {
 	* Return : none
 	*
 	* TODO : This should return a promise object but (ie11)
-	* TODO : Convert to fetch
-	* TODO : Uniform error handling
 	*
 	*/
-	
-	static Request(url, headers, responseType, optional) {
-		var d = Core.Defer();
-		
-		var xhttp = new XMLHttpRequest();
-		
-		xhttp.onreadystatechange = function() {
-			if (this.readyState != 4) return;
-		
-			if (this.status == 404 && !!optional) d.Resolve(null);
-		
-			if (this.status == 200) d.Resolve(this.response);
-			
-			else d.Reject({ status:this.status, response:this.response });
-		};
-		
-		xhttp.open("GET", url, true);
-		
-		if (headers) {
-			for (var id in headers) xhttp.setRequestHeader(id, headers[id]);
-		}
-		
-		if (responseType) xhttp.responseType = responseType;   
-		
-		xhttp.send();
-		
-		return d.promise;
-	}
-	
-	static Fetch(url, options){
+	static Fetch(url, options, optional){
 		var d = Core.Defer();
 		var p = fetch(url, options);
 		
 		p.then((response) => {
 			if (response.status == 200) d.Resolve(response);
+		
+			else if (response.status == 404 && !!optional) d.Resolve(null);
 			
-			else response.text().then((text) => fail(new Error(text)), fail);
-		}, fail);
-		
-		function fail(error) {
-			d.Reject(error);
-		}
-		
+			else d.Reject(new Error(`Url ${url} returned ${response.status} ${response.statusText}`));
+		}, (error) => d.Reject(error));
+
 		return d.promise;
 	}
 	
-	static FetchBlob(url, options) {
+	static FetchBlob(url, options, optional) {
 		var d = Core.Defer();
 		
-		this.Fetch(url, options).then(response => {
-			response.blob().then(blob => d.Resolve(blob), error => d.Reject(error));
+		this.Fetch(url, options, optional).then(response => {
+			if (response == null) d.Resolve(null);
+			
+			else response.blob().then(blob => d.Resolve(blob), error => d.Reject(error));
 		}, error => d.Reject(error));
 		
 		return d.promise;
 	}
 	
-	static FetchText(url, options) {
+	static FetchText(url, options, optional) {
 		var d = Core.Defer();
 		
-		this.Fetch(url, options).then(response => {
-			response.text().then(text => d.Resolve(text), error => d.Reject(error));
+		this.Fetch(url, options, optional).then(response => {
+			if (response == null) d.Resolve(null);
+			
+			else response.text().then(text => d.Resolve(text), error => d.Reject(error));
 		}, error => d.Reject(error));
 		
 		return d.promise;
 	}
 	
-	static FetchJson(url, options) {
+	static JSON(url, options, optional) {
 		var d = Core.Defer();
 		
-		this.FetchText(url, options).then(text => d.Resolve(JSON.parse(text), error => d.Reject(error)));
+		Net.FetchText(url, options, optional).then(text => {
+			d.Resolve(text ? JSON.parse(text) : null);
+		}, error => d.Reject(error));
 		
 		return d.promise;
 	}
-	
-	static JSON(url, optional) {
-		var d = Core.Defer();
-		
-		Net.Request(url, null, null, optional).then(r => d.Resolve(JSON.parse(r)), d.Reject);
-				
-		return d.promise;
-	}
-	
+
 	static File(url, name, optional) {
 		var d = Core.Defer();
 		
-		Net.Request(url, null, 'blob', optional).then(b => {			
+		Net.FetchBlob(url, null, optional).then(b => {			
 			d.Resolve(b ? new File([b], name) : null);
-		}, d.Reject);
+		}, error => d.Reject(error));
 		
 		return d.promise;
 	}
