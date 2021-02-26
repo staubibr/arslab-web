@@ -19,7 +19,7 @@ export default class Net {
 		p.then((response) => {
 			if (response.status == 200) d.Resolve(response);
 		
-			else if (response.status == 404 && !!optional) d.Resolve(null);
+			else if (response.status > 399 && response.status < 500 && !!optional) d.Resolve(null);
 			
 			else d.Reject(new Error(`Url ${url} returned ${response.status} ${response.statusText}`));
 		}, (error) => d.Reject(error));
