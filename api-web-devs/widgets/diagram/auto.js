@@ -83,7 +83,7 @@ export default Core.Templatable("Auto.Diagram", class AutoDiagram extends Automa
 		
 		tY.forEach(t => {
 			var subs = [t.Emitter.Model.Name, t.Value.value, t.Emitter.Name];
-			var html = Core.Nls("Diagram_Tooltip_Y", subs);
+			var html = this.nls.Ressource("Diagram_Tooltip_Y", subs);
 			
 			Dom.Create("div", { className:"tooltip-label", innerHTML:html }, this.tooltip.Elem("content"));
 		});
@@ -109,5 +109,13 @@ export default Core.Templatable("Auto.Diagram", class AutoDiagram extends Automa
 
 	onMouseOut_Handler(ev) {
 		this.tooltip.Hide();
+	}
+	
+	static Nls() {
+		return {
+			"Diagram_Tooltip_Y" : {
+				"en" : "<b>{0}</b> emitted an output (<b>{1}</b>) through port <b>{2}</b>"		
+			}
+		}
 	}
 });

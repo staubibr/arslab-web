@@ -21,6 +21,7 @@ export default class Popup extends Templated {
 	constructor(container) {	
 		super(container || document.body);
 		
+		this.position = { initial:{}, current:{}, offset:{ x:0, y:0 } };
 		this.defer = null;
 		
 		this.onBody_KeyUp_Bound = this.onBody_KeyUp.bind(this);
@@ -33,6 +34,10 @@ export default class Popup extends Templated {
 		
 		this.Node("close").On("click", this.onBtnClose_Click.bind(this));
 		this.Node("blocker").On("click", this.onModal_Click.bind(this));
+		
+		this.container.addEventListener("mousedown", this.onPopup_MouseDown.bind(this));
+		this.container.addEventListener("mouseup", this.onPopup_MouseUp.bind(this));
+		this.container.addEventListener("mousemove", this.onPopup_MouseMove.bind(this));
 	}
 	
 	SetStyle(opacity, visibility) {
@@ -84,6 +89,39 @@ export default class Popup extends Templated {
 		this.Hide();
 	}
 	
+	onPopup_MouseDown(ev) {
+		this.position.initial.x = ev.clientX - this.position.offset.x;
+		this.position.initial.y = ev.clientY - this.position.offset.y;
+
+		if (ev.target === this.Elem("title")) this.position.active = true;
+	}
+	
+	onPopup_MouseUp(ev) {
+		this.position.initial.x = this.position.current.x;
+		this.position.initial.y = this.position.current.y;
+
+		this.position.active = false;
+	}
+	
+	onPopup_MouseMove(ev) {
+
+		if (!this.position.active) return;
+      
+		ev.preventDefault();
+
+		this.position.current.x = ev.clientX - this.position.initial.x;
+		this.position.current.y = ev.clientY - this.position.initial.y;
+
+		this.position.offset.x = this.position.current.x;
+		this.position.offset.y = this.position.current.y;
+
+		this.Move(this.position.current.x, this.position.current.y);
+	}
+	
+    Move(x, y) {
+		this.Elem("popup").style.transform = "translate3d(" + x + "px, " + y + "px, 0)";
+    }
+	
 	Template() {
 		return "<div handle='popup' class='popup'>" +
 				  "<div class='popup-header'>" +
@@ -93,5 +131,14 @@ export default class Popup extends Templated {
 				  "<div class='popup-body' handle='body'></div>" +
 				  "<div class='popup-footer' handle='footer'></div>" +
 			   "</div>";
+	}
+	
+	static Nls() {
+		return {
+			"Popup_Close": {
+				"en": "Close",
+				"fr": "Fermer"
+			}
+		}
 	}
 }

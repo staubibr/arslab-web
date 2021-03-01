@@ -45,12 +45,12 @@ export default Core.Templatable("Widgets.GIS", class GIS extends Templated {
 				
 				if (f) return ChunkReader.Read(f, (json) => JSON.parse(json));
 				
-				if (!Core.ConfigCheck("root")) { 
+				if (!Core.URLs.models) { 
 					throw new Error(`Required file for layer ${l.id} was not provided by the user. Unable to fall back on server-side load, Core root is not configured.`);
 				}
 				
 				Core.Log(`GIS`, `Unable to find file for layer ${l.id} in the files provided by user.`);
-				l.url = Core.config.root + "/" + l.file;
+				l.url = Core.URLs.models + "/" + l.file;
 			}
 			
 			Core.Log(`GIS`, `Loading layer ${l.id} from the server.`);
@@ -253,5 +253,18 @@ export default Core.Templatable("Widgets.GIS", class GIS extends Templated {
 					  "<select handle='variable-select' title=nls(title_variable_select)></select></div>" +
 				   "</div>" +
 			   "</div>";
+	}
+	
+	static Nls() {
+		return {
+			"label_variable_select" : {
+				"en": "Select a variable:",
+				"fr": "Choisissez une variable:"
+			},
+			"title_variable_select" : {
+				"en": "Select a simulation variable to display on the map",
+				"fr": "Choisissez une variable de simulation à afficher sur la carte"
+			}
+		}
 	}
 });

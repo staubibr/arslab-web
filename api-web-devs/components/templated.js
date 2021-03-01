@@ -4,6 +4,7 @@ import Core from '../tools/core.js';
 import Dom from '../tools/dom.js';
 import Evented from './evented.js';
 import Node from './node.js';
+import Nls from './nls.js';
 
 export default class Templated extends Evented { 
 
@@ -11,6 +12,8 @@ export default class Templated extends Evented {
 		super();
 		
 		this.options = options || { };
+
+		this.nls = this.constructor.Nls ? new Nls(this.constructor.Nls()) : null;
 		
 		this.BuildTemplate();
 		
@@ -35,8 +38,10 @@ export default class Templated extends Evented {
 		// Trailing whitespaces can cause issues when parsing the template, remove them
 		html = html.trim();
 		
+		var nls = this.nls;
+		
 		// Replace all nls strings in template. Nls string pattern in templates is nls(StringId)
-		html = this.Replace(html, /nls\((.*?)\)/, function(m) { return Core.Nls(m); });
+		html = this.Replace(html, /nls\((.*?)\)/, function(m) { return nls.Ressource(m); });
 		
 		this.template = Dom.Create("div", { innerHTML:html });
 	}

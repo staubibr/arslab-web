@@ -1,22 +1,23 @@
 'use strict';
 
-let _nls = null;
-let _locale = null;
+let _nls = {};
+let _locale = document.documentElement.lang || "en";
 let _templatables = {}
 
+let _urls = {
+	conversion : "http://206.12.94.204:8080/sim.services.1.4/parser/auto",
+	models : "http://206.12.94.204:8080/arslab-logs/devs-logs/1.4",
+	files : "http://arslab-services.herokuapp.com/get/model/simulation"
+}
+	
 export default class Core {
 	
 	/**
-	* Gets the nls ressources
+	* Gets the urls to different services used by API-WEB-DEVS
 	*
-	* Return : Object, an object containing the nls ressources
+	* Return : Object, an Object containing URLs
 	*/
-    static get nls() { return _nls; }
-	
-	/**
-	* Sets the nls ressources
-	*/
-    static set nls(value) { _nls = value; }
+    static get URLs() { return _urls; }
 	
 	/**
 	* Gets the locale String
@@ -30,29 +31,6 @@ export default class Core {
 	*/
     static set locale(value) { _locale = value; }
 	
-	/**
-	* Get a localized nls string ressource
-	*
-	* Parameters :
-	*	id : String, the id of the nls ressource to retrieve
-	*	subs : Array(String), an array of Strings to substitute in the localized nls string ressource
-	*	locale : String, the locale for the nls ressource
-	* Return : String, the localized nls string ressource
-	*/
-	static Nls(id, subs, locale) {
-		if (!this.nls) throw new Error("Nls content not set.");
-		
-		var itm = this.nls[id];
-
-		if (!itm) throw new Error("Nls String '" + id + "' undefined.");
-
-		var txt = itm[(locale) ? locale : this.locale];
-
-		if (txt === undefined || txt === null) throw new Error("String does not exist for requested language.");
-
-		return this.Format(txt, subs);
-	}
-		
 	/**
 	* A convenience function to get a deffered object for asynchronous processing. 
 	* Removes one level of nesting when working with promises
@@ -146,7 +124,9 @@ export default class Core {
 		if (definition) {
 			if (_templatables[id]) throw new Error(`Templatable ${id} is defined multiple times.`);
 			
-			else _templatables[id] = definition;
+			else {				
+				_templatables[id] = definition;
+			}
 		}
 		else if (!_templatables[id]) throw new Error(`Templatable ${id} is not defined.`);
 		
@@ -217,27 +197,6 @@ export default class Core {
 	}
 	
 	/**
-	* Formats a String using substitute strings
-	*
-	* Parameters :
-	*	str : String, the String to format
-	*	subs : Array(String), An array of Strings to substitute into the String
-	* Return : String, the formatted String
-	*/
-	static Format(str, subs) {
-		if (!subs || subs.length == 0) return str;
-		
-		var s = str;
-
-		for (var i = 0; i < subs.length; i++) {
-			var reg = new RegExp("\\{" + i + "\\}", "gm");
-			s = s.replace(reg, subs[i]);
-		}
-
-		return s;
-	}
-	
-	/**
 	* Disables or enables all focusable elements in an array of nodes
 	*
 	* Parameters :
@@ -285,9 +244,5 @@ export default class Core {
 		else window.addEventListener('load', (ev) => d.Resolve());
 		
 		return d.promise;
-	}
-	
-	static ConfigCheck(field) {
-		return Core.config[field] != undefined;
 	}
 }

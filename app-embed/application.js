@@ -11,11 +11,13 @@ import GisAuto from '../api-web-devs/widgets/gis/auto.js'
 import Playback from '../api-web-devs/widgets/playback.js';
 import Recorder from '../api-web-devs/components/recorder.js';
 
-export default class Main extends Templated { 
+export default Core.Templatable("Application", class Application extends Templated { 
 
 	constructor(node, simulation, config, style, files) {		
 		super(node);
 		
+		Dom.AddCss(document.body, "Embed");
+			
 		this.files = files;
 		this.simulation = simulation;
 		
@@ -58,7 +60,6 @@ export default class Main extends Templated {
 			var geojson = this.files.convert.filter(f => f.name.match(/.geojson/i));
 			var view = new GisAuto(container, this.simulation, this.settings.gis, geojson);
 
-			Dom.AddCss(document.body, "GIS");
 			Dom.Place(this.Elem("playback"), view.Widget.roots[0]);
 			
 			view.On("ready", ev => d.Resolve(view));
@@ -72,9 +73,9 @@ export default class Main extends Templated {
 	}						   
 						   
 	Template() {
-		return	"<main handle='main' class='view-container'>" +
+		return	"<main handle='main' class='awd view-container'>" +
 					"<div handle='view' class='view'></div>" +
 					"<div handle='playback' widget='Widget.Playback'></div>" +
 				"</main>";
 	}
-}
+});

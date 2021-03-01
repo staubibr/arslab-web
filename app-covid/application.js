@@ -47,7 +47,7 @@ export default class Main extends Templated {
 		Dom.Empty(this.Elem("logs"));
 		
 		logs.forEach((l, i) => {					
-			var label = Core.Nls("App_Log_Option", [l.transmission, l.death]);
+			var label = this.nls.Ressource("App_Log_Option", [l.transmission, l.death]);
 			
 			Dom.Create("option", { innerHTML:label, value:i }, this.Elem("logs"));
 		});
@@ -138,7 +138,7 @@ export default class Main extends Templated {
 		var dates = this.GetDates(this.simulation.Frames);
 		var date = this.simulation.FirstFrame().time;
 		
-		this.chart.Update(data, dates, "count", date, Core.Nls("Chart_Y_Label"), true);
+		this.chart.Update(data, dates, "count", date, this.nls.Ressource("Chart_Y_Label"), true);
 	}
 	
 	GetDates(frames) {
@@ -183,7 +183,7 @@ export default class Main extends Templated {
 	OnChart_MouseMove(ev) {	
 		this.tooltip.Empty();
 
-		var html = `<div class='tooltip-title'>${Core.Nls("Chart_Y_Label")}</div>`;
+		var html = `<div class='tooltip-title'>${this.nls.Ressource("Chart_Y_Label")}</div>`;
 		
 		ev.items.forEach((d, i) => {
 			html = html + "<div class='tooltip-line'>" + 

@@ -31,8 +31,8 @@ export default Core.Templatable("Widget.Settings.Layers", class Layers extends T
 		Dom.Empty(this.Elem("body"));
 		
 		this.simulation = simulation;
-		this.layers = settings.layers;
-		this.styler = settings.styler;
+		this.layers = settings.grid.layers;
+		this.styles = settings.grid.styles;
 		
 		this.layers.forEach((l) => { this.AddLayer(l.z, l.ports, l.style); });
 		
@@ -46,7 +46,7 @@ export default Core.Templatable("Widget.Settings.Layers", class Layers extends T
 		item.row = Dom.Create("tr", { className:"table-row" }, this.Elem("body"));		
 		item.z = this.AddZ(item.row, this.simulation.MaxZ, z);
 		item.ports = this.AddPorts(item.row, this.simulation.Ports, ports);
-		item.style = this.AddStyle(item.row, this.styler, style);
+		item.style = this.AddStyle(item.row, this.styles, style);
 		item.btnDelete = this.AddDeleteButton(item);
 		
 		this.items.push(item);
@@ -55,7 +55,7 @@ export default Core.Templatable("Widget.Settings.Layers", class Layers extends T
 	AddDeleteButton(item) {
 		var td = Dom.Create("td", { className:"grid-delete"}, item.row);
 		var btn = Dom.Create("button", { className:"table-button button-delete image-button" }, td);
-		var img = Dom.Create("img", { className:"image-icon", src:"./assets/delete.png", title:Core.Nls("Settings_Layers_Delete_Title") }, btn);
+		var img = Dom.Create("img", { className:"image-icon", src:"./assets/delete.png", title:this.nls.Ressource("Settings_Layers_Delete_Title") }, btn);
 		
 		btn.addEventListener('click', this.OnButtonDelete_Click.bind(this, item));
 		
@@ -65,19 +65,19 @@ export default Core.Templatable("Widget.Settings.Layers", class Layers extends T
 	AddStyleButton(item) {
 		var td = Dom.Create("td", { className:"grid-style"}, item.row);
 		var btn = Dom.Create("button", { className:"table-button button-style image-button" }, td);
-		var img = Dom.Create("img", { className:"image-icon", src:"./assets/color-wheel-flat.png", title:Core.Nls("Settings_Layers_Style_Title") }, btn);
+		var img = Dom.Create("img", { className:"image-icon", src:"./assets/color-wheel-flat.png", title:this.nls.Ressource("Settings_Layers_Style_Title") }, btn);
 		
 		btn.addEventListener('click', this.OnButtonStyle_Click.bind(this, item));
 		
 		return btn;
 	}
 	
-	AddStyle(tr, styler, selected) {
+	AddStyle(tr, styles, selected) {
 		var td = Dom.Create("td", { className:"grid-styles"}, tr);
 		
 		var select = new Select(td);
 
-		styler.scales.forEach((s, i) => select.Add(i, null, s));
+		styles.forEach((s, i) => select.Add(i, null, s));
 		
 		select.Select((item, i) => i == selected);
 		
@@ -109,7 +109,7 @@ export default Core.Templatable("Widget.Settings.Layers", class Layers extends T
 	}
 	
 	ShowStyle(style) {				
-		this.Widget("styles").Initialize(this.styler, style);
+		this.Widget("styles").Initialize(this.styles, style);
 	}
 	
 	OnButtonStyle_Click(item, ev) {
@@ -201,5 +201,37 @@ export default Core.Templatable("Widget.Settings.Layers", class Layers extends T
 					   "<i class='fas fa-check'></i>" + 
 				    "</button>" +
 				 "</div>";
+	}
+	
+	static Nls() {
+		return {
+			"Settings_Layers" : {
+				"en" : "Modify grids"
+			},
+			"Settings_Layers_Z" : {
+				"en" : "Z"
+			},
+			"Settings_Layers_Ports" : {
+				"en" : "Ports"
+			},
+			"Settings_Layers_Styles" : {
+				"en" : "Style"
+			},
+			"Settings_Layers_Add_Title" : {
+				"en" : "Add another grid to the visualization"
+			},
+			"Settings_Layers_Cancel" : {
+				"en" : "Close"
+			},
+			"Settings_Layers_Apply" : {
+				"en" : "Apply"
+			},
+			"Settings_Layers_Delete_Title" : {
+				"en" : "Remove grid no from visualization"
+			},
+			"Settings_Layers_Style_Title" : {
+				"en" : "Modify the style for grid"
+			}
+		}
 	}
 });

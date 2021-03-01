@@ -186,4 +186,13 @@ export default Core.Templatable("Basic.Components.Typeahead", class Typeahead ex
 			     "<ul handle='list' class='list'></ul>" +
 			   "</div>";
 	}
+	
+	static Nls() {
+		return {
+			"Typeahead_Title": {
+				"en": "A Filtered list of items will appear after 3 characters are entered.",
+				"fr": "Une liste filtrée d'objets apparaîtra lorsque 3 caractères auront été entrés."
+			}
+		}
+	}
 })

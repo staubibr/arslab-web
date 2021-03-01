@@ -105,7 +105,7 @@ export default Core.Templatable("Auto.Grid", class AutoGrid extends Automator {
 			var state = this.simulation.state.GetValue([ev.data.x, ev.data.y, ev.data.layer.z]);
 			var subs = [ev.data.x, ev.data.y, ev.data.layer.z, state[port], port];
 			
-			labels.push(Core.Nls("Grid_Tooltip_Title", subs));
+			labels.push(this.nls.Ressource("Grid_Tooltip_Title", subs));
 			
 			this.tooltip.Show(ev.x + 20, ev.y);
 		});
@@ -136,5 +136,13 @@ export default Core.Templatable("Auto.Grid", class AutoGrid extends Automator {
 		}
 		
 		this.Widget.DrawCellBorder(ev.data.x, ev.data.y, ev.data.k, color);
+	}
+	
+	static Nls() {
+		return {
+			"Grid_Tooltip_Title" : {
+				"en" : "The state of cell <b>({0}, {1}, {2})</b> on port <b>{4}</b> is <b>{3}</b>."		
+			}
+		}
 	}
 });

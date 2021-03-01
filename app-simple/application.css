@@ -1,79 +1,88 @@
 @import url(https://fonts.googleapis.com/css?family=Varela+Round);
 
-html, body, .popup {
+html, 
+body.Simple, 
+body.Simple .popup {
     font-family: sans-serif;
     font-size: 11pt;
 	background : #f9f9f9;
 }
 
-*:focus {
+body.Simple *:focus {
 	outline:none;
+}
+
+body.Simple main {
+    margin: 30px auto;
+	min-width: 600px;
+}
+
+@media (min-width: 768px) {
+	body.Simple main {
+		width: 750px;
+	}
+}
+
+@media (min-width: 992px) {
+	body.Simple main {
+		width: 970px;
+	}
+}
+
+@media (min-width: 1200px) {
+	body.Simple main {
+		width: 1170px;
+	}
+}
+
+body.Simple h1, 
+body.Simple h2, 
+body.Simple h3, 
+body.Simple table, 
+body.Simple input, 
+body.Simple select 
+body.Simple .popup .popup-title {
+	font-family: 'Varela Round', sans-serif;
+}
+
+body.Simple h1, 
+body.Simple h2 {
+	margin: 0px;
+}
+
+body.Simple h1 {
+    font-size: 1.5em;
+}
+
+body.Simple h2 {
+    font-size: 1.3em;
+}
+
+body.Simple h2 a {
+	color: #198CFF;
+}
+
+body.Simple h3 {
+    font-size: 1.2em;
 }
 
 .popup {
 	background-color: #fff;
 }
 
-main {
-    margin: 30px auto;
-	min-width: 600px;
-}
-
-@media (min-width: 768px) {
-	main {
-		width: 750px;
-	}
-}
-
-@media (min-width: 992px) {
-	main {
-		width: 970px;
-	}
-}
-
-@media (min-width: 1200px) {
-	main {
-		width: 1170px;
-	}
-}
-
-h1, h2, h3, table, input, select .popup .popup-title {
-	font-family: 'Varela Round', sans-serif;
-}
-
-h1, h2 {
-	margin: 0px;
-}
-
-h1 {
-    font-size: 1.5em;
-}
-
-h2 {
-    font-size: 1.3em;
-}
-
-h2 a {
-	color: #198CFF;
-}
-
-h3 {
-    font-size: 1.2em;
-}
-
 .popup button.close, 
 .popup .popup-title,
-.box i, 
-.box label, 
-a {
+.box-input-files i, 
+.box-input-files label, 
+body.Simple a {
     color: #0051A3;
 }
 
-a {
+body.Simple a {
     text-decoration: none;
 }
 
-button {
+body.Simple button {
     height: 30px;
     width: 30px;
 	background-color: #198CFF;
@@ -85,34 +94,46 @@ button {
 	cursor: pointer;
 }
 
-button:disabled {
+body.Simple button:disabled {
     cursor: not-allowed;
 	background-color: #cacaca;
     color: #7e7e7e;
     border-color: #7e7e7e;
 }
 
-.box .box-inner:hover {
-  background: #eff7ff;
-  border-color: #0051a3;
-  transition: all .2s ease;
-}
-
-.box .files-container .file:hover {
-  background: #eff7ff;
-}
-
-button:not(:disabled):hover {
+body.Simple button:not(:disabled):hover {
   background: #0051A3;
   transition: all .2s ease;
 }
 
-select, input[type=text], input[type=number] {
+body.Simple select, 
+body.Simple input[type=text], 
+body.Simple input[type=number] {
 	cursor: pointer;
     height: 30px;
     border-radius: 4px;
     border: solid thin silver;
     font-size: 11pt;
+}
+
+.box-input-files .box-inner:hover {
+  background: #eff7ff;
+  border-color: #0051a3;
+  transition: all .2s ease;
+}
+
+.box-input-files .files-container .file:hover {
+  background: #eff7ff;
+}
+
+.box-input-files .box-inner {
+    background: #fff;
+	border-color: #198CFF;
+}
+
+.box-input-files i, 
+.box-input-files label {
+    font-weight: bold;
 }
 
 .centered-row {
@@ -137,19 +158,19 @@ select, input[type=text], input[type=number] {
 }
 
 /* Style for body of application */
-.body {
+.body.Simple {
     text-align: center;
 	max-width: 1080px;
 	overflow-x : auto;
 }
 
-.body, .button-column {
+.body.Simple, .button-column {
 	vertical-align: top;
 	margin : 15px 5px;
 }
 
-.body .clear,
-.body .parse {
+.body.Simple .clear,
+.body.Simple .parse {
     display:inline-block;
 }
 
@@ -179,19 +200,6 @@ select, input[type=text], input[type=number] {
 	margin-bottom: 6px;
 }
 
-.box .box-inner {
-    background: #fff;
-	border-color: #198CFF;
-	/*width:30%;*/
-}/*
-.box .files-container {
-	width:70%;
-}*/
-
-.box i, .box label {
-    font-weight: bold;
-}
-
 .playback {
 	text-align:center; 
 	margin-top:10px;
@@ -206,19 +214,6 @@ select, input[type=text], input[type=number] {
 	outline: none;
 }
 
-.rise-loader ul li {
-    cursor: pointer;
-    font-size: 16px;
-}
-
-.rise-loader ul li:nth-child(even) {
-    background: #eeeeee;
-}
-  
-.rise-loader ul li:hover {
-    background: #ccc;
-}
-
 .popup.popup-converter {
     max-height: 460px;
 }
@@ -227,20 +222,16 @@ select, input[type=text], input[type=number] {
 	max-height : 350px;
 }
 
-main .dropzone-container {
+body.Simple main .dropzone-container {
 	width : 600px;
 }
 
-.viz-container:not(.DEVS) .diagram-widget-container,
-.viz-container:not(.Cell-DEVS) .grid-widget-container {
-	display:none;
-}
-
-main .view {
+body.Simple main .view {
 	display:inline-block;
 }
 
-.tooltip .legend, .tooltip .legend rect {
+.tooltip .legend, 
+.tooltip .legend rect {
 	width:12px;
 	height:2px;
 }

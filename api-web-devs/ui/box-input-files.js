@@ -19,7 +19,7 @@ export default Core.Templatable("Widget.Box-Input-Files", class Dropzone extends
 	}
 	
 	Template() {
-		return "<div class='box'>" +
+		return "<div class='box-input-files'>" +
 				   "<div class='box-inner'>" +
 					  "<label handle='label' class='top'>nls(Dropzone_Upload_Label)</label>" +
 					  "<i handle='icon' class='fas fa-file-upload'></i>" +
@@ -52,7 +52,7 @@ export default Core.Templatable("Widget.Box-Input-Files", class Dropzone extends
 		Dom.Empty(this.Elem("files"));
 				
 		for (var i = 0; i < files.length; i++) {
-			var options = { className:"file", title:Core.Nls("Dropzone_File_Title"), innerHTML:files[i].name };
+			var options = { className:"file", title:this.nls.Ressource("Dropzone_File_Title"), innerHTML:files[i].name };
 			var lbl = Dom.Create("label", options, this.Elem("files"));
 			
 			Dom.Create("span", { className:"fa fa-times-circle" }, lbl);
@@ -79,5 +79,18 @@ export default Core.Templatable("Widget.Box-Input-Files", class Dropzone extends
 		ev.target.value = null;
 
 		this.Emit("change", { files:this.files });
+	}
+	
+	static Nls() {
+		return {
+			"Dropzone_Upload_Label": {
+				"en": "DRAG AND DROP<BR> FILES HERE",
+				"fr": "GLISSER ET DÉPOSER<BR> LES FICHIERS ICI"
+			},
+			"Dropzone_File_Title" : {
+				"en" : "Click to remove file",
+				"fr" : "Cliquer pour retirer le fichier"
+			}
+		}
 	}
 });

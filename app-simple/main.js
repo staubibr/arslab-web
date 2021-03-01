@@ -3,24 +3,16 @@ import Net from "../api-web-devs/tools/net.js";
 
 import Application from "./application.js";
 
-var p1 = Net.JSON(`../api-web-devs/nls.json`);
-var p2 = Net.JSON(`./nls.json`);
-var p3 = Net.JSON(`./application.json`);
-var p4 = Core.WaitForDocument();
+Core.WaitForDocument().then(Start);
 
-Promise.all([p1, p2, p3, p4]).then(Start);
-
-function Start(responses) {	
+function Start() {	
 
 	var path = location.href.split("/").slice(0,-2).join("/");
 
 	streamSaver.mitm = path + "/api-web-devs/references/StreamSaver/mitm.html";
-
-	Core.locale = document.documentElement.lang || "en";
 	
-	Core.nls = Core.Mixin(responses[0], responses[1]);
-	
-	Core.config = responses[2];
+	// Core.URLs.conversion = "http://localhost:8080/parser/auto";
+	// Core.URLs.models = "http://localhost/Dev/arslab-logs/devs-logs/";
 	
 	var app = new Application(document.body);
 }

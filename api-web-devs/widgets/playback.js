@@ -215,4 +215,33 @@ export default Core.Templatable("Widget.Playback", class Playback extends Templa
 			      "<button handle='record' title='nls(Playback_Record)' class='fas fa-circle record hidden'></button>" +
 		       "</div>" ;
 	}
+
+	static Nls() {
+		return {
+			"Playback_FastBackward" : {
+				"en" : "Go to first frame"
+			},
+			"Playback_StepBack" : {
+				"en" : "Step back"
+			},
+			"Playback_Backwards" : {
+				"en" : "Play backwards"
+			},
+			"Playback_Play" : {
+				"en" : "Play forward"
+			},
+			"Playback_StepForward" : {
+				"en" : "Step forward"
+			},
+			"Playback_FastForward" : {
+				"en" : "Go to last frame"
+			},
+			"Playback_Seek" : {
+				"en" : "Slide to seek frame"
+			},
+			"Playback_Record" : {
+				"en" : "Record simulation to .webm"
+			}
+		}
+	}
 });

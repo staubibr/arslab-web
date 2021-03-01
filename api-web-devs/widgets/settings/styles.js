@@ -27,7 +27,7 @@ export default Core.Templatable("Widget.Settings.Styles", class Styles extends T
 	}
 	
 	BuildTooltip() {
-		this.tooltip = Dom.Create("div", { className:"picker-container hidden" }, document.body);
+		this.tooltip = Dom.Create("div", { className:"color-picker-container hidden" }, document.body);
 		
 		this.picker = new iro.ColorPicker(this.tooltip, {
 			width : 170,
@@ -50,9 +50,8 @@ export default Core.Templatable("Widget.Settings.Styles", class Styles extends T
 		});
 	}
 	
-	Initialize(styler, style) {
-		this.styler = styler;
-		this.styles = styler.ToJson(); 
+	Initialize(styles, style) {
+		this.styles = styles;
 		
 		this.LoadStylesDropdown(this.styles);		
 		this.ShowStyle(style);
@@ -125,7 +124,7 @@ export default Core.Templatable("Widget.Settings.Styles", class Styles extends T
 	AddDeleteButton(item) {
 		var td = Dom.Create("td", { className:"grid-delete"}, item.row);
 		var btn = Dom.Create("button", { className:"table-button button-delete image-button" }, td);
-		var img = Dom.Create("img", { className:"image-icon", src:"./assets/delete.png", title:Core.Nls("Settings_Class_Delete_Title") }, btn);
+		var img = Dom.Create("img", { className:"image-icon", src:"./assets/delete.png", title:this.nls.Ressource("Settings_Class_Delete_Title") }, btn);
 		
 		btn.addEventListener('click', this.OnButtonDelete_Click.bind(this, item));
 		
@@ -213,5 +212,34 @@ export default Core.Templatable("Widget.Settings.Styles", class Styles extends T
 						"</tfoot>" + 
 					"</table>" + 
 				 "</div>";
+	}
+	
+	static Nls() {
+		return {
+			"Settings_Styles" : {
+				"en" : "Modify style no."
+			},
+			"Settings_Layers_Add_Style_Title" : {
+				"en" : "Add a new style to the visualization"
+			},
+			"Settings_Layers_Del_Style_Title" : {
+				"en" : "Remove this style from the visualization"
+			},
+			"Settings_Style_Start" : {
+				"en" : "Start"
+			},
+			"Settings_Style_End" : {
+				"en" : "End"
+			},
+			"Settings_Style_Color" : {
+				"en" : "Color"
+			},
+			"Settings_Class_Add_Title" : {
+				"en" : "Add a color classification to the visualization"
+			},
+			"Settings_Class_Delete_Title" : {
+				"en" : "Remove color classification from visualization"
+			}			
+		}
 	}
 })

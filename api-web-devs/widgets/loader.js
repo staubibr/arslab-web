@@ -18,7 +18,7 @@ import SimulationCA from '../simulation/simulationCA.js';
 export default Core.Templatable("Widget.Loader", class Loader extends Templated { 
 	
 	static get URL() {
-		return Core.config.parsing;
+		return Core.URLs.conversion;
 	}
 	
 	set Files(value) {
@@ -42,7 +42,7 @@ export default Core.Templatable("Widget.Loader", class Loader extends Templated 
 	constructor(node) {		
 		super(node);
 		
-        if (!Core.ConfigCheck("parsing")) throw new Error("Config Error: parsing url not defined in application configuration.");
+        if (!Core.URLs.conversion) throw new Error("Config Error: conversion url not defined in application configuration.");
 						
 		this.Node("parse").On("click", this.onParseButton_Click.bind(this));
 		this.Node("clear").On("click", this.onClearButton_Click.bind(this));
@@ -171,5 +171,16 @@ export default Core.Templatable("Widget.Loader", class Loader extends Templated 
 					 "<button handle='parse' class='parse' disabled>nls(Loader_Parse)</button>" +
 			      "</div>" +
 			   "</div>";
+	}
+	
+	static Nls() {
+		return {
+			"Loader_Clear" : {
+				"en" : "Clear"
+			},
+			"Loader_Parse" : {
+				"en" : "Load simulation"
+			}
+		}
 	}
 });

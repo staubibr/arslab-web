@@ -104,7 +104,7 @@ export default Core.Templatable("Widget.Settings", class Settings extends Popup 
 		this.Widget("layers").Initialize(this.simulation, this.settings);
 		
 		this.Content = this.Widget("layers");
-		this.Title = Core.Nls("Settings_Layers");
+		this.Title = this.nls.Ressource("Settings_Layers");
 		this.SetCss(`popup popup-settings popup-layers`);
 	}
 	
@@ -119,7 +119,7 @@ export default Core.Templatable("Widget.Settings", class Settings extends Popup 
 		
 		this.original.forEach(c => Dom.Place(c, this.Elem("body")));
 		
-		this.Title = Core.Nls("Popup_Settings_Title");
+		this.Title = this.nls.Ressource("Popup_Settings_Title");
 		
 		this.SetCss(`popup popup-settings`);
 	}
@@ -213,5 +213,65 @@ export default Core.Templatable("Widget.Settings", class Settings extends Popup 
 				     "</div>" +
 				  "</div>" +
 			   "</div>";
+	}
+	
+	static Nls() {
+		return {
+			"Popup_Close": {
+				"en": "Close",
+				"fr": "Fermer"
+			},
+			"Popup_Settings_Title" : {
+				"en":"Settings"
+			},
+			"Settings_Grid_Options" : {
+				"en" : "Grid options"
+			},
+			"Settings_Grid_Width" : {
+				"en" : "Width:"
+			},
+			"Settings_Grid_Height" : {
+				"en" : "Height:"
+			},
+			"Settings_Grid_Aspect" : {
+				"en" : "Simulation aspect ratio:"
+			},
+			"Settings_Grid_Columns" : {
+				"en" : "Columns:"
+			},
+			"Settings_Grid_Spacing" : {
+				"en" : "Spacing:"
+			},
+			"Settings_Grid_ShowGrid" : {
+				"en" : "Show grid:"
+			},
+			"Settings_Layers" : {
+				"en" : "Modify grids"
+			},
+			"Settings_Diagram_Options" : {
+				"en" : "Diagram options"
+			},
+			"Settings_Diagram_Width" : {
+				"en" : "Width:"
+			},	
+			"Settings_Diagram_Height" : {
+				"en" : "Height:"
+			},
+			"Settings_Diagram_Aspect" : {
+				"en" : "Simulation aspect ratio:"
+			},
+			"Settings_Playback_Options" : {
+				"en" : "Playback options"
+			},	
+			"Settings_Playback_Speed" : {
+				"en" : "Playback speed:"
+			},
+			"Settings_Playback_Loop" : {
+				"en" : "Loop:"
+			},
+			"Settings_Playback_Cache" : {
+				"en" : "Cache step:"
+			}
+		}
 	}
 });

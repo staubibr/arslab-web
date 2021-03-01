@@ -19,4 +19,21 @@ export default Core.Templatable("Widget.Header", class Header extends Templated 
 				  "</div>" +
 			   "</div>";
 	}
+	
+	static Nls() {
+		return {
+			"Header_Lab": {
+				"en": "ARSLab"
+			},
+			"Header_App": {
+				"en": "DEVS Web Viewer"
+			},
+			"Header_Sample": {
+				"en": "&#9733; samples"
+			},
+			"Header_Problem": {
+				"en": "&#9749; report a problem"
+			}
+		}
+	}
 });

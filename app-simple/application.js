@@ -16,12 +16,14 @@ import GridAuto from '../api-web-devs/widgets/grid/auto.js'
 import Recorder from '../api-web-devs/components/recorder.js';
 import Zip from '../api-web-devs/tools/zip.js';
 
-export default class Main extends Templated { 
+export default Core.Templatable("Application", class Application extends Templated { 
 
 	get Settings() { return this.Widget("settings").Settings; }
 
 	constructor(node) {		
 		super(node);
+		
+		Dom.AddCss(document.body, "Simple");
 		
 		this.simulation = null;
 		this.files = null;
@@ -64,7 +66,7 @@ export default class Main extends Templated {
 	}
 	
 	OnButtonRise_Click(ev) {
-		this.ShowPopup(Core.Nls("Popup_Rise_Title"), this.Widget("rise"), 'rise-loader');
+		this.Widget("rise").Show();
 	}
 	
 	OnButtonLoader_Click(ev) {				
@@ -93,7 +95,7 @@ export default class Main extends Templated {
 	}
 		
 	OnFiles_Loaded(ev) {
-		this.HidePopup();
+		this.Widget("rise").Hide();
 
 		this.Widget("upload").Widget("dropzone").files = ev.files;
 		this.Widget("upload").Load();
@@ -140,20 +142,7 @@ export default class Main extends Templated {
 		this.view.Destroy();
 		this.view = null;
 	}
-	
-	ShowPopup(title, content, css) {
-		this.popup.Content = content;
-		this.popup.Title = title;
 		
-		this.popup.SetCss(`popup popup-${css}`);
-		
-		this.popup.Show();
-	}
-	
-	HidePopup() {
-		this.popup.Hide();
-	}
-	
 	Template() {
 		return	"<main handle='main' class='dropzone-visible'>" +
 					"<div handle='header' widget='Widget.Header'></div>" +
@@ -179,4 +168,28 @@ export default class Main extends Templated {
 					"</div>" +
 				"</main>";
 	}
-}
+	
+	static Nls() {
+		return {
+			"Popup_Rise_Title" : {
+				"en":"Load from RISE"
+			},
+			"Dropzone_Load" : {
+				"en":"Load simulation"
+			},
+			"Dropzone_Viz" : {
+				"en":"Visualize simulation"
+			},
+			"Dropzone_Rise" : {
+				"en":"Load from RISE"
+			},
+			"Playback_Settings" : {
+				"en" : "Modify simulation playback settings"
+			},
+			"Download_Files" : {
+				"en" : "Download normalized simulation files"
+			}
+		}
+		
+	}
+});

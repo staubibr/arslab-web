@@ -1,22 +1,29 @@
 @import url(https://fonts.googleapis.com/css?family=Varela+Round);
 
-html, body, main, .GIS .view, .map, .map-container {
+html, 
+body.Embed, 
+body.Embed main, 
+body.Embed .view, 
+body.Embed .map-container, 
+body.Embed .map {
 	width: 100%;
 	height: 100%;    
 	padding: 0;
     margin: 0;
 }
 
-html, body, select, .popup {
+body.Embed,
+body.Embed select, 
+body.Embed .popup {
 	font-family: 'Varela Round', sans-serif;
     font-size: 11pt;
 }
 
-button {
+body.Embed button {
 	background-color: rgba(0,60,136,.5);
 }
 
-button:hover {
+body.Embed button:hover {
 	background-color: rgba(0,60,136,.7);
 }
 
@@ -32,7 +39,7 @@ button:hover {
     padding: 2px;
 }
 
-.GIS .playback {
+.playback {
     bottom: 8px;
 }
 
@@ -145,7 +152,6 @@ button:hover {
 }
 
 /* GIS-DEVS stuff */
-
 .ol-control {
 	background-color: rgba(255,255,255,.7);
 }

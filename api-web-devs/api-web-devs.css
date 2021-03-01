@@ -1,257 +1,20 @@
-table {
-	border-collapse: collapse;
-}
-
-input[type=range]: disabled: : -webkit-slider-runnable-track {
-	cursor: not-allowed;
-}
-
-input[type=range]::-webkit-slider-runnable-track { 
-  cursor: pointer;
-}
-
-input[type=range]: disabled::-webkit-slider-thumb{
-    visibility: hidden;
-}
-
-table thead tr td:not(:last-child) {
-	border-top: solid thin #badcff;
-}
-
-table thead tr td:not(:last-child),
-table tbody tr:last-child td:not(:last-child) {
-	border-bottom: solid thin #badcff;
-}
-
-table td {
-	padding: 3px 4px;
-}
-
-table thead td {
-	font-weight: bold;
-}
-
-table thead tr td:not(:last-child),
-table tr:nth-child(even) td:not(:last-child) {
-	background: rgb(236, 246, 255);
-}
-
 .hidden {
 	display: none !important;
 }
 
-.box .box-inner {
-    position: relative;
-    border: 2.5px dashed silver;
-    box-sizing: border-box;
-	display:inline-block;
+/* Playback bar styling */
+.playback input[type=range]: disabled: : -webkit-slider-runnable-track {
+	cursor: not-allowed;
 }
 
-.box .box-inner input, .box .box-inner button {
-    width: 100%;
-    height: 100%;
-    opacity: 0;
-    cursor: pointer;
+.playback input[type=range]::-webkit-slider-runnable-track { 
+  cursor: pointer;
 }
 
-.box .box-inner i {
-    position: absolute;
-	font-size: 30px;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+.playback input[type=range]: disabled::-webkit-slider-thumb{
+    visibility: hidden;
 }
 
-.box .box-inner label {
-	position: absolute;
-    width: 100%;
-}
-
-.box > * {
-	width:100%;
-}
-
-.box .box-inner {
-	height:250px;
-}
-
-.box .files-container {
-    text-align: left;
-    overflow-y: auto;
-	max-height:100px;
-    margin-top: 10px;
-}
-
-/*
-.box > * {
-	vertical-align:middle;
-    height: 250px;
-}
-*/
-.box .box-inner label.top {
-    top: 60px;
-}
-
-.box .files-container > * {
-    width: initial;
-    display: inline-block;
-    position: relative;
-    z-index: 1000;
-}
-
-.box .files-container .file {
-    margin: 3px;
-    padding: 2px;
-    border-radius: 3px;
-    border: dashed thin black;
-    cursor: pointer;
-}
-
-.box .files-container .file span {
-    font-size: 14px;
-	margin-left: 4px;
-}
-
-.tooltip {
-	position: absolute;
-    border: solid thin silver;
-    border-radius: 4px;
-    pointer-events: none;
-    background: #fff;
-	opacity: 0;
-}
-
-.tooltip > * {
-    margin: 5px;
-}
-
-.tooltip .tooltip-title {
-	font-weight: bold;
-}
-
-.tooltip .tooltip-label {
-	margin: 5px;
-}
-
-.tooltip .tooltip-line > * {
-	display: inline-block;
-	vertical-align: middle;
-	margin-left: 3px;
-	margin-right: 3px;
-}
-
-.popup-blocker {
-	position: fixed;
-	top: 0px;
-	bottom: 0px;
-	right: 0px;
-	left: 0px;
-	z-index: 1000;
-    background: rgba(0, 0, 0, 0.6);
-}
-
-.popup {
-    position: absolute;
-    max-width: 300px;
-    max-height: 375px;
-    min-height: 175px;
-    margin: auto;
-    bottom: 0px;
-    top: 0px;
-    left: 0px;
-    right: 0px;
-	
-    background-color: #fff;
-    border-radius: 5px;
-    box-shadow: 0px 1px 8px #111;
-	z-index: 1500;
-}
-
-.popup .popup-body {
-	overflow-y: auto;
-    top: 25px;
-    bottom: 0px;
-    position: absolute;
-    left: 0px;
-    right: 0px;
-    margin: 10px 15px;
-}
-
-.popup .popup-header {
-    position: relative;
-}
-
-.popup .popup-header .popup-title {
-    margin: 10px;
-}
-
-.popup .popup-header .close {
-    position: absolute;
-    right: 5px;
-    top: -5px;
-    line-height: 28px;
-	font-size: 28px;
-    background: none;
-    box-shadow: none;
-}
-
-.typeahead ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-    background-color: white;
-
-    width: 100%;
-	
-    border-bottom-left-radius: 4px;
-    border-bottom-right-radius: 4px;
-	
-    position: absolute;
-    z-index: 5000;
-	
-    overflow-y: auto;
-    overflow-x: hidden;
-    max-height: 400px;
-}
-
-.typeahead.collapsed ul{
-	display: none;
-}
-
-.typeahead: not(.collapsed) ul,
-.typeahead .input { 
-    -moz-box-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
-    -webkit-box-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
-    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
-}
-
-.typeahead li {
-	padding: 3px 8px;
-	cursor: pointer;
-}
-
-.typeahead li:not(:first-child) {
-	border-top: solid thin rgba(0, 0, 0, 0.1);
-}
-
-.typeahead li: hover, .typeahead li.active {
-	background-color: rgba(70,137,194,1);
-	color: #fff;
-	font-weight: bold;
-}
-
-.typeahead.collapsed .input {
-    border-bottom-left-radius: 4px;
-    border-bottom-right-radius: 4px;
-}
-
-.typeahead .input {
-	border: none;
-	padding: 0px 8px;
-	
-    border-top-left-radius: 4px;
-    border-top-right-radius: 4px;
-}
 
 .playback .controls button {
 	border-radius: 0px;
@@ -297,174 +60,67 @@ table tr:nth-child(even) td:not(:last-child) {
 	color: #dd4237;
 }
 
-.rise-loader ul {
-    padding: 0;
-    margin: 0;
-    border: dotted thin;
+/* Popups styling (General, Settings, Rise-Loader) */
+.popup-blocker {
+	position: fixed;
+	top: 0px;
+	bottom: 0px;
+	right: 0px;
+	left: 0px;
+	z-index: 1000;
+    background: rgba(0, 0, 0, 0.6);
 }
-  
-.rise-loader ul li {
-    padding: 6px;
-    list-style-type: none;
-    transition: all .2s ease;
-}
-  
-.wait {
+
+.popup {
     position: absolute;
-    top: 0px;
+    max-width: 300px;
+    max-height: 375px;
+    min-height: 175px;
+    margin: auto;
     bottom: 0px;
+    top: 0px;
     left: 0px;
     right: 0px;
-    z-index: 1000;
-    background: rgba(255, 255, 255, 0.5);
+	
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0px 1px 8px #111;
+	z-index: 1500;
 }
 
-.wait img{ 
+.popup .popup-body {
+	overflow-y: auto;
+    top: 25px;
+    bottom: 0px;
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    left: 0px;
+    right: 0px;
+    margin: 10px 10px;
 }
 
-.loader .box {
-    width: 100%;
+.popup .popup-header {
+    position: relative;
 }
 
-.loader .save {
-	margin-top: 10px;
-    width: 100%;
-}
-
-.loader .options-container {
-    text-align: center;
-}
-
-.loader .options-container > * {
-	display: inline-block;
-    margin-bottom: 10px;
-    vertical-align: top;
-}
-
-.loader .options-container .option {
+.popup .popup-header .popup-title {
+    margin: 10px;
 	cursor: pointer;
 }
 
-.loader .options-column {	
-    width: 50%;
-}
-
-.loader .options-column > * {
-	display: block;
-	text-align: left;
-    padding: 1px;
-}
-
-.loader .options-column > *:first-child {
-    font-size: 1.1em;
-    font-weight: bold;
-    color: #198CFF;
-    padding-bottom: 4px;
-}
-
-.loader .options-column > *:not(:first-child) {
-    padding-left: 10px;
-}
-
-.diagram-container {
-	width: 100%;
-	height: 100%;
-}
-
-.diagram-container svg {
-    pointer-events: visible;
-	cursor: pointer;
-    width: 100%;
-    height: 100%;
-}
-
-.diagram-container path {
-	pointer-events:none;
-}
-/*
-.diagram-container marker.highlighted path {
-    fill: #1e94c3 !important;
-    stroke: #1e94c3 !important;
-}
-
-.diagram-container marker.highlighted.origin path {
-    fill: #b36402 !important;
-    stroke: #b36402 !important;
-}
-
-.diagram-container text.highlighted {
-    fill: #1e94c3 !important;
-}
-
-.diagram-container text.highlighted.origin {
-    fill: #b36402 !important;
-}
-
-.diagram-container path.highlighted {
-    stroke: #1e94c3 !important;
-}
-
-.diagram-container path.highlighted.origin {
-    stroke: #b36402 !important;
-}
-
-.diagram-container .highlighted:not(text):not(path) {
-    stroke: #1e94c3 !important;
-    fill: #d6f2fd !important;
-}
-
-.diagram-container .highlighted.origin:not(text):not(path) {
-    stroke: #b36402 !important;
-    fill: #f9e5c1 !important;
-}
-*/
-
-
-
-.diagram-container .selected:not(text) {
-    stroke: red  !important;
-}
-
-.grid, .grid .grid-canvas-container {
-	width: 100%;
-	height: 100%;
-    box-sizing: border-box;
-}
-.grid .grid-canvas-container canvas {
-	cursor: pointer;
-}
-
-.color-picker > * {
-	display: inline-block;
-}
-
-.color-picker .wheel-container {
+.popup .popup-header .close {
     position: absolute;
-    transform: translate(-190px, 0px);
-    box-shadow: -2px 2px 4px 0px #7777778c;
-    background: white;
-    padding: 10px;
-    border-radius: 2px;
-    border: solid thin silver;
-	cursor: pointer;
+    right: 5px;
+    top: -5px;
+    line-height: 28px;
+	font-size: 28px;
+    background: none;
+    box-shadow: none;
 }
-
-.color-picker .wheel-container.collapsed {
-	display: none;
-}
-
-
-
-
-
 
 .popup.popup-settings {
     max-height: 350px;
     min-width: 480px;
+	white-space: nowrap;
 }
 
 .popup.popup-settings .styles {
@@ -698,11 +354,248 @@ table tr:nth-child(even) td:not(:last-child) {
 	overflow-y: auto;
 } 
 
-.picker-container {
+/* Color picker style */
+.color-picker-container {
     position: fixed;
     z-index: 10000;
     padding: 10px;
     background: white;
     box-shadow: -2px 2px 4px 0px #7777778c;
     border-radius: 2px;
+}
+
+.color-picker > * {
+	display: inline-block;
+}
+
+.color-picker .wheel-container {
+    position: absolute;
+    transform: translate(-190px, 0px);
+    box-shadow: -2px 2px 4px 0px #7777778c;
+    background: white;
+    padding: 10px;
+    border-radius: 2px;
+    border: solid thin silver;
+	cursor: pointer;
+}
+
+.color-picker .wheel-container.collapsed {
+	display: none;
+}
+
+/* diagram widget styling */
+.diagram-container {
+	width: 100%;
+	height: 100%;
+}
+
+.diagram-container svg {
+    pointer-events: visible;
+	cursor: pointer;
+    width: 100%;
+    height: 100%;
+}
+
+.diagram-container path {
+	pointer-events:none;
+}
+
+.diagram-container .selected:not(text) {
+    stroke: red  !important;
+}
+
+/* grid widget styling */
+.grid, .grid .grid-canvas-container {
+	width: 100%;
+	height: 100%;
+    box-sizing: border-box;
+}
+.grid .grid-canvas-container canvas {
+	cursor: pointer;
+}
+
+/* Loader widget styling */
+.loader .box {
+    width: 100%;
+}
+
+.loader .save {
+	margin-top: 10px;
+    width: 100%;
+}
+
+.loader .options-container {
+    text-align: center;
+}
+
+.loader .options-container > * {
+	display: inline-block;
+    margin-bottom: 10px;
+    vertical-align: top;
+}
+
+.loader .options-container .option {
+	cursor: pointer;
+}
+
+.loader .options-column {	
+    width: 50%;
+}
+
+.loader .options-column > * {
+	display: block;
+	text-align: left;
+    padding: 1px;
+}
+
+.loader .options-column > *:first-child {
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #198CFF;
+    padding-bottom: 4px;
+}
+
+.loader .options-column > *:not(:first-child) {
+    padding-left: 10px;
+}
+
+/* Rise loader widget styling */
+.rise-loader ul {
+    padding: 0;
+    margin: 0;
+    border: dotted thin;
+}
+  
+.rise-loader ul li {
+    padding: 6px;
+    list-style-type: none;
+    transition: all .2s ease;
+}
+
+.rise-loader ul li {
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.rise-loader ul li:nth-child(even) {
+    background: #eeeeee;
+}
+  
+.rise-loader ul li:hover {
+    background: #ccc;
+}
+
+/* Tooltip styling */
+.tooltip {
+	position: absolute;
+    border: solid thin silver;
+    border-radius: 4px;
+    pointer-events: none;
+    background: #fff;
+	opacity: 0;
+}
+
+.tooltip > * {
+    margin: 5px;
+}
+
+.tooltip .tooltip-title {
+	font-weight: bold;
+}
+
+.tooltip .tooltip-label {
+	margin: 5px;
+}
+
+.tooltip .tooltip-line > * {
+	display: inline-block;
+	vertical-align: middle;
+	margin-left: 3px;
+	margin-right: 3px;
+}
+  
+/* Wait spinner styling */
+.wait {
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    z-index: 1000;
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.wait img{ 
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* box input files styling */
+.box-input-files .box-inner {
+    position: relative;
+    border: 2.5px dashed silver;
+    box-sizing: border-box;
+	display:inline-block;
+}
+
+.box-input-files .box-inner input, 
+.box-input-files .box-inner button {
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.box-input-files .box-inner i {
+    position: absolute;
+	font-size: 30px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.box-input-files .box-inner label {
+	position: absolute;
+    width: 100%;
+}
+
+.box-input-files > * {
+	width:100%;
+}
+
+.box-input-files .box-inner {
+	height:250px;
+}
+
+.box-input-files .files-container {
+    text-align: left;
+    overflow-y: auto;
+	max-height:100px;
+    margin-top: 10px;
+}
+
+.box-input-files .box-inner label.top {
+    top: 60px;
+}
+
+.box-input-files .files-container > * {
+    width: initial;
+    display: inline-block;
+    position: relative;
+    z-index: 1000;
+}
+
+.box-input-files .files-container .file {
+    margin: 3px;
+    padding: 2px;
+    border-radius: 3px;
+    border: dashed thin black;
+    cursor: pointer;
+}
+
+.box-input-files .files-container .file span {
+    font-size: 14px;
+	margin-left: 4px;
 }

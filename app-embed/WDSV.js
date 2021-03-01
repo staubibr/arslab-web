@@ -25,40 +25,35 @@ export default class Main extends Evented {
 			throw new Error("The embedded Web DEVS Simulation Viewer requires either an 'id' to read visualization data from the Web DEVS Environment or, a 'path' to read directly from the server.");
 		}
 		
-		var p1 = Net.JSON(`../api-web-devs/nls.json`);
-		var p2 = Net.JSON(`./nls.json`);
-		var p3 = Net.JSON(`./application.json`);
-		var p4 = Core.WaitForDocument();
-
-		Promise.all([p1, p2, p3, p4]).then(this.OnBaseConfig_Loaded.bind(this), this.OnWDSV_Failure.bind(this));
+		Core.WaitForDocument().then(this.OnBaseConfig_Loaded.bind(this), this.OnWDSV_Failure.bind(this));
 	
 		this.Emit("Initializing");
 	}
 	
 	OnBaseConfig_Loaded(responses) {
-		Core.locale = document.documentElement.lang || "en";
-		Core.nls = Core.Mixin(responses[0], responses[1]);	
-		Core.config = responses[2];
-
+		// Core.URLs.conversion = "http://localhost:8080/parser/auto";
+		// Core.URLs.models = "http://localhost/Dev/arslab-logs/devs-logs/";
+		// Core.URLs.files = "http://arslab-services.herokuapp.com/get/model/simulation";
+	
 		this.loader = new Loader(this.node);
 		
 		this.loader.On("ready", this.OnLoader_Ready.bind(this));
 		this.loader.On("error", this.OnLoader_Failure.bind(this));
 		
 		if (this.id != null) {
-			Core.config.files = [Core.config.files, this.id].join("/");
+			Core.URLs.files = [Core.URLs.files, this.id].join("/");
 			
-			Net.JSON(Core.config.files + "?v=0").then(files => this.LoadFiles(files));
+			Net.JSON(Core.URLs.files + "?v=0").then(files => this.LoadFiles(files));
 		}
 		
 		else if (this.path) {
-			Core.config.root = [Core.config.root, this.path].join("/");
+			Core.URLs.models = [Core.URLs.models, this.path].join("/");
 			
 			this.LoadFiles({
-				"visualization.json" : `${Core.config.root}/visualization.json`,
-				"structure.json" : `${Core.config.root}/structure.json`,
-				"messages.log" : `${Core.config.root}/messages.log`,
-				"diagram.svg" : `${Core.config.root}/diagram.svg`
+				"visualization.json" : `${Core.URLs.models}/visualization.json`,
+				"structure.json" : `${Core.URLs.models}/structure.json`,
+				"messages.log" : `${Core.URLs.models}/messages.log`,
+				"diagram.svg" : `${Core.URLs.models}/diagram.svg`
 			});
 		}
 		

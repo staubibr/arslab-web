@@ -4,15 +4,16 @@ import Core from '../tools/core.js';
 import Dom from '../tools/dom.js';
 import Net from '../tools/net.js';
 import Templated from '../components/templated.js';
+import Popup from '../ui/popup.js';
 
-export default Core.Templatable("Widget.RiseList", class RiseLoader extends Templated {
+export default Core.Templatable("Widget.RiseList", class RiseLoader extends Popup {
 
     constructor(id) {
         super(id);
 		
-        if (!Core.ConfigCheck("rise")) throw new Error("Config Error: rise url not defined in application configuration.");
+        if (!Core.URLs.models) throw new Error("Config Error: rise url not defined in application configuration.");
 
-		var path = Core.config.rise;
+		var path = Core.URLs.models;
 		
 		// TODO : This is temporary, just to showcase how we could read from RISE. We need
 		// to fix a bunch of issues with RISE before we can fully implement this.
@@ -143,9 +144,32 @@ export default Core.Templatable("Widget.RiseList", class RiseLoader extends Temp
 	}
 
     Template(){
-        return "<div class='rise-loader'>" + 
-				  "<div handle='wait' class='wait hidden'><img src='./assets/loading.svg'></div>" + 
-				  "<ul handle='list'></ul>" + 
+		return "<div handle='popup' class='popup popup-rise-loader'>" +
+				  "<div class='popup-header'>" +
+					  "<h2 class='popup-title' handle='title'>nls(Popup_Rise_Title)</h2>" +
+					  "<button class='close' handle='close' title='nls(Popup_Close)'>×</button>" +
+				  "</div>" +
+				  "<div class='popup-body' handle='body'>"+
+						"<div class='rise-loader'>" + 
+							"<div handle='wait' class='wait hidden'><img src='./assets/loading.svg'></div>" + 
+							"<ul handle='list'></ul>" + 
+						"</div>"
+				  "</div>" +
+				  "<div class='popup-footer' handle='footer'></div>" +
 			   "</div>";
     }
+	
+	static Nls() {
+		return { 
+			"Popup_Close": {
+				"en": "Close",
+				"fr": "Fermer"
+			}, 
+			"Popup_Rise_Title" : {
+				"en": "Load from RISE",
+				"fr": "Charger de RISE"
+			}
+		
+		}
+	}
 });
