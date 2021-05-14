@@ -1,17 +1,22 @@
 import BucketFill from "../components/style/bucketFill.js";
 import BucketRadius from "../components/style/bucketRadius.js";
 import BucketStroke from "../components/style/bucketStroke.js";
+import BucketScale from "../components/style/bucketScale.js";
 import StaticFill from "../components/style/staticFill.js";
 import StaticRadius from "../components/style/staticRadius.js";
 import StaticStroke from "../components/style/staticStroke.js";
+import StaticScale from "../components/style/staticScale.js";
 import Polygon from "../components/style/polygon.js";
 import Point from "../components/style/point.js";
+import PointIcon from "../components/style/pointIcon.js";
 
 export default class Style {
 	
 	static Statistics(simulation) {		
 		var values = {};
 		
+		// TODO :Something doesn't work here now that there can be multiple model types. 
+		// Statistics should be computed in the GIS part of the app, by property on the map.
 		simulation.EachMessage((t, f) => {			
 			for (var f in t.Value) {
 				if (!values[f]) values[f] = [];
@@ -78,7 +83,23 @@ export default class Style {
 	static GetStyle(type, json) {
 		if (type == "point") return this.PointStyle(json);
 		
+		if (type == "pointIcon") return this.PointIconStyle(json);
+		
 		if (type == "polygon") return this.PolygonStyle(json);
+	}
+	
+	static PointIconStyle(json) {
+		return new ol.style.Style({
+			image: new ol.style.Icon({
+				anchor: [0.5, 0.5],
+				anchorXUnits: 'fraction',
+				anchorYUnits: 'fraction',
+				scale: json.scale,
+				offset: [0,0],
+				opacity: 1,
+				src: json.src
+			})
+		});
 	}
 	
 	static PointStyle(json) {
@@ -120,6 +141,10 @@ export default class Style {
 		return new StaticRadius(4);
 	}
 	
+	static DefaultScale() {
+		return new StaticScale(0.5);
+	}
+	
 	static FillStyleFromJson(json) {
 		if (json.type == "equivalent" || json.type == "quantile" || json.type == "user-defined") {
 			return BucketFill.FromJson(json);
@@ -144,9 +169,21 @@ export default class Style {
 		if (json.type == "static") return StaticRadius.FromJson(json.radius);	
 	}
 	
+	static ScaleStyleFromJson(json) {
+		if (json.type == "equivalent" || json.type == "quantile" || json.type == "user-defined") {
+			return BucketScale.FromJson(json);
+		}
+		
+		if (json.type == "static") return StaticScale.FromJson(json.scale);	
+	}
+	
 	static FromJson(type, json) {
 		if (type == "polygon") return Polygon.FromJson(json);
 		
-		if (type == "point") return Point.FromJson(json);
+		if (type == "point") {
+			if (json.radius) return Point.FromJson(json);
+			
+			if (json.src) return PointIcon.FromJson(json);
+		}
 	}
 }

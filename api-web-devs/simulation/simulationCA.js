@@ -19,12 +19,22 @@ export default class SimulationCA extends Simulation {
 	
 	get MaxZ() { return this.size[2] }
 	
-	constructor(name, simulator, type, models, size) {
-		super(name, simulator, type, models);
+	constructor(structure, messages, size) {
+		super(structure, messages);
 		
 		this.size = size || null;
 		
 		this.state = new StateCA(this.Models, size);
+	}
+	
+	LoadStateMessages(messages) {
+		// Add frames from flat messages list			
+		for (var i = 0; i < messages.length; i++) {
+			var m = messages[i];
+			var message = new MessageCA(m.cell, m.value);
+			
+			this.AddStateMessage(m.time, message);
+		}
 	}
 	
 	get Ports() {
@@ -38,24 +48,5 @@ export default class SimulationCA extends Simulation {
 		for (var i = 0; i < this.MaxZ; i++) layers.push(i);
 		
 		return layers;
-	}
-	
-	static FromJson(json, messages) {
-		var info = json.info;
-		var models = json.models.map(m => Model.FromJson(m));
-		
-		// TODO : This is awkward, do Cell-DEVS models always have a single model?
-		var size = json.models[0].size;
-		var simulation = new SimulationCA(info.name, info.simulator, info.type, models, size);
-		
-		// Add frames from flat messages list			
-		for (var i = 0; i < messages.length; i++) {			
-			var m = messages[i];
-			var message = new MessageCA(m.cell, m.value);
-						
-			simulation.AddStateMessage(m.time, message);
-		}
-		
-		return simulation;
 	}
 }

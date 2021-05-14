@@ -1,53 +1,51 @@
 'use strict';
 
 import Style from "../../tools/style.js";
-import Evented from '../evented.js';
+import Templated from '../templated.js';
+import Dom from '../../tools/dom.js';
 
-export default class Legend extends Evented { 
+export default class Legend extends Templated { 
 	
-	get OL() {
-		return this._ol;
-	}
+	get control() { return this._control; }
   
 	constructor(style) {		
 		super();
 		
-		this._element = null;
-		this._ol = [];
-		
-		if (style.fill) {
-			var rows = this.BuildFill(style.fill);
+		this._control = new ol.control.Control({ element: this.Elem("legend-container") });
+	}
+	
+	AddLegend(variable) {
+		if (variable.style.fill) {
+			var rows = this.BuildFill(variable.style.fill);
 			
-			this.AddLegend(`${style.fill.property}`, rows);
+			this.AddLegendRows(variable.layer, `${variable.style.fill.property}`, rows);
 		}
 		
-		if (style.radius) {
-			var rows = this.BuildRadius(style.radius);
+		if (variable.style.radius) {
+			var rows = this.BuildRadius(variable.style.radius);
 		
-			this.AddLegend(`${style.radius.property}`, rows);
+			this.AddLegendRows(variable.layer, `${variable.style.radius.property}`, rows);
 		}
-	}
-	
-	GetLegendRow(legendIndex, rowIndex) {
-		var ul = this.OL[legendIndex].element.querySelector("ul");
+		/*
+		if (variable.style.src) {
+			var rows = this.BuildScale(variable.style.scale, variable.style.src);
 		
-		// First element is title, we don't care about it
-		return ul.children[rowIndex + 1];
+			this.AddLegendRows(variable.layer, `${variable.style.scale.property}`, rows);
+		}
+		*/
 	}
 	
-	AddLegend(title, rows) {
+	AddLegendRows(layer, property, rows) {
 		var sizes = rows.map(r => r.size);
 		var size = Math.max(...sizes) * 2;
-				
-		var legend = new ol.control.Legend({ title:title, margin:5, size:[size, size], collapsed:false, target:this._element });
 		
-		if (!this._element) this._element = legend.element;
+		var legend = new ol.control.Legend({ title:`${layer.label} - ${property}`, margin:5, size:[size, size], collapsed:false, target:this.control.element });
 		
 		rows.forEach(r => {
-			legend.addRow({ title:r.title, typeGeom:"Point", style: r.style });
+			legend.addRow({ title:r.title, typeGeom:"Point", style:r.style });
 		});
 		
-		this.OL.push(legend);
+		Dom.Place(legend.element, this.control.element);
 	}
 	
 	BuildFill(style) {
@@ -90,5 +88,29 @@ export default class Legend extends Evented {
 				})
 			}
 		});
+	}
+	
+	BuildScale(style, src){
+		var prev = null;
+		
+		return style.buckets.map((b, i) => {
+			var curr = b.toFixed(4).toString();
+			var title = (prev) ? `${prev} - ${curr}` : `0 - ${curr}`;
+
+			prev = curr;
+			
+			return {
+				title: title, 
+				size: style.scale[i], 
+				style: Style.PointIconStyle({
+					scale: style.scale[i], 
+					src: src
+				})
+			}
+		});
+	}
+	
+	Template() {
+		return "<div handle='legend-container' class='ol-control ol-legend-container'></div>";
 	}
 }

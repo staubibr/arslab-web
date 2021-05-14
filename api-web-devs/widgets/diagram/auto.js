@@ -77,12 +77,12 @@ export default Core.Templatable("Auto.Diagram", class AutoDiagram extends Automa
 		
 		Dom.Empty(this.tooltip.Elem("content"));
 		
-		var tY = messages.filter(t => t.Emitter.Model.Name == ev.model.Name);
+		var tY = messages.filter(t => t.Emitter.Model.Id == ev.model.Id);
 		
 		if (tY.length == 0) return;
 		
 		tY.forEach(t => {
-			var subs = [t.Emitter.Model.Name, t.Value.value, t.Emitter.Name];
+			var subs = [t.Emitter.Model.Id, t.Value.value, t.Emitter.Id];
 			var html = this.nls.Ressource("Diagram_Tooltip_Y", subs);
 			
 			Dom.Create("div", { className:"tooltip-label", innerHTML:html }, this.tooltip.Elem("content"));

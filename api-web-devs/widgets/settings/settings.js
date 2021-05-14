@@ -47,7 +47,9 @@ export default Core.Templatable("Widget.Settings", class Settings extends Popup 
 		
 		else if (simulation.Type == "Cell-DEVS") this.InitializeCellDEVS(settings);
 		
-		else if (simulation.Type == "Irregular Cell-DEVS") this.InitializeGisDEVS(settings);
+		// else if (simulation.Type == "Irregular Cell-DEVS") this.InitializeGisDEVS(settings);
+		
+		else if (simulation.Type == "GIS-DEVS") this.InitializeGisDEVS(settings);
 		
 		// Hook up change event for each ui element, when ui element changes, update corresponding setting
 		this.ui.forEach(u => {

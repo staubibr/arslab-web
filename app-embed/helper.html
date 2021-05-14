@@ -1,0 +1,184 @@
+<!--
+/********************************************************
+ * Author:  Bruno St-Aubin, 2017-2019.
+ * Contributors: Omar Hesham, Omar Kawach, Fernando Loor,
+ *				 Shreya Taneja, Jose Franco, Eli Yammine, 
+ *				 Majed Nayef
+  * Advanced Real-Time Simulation Lab.
+ * Carleton University, Ottawa, Canada.​​
+ * License: GNU General Public License v3.0
+ *
+ * Project: Web-based DEVS Simulation Viewer
+ */
+-->
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="user-scalable=no" />
+		<meta name="description" content="This web application is a viewer for DEVS simulation log files">
+		<meta name="author" content="Bruno St-Aubin">
+		<title>DEVS Visualization Helper | ARS Lab | Carleton University</title>
+		<link rel='shortcut icon' href='./assets/favicon.ico'>
+		
+		<style>
+			html {
+				font-family: sans-serif;
+			}
+			
+			label {
+				margin-left:5px;
+			}
+			
+			input, button {
+				cursor:pointer;
+			}
+			
+			.level-1 {
+				margin-left: 10px;
+			}
+			
+			.level-2 {
+				margin-left: 20px;
+			}
+			
+			.level-3 {
+				margin-left: 30px;
+			}
+			
+			.level-4 {
+				margin-left: 40px;
+			}
+			
+			.level-5 {
+				margin-left: 50px;
+			}
+			
+			h3 > button {
+				margin-left: 10px;
+			}
+			
+			#layers-container {
+				margin-bottom: 20px;
+				display: inline-block;
+			}
+			
+			#layers-container .layer-container {
+				display: inline-block;
+			}
+			
+			#layers-container .layer-container:not(:first-child) {
+				margin-left:30px;
+			}
+			
+			#layers-container .layer-container > * {
+				margin-top: 5px;
+			}
+			
+			#layers-container button {
+				float:right
+			}
+			
+			#layers-container label {
+				display: inline-block;
+				width: 50px;
+			}
+		</style>
+	</head>
+	<body>
+		<h1 class="level-1">DEVS visualization file helper</h1>
+		<h2 class="level-2">Playback</h2>
+		<div class="level-3">
+			<label>speed: 
+				<input id="playback_speed" type="number" min="5" max="50" value="20" />
+			</label>
+			<label>loop: 
+				<input id="playback_loop" type="checkbox" />
+			</label>
+			<label>cache: 
+				<input id="playback_cache" type="number" min="5" max="50" value="10" />
+			</label>
+		</div>
+		
+		<h2 class="level-2">GIS</h2>
+		<div class="level-3">
+			<label>basemap: 
+				<select id="gis_basemap">
+					<option selected>openstreetmap</option>
+				</select>
+			</label>
+		</div>
+			
+		<h3 class="level-3">view</h3>
+		<div class="level-4">
+			<label>latitude: 
+				<input id="view_latitude" type="number" min="-90" max="90" value="46.000" step="0.0001" />
+			</label>
+			<label>longitude: 
+				<input id="view_longitude" type="number" min="-180" max="180" value="-75.000" step="0.0001" />
+			</label>
+			<label>zoom: 
+				<input id="view_zoom" type="number" min="1" max="20" value="10" />
+			</label>
+		</div>
+			
+		<h3 class="level-3">layers
+			<button id="btnAddLayer">Add Layer</button>
+		</h3>
+		<div id="layers-container" class="level-4">
+		</div>
+
+		<script type="module">
+		
+		import Dom from '../api-web-devs/tools/dom.js';
+
+		function CreateLabel(label) {
+			var label = document.createElement("label");
+			label.innerHMTL = label;
+			return label;
+		}
+		
+		function AddInput(container, label) {
+			var div = Dom.Create("div", {  }, container);
+			var label = Dom.Create("label", { innerHTML:label }, div);
+			var input = Dom.Create("input", {  }, div);
+		}
+		
+		function AddSelect(container, label, options) {
+			var div = Dom.Create("div", {  }, container);
+			var label = Dom.Create("label", { innerHTML:label }, div);
+			var select = Dom.Create("select", { }, div);
+			
+			options.forEach(o => select.appendChild(o));
+		}
+		
+		function RemoveLayer(div) {
+			div.remove();
+		}
+		
+		function AddLayer() {
+			var container = document.querySelector("#layers-container");
+			var div = Dom.Create("div", { className:"layer-container" }, container);
+			
+			var option1 = Dom.Create("option", { innerHTML:"polygon", value:"polygon", "selected":true });
+			var option2 = Dom.Create("option", { innerHTML:"point", value:"point" });
+			
+			AddInput(div, "id: ");
+			AddSelect(div, "type: ", [option1, option2]);
+			AddInput(div, "file: ");
+			AddInput(div, "label: ");
+			AddInput(div, "style: ");
+			AddInput(div, "join: ");
+			
+			var button = Dom.Create("button", { innerHTML:"Remove Layer" }, div);
+			
+			button.addEventListener("click", ev => RemoveLayer(div));
+		}
+
+		AddLayer();
+
+		document.querySelector("#btnAddLayer").addEventListener("click", ev => AddLayer());
+		
+		</script>
+	</body>
+</html>

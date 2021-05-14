@@ -20,9 +20,9 @@ export default class State {
 	}
 	
 	GetValue(emitter) {
-		if (!this.data.hasOwnProperty(emitter.Name)) return null;
+		if (!this.data.hasOwnProperty(emitter.Id)) return null;
 		
-		return this.data[emitter.Name] || null;
+		return this.data[emitter.Id] || null;
 	}
 	
 	ApplyMessages(frame) {
@@ -32,9 +32,9 @@ export default class State {
 	}
 
 	ApplyMessage(m) {
-		if (!this.data.hasOwnProperty(m.Emitter.Name)) return;
+		if (!this.data.hasOwnProperty(m.Emitter.Id)) return;
 		
-		for (var f in m.Value) this.data[m.Emitter.Name][f] = m.Value[f];
+		for (var f in m.Value) this.data[m.Emitter.Id][f] = m.Value[f];
 	}
 	
 	Forward(frame) {
@@ -57,7 +57,7 @@ export default class State {
 			
 			m.Template.forEach(f => d[f] = 0);
 			
-			this.data[m.Name] = d;
+			this.data[m.Id] = d;
 		});
 	}
 }

@@ -14,6 +14,7 @@ export default class ChunkReader extends Evented {
 		this.defer = null;
 	
 		this.fileReader.addEventListener("loadend", this.onLoadEnd_Handler.bind(this));
+		this.fileReader.addEventListener("error", this.onLoadError_Handler.bind(this));
 	}
 	
 	PromiseRead(file) {
@@ -39,12 +40,23 @@ export default class ChunkReader extends Evented {
 		
 		resolve(this.fileReader.result);
 	}
+
+	onLoadError_Handler(ev) {
+		debugger;
+		
+		// TODO: This never triggers, example, bad visualization.json file
+		var reject = this.defer.Reject;
+		
+		this.defer = null;
+		
+		reject(new Error("Unable to read the file."));
+	}
 	
 	Read(file, delegate) {
 		var d = Core.Defer();
 		
 		if (!file) return d.Resolve(null);
-				
+		
 		this.PromiseRead(file).then(function(result) {			
 			d.Resolve(delegate(result));
 		}, (error) => { d.Reject(error); });

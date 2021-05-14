@@ -6,13 +6,17 @@ export default class GIS extends Evented {
 
 	get json() { return this._json; }
 	
-	set json(value) { this._json = value; }
+	set json(value) { 
+		this._json = value; 
+		
+		if (this.variables) this.variables.forEach((s, i) => s.index = i); 
+	}
 	
 	get basemap() { return this._json.basemap; }
 	
 	get layers() { return this._json.layers; }
 	
-	get simulation() { return this._json.simulation; }
+	get variables() { return this._json.variables; }
 	
 	get view() { return this._json.view; }
 	
@@ -26,7 +30,7 @@ export default class GIS extends Evented {
 	
 	Set(property, value) {
 		this[property] = value;
-				
+		
 		this.Emit("Change", { property:property, value:value });
 	}
 	

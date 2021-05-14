@@ -24,16 +24,18 @@ export default class Point {
 		Style.BucketizeStyle(this.stroke, stats);
 	}
 	
-	Symbol(d) {		
-		return new ol.style.Style({
-			image: new ol.style.Circle({
-				radius: this.radius.Symbol(d),
-				fill: this.fill.Symbol(d),
-				stroke: this.stroke.Symbol(d)
-			})
-		});
+	Symbol(d) {
+		if (this.radius) {
+			return new ol.style.Style({
+				image: new ol.style.Circle({
+					radius: this.radius.Symbol(d),
+					fill: this.fill.Symbol(d),
+					stroke: this.stroke.Symbol(d)
+				})
+			});
+		}
 	}
-		
+	
 	static FromJson(json) {
 		var radius = json.radius ? Style.RadiusStyleFromJson(json.radius) : Style.DefaultRadius();
 		

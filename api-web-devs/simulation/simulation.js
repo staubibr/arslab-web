@@ -4,16 +4,17 @@ import Evented from '../components/evented.js';
 import Cache from './cache.js';
 import Frame from './frame.js';
 import Model from './model.js';
+import Message from './message.js';
 
 export default class Simulation extends Evented { 
 	
 	get TimeStep() { return this.State.i; }
 	
-	get Name() { return this.name; }
+	get Name() { return this.info.name; }
 	
-	get Type() { return this.type; }
+	get Type() { return this.info.type; }
 	
-	get Simulator() { return this.simulator; }
+	get Simulator() { return this.info.simulator; }
 	
 	get State() { return this.state; }
 	
@@ -28,7 +29,7 @@ export default class Simulation extends Evented {
 	get CurrentFrame() { return this.Frames[this.TimeStep]; }
 	
 	get FirstFrame() { return this.Frames[0]; }
-			
+	
 	get LastFrame() { return this.Frames[this.Frames.length - 1]; }
 	
 	get Models() { return this.models; }
@@ -37,28 +38,66 @@ export default class Simulation extends Evented {
 
 	get CoupledModels() { return this.Models.filter(m => m.Type == "coupled"); }
 
-	get ModelNames() { return this.Models.map(m => m.name); }
+	get ModelIds() { return this.Models.map(m => m.Id); }
 	
 	get Ratio() { 
 		throw new Error("get Ratio must be defined in child simulation class.");
 	}
 
-	constructor(name, simulator, type, models) {
+	constructor(structure, messages) {
 		super();
+		
+		this.info = structure.info;
 		
 		// class variables with accessors
 		this.time = -1;
-		this.name = name || null;
-		this.type = type || null;
-		this.simulator = simulator || null;
 		this.state = null;
 		this.cache = new Cache();
 		this.selected = [];
 		this.frames = [];
-		this.models = models || [];
+		this.models = structure.models;
 		
 		// class variables meant to be private
 		this.index = {};
+		
+		this.BuildModels();
+		
+		this.LoadOutputMessages(messages.output);
+		this.LoadStateMessages(messages.state);
+	}
+	
+	BuildModels() {
+		this.Models.forEach(m => {
+			m.Ports.forEach(p => p.Model = m);
+			
+			m.Links.forEach(l => {
+				l.ModelB = this.Model(l.ModelB);
+				l.PortB = this.Port(l.ModelB.Id, l.PortB);
+				l.PortA = this.Port(m.Id, l.PortA);				
+			});
+		});
+	}
+	
+	LoadOutputMessages(messages) {
+		// Add frames from flat messages list			
+		for (var i = 0; i < messages.length; i++) {
+			var m = messages[i];
+			var emitter = this.Port(m.model, m.port);
+			var message	= new Message(emitter, m.value);		
+			
+			this.AddOutputMessage(m.time, message);
+		}		
+	}
+	
+	LoadStateMessages(messages) {
+		// Add frames from flat messages list			
+		for (var i = 0; i < messages.length; i++) {
+			var m = messages[i];
+			var emitter = this.Model(m.model);
+			var message	= new Message(emitter, m.value);		
+			
+			this.AddStateMessage(m.time, message);
+		}
 	}
 	
 	// TODO REVIEW
@@ -78,7 +117,7 @@ export default class Simulation extends Evented {
 	}
 
 	Model(name) {
-		return this.Models.find(m => name == m.name) || null;
+		return this.Models.find(m => name == m.Id) || null;
 	}
 	
 	Port(mName, pName) {
@@ -173,6 +212,19 @@ export default class Simulation extends Evented {
 		this.Selected.splice(idx, 1);
 		
 		this.Emit("Selected", { model:model, selected:false });
+	}
+	
+	// TODO: This doesn't belong here, only used for style.js
+	EachMessage(delegate) {
+		for (var i = 0; i < this.Frames.length; i++) {
+			var f = this.Frames[i];
+			
+			for (var j = 0; j < f.StateMessages.length; j++) {
+				var t = f.StateMessages[j];
+				
+				delegate(t, f);
+			}
+		}
 	}
 	
 	onSimulation_Error(message) {

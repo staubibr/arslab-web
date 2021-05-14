@@ -22,7 +22,7 @@ export default Core.Templatable("Widgets.Diagram", class Diagram extends Templat
 		var style = "marker.highlighted path {fill: #1e94c3 !important;stroke: #1e94c3 !important;}marker.highlighted.origin path {fill: #b36402 !important;stroke: #b36402 !important;}text.highlighted {fill: #1e94c3 !important;}text.highlighted.origin {fill: #b36402 !important;}path.highlighted {stroke: #1e94c3 !important;}path.highlighted.origin {stroke: #b36402 !important;}.highlighted:not(text):not(path) {stroke: #1e94c3 !important;fill: #d6f2fd !important;}.highlighted.origin:not(text):not(path) {stroke: #b36402 !important;fill: #f9e5c1 !important;}";
 		
 		Dom.Create("style", { innerHTML:style }, this.Node("diagram").Elem("svg"));
-				
+		
 		this.Simulation = simulation;
 		
 		this.Simulation.models.forEach(model => {

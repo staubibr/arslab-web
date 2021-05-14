@@ -3,6 +3,7 @@
 import Core from '../tools/core.js';
 import Evented from "../components/evented.js";
 import ChunkReader from "../components/chunkReader.js";
+import Structure from "../components/parsing/structure.js";
 import SimulationDEVS from "../simulation/simulationDEVS.js";
 import SimulationCA from "../simulation/simulationCA.js";
 import SimulationIRR from "../simulation/simulationIRR.js";
@@ -21,7 +22,7 @@ export default class Parser extends Evented {
 			return parsed;
 		});
 	}
-	
+		
 	Parse(files) {
 		var d = Core.Defer();
 
@@ -42,7 +43,7 @@ export default class Parser extends Evented {
 			var type = this.structure.info.type;
 			
 			this.t = null;
-						
+			
 			var p1 = this.ReadLog(messages);
 			var p2 = ChunkReader.Read(diagram, (content) => content);
 			var p3 = ChunkReader.Read(style, (content) => JSON.parse(content));
@@ -52,9 +53,9 @@ export default class Parser extends Evented {
 				
 				var simulation = null;
 				
-				if (type == "DEVS") simulation = SimulationDEVS.FromJson(this.structure, data[0], data[1]);
-				if (type == "Cell-DEVS") simulation = SimulationCA.FromJson(this.structure, data[0]);
-				if (type == "Irregular Cell-DEVS") simulation = SimulationIRR.FromJson(this.structure, data[0]);
+				if (type == "DEVS" || type == "GIS-DEVS") simulation = new SimulationDEVS(this.structure, data[0], data[1]);
+				if (type == "Cell-DEVS") simulation = new SimulationCA(this.structure, data[0]);
+				// if (type == "Irregular Cell-DEVS") simulation = new SimulationIRR(this.structure, data[0]);
 				
 				d.Resolve({ simulation:simulation, style:data[2] || null });
 			}, (error) => d.Reject(error));
@@ -65,50 +66,13 @@ export default class Parser extends Evented {
 	
 	ParseStructure(file) {
 		var json = JSON.parse(file);
-		var index = {};
-		var size;
 		
-		var models = json.nodes.map(n => {
-			index[n.name] = n
-						
-			n.ports = [];
-			n.links = [];
-			
-			// TODO: This doesn't work, size can be per model but the API uses a single size for the whole simulation.
-			if (n.size) size = n.size;
-
-			if (n.template) n.template = JSON.parse(n.template);
-			
-			return index[n.name];
-		});
-		
-		if (!size) size = models.length;
-		
-		if (json.ports) json.ports.forEach(p => {
-			if (p.template) p.template = JSON.parse(p.template);
-			
-			// When a DEVS model is connected to a Cell-DEVS model, there will be ports linked to the main model with coords, 
-			// these are not in the models list. It has to be fixed someday.
-			var model = index[p.model];
-			
-			if (!model) return;
-			
-			model.ports.push(p)
-		});
-		
-		if (json.links) json.links.forEach(l => index[l.modelA].links.push(l));
-		
-		return {
-			ports: json.ports, 
-			info: json.info,
-			models: models,
-			size : size
-		};
+		return Structure.FromJson(json);
 	}
 	
 	ReadLog(file) {
 		return ChunkReader.ReadByChunk(file, "\n", (parsed, chunk, progress) => {
-			if (parsed == null) parsed = [];
+			if (parsed == null) parsed = { state:[], output:[] };
 			
 			parsed = this.ParseLogChunk(parsed, chunk);
 			
@@ -124,49 +88,40 @@ export default class Parser extends Evented {
 		var lines = chunk.split("\n");
 		
 		for (var i = 0; i < lines.length; i++) {
-			var l = lines[i];
-			var v = l.trim().split(",");
+			var v = lines[i].trim().split(",");
 			
 			if (v.length == 1) this.t = v[0];
 			
-			else if (this.structure.info.type == "Cell-DEVS") {
-				var c = [+v[0],+v[1],+v[2]];
-				var m = this.structure.models[0];
-				var d = this.TemplateData(m.template, v.slice(3));
+			else if (this.structure.info.type == "GIS-DEVS") {
+				var node = this.structure.nodes[v[0]];
 				
-				// StateChangeMessages
-				parsed.push({ time:this.t, cell:c, value:d });
-			}
-			else if (this.structure.info.type == "Irregular Cell-DEVS") {
-				var m = this.structure.models[v[0]];
-				var d = this.TemplateData(m.template, v.slice(1));
+				if (node.port != undefined) {
+					var type = this.structure.portTypes[node.port];
+					var data = this.structure.TemplateData(type, v.slice(1));
+					
+					parsed.output.push({ time:this.t, model:node.model, port:type.name, value:data });
+				}
 				
-				// StateChangeMessages
-				parsed.push({ time:this.t, model:m.name, value:d });
-			}
-			else if (this.structure.info.type != "Cell-DEVS") {
-				var p = this.structure.ports[v[0]];
-				var d = this.TemplateData(p.template, v.slice(1));
+				else if (node.id != undefined) {
+					var type = this.structure.modelTypes[node.model];
+					var data = this.structure.TemplateData(type, v.slice(1));
 				
-				// OutputMessages
-				parsed.push({ time:this.t, model:p.model, port:p.name, value:d });
+					parsed.state.push({ time:this.t, model:node.id, value:data });
+				}
+				
+				else if (node.cell != undefined) {
+					var cell = [+v[0],+v[1],+v[2]];
+					var type = this.structure.modelTypes[0];
+					var data = this.structure.TemplateData(type, v.slice(1));
+				
+					parsed.state.push({ time:this.t, cell:cell, value:data });
+				}
+				
 			}
+			
+			else throw new Error(this.structure.info.type + " simulation not supported yet.");
 		}
 		
 		return parsed;
-	}
-	
-	TemplateData(template, values) {
-		if (template.length != values.length) throw new Error("length mismatch between fields and message content. This is a required temporary measure until Cadmium outputs message information.");			
-			
-		var out = {};
-		
-		for (var i = 0; i < template.length; i++) {
-			var f = template[i];
-			
-			if (values[i] != "") out[f] = values[i];
-		}
-		
-		return out;
 	}
 }

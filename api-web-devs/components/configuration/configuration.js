@@ -42,7 +42,7 @@ export default class Configuration extends Evented {
 		
 		if (simulation.Type == "DEVS") configuration.diagram = new Diagram();
 		
-		if (simulation.Type == "Irregular Cell-DEVS") configuration.diagram = new GIS();
+		if (simulation.Type == "GIS-DEVS") configuration.gis = new GIS();
 		
 		return configuration;
 	}

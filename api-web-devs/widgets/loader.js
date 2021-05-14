@@ -6,6 +6,7 @@ import Net from '../tools/net.js';
 import Zip from '../tools/zip.js';
 import Styler from '../components/styler.js';
 import Templated from '../components/templated.js';
+// import Parser from '../components/cadmiumParser.js';
 import Parser from '../components/parser.js';
 import ChunkReader from '../components/chunkReader.js';
 import BoxInput from '../ui/box-input-files.js';
@@ -25,6 +26,7 @@ export default Core.Templatable("Widget.Loader", class Loader extends Templated 
 		this.files = { ready:[], convert:[] };
 		
 		var ready = ["structure.json", "messages.log", "diagram.svg", "style.json", "visualization.json"];
+		// var ready = ["scenario.json", "messages.txt", "style.json", "visualization.json"];
 		
 		value.forEach(f => {
 			ready.indexOf(f.name) > -1 ? this.Files.ready.push(f) : this.Files.convert.push(f);
@@ -43,7 +45,7 @@ export default Core.Templatable("Widget.Loader", class Loader extends Templated 
 		super(node);
 		
         if (!Core.URLs.conversion) throw new Error("Config Error: conversion url not defined in application configuration.");
-						
+		
 		this.Node("parse").On("click", this.onParseButton_Click.bind(this));
 		this.Node("clear").On("click", this.onClearButton_Click.bind(this));
 		this.Widget("dropzone").On("change", this.onDropzone_Change.bind(this));
@@ -61,6 +63,8 @@ export default Core.Templatable("Widget.Loader", class Loader extends Templated 
 	
 	Load() {
 		this.Files = this.Widget("dropzone").files;
+		
+		// var p = this.Parse();
 		
 		var n = this.Files.ready.length;
 		
@@ -166,7 +170,7 @@ export default Core.Templatable("Widget.Loader", class Loader extends Templated 
 		return "<div class='loader'>" +
 				  "<div handle='wait' class='wait hidden'><img src='./assets/loading.svg'></div>" + 
 			      "<div handle='dropzone' widget='Widget.Box-Input-Files'></div>" +
-				  "<div>" +
+				  "<div class='box-input-files'>" +
 					 "<button handle='clear' class='clear'>nls(Loader_Clear)</button>" +
 					 "<button handle='parse' class='parse' disabled>nls(Loader_Parse)</button>" +
 			      "</div>" +

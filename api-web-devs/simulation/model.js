@@ -4,7 +4,9 @@ import Port from './port.js';
 import Link from './link.js';
 
 export default class Model { 
-    	
+    
+	get Id() { return this.id; }
+    
 	get Name() { return this.name; }
 
 	get Type() { return this.type; }
@@ -19,7 +21,8 @@ export default class Model {
 	
 	get Template() { return this.template; }
 
-	constructor(name, type, ports, links, svg, template) {
+	constructor(id, name, type, ports, links, svg, template) {
+        this.id = id;
         this.name = name;
         this.type = type;
         this.ports = ports || [];
@@ -68,6 +71,6 @@ export default class Model {
 		if (json.ports) var ports = json.ports.map(p => Port.FromJson(p));
 		if (json.links) var links = json.links.map(l => Link.FromJson(l));
 		
-		return new Model(json.name, json.type, ports, links, json.svg, json.template);
+		return new Model(json.id, json.name, json.type, ports, links, json.svg, json.template);
 	}
 }

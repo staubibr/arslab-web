@@ -13,6 +13,8 @@ export default class Main extends Evented {
 
 	get id() { return this._json.id; }
 
+	get diagram() { return this._json.diagram; }
+
 	get node() { return this._node; }
 
 	constructor(node, json) {
@@ -20,11 +22,11 @@ export default class Main extends Evented {
 		
 		this._node = node;
 		this._json = json;
-		
+		/*
 		if (this.path == null && this.id == null) {
 			throw new Error("The embedded Web DEVS Simulation Viewer requires either an 'id' to read visualization data from the Web DEVS Environment or, a 'path' to read directly from the server.");
 		}
-		
+		*/
 		Core.WaitForDocument().then(this.OnBaseConfig_Loaded.bind(this), this.OnWDSV_Failure.bind(this));
 	
 		this.Emit("Initializing");
@@ -41,20 +43,23 @@ export default class Main extends Evented {
 		this.loader.On("error", this.OnLoader_Failure.bind(this));
 		
 		if (this.id != null) {
-			Core.URLs.files = [Core.URLs.files, this.id].join("/");
+			var files = [Core.URLs.files, this.id].join("/");
 			
-			Net.JSON(Core.URLs.files + "?v=0").then(files => this.LoadFiles(files));
+			Net.JSON(files + "?v=0").then(files => this.LoadFiles(files));
 		}
 		
 		else if (this.path) {
 			Core.URLs.models = [Core.URLs.models, this.path].join("/");
 			
-			this.LoadFiles({
+			var files = {
 				"visualization.json" : `${Core.URLs.models}/visualization.json`,
 				"structure.json" : `${Core.URLs.models}/structure.json`,
-				"messages.log" : `${Core.URLs.models}/messages.log`,
-				"diagram.svg" : `${Core.URLs.models}/diagram.svg`
-			});
+				"messages.log" : `${Core.URLs.models}/messages.log`
+			}
+			
+			if (this.diagram) files["diagram.svg"] = `${Core.URLs.models}/diagram.svg`;
+			
+			this.LoadFiles(files);
 		}
 		
 		else this.loader.container.style.display = "block";
@@ -64,9 +69,12 @@ export default class Main extends Evented {
 		var p1 = Net.File(files["visualization.json"], "visualization.json", true);
 		var p2 = Net.File(files["structure.json"], "structure.json");
 		var p3 = Net.File(files["messages.log"], "messages.log");
-		var p4 = Net.File(files["diagram.svg"], "diagram.svg", true);
 		
-		Promise.all([p1, p2, p3, p4]).then(this.OnFiles_Ready.bind(this), this.OnWDSV_Failure.bind(this));
+		var defs = [p1,p2,p3];
+		
+		if (files["diagram.svg"]) defs.push(Net.File(files["diagram.svg"], "diagram.svg", true));
+		
+		Promise.all(defs).then(this.OnFiles_Ready.bind(this), this.OnWDSV_Failure.bind(this));
 	}
 	
 	OnFiles_Ready(files) {

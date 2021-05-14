@@ -5,7 +5,7 @@ import Dom from '../tools/dom.js';
 
 import Templated from '../components/templated.js';
 
-export default Core.Templatable("Basic.Components.Select", class Select extends Templated {
+export default Core.Templatable("Basic.UI.Select", class Select extends Templated {
 	
 	get value() {
 		return this.Elem("root").value;

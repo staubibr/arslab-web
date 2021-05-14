@@ -17,7 +17,7 @@ export default Core.Templatable("Application", class Application extends Templat
 		super(node);
 		
 		Dom.AddCss(document.body, "Embed");
-			
+		
 		this.files = files;
 		this.simulation = simulation;
 		
@@ -56,7 +56,7 @@ export default Core.Templatable("Application", class Application extends Templat
 		else if (this.simulation.Type === "Cell-DEVS") {
 			d.Resolve(new GridAuto(container, this.simulation, this.settings.grid));
 		}
-		else if (this.simulation.Type === "Irregular Cell-DEVS") {
+		else if (this.simulation.Type === "GIS-DEVS") {
 			var geojson = this.files.convert.filter(f => f.name.match(/.geojson/i));
 			var view = new GisAuto(container, this.simulation, this.settings.gis, geojson);
 
@@ -64,7 +64,7 @@ export default Core.Templatable("Application", class Application extends Templat
 			
 			view.On("ready", ev => d.Resolve(view));
 		}
-				
+		
 		return d.promise;
 	}
 	

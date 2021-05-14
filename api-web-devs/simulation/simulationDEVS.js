@@ -23,26 +23,12 @@ export default class SimulationDEVS extends Simulation {
 	
 	get SVG() { return this.svg; }
 	
-	constructor(name, simulator, type, models, diagram) {
-		super(name, simulator, type, models);
+	constructor(structure, messages, diagram) {
+		super(structure, messages);
 		
-		this.BuildModels();
-				
 		if (diagram) this.LoadSVG(diagram);
 		
 		this.state = new State(this.Models);
-	}
-	
-	BuildModels() {
-		this.Models.forEach(m => {
-			m.Ports.forEach(p => p.Model = m);
-			
-			m.Links.forEach(l => {
-				l.ModelB = this.Model(l.ModelB);
-				l.PortB = this.Port(l.ModelB.Name, l.PortB);
-				l.PortA = this.Port(m.Name, l.PortA);				
-			});
-		});
 	}
 	
 	LoadSVG(svg) {		
@@ -61,22 +47,5 @@ export default class SimulationDEVS extends Simulation {
 		});
 		
 		this.diagram = root.children[0];
-	}
-	
-	static FromJson(json, messages, diagram) {
-		var info = json.info;
-		var models = json.models.map(m => Model.FromJson(m));
-		var simulation = new SimulationDEVS(info.name, info.simulator, info.type, models, diagram);
-		
-		// Add frames from flat messages list			
-		for (var i = 0; i < messages.length; i++) {
-			var m = messages[i];
-			var emitter = simulation.Port(m.model, m.port);
-			var message	= new Message(emitter, m.value);		
-			
-			simulation.AddOutputMessage(m.time, message);
-		}
-		
-		return simulation;		
 	}
 }

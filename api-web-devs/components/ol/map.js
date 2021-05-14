@@ -54,6 +54,10 @@ export default class Map extends Evented {
 		return this.layers[id];
 	}
 
+	LayerFeatures(id) {
+		return this.Layer(id).getSource().getFeatures();
+	}
+
 	AddControl(controls, options) {
 		if (!Array.isArray(controls)) controls = [controls];
 		

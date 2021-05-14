@@ -1,5 +1,11 @@
 @import url(https://fonts.googleapis.com/css?family=Varela+Round);
 
+html {
+    font-family: sans-serif;
+    font-size: 11pt;
+	background : #f9f9f9;
+}
+
 html, 
 body.Embed, 
 body.Embed main, 
@@ -29,7 +35,6 @@ body.Embed button:hover {
 
 .playback, .custom-control {
     background: rgba(255,255,255,.8);
-    border-radius: 4px;
 }
 
 .playback {
@@ -37,11 +42,14 @@ body.Embed button:hover {
     left: 50%;
     transform: translate(-50%,0);
     padding: 2px;
+    bottom: 8px;
+	border-radius: 0px;
 }
 
-.playback {
-    bottom: 8px;
+.playback > * {
+    margin: 2px;
 }
+
 
 .playback button {
 	height: 30px;
@@ -50,7 +58,6 @@ body.Embed button:hover {
     font-size: 15px;
     border: none;
     border-bottom: solid 2px #0051A3;
-    border-radius: 4px;
     cursor: pointer;
 }
 
@@ -63,6 +70,11 @@ body.Embed button:hover {
     border-right-color: #eee;
 }
 
+
+
+
+
+
 /* TODO: THIS IS A LOT OF CSS FOR ONE WIDGET, SOME NEEDS TO MOVE TO API-WEB-DEVS */
 .loader {
     position: absolute;
@@ -73,51 +85,70 @@ body.Embed button:hover {
     transform: translate(-50%, -50%);
 }
 
-.loader > *,
-.loader .box,
-.loader .box-inner {
-	/*height : 100%;*/
-}
-
 .loader .box-inner {
 	height: 400px;
+	text-align:center;
 }
 
-.loader .box i, 
-.loader .box label {
-    color: #0051A3;
-    font-weight: bold;
-}
-
-.loader .box .files-container .file:hover,
-.loader .box .box-inner:hover {
-	background: #eff7ff;
-}
-
-.loader .box .box-inner:hover {
+.loader .box-input-files .box-inner:hover {
+  background: #eff7ff;
   border-color: #0051a3;
   transition: all .2s ease;
 }
 
-.loader .box .box-inner {
+.loader .box-input-files .files-container .file:hover {
+  background: #eff7ff;
+}
+
+.loader .box-input-files .box-inner {
     background: #fff;
 	border-color: #198CFF;
 }
 
-.loader .box .box-inner label {
-	text-align: center;
+.loader .box-input-files i, 
+.loader .box-input-files label {
+    font-weight: bold;
 }
 
-.loader button{
-    height: 30px;
-    width: 30px;
+.loader .box-input-files i, 
+.loader .box-input-files label {
+    color: #0051A3;
+}
+
+.loader button {
+	height: 30px;
+    background-color: #198CFF;
     color: #eee;
     font-size: 15px;
     border: none;
     border-bottom: solid 2px #0051A3;
-    border-radius: 4px;
-	background-color: #198CFF;
     cursor: pointer;
+}
+
+.loader, .button-column {
+	vertical-align: top;
+	margin : 15px 5px;
+}
+
+.loader .clear,
+.loader .parse {
+    display:inline-block;
+}
+
+.loader .clear {
+    border-bottom: solid 2px #980000;
+	background:#fd6e6e;
+    width: 29%;
+}
+
+.loader .clear:hover {
+	background:#980000;
+}
+
+.loader .parse {
+    width: 69%;
+	margin-top : 10px;
+	margin-left : 2%;
 }
 
 .loader button:disabled {
@@ -127,24 +158,9 @@ body.Embed button:hover {
     border-color: #7e7e7e;
 }
 
-.loader button.clear {
-    border-bottom: solid 2px #980000;
-	background:#fd6e6e;
-    width: 29%;
-}
-
-.loader button.clear:hover {
-	background:#980000;
-}
-
-.loader button.parse {
-    width: 69%;
-	margin-top : 10px;
-	margin-left : 2%;
-}
-
-.view-container {
-    text-align: center;
+.loader button:not(:disabled):hover {
+  background: #0051A3;
+  transition: all .2s ease;
 }
 
 .view {
@@ -154,6 +170,11 @@ body.Embed button:hover {
 /* GIS-DEVS stuff */
 .ol-control {
 	background-color: rgba(255,255,255,.7);
+	border-radius: 0px;
+}
+
+.ol-control button {
+	border-radius:0px;
 }
 
 .ol-control:hover {
@@ -179,7 +200,26 @@ body.Embed button:hover {
 
 .ol-popup .ol-popup-content ul {
     padding: 0;
-    margin: 4px;
+}
+
+.ol-popup .ol-popup-content hr {
+	border: none;
+    border-bottom: solid thin silver;
+}
+
+.ol-popup .ol-popup-content ul {
+    margin: 10px;
+    list-style: none;
+}
+
+.ol-popup .ol-popup-content .title {
+	font-size: 1.2em;
+    margin-bottom: 2px;
+    font-weight:bold;
+}
+
+.ol-popup .ol-popup-content ul > li:first-child {
+    font-weight:bold;
 }
 
 .ol-layerswitcher>button {
@@ -231,18 +271,22 @@ body.Embed button:hover {
     right: unset;
 }
 
-.ol-control.ol-legend {
-	bottom: unset;
-    left: unset;
-    top: .5em;
+/* legend */
+.ol-control.ol-legend-container {	
+    position: absolute;
     right: .5em;
+    top: .5em;
+    max-height: 500px;
+    overflow-y: auto;
+    overflow-x: hidden;
+	padding:10px;
 }
 
-.ol-control.ol-legend ul {
-	display: block;
+.ol-control.ol-legend-container {
+	background-color: rgba(255,255,255,.85);
 }
 
-
-.ol-control.ol-legend .ol-legendImg {
+.ol-control.ol-legend-container .ol-legendImg {
 	pointer-events:none;	
+    position: absolute;
 }
