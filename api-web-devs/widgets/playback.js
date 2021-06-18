@@ -6,25 +6,25 @@ import Templated from '../components/templated.js';
 
 export default Core.Templatable("Widget.Playback", class Playback extends Templated { 
 
-	get IsLooping() { return this.settings.loop;; } 
+	get is_looping() { return this.settings.loop; } 
 	
-	get Interval() { return 1000 / this.settings.speed; }
+	get interval() { return 1000 / this.settings.speed; }
 
-	set Recorder(value) {
-		this.recorder = value;
+	get recorder() { return this._recorder; } 
+	
+	set recorder(value) {
+		this._recorder = value;
 		
 		Dom.ToggleCss(this.Elem("record"), "hidden", !value);
 	}
 	
-	get Recording() {
-		return (this.recorder) ? this.recorder.Recording : false;
-	}
+	get recording() { return (this.recorder) ? this.recorder.recording : false; }
 
 	constructor(node) {
 		super(node);
 		
 		this.current = 0;
-		this.interval = null;
+		this._interval = null;
 		this.direction = null;
 		
 		this.Enable(false);
@@ -45,7 +45,7 @@ export default Core.Templatable("Widget.Playback", class Playback extends Templa
 		
 		this.simulation.On("Session", this.onSimulationSession_Handler.bind(this));
 		
-		this.values = this.simulation.Frames.map((f) => { return f.time; });
+		this.values = this.simulation.frames.map((f) => { return f.time; });
 		
 		this.min = 0;
 		this.max = this.values.length - 1;
@@ -81,7 +81,7 @@ export default Core.Templatable("Widget.Playback", class Playback extends Templa
 		
 		this.direction = null;
 		
-		if (this.interval) clearInterval(this.interval);
+		if (this._interval) clearInterval(this._interval);
 		
 		Dom.SetCss(this.Elem("rewind"), "fas fa-backward");
 		Dom.SetCss(this.Elem("play"), "fas fa-play");
@@ -92,7 +92,7 @@ export default Core.Templatable("Widget.Playback", class Playback extends Templa
 	Play(loop, interval) {		
 		this.direction = "play";
 		
-		this.interval = setInterval(function(){ 
+		this._interval = setInterval(function(){ 
 			if (this.current < this.max) this.GoToNext();
 		
 			else if (loop) this.GoTo(this.min);
@@ -104,7 +104,7 @@ export default Core.Templatable("Widget.Playback", class Playback extends Templa
 	Rewind(loop, interval) {
 		this.direction = "rewind";
 		
-		this.interval = setInterval(function(){ 
+		this._interval = setInterval(function(){ 
 			if (this.current > this.min) this.GoToPrevious();
 		
 			else if (loop) this.GoTo(this.max);
@@ -142,7 +142,7 @@ export default Core.Templatable("Widget.Playback", class Playback extends Templa
 		
 		if (this.current > this.min) this.GoToPrevious();
 		
-		else if (this.IsLooping, this.GoTo(this.max));
+		else if (this.is_looping, this.GoTo(this.max));
 	}
 	
 	onRewindClick_Handler(ev) {
@@ -150,7 +150,7 @@ export default Core.Templatable("Widget.Playback", class Playback extends Templa
 		
 		Dom.SetCss(this.Elem("rewind"), "fas fa-pause");
 		
-		this.Rewind(this.IsLooping, this.Interval);
+		this.Rewind(this.is_looping, this.interval);
 	}
 	
 	onPlayClick_Handler(ev) {
@@ -158,7 +158,7 @@ export default Core.Templatable("Widget.Playback", class Playback extends Templa
 		
 		Dom.SetCss(this.Elem("play"), "fas fa-pause");
 		
-		this.Play(this.IsLooping, this.Interval);
+		this.Play(this.is_looping, this.interval);
 	}
 	
 	onStepForwardClick_Handler(ev) {
@@ -166,7 +166,7 @@ export default Core.Templatable("Widget.Playback", class Playback extends Templa
 		
 		if (this.current < this.max) this.GoToNext();
 		
-		else if (this.IsLooping) this.GoTo(this.min)
+		else if (this.is_looping) this.GoTo(this.min)
 	}
 	
 	onLastClick_Handler(ev) {
@@ -176,11 +176,11 @@ export default Core.Templatable("Widget.Playback", class Playback extends Templa
 	}
 	
 	onRecordClick_Handler(ev) {
-		if (this.recorder.Recording) {
+		if (this.recorder.recording) {
 			Dom.SetCss(this.Elem("record"), "fas fa-circle record");
 			
 			this.recorder.Stop().then(e => {
-				this.recorder.Download(this.simulation.Name);
+				this.recorder.Download(this.simulation.name);
 			});
 		}
 		else {
@@ -197,7 +197,7 @@ export default Core.Templatable("Widget.Playback", class Playback extends Templa
 	}
 	
 	onSimulationSession_Handler(ev) {
-		this.SetCurrent(this.simulation.State.i);
+		this.SetCurrent(this.simulation.state.i);
 	}
 	
 	Template() {

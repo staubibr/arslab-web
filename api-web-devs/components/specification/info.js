@@ -14,25 +14,15 @@ export default class Info {
 	get type() {  return this._json.type; }
 	set type(value) { this._json.type = value; }
 	
-	constructor() {
-		this._json = Info.Default();
-	}
-	
-	static Default() {
-		return {
-			name : null,
-			simulator : null,
-			type : null
+	constructor(name, simulator, type) {
+		this._json = {
+			name : name ?? null,
+			simulator : simulator ?? null,
+			type : type ?? null
 		}
 	}
 	
 	static FromJson(json) {
-		var info = new Info();
-		
-		info.name = json.name;
-		info.simulator = json.simulator;
-		info.type = json.type;
-		
-		return info;
+		return new Info(json.name, json.simulator, json.type);
 	}
 }

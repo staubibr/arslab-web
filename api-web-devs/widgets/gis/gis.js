@@ -12,7 +12,7 @@ import Legend from "../../components/ol/legend.js";
 
 export default Core.Templatable("Widgets.GIS", class GIS extends Templated { 
 
-	get Canvas() { 
+	get canvas() { 
 		return this.Elem("map").querySelector(".ol-layer").firstChild; 
 	}
 	
@@ -68,8 +68,8 @@ export default Core.Templatable("Widgets.GIS", class GIS extends Templated {
 	
 	OnMap_RenderComplete(d, ev) {		
 		// Show geo layers and draw simulation state
-		for (var id in this.map.Layers) {
-			this.map.Layers[id].set('visible', true);
+		for (var id in this.map.layers) {
+			this.map.layers[id].set('visible', true);
 		}
 		
 		// Prepare simulation styles, set first one as currently selected, 
@@ -145,7 +145,9 @@ export default Core.Templatable("Widgets.GIS", class GIS extends Templated {
 		
 		this.map.ShowPopup(null);
 		
-		this.selected = ev.features.length > 0 ? ev.features : null;
+		this.selected = this.GetSelected(ev.features);
+		
+		if (!this.selected) return;
 		
 		this.HighlightSelected();
 		
@@ -154,42 +156,55 @@ export default Core.Templatable("Widgets.GIS", class GIS extends Templated {
 		if (content.length > 0) this.map.ShowPopup(ev.coordinates, content);
 	}
 	
+	GetSelected(features) {
+		var selected = features.filter(f => {
+			return !!this.Current[f.layer];			
+		});
+		
+		return selected.length > 0 ? selected : null;
+	}
 	
 	GetContent(selected) {
 		var content = [];
-		var messages = this.simulation.CurrentFrame.OutputMessages;
+		var messages = this.simulation.current_frame.output_messages;
 		
 		selected.forEach(s => {
 			var variable = this.Current[s.layer];
 			
 			if (!variable) return;
 			
-			var id = s.feature.getProperties()[variable.layer.join];
 			
 			// state messages
+			var props = s.feature.getProperties();
+			var id = props[variable.layer.join];
 			var emitter = this.simulation.Model(id);
-			var props = this.simulation.state.GetValue(emitter);
+			var data = this.simulation.state.GetValue(emitter);
 			
-			var line = `<div class='title'>${variable.layer.label}</div><div>(${id})</div>`;
+			var line = `<div class='title'>${variable.layer.label}</div>`;
 			
-			line += `<ul><li>State</li>`;
+			line += `<ul class='properties'><li>Attributes</li>`;
 			
-			for (var p in props) line += `<li>${p}: ${props[p]}</li>`
+			variable.layer.fields.forEach(f => line += `<li>${f}: ${props[f]}</li>`);
+			
+			line += `</ul>`;
+			line += `<ul class='state-message'><li>State</li>`;
+			
+			for (var p in data) line += `<li>${p}: ${data[p]}</li>`
 			
 			line += `</ul>`;
 			
 			// output messages
-			var tY = messages.filter(t => t.Emitter.Model.Id == id);
+			var tY = messages.filter(t => t.emitter.model.id == id);
 			
 			tY.forEach(t => {
-				line += `<ul><li>Output</li>`;
+				line += `<ul class='output-message'><li>Output</li>`;
 				
 				for (var p in t.value) line += `<li>${p}: ${t.value[p]}</li>`
 				
 				line += `</ul>`;
-				
-				content.push(line);
 			});
+			
+			content.push(line);
 		});
 		
 		return content.join(`<hr>`);

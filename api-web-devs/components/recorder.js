@@ -4,14 +4,13 @@ import Core from '../tools/core.js';
 
 export default class Recorder { 
 	
-	get Recording() {
-		return this.recording;
-	}
+	get recording() { return this._recording; }
+	set recording(value) { this._recording = value; }
 	
 	constructor(canvas) {		
 		this.canvas = canvas;
 		this.chunks = null;
-		this.recording = false;
+		this._recording = false;
 		
 		var options;
 		

@@ -6,7 +6,7 @@ import Scale from './scales/basic.js';
 
 export default class Styler extends Evented { 
 	
-	get Empty() { return this.scales.length == 0 };
+	get empty() { return this.scales.length == 0 };
 	
 	constructor(scales) {
 		super();

@@ -44,8 +44,8 @@ export default Core.Templatable("Widget.Settings.Layers", class Layers extends T
 				
 		item.data = { z:z, ports:ports, style:style };
 		item.row = Dom.Create("tr", { className:"table-row" }, this.Elem("body"));		
-		item.z = this.AddZ(item.row, this.simulation.MaxZ, z);
-		item.ports = this.AddPorts(item.row, this.simulation.Ports, ports);
+		item.z = this.AddZ(item.row, this.simulation.maxZ, z);
+		item.ports = this.AddPorts(item.row, this.simulation.ports, ports);
 		item.style = this.AddStyle(item.row, this.styles, style);
 		item.btnDelete = this.AddDeleteButton(item);
 		
@@ -117,7 +117,7 @@ export default Core.Templatable("Widget.Settings.Layers", class Layers extends T
 	}
 	
 	OnButtonAdd_Click(ev) {
-		this.AddLayer(0, this.simulation.Ports, 0);
+		this.AddLayer(0, this.simulation.ports, 0);
 		
 		this.Elem("layers").scrollTop = this.Elem("layers").scrollHeight;
 	}

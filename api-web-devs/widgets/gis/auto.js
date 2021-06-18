@@ -6,10 +6,11 @@ import Net from '../../tools/net.js';
 import Tooltip from '../../ui/tooltip.js';
 import Automator from '../../components/automator.js';
 import GIS from '../gis/gis.js';
+import ChunkReader from '../../components/chunkReader.js';
 
 export default Core.Templatable("Auto.GIS", class AutoGIS extends Automator { 
 
-	get Canvas() { return this.Widget.Canvas; }
+	get canvas() { return this.widget.canvas; }
 	
 	constructor(node, simulation, options, files) {
 		if (!options) throw new Error("No options provided for the GIS widget");
@@ -19,7 +20,7 @@ export default Core.Templatable("Auto.GIS", class AutoGIS extends Automator {
 		this.config = options;		
 		
 		this.Load(options, files).then(data => {
-			this.Widget.Load(options, data, simulation).then(this.onMap_Ready.bind(this), this.OnMap_Error.bind(this));
+			this.widget.Load(options, data, simulation).then(this.onMap_Ready.bind(this), this.OnMap_Error.bind(this));
 		});
 		
 		this.simulation.On("Move", this.onSimulation_Move.bind(this));
@@ -58,7 +59,7 @@ export default Core.Templatable("Auto.GIS", class AutoGIS extends Automator {
 	}
 	
 	Redraw() {
-		this.Widget.Draw(this.simulation.State.data);
+		this.widget.Draw(this.simulation.state.data);
 	}
 	
 	Resize() {
@@ -66,15 +67,15 @@ export default Core.Templatable("Auto.GIS", class AutoGIS extends Automator {
 	}
 	
 	onSimulation_Jump(ev) {
-		this.Widget.Draw(ev.state.data);
+		this.widget.Draw(ev.state.data);
 	}
 	
 	onSimulation_Move(ev) {
 		var data = {};
 		
-		ev.frame.StateMessages.forEach(t => data[t.Emitter.Id] = t.Value);
+		ev.frame.state_messages.forEach(t => data[t.emitter.id] = t.value);
 		
-		this.Widget.Draw(data);
+		this.widget.Draw(data);
 	}
 	
 	OnSettings_Change(ev) {			

@@ -1,52 +1,42 @@
 'use strict';
 
 import Simulation from './simulation.js';
-import MessageCA from './messageCA.js';
 import StateCA from './stateCA.js';
-import Model from './model.js';
 
 export default class SimulationCA extends Simulation { 
 	
-	get Size() { return this.size; }
+	get dimensions() {  return this._dimensions; }
 	
-	get Dimensions() {  return { x:this.size[0], y:this.size[1], z:this.size[2] }}
+	get ratio() { return this.dimensions.x / this.dimensions.y; }
 	
-	get Ratio() { return this.Dimensions.x / this.Dimensions.y; }
+	get maxX() { return this.dimensions.x }
 	
-	get MaxX() { return this.size[0] }
+	get maxY() { return this.dimensions.y }
 	
-	get MaxY() { return this.size[1] }
+	get maxZ() { return this.dimensions.z }
 	
-	get MaxZ() { return this.size[2] }
-	
-	constructor(structure, messages, size) {
-		super(structure, messages);
-		
-		this.size = size || null;
-		
-		this.state = new StateCA(this.Models, size);
+	get ports() {
+		// TODO : Is this always 1?? Is there always only one model in Cell-DEVS?
+		return this.structure.models[1].ports.map(p => p.name);
 	}
 	
-	LoadStateMessages(messages) {
-		// Add frames from flat messages list			
-		for (var i = 0; i < messages.length; i++) {
-			var m = messages[i];
-			var message = new MessageCA(m.cell, m.value);
-			
-			this.AddStateMessage(m.time, message);
-		}
-	}
-	
-	get Ports() {
-		// TODO : Is this always 0?? Is there always only one model in Cell-DEVS?
-		return this.Models[0].Ports.map(p => p.Name);
-	}
-	
-	get Layers() {
+	get layers() {
 		var layers = [];
 		
-		for (var i = 0; i < this.MaxZ; i++) layers.push(i);
+		for (var i = 0; i < this.maxZ; i++) layers.push(i);
 		
 		return layers;
+	}
+	
+	constructor(structure, frames) {
+		super(structure, frames);
+		
+		this._dimensions = {
+			x: this.structure.model_types[1].dim[0],
+			y: this.structure.model_types[1].dim[1],
+			z: this.structure.model_types[1].dim[2]
+		}
+		
+		this.state = new StateCA(this.models[1], this.dimensions);
 	}
 }

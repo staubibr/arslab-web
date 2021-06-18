@@ -2,236 +2,161 @@
 
 import Evented from '../components/evented.js';
 import Cache from './cache.js';
-import Frame from './frame.js';
-import Model from './model.js';
-import Message from './message.js';
 
 export default class Simulation extends Evented { 
 	
-	get TimeStep() { return this.State.i; }
+	get structure() { return this._structure; }
 	
-	get Name() { return this.info.name; }
+	get name() { return this.structure.info.name; }
 	
-	get Type() { return this.info.type; }
+	get type() { return this.structure.info.type; }
 	
-	get Simulator() { return this.info.simulator; }
+	get models() { return this.structure.models; }
 	
-	get State() { return this.state; }
+	get timestep() { return this.state.i; }
 	
-	set State(value) { this.state = value; }
+	get state() { return this._state; }
+	set state(value) { this._state = value; }
 	
-	get Cache() { return this.cache; }
+	get cache() { return this._cache; }
 
-	get Selected() { return this.selected; }
+	get selected() { return this._selected; }
 	
-	get Frames() { return this.frames; }
+	get frames() { return this._frames; }
 
-	get CurrentFrame() { return this.Frames[this.TimeStep]; }
+	get current_frame() { return this.frames[this.timestep]; }
 	
-	get FirstFrame() { return this.Frames[0]; }
+	get first_frame() { return this.frames[0]; }
 	
-	get LastFrame() { return this.Frames[this.Frames.length - 1]; }
+	get last_frame() { return this.frames[this.frames.length - 1]; }
 	
-	get Models() { return this.models; }
-
-	get AtomicModels() { return this.Models.filter(m => m.Type == "atomic"); }
-
-	get CoupledModels() { return this.Models.filter(m => m.Type == "coupled"); }
-
-	get ModelIds() { return this.Models.map(m => m.Id); }
-	
-	get Ratio() { 
-		throw new Error("get Ratio must be defined in child simulation class.");
+	get ratio() { 
+		throw new Error("get ratio must be defined in child simulation class.");
 	}
 
-	constructor(structure, messages) {
+	constructor(structure, frames) {
 		super();
 		
-		this.info = structure.info;
+		this._structure = structure
 		
 		// class variables with accessors
-		this.time = -1;
-		this.state = null;
-		this.cache = new Cache();
-		this.selected = [];
-		this.frames = [];
-		this.models = structure.models;
+		this._state = null;
+		this._cache = new Cache();
+		this._selected = [];
+		this._frames = [];
+		this._frame_index = {};
 		
-		// class variables meant to be private
-		this.index = {};
-		
-		this.BuildModels();
-		
-		this.LoadOutputMessages(messages.output);
-		this.LoadStateMessages(messages.state);
-	}
-	
-	BuildModels() {
-		this.Models.forEach(m => {
-			m.Ports.forEach(p => p.Model = m);
-			
-			m.Links.forEach(l => {
-				l.ModelB = this.Model(l.ModelB);
-				l.PortB = this.Port(l.ModelB.Id, l.PortB);
-				l.PortA = this.Port(m.Id, l.PortA);				
-			});
-		});
-	}
-	
-	LoadOutputMessages(messages) {
-		// Add frames from flat messages list			
-		for (var i = 0; i < messages.length; i++) {
-			var m = messages[i];
-			var emitter = this.Port(m.model, m.port);
-			var message	= new Message(emitter, m.value);		
-			
-			this.AddOutputMessage(m.time, message);
-		}		
-	}
-	
-	LoadStateMessages(messages) {
-		// Add frames from flat messages list			
-		for (var i = 0; i < messages.length; i++) {
-			var m = messages[i];
-			var emitter = this.Model(m.model);
-			var message	= new Message(emitter, m.value);		
-			
-			this.AddStateMessage(m.time, message);
-		}
+		for (var i = 0; i < frames.length; i++) this.AddFrame(frames[i]);
 	}
 	
 	// TODO REVIEW
 	Initialize(nCache) {
-		this.State.Reset();
+		this.state.Reset();
 		
-		this.Cache.Build(nCache, this.Frames, this.State);
+		this.cache.Build(nCache, this.frames, this.state);
 		
-		this.State.Reset();
+		this.state.Reset();
 		
-		for (var i = 0; i < this.Frames.length; i++) {
-			this.Frames[i].Difference(this.State);
-			this.State.ApplyMessages(this.Frames[i]);
+		for (var i = 0; i < this.frames.length; i++) {
+			this.frames[i].Difference(this.state);
+			this.state.ApplyMessages(this.frames[i]);
 		}
 		
-		this.State = this.Cache.First();
+		this.state = this.cache.First();
 	}
 
-	Model(name) {
-		return this.Models.find(m => name == m.Id) || null;
+	Model(id) {
+		return this.structure.Model(id);
 	}
 	
-	Port(mName, pName) {
-		var model = this.Model(mName);
+	Port(mId, pName) {
+		return this.structure.Port(mId, pName);
+	}
+	
+	State(i) {
+		if (i == this.frames.length - 1) return this.cache.Last();
 		
-		return model && model.Port(pName) || null;
-	}
-	
-	AddFrame(frame) {		
-		this.frames.push(frame);
+		if (i == 0) return this.cache.First();
 		
-		this.index[frame.time] = frame;
-		
-		return frame;
-	}
-	
-	GetFrame(time) {
-		return this.index[time] || null;
-	}
-	
-	AddMessage(time, message, type) {
-		var f = this.GetFrame(time) || this.AddFrame(new Frame(time));
-		
-		f.AddMessage(message, type);
-	}
-	
-	AddOutputMessage(time, message) {		
-		this.AddMessage(time, message, "output");
-	}
-	
-	AddStateMessage(time, message) {		
-		this.AddMessage(time, message, "state");
-	}
-	
-	GetState(i) {
-		if (i == this.Frames.length - 1) return this.Cache.Last();
-		
-		if (i == 0) return this.Cache.First();
-		
-		var cached = this.Cache.GetClosest(i);
+		var cached = this.cache.GetClosest(i);
 		
 		for (var j = cached.i + 1; j <= i; j++) {
-			cached.Forward(this.Frames[j]);
+			cached.Forward(this.frames[j]);
 		}
 		
 		return cached;
 	}
 	
-	GoToFrame(i) {
-		this.State = this.GetState(i);
+	Frame(time) {
+		return this._frame_index[time] || null;
+	}
+	
+	AddFrame(frame) {		
+		this.frames.push(frame);
 		
-		this.Emit("Jump", { state:this.State, i: i });
+		this._frame_index[frame.time] = frame;
+		
+		return frame;
+	}
+	
+	GoToFrame(i) {
+		this.state = this.State(i);
+		
+		this.Emit("Jump", { state:this.state, i: i });
 	}
 	
 	GoToNextFrame() {
-		var frame = this.Frames[this.TimeStep + 1];
+		var frame = this.frames[this.timestep + 1];
 		
-		this.State.Forward(frame);
+		this.state.Forward(frame);
 		
 		this.Emit("Move", { frame : frame, direction:"next" });
 	}
 	
 	GoToPreviousFrame() {
-		var frame = this.Frames[this.State.i].Reverse();
+		var frame = this.frames[this.state.i].Reverse();
 		
-		this.State.Backward(frame);
+		this.state.Backward(frame);
 		
 		this.Emit("Move", { frame : frame, direction:"previous"});
 	}
 	
 	IsSelected(model) {
-		return this.Selected.indexOf(model) > -1;
+		return this.selected.indexOf(model) > -1;
 	}
 	
 	Select(model) {
-		var idx = this.Selected.indexOf(model);
+		var idx = this.selected.indexOf(model);
 		
 		// Already selected
 		if (idx != -1) return;
 		
-		this.Selected.push(model);
+		this.selected.push(model);
 		
 		this.Emit("Selected", { model:model, selected:true });
 	}
 	
 	Deselect(model) {
-		var idx = this.Selected.indexOf(model);
+		var idx = this.selected.indexOf(model);
 		
 		// Not in current selection
 		if (idx == -1) return;
 		
-		this.Selected.splice(idx, 1);
+		this.selected.splice(idx, 1);
 		
 		this.Emit("Selected", { model:model, selected:false });
 	}
 	
 	// TODO: This doesn't belong here, only used for style.js
 	EachMessage(delegate) {
-		for (var i = 0; i < this.Frames.length; i++) {
-			var f = this.Frames[i];
+		for (var i = 0; i < this.frames.length; i++) {
+			var f = this.frames[i];
 			
-			for (var j = 0; j < f.StateMessages.length; j++) {
-				var t = f.StateMessages[j];
+			for (var j = 0; j < f.state_messages.length; j++) {
+				var t = f.state_messages[j];
 				
 				delegate(t, f);
 			}
 		}
-	}
-	
-	onSimulation_Error(message) {
-		this.Emit("Error", { error:new Error(message) });
-	}
-	
-	static FromJson(json) {
-		throw new Error("function FromJson must be defined in child simulation class.");
 	}
 }

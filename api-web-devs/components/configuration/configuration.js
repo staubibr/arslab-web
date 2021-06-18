@@ -38,11 +38,11 @@ export default class Configuration extends Evented {
 		
 		configuration.playback = new Playback();
 		
-		if (simulation.Type == "Cell-DEVS") configuration.grid = Grid.FromSimulation(simulation);
+		if (simulation.type == "Cell-DEVS") configuration.grid = Grid.FromSimulation(simulation);
 		
-		if (simulation.Type == "DEVS") configuration.diagram = new Diagram();
+		if (simulation.type == "DEVS") configuration.diagram = new Diagram();
 		
-		if (simulation.Type == "GIS-DEVS") configuration.gis = new GIS();
+		if (simulation.type == "GIS-DEVS") configuration.gis = new GIS();
 		
 		return configuration;
 	}

@@ -1,21 +1,25 @@
 
 import Style from "../../tools/style.js";
 
+import BucketFill from "./bucketFill.js";
+import BucketStroke from "./bucketStroke.js";
+import BucketRadius from "./bucketRadius.js";
+
 export default class Point {
 
-	get Radius() {
-		return this.fill;
-	}
+	get radius() { return this._radius; }
 
-	get Stroke() {
-		return this.stroke;
-	}
+	get stroke() { return this._stroke; }
+
+	get fill() { return this._fill; }
+
+	get type() { return this._type; }
 
 	constructor(radius, fill, stroke) {
-		this.type = "point";
-		this.radius = radius;
-		this.fill = fill;
-		this.stroke = stroke;
+		this._type = "point";
+		this._radius = radius;
+		this._fill = fill;
+		this._stroke = stroke;
 	}
 	
 	Bucketize(stats) {
@@ -37,11 +41,11 @@ export default class Point {
 	}
 	
 	static FromJson(json) {
-		var radius = json.radius ? Style.RadiusStyleFromJson(json.radius) : Style.DefaultRadius();
+		var radius = json.radius ? Style.RadiusStyleFromJson(json.radius) : BucketRadius.DefaultRadius();
 		
-		var fill = json.fill ? Style.FillStyleFromJson(json.fill) : Style.DefaultFill();
+		var fill = json.fill ? Style.FillStyleFromJson(json.fill) : BucketFill.DefaultFill();
 		
-		var stroke = json.stroke ? Style.StrokeStyleFromJson(json.stroke) : Style.DefaultStroke();
+		var stroke = json.stroke ? Style.StrokeStyleFromJson(json.stroke) : BucketStroke.DefaultStroke();
 		
 		return new Point(radius, fill, stroke);
 	}

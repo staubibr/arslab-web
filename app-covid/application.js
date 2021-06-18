@@ -134,9 +134,9 @@ export default class Main extends Templated {
 			this.chart.On("mouseout", this.OnChart_MouseOut.bind(this));
 		}
 		
-		var data = this.GetChartData(this.simulation.Frames);
-		var dates = this.GetDates(this.simulation.Frames);
-		var date = this.simulation.FirstFrame().time;
+		var data = this.GetChartData(this.simulation.frames);
+		var dates = this.GetDates(this.simulation.frames);
+		var date = this.simulation.first_frame().time;
 		
 		this.chart.Update(data, dates, "count", date, this.nls.Ressource("Chart_Y_Label"), true);
 	}
@@ -177,7 +177,7 @@ export default class Main extends Templated {
 	}
 	
 	OnSimulation_Move(ev) {		
-		this.chart.UpdateHighlight(this.simulation.CurrentFrame().time, false);
+		this.chart.UpdateHighlight(this.simulation.current_frame().time, false);
 	}
 	
 	OnChart_MouseMove(ev) {	

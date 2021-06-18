@@ -18,8 +18,6 @@ import Zip from '../api-web-devs/tools/zip.js';
 
 export default Core.Templatable("Application", class Application extends Templated { 
 
-	get Settings() { return this.Widget("settings").Settings; }
-
 	constructor(node) {		
 		super(node);
 		
@@ -27,8 +25,6 @@ export default Core.Templatable("Application", class Application extends Templat
 		
 		this.simulation = null;
 		this.files = null;
-		
-		this.popup = new Popup();
 		
 		this.AddWidget("rise", new Rise());
 		this.AddWidget("settings", new Settings());
@@ -45,11 +41,10 @@ export default Core.Templatable("Application", class Application extends Templat
 		this.Widget("rise").On("error", this.OnWidget_Error.bind(this));
 	}
 	
-	OnUpload_Ready(ev) {							
+	OnUpload_Ready(ev) {
 		this.simulation = ev.simulation;
 		this.files = ev.files;
-		
-		this.Configure(ev.configuration, ev.style);
+		this.settings = ev.configuration;
 		
 		this.Elem("btnViz").disabled = false;
 		this.Elem("btnSettings").disabled = false;
@@ -60,7 +55,7 @@ export default Core.Templatable("Application", class Application extends Templat
 		this.ShowDropzone(false);
 		this.ShowView(this.Elem("view"));
 		
-		this.Widget("playback").Recorder = new Recorder(this.view.Widget.Canvas);
+		this.Widget("playback").recorder = new Recorder(this.view.widget.canvas);
 		this.Widget("playback").Initialize(this.simulation, this.settings.playback);
 		this.Widget('settings').Initialize(this.simulation, this.settings);	
 	}
@@ -82,15 +77,11 @@ export default Core.Templatable("Application", class Application extends Templat
 		this.Widget("settings").Show();
 	}
 	
-	OnButtonDownload_Click(ev) {
-		var structure = this.files.find(f => f.name == "structure.json");
-		var messages = this.files.find(f => f.name == "messages.log");
-		var diagram = this.files.find(f => f.name == "diagram.svg");
+	OnButtonDownload_Click(ev) {		
+		var files = [this.files.structure, this.files.messages, this.settings.ToFile()];
 		
-		var files = [structure, messages, this.settings.ToFile()];
+		if (this.files.diagram) files.push(this.files.diagram);
 		
-		if (diagram) files.push(diagram);
-				
 		Zip.SaveZipStream(this.simulation.name, files);
 	}
 		
@@ -105,14 +96,6 @@ export default Core.Templatable("Application", class Application extends Templat
 		alert (ev.error);
 	}
 	
-	Configure(config, style) {
-		if (config) this.settings = Configuration.FromJson(config);
-		
-		else this.settings = Configuration.FromSimulation(this.simulation);
-		
-		if (this.simulation.Type == "Cell-DEVS" && style) this.settings.grid.styles = style;
-	}
-	
 	ShowDropzone(visible) {
 		Dom.ToggleCss(this.Elem("dropzone"), "hidden", !visible);
 		Dom.ToggleCss(this.Elem("views"), "hidden", visible);
@@ -121,10 +104,10 @@ export default Core.Templatable("Application", class Application extends Templat
 	ShowView(container) {
 		this.Clear();
 		
-		if (this.simulation.Type == "DEVS") {			
+		if (this.simulation.type == "DEVS") {			
 			this.view = new DiagramAuto(container, this.simulation, this.settings.diagram);
 		}
-		else if (this.simulation.Type === "Cell-DEVS") {
+		else if (this.simulation.type === "Cell-DEVS") {
 			this.view = new GridAuto(container, this.simulation, this.settings.grid);
 		}
 		

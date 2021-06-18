@@ -2,49 +2,43 @@
 
 import Core from '../tools/core.js';
 import Dom from '../tools/dom.js';
-import Net from '../tools/net.js';
-import Zip from '../tools/zip.js';
-import Styler from '../components/styler.js';
 import Templated from '../components/templated.js';
-// import Parser from '../components/cadmiumParser.js';
+import DialogYesNo from '../ui/yesNo.js';
+import BoxInputFiles from '../ui/box-input-files.js';
+import PopupLinker from './linker/popup-linker.js';
 import Parser from '../components/parser.js';
 import ChunkReader from '../components/chunkReader.js';
-import BoxInput from '../ui/box-input-files.js';
-
 import SimulationDEVS from '../simulation/simulationDEVS.js';
 import SimulationCA from '../simulation/simulationCA.js';
 
-
-// A lot of async going on, sorry.
 export default Core.Templatable("Widget.Loader", class Loader extends Templated { 
-	
-	static get URL() {
-		return Core.URLs.conversion;
+
+	set files(value) {
+		this._files = { 
+			structure: value.find(f => f.name == 'structure.json'),
+			messages: value.find(f => f.name == 'messages.log'),
+			diagram: value.find(f => f.name == 'diagram.svg'),
+			visualization: value.find(f => f.name == 'visualization.json'),
+			style: value.find(f => f.name == 'style.json')
+		}
 	}
 	
-	set Files(value) {
-		this.files = { ready:[], convert:[] };
-		
-		var ready = ["structure.json", "messages.log", "diagram.svg", "style.json", "visualization.json"];
-		// var ready = ["scenario.json", "messages.txt", "style.json", "visualization.json"];
-		
-		value.forEach(f => {
-			ready.indexOf(f.name) > -1 ? this.Files.ready.push(f) : this.Files.convert.push(f);
-		});
-	}
-	
-	get Files() {
-		return this.files;
-	}
-	
-	get Disabled() {
-		return this.Elem("parse").disabled;
+	get files() {
+		return this._files;
 	}
 	
 	constructor(node) {		
 		super(node);
 		
         if (!Core.URLs.conversion) throw new Error("Config Error: conversion url not defined in application configuration.");
+		
+		this.dialog = new DialogYesNo();
+		this.dialog.message = this.nls.Ressource("Dialog_Linker");
+		
+		this.linker = new PopupLinker();
+		this.parser = new Parser();
+		
+		this.parser.On("Progress", this.OnParser_Progress.bind(this));
 		
 		this.Node("parse").On("click", this.onParseButton_Click.bind(this));
 		this.Node("clear").On("click", this.onClearButton_Click.bind(this));
@@ -55,67 +49,59 @@ export default Core.Templatable("Widget.Loader", class Loader extends Templated 
 		this.Elem("parse").disabled = this.Widget("dropzone").files.length == 0;
 	}
 
-	Finish() {
+	RestoreUI() {
 		Dom.AddCss(this.Elem("wait"), "hidden");
 		
 		this.Elem("parse").style.backgroundImage = null;	
 	}
 	
 	Load() {
-		this.Files = this.Widget("dropzone").files;
+		this.files = this.Widget("dropzone").files;
 		
-		// var p = this.Parse();
+		if (!this.files.structure) this.onWidget_Error(new Error("Missing structure.json file, cannot parse."));
 		
-		var n = this.Files.ready.length;
+		else if (!this.files.messages) this.onWidget_Error(new Error("Missing messages.log file, cannot parse."));
 		
-		if (n == 3 || n == 4) var p = this.Parse();
-		
-		else if (this.Files.convert.length > 0) var p = this.Convert();
-		
-		else var p = Core.Rejected("Files cannot be converted or parsed automatically.");
-		
-		p.then(this.OnParser_Finished.bind(this), (error) => this.OnError(error));
+		else this.PreParse();
 	}
 	
-	Convert() {
-		var d = Core.Defer();
-		var form = new FormData();
+	async PreParse() {		
+		var json = await ChunkReader.ReadAsJson(this.files.structure);
 		
-		this.Files.convert.forEach(f => form.append("files", f));
+		if (json.info.type != "DEVS") return this.Parse();
 		
-		var p = Net.Fetch(Loader.URL, { method: 'POST', body: form });
+		await this.dialog.Show();
 		
-		p.then(this.onFiles_Converted.bind(this, d), (error) => { d.Reject(error); });
+		if (this.dialog.answer == "no") return this.Parse();
 		
-		return d.promise;
+		await this.linker.Show(this.files.structure, this.files.diagram);
+		
+		this.files.structure = this.linker.structure_file;
+		this.files.diagram = this.linker.diagram_file;
+		
+		return this.Parse();
 	}
 	
-	Parse() {
-		var d = Core.Defer();
-		var parser = new Parser();
+	async Parse() {
+		var structure = await this.parser.ParseStructure(this.files.structure);
+		var messages = await this.parser.ParseMessages(structure, this.files.messages);
+		var diagram = await this.parser.ParseDiagram(this.files.diagram);
 		
-		parser.On("Progress", this.OnParser_Progress.bind(this));
+		if (structure.type == "Cell-DEVS") var simulation = new SimulationCA(structure, messages);
 		
-		var config = this.Files.ready.find(f => f.name.match(/visualization.json/));
-		
-		var p1 = parser.Parse(this.Files.ready);
-		var p2 = ChunkReader.Read(config, (content) => JSON.parse(content));
-		
-		Promise.all([p1, p2]).then(responses => d.Resolve(responses), (error) => d.Reject(error));
-		
-		return d.promise;
-	}
-	
-	onFiles_Converted(d, response) {
-		response.blob().then(blob => {			
-			Zip.LoadZip(blob).then(response => {
-				this.Files.ready.push(...response.files);
-				
-				this.Parse().then(result => d.Resolve(result), (error) => d.Reject(error));
-			}, error => d.Reject(error));
-		}, error => d.Reject(error));
-	}
+		else var simulation = new SimulationDEVS(structure, messages, diagram);
 
+		var configuration = await this.parser.ParseConfiguration(simulation, this.files.visualization, this.files.style);
+		
+		this.RestoreUI();
+		
+		if (simulation.type == "DEVS" && !simulation.diagram) {
+			this.onWidget_Error(new Error("Diagram not found for DEVS simulation. Please provide a diagram.svg file and reload the simulation."));
+		}
+
+		else this.Emit("ready", { files: this.files, simulation: simulation, configuration: configuration });			
+	}
+	
 	OnParser_Progress(ev) {		
 		var c1 = "#198CFF";
 		var c2 = "#0051A3";
@@ -125,25 +111,6 @@ export default Core.Templatable("Widget.Loader", class Loader extends Templated 
 		this.Elem("parse").style.backgroundImage = bg;		
 	}
 	
-	OnParser_Finished(responses) {	
-		this.Finish();
-		
-		var simulation = responses[0].simulation;
-		
-		if (simulation.Type == "DEVS" && !simulation.Diagram) {
-			alert("Diagram not found for DEVS simulation. Please provide a diagram.svg file and reload the simulation.");
-		}
-		
-		var output = {
-			files: this.files.ready,
-			simulation: responses[0].simulation,
-			configuration : responses[1] || null,
-			style : responses[0].style || null
-		}
-		
-		this.Emit("ready", output);
-	}
-		
 	onDropzone_Change(ev) {		
 		this.UpdateButton();
 	}
@@ -159,11 +126,10 @@ export default Core.Templatable("Widget.Loader", class Loader extends Templated 
 		
 		this.UpdateButton();
 	}
-
-	OnError(error) {
-		this.Finish();
-		
+	
+	onWidget_Error(error) {
 		this.Emit("error", { error:error });
+		this.RestoreUI();
 	}
 
 	Template() {
@@ -184,6 +150,9 @@ export default Core.Templatable("Widget.Loader", class Loader extends Templated 
 			},
 			"Loader_Parse" : {
 				"en" : "Load simulation"
+			},
+			"Dialog_Linker": {
+				"en": "This visualization uses an SVG diagram. Do you want to review the associations between the diagram and the structure file?"
 			}
 		}
 	}

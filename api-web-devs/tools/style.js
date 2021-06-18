@@ -9,19 +9,21 @@ import StaticScale from "../components/style/staticScale.js";
 import Polygon from "../components/style/polygon.js";
 import Point from "../components/style/point.js";
 import PointIcon from "../components/style/pointIcon.js";
+import Linestring from "../components/style/linestring.js";
 
 export default class Style {
 	
 	static Statistics(simulation) {		
 		var values = {};
+
 		
 		// TODO :Something doesn't work here now that there can be multiple model types. 
 		// Statistics should be computed in the GIS part of the app, by property on the map.
 		simulation.EachMessage((t, f) => {			
-			for (var f in t.Value) {
+			for (var f in t.value) {
 				if (!values[f]) values[f] = [];
 				
-				values[f].push(t.Value[f]);
+				values[f].push(t.value[f]);
 			}
 		});
 		
@@ -46,24 +48,16 @@ export default class Style {
 		return stats;
 	}
 	
-	static BucketizeStyle(style, stats) {
-		if (style.type == "quantile") {	
-			style.buckets = Style.QuantileBuckets(stats[style.property].sorted, style.Length);
-		}
-		else if (style.type == "equivalent") {
-			style.buckets = Style.EquivalentBuckets(stats[style.property].min, stats[style.property].max, style.Length);
-		}
-	}
-	
-	static QuantileBuckets(values, n) {
+	static QuantileBuckets(values, n, zero) {
 		var buckets = [];
 		
-		var interval = Math.floor(values.length / n);
+		var zValues = zero ?  values.filter(v => v != 0) : values;
 		
+		var interval = Math.floor(zValues.length / n);
 		
-		for (var i = 1; i < n; i++) buckets.push(values[i * interval]);
+		for (var i = 1; i < n; i++) buckets.push(zValues[i * interval]);
 		
-		buckets.push(values[values.length - 1]);
+		buckets.push(zValues[zValues.length - 1]);
 		
 		return buckets;
 	}
@@ -80,12 +74,23 @@ export default class Style {
 		return buckets;
 	}
 	
+	static BucketizeStyle(style, stats) {
+		if (style.type == "quantile") {	
+			style.buckets = Style.QuantileBuckets(stats[style.property].sorted, style.length, !!style.zero);
+		}
+		else if (style.type == "equivalent") {
+			style.buckets = Style.EquivalentBuckets(stats[style.property].min, stats[style.property].max, style.length);
+		}
+	}
+	
 	static GetStyle(type, json) {
 		if (type == "point") return this.PointStyle(json);
 		
 		if (type == "pointIcon") return this.PointIconStyle(json);
 		
 		if (type == "polygon") return this.PolygonStyle(json);
+		
+		if (type == "linestring") return this.LinestringStyle(json);
 	}
 	
 	static PointIconStyle(json) {
@@ -129,20 +134,13 @@ export default class Style {
 		});
 	}
 	
-	static DefaultFill() {
-		return new StaticFill('rgba(50,100,200,0.6)');
-	}
-	
-	static DefaultStroke() {
-		return new StaticStroke('rgba(0,0,0,1)', 1);
-	}
-	
-	static DefaultRadius() {
-		return new StaticRadius(4);
-	}
-	
-	static DefaultScale() {
-		return new StaticScale(0.5);
+	static LinestringStyle(json) {
+		return new ol.style.Style({
+			stroke: new ol.style.Stroke({
+				color: json.stroke.color,
+				width: json.stroke.width
+			})
+		})
 	}
 	
 	static FillStyleFromJson(json) {
@@ -185,5 +183,7 @@ export default class Style {
 			
 			if (json.src) return PointIcon.FromJson(json);
 		}
+		
+		if (type == "linestring") return Linestring.FromJson(json);
 	}
 }

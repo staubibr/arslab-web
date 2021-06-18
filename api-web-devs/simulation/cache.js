@@ -24,17 +24,7 @@ export default class Cache {
 	GetClosest(i) {
 		var diff = i % this.n;
 		
-		var state = this.GetState((i - diff) / this.n);
-		
-		return state;
-	}
-	
-	get Length(){
-		return this.states.length;
-	}
-	
-	get N(){
-		return this.n;
+		return this.GetState((i - diff) / this.n);
 	}
 	
 	AddState(state) {

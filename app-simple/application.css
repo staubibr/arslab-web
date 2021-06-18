@@ -101,9 +101,17 @@ body.Simple button:disabled {
     border-color: #7e7e7e;
 }
 
-body.Simple button:not(:disabled):hover {
-  background: #0051A3;
+body.Simple :not(.popup) button:not(:disabled):hover {
+  background: #0a54a2;
   transition: all .2s ease;
+}
+
+body.Simple button.clear:not(:disabled):hover {
+  background: #980000;
+}
+
+body.Simple .popup button.close:hover {
+   background:none;	
 }
 
 body.Simple select, 
@@ -179,11 +187,6 @@ body.Simple input[type=number] {
 	background:#fd6e6e;
     width: 29%;
 }
-
-.body .clear:hover {
-	background:#980000;
-}
-
 
 .body .parse {
     width: 69%;

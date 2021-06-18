@@ -9,9 +9,9 @@ import Styler from '../../components/styler.js';
 
 export default Core.Templatable("Widget.Settings", class Settings extends Popup { 
 	
-	set Settings(value) { this.settings = value; }
+	set settings(value) { this._settings = value; }
 	
-	get Settings() { return this.settings; }
+	get settings() { return this._settings; }
 
 	constructor(id) {
 		super(id);
@@ -24,7 +24,6 @@ export default Core.Templatable("Widget.Settings", class Settings extends Popup 
 		this.Widget("layers").On("close", this.OnLayers_Close.bind(this));
 		this.Widget("layers").On("apply", this.OnLayers_Apply.bind(this));
 		
-		
 		this.Node("btnLayers").On("click", this.onLayers_Click.bind(this));
 	}
 	
@@ -33,8 +32,8 @@ export default Core.Templatable("Widget.Settings", class Settings extends Popup 
 		Dom.SetCss(this.Elem("top"), `settings DEVS Cell-DEVS`);
 		Dom.SetCss(this.Elem("top"), `settings DEVS Cell-DEVS`);
 		
-		this.simulation = simulation;
-		this.settings = settings;
+		this._simulation = simulation;
+		this._settings = settings;
 		
 		// Link UI to setting parameters. Each item requires two delegates, setting is used to update 
 		// the settings object from the ui, ui is used to update the ui from the settings object
@@ -43,13 +42,11 @@ export default Core.Templatable("Widget.Settings", class Settings extends Popup 
 			{ group:"playback", property:"loop", node:"playbackLoop", setting: el => el.checked, ui: (el,v) => { el.checked = v; } }
 		]
 		
-		if (simulation.Type == "DEVS") this.InitializeDEVS(settings);
+		if (simulation.type == "DEVS") this.InitializeDEVS(settings);
 		
-		else if (simulation.Type == "Cell-DEVS") this.InitializeCellDEVS(settings);
+		else if (simulation.type == "Cell-DEVS") this.InitializeCellDEVS(settings);
 		
-		// else if (simulation.Type == "Irregular Cell-DEVS") this.InitializeGisDEVS(settings);
-		
-		else if (simulation.Type == "GIS-DEVS") this.InitializeGisDEVS(settings);
+		else if (simulation.type == "GIS-DEVS") this.InitializeGisDEVS(settings);
 		
 		// Hook up change event for each ui element, when ui element changes, update corresponding setting
 		this.ui.forEach(u => {
@@ -103,7 +100,7 @@ export default Core.Templatable("Widget.Settings", class Settings extends Popup 
 	}
 	
 	onLayers_Click(ev) {
-		this.Widget("layers").Initialize(this.simulation, this.settings);
+		this.Widget("layers").Initialize(this._simulation, this.settings);
 		
 		this.Content = this.Widget("layers");
 		this.Title = this.nls.Ressource("Settings_Layers");
@@ -111,9 +108,9 @@ export default Core.Templatable("Widget.Settings", class Settings extends Popup 
 	}
 	
 	OnLayers_Apply(ev) {
-		this.Settings.styler = Styler.FromJson(ev.styles);
+		this.settings.styler = Styler.FromJson(ev.styles);
 		
-		this.Settings.grid.Set("layers", ev.layers);
+		this.settings.grid.Set("layers", ev.layers);
 	}
 	
 	OnLayers_Close(ev) {		

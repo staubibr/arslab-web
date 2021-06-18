@@ -48,12 +48,12 @@ export default class Grid extends Evented {
 	
 	Set(property, value) {
 		this[property] = value;
-				
+		
 		this.Emit("Change", { property:property, value:value });
 	}
 	
 	CanvasSize(simulation, nGrids) {
-		nGrids = nGrids || simulation.Dimensions.z;
+		nGrids = nGrids || simulation.dimensions.z;
 		
 		var aspect = this.aspect;
 		var space = this.spacing;
@@ -62,7 +62,7 @@ export default class Grid extends Evented {
 		var width = this.width;
 		var height = this.height;
 		
-		if (aspect) height = width / simulation.Ratio;
+		if (aspect) height = width / simulation.ratio;
 		
 		width = (cols * width + space * cols - space);
 		height = (rows * height + rows * space - space);
@@ -77,7 +77,7 @@ export default class Grid extends Evented {
 	static FromSimulation(simulation) {
 		var json = Grid.Default();
 		
-		json.layers = Grid.DefaultLayers(simulation.MaxZ, simulation.Ports);
+		json.layers = Grid.DefaultLayers(simulation.maxZ, simulation.ports);
 		json.columns = Grid.DefaultColumns(json.layers);
 
 		return Grid.FromJson(json);

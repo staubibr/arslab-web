@@ -10,31 +10,30 @@ export default class State {
 	}
 	
 	Clone() {
-		var clone = new State([]);
+		var clone = new State(this.models);
 		
 		clone.i = this.i;
-		clone.models = this.models.map(m => m.Clone());
 		clone.data = JSON.parse(JSON.stringify(this.data));
 
 		return clone;
 	}
 	
 	GetValue(emitter) {
-		if (!this.data.hasOwnProperty(emitter.Id)) return null;
+		if (!this.data.hasOwnProperty(emitter.id)) return null;
 		
-		return this.data[emitter.Id] || null;
+		return this.data[emitter.id] || null;
 	}
 	
 	ApplyMessages(frame) {
-		for (var i = 0; i < frame.StateMessages.length; i++) {
-			this.ApplyMessage(frame.StateMessages[i]);
+		for (var i = 0; i < frame.state_messages.length; i++) {
+			this.ApplyMessage(frame.state_messages[i]);
 		}
 	}
 
 	ApplyMessage(m) {
-		if (!this.data.hasOwnProperty(m.Emitter.Id)) return;
+		if (!this.data.hasOwnProperty(m.emitter.id)) return;
 		
-		for (var f in m.Value) this.data[m.Emitter.Id][f] = m.Value[f];
+		for (var f in m.value) this.data[m.emitter.id][f] = m.value[f];
 	}
 	
 	Forward(frame) {
@@ -55,9 +54,9 @@ export default class State {
 		this.models.forEach((m) => {			
 			var d = {};
 			
-			m.Template.forEach(f => d[f] = 0);
+			m.node_type.template.forEach(f => d[f] = 0);
 			
-			this.data[m.Id] = d;
+			this.data[m.id] = d;
 		});
 	}
 }

@@ -9,7 +9,7 @@ import Grid from '../grid/grid.js';
 
 export default Core.Templatable("Auto.Grid", class AutoGrid extends Automator { 
 
-	get Canvas() { return this.Widget.Canvas; }
+	get canvas() { return this.widget.canvas; }
 
 	constructor(node, simulation, options) {
 		if (!options) throw new Error("No options provided for the Grid widget");
@@ -17,12 +17,12 @@ export default Core.Templatable("Auto.Grid", class AutoGrid extends Automator {
 		super(new Grid(node), simulation);
 		
 		this.options = options;
-				
-		this.Widget.Dimensions = this.simulation.Dimensions;
-		this.Widget.Columns = options.columns;
-		this.Widget.Spacing	= options.spacing;
-		this.Widget.Layers	= options.layers;
-		this.Widget.Styles	= options.styles;
+		
+		this.widget.dimensions = this.simulation.dimensions;
+		this.widget.columns = options.columns;
+		this.widget.spacing	= options.spacing;
+		this.widget.layers	= options.layers;
+		this.widget.styles	= options.styles;
 		
 		this.AttachHandlers(options);
 		
@@ -32,14 +32,14 @@ export default Core.Templatable("Auto.Grid", class AutoGrid extends Automator {
 	AttachHandlers(options) {
 		var h = [];
 		
-		if (options.hoverEnabled != false) h.push(this.Widget.On("MouseMove", this.onMouseMove_Handler.bind(this)));
-		if (options.hoverEnabled != false) h.push(this.Widget.On("MouseOut", this.onMouseOut_Handler.bind(this)));
-		if (options.clickEnabled != false) h.push(this.Widget.On("Click", this.onClick_Handler.bind(this)));
+		if (options.hoverEnabled != false) h.push(this.widget.On("MouseMove", this.onMouseMove_Handler.bind(this)));
+		if (options.hoverEnabled != false) h.push(this.widget.On("MouseOut", this.onMouseOut_Handler.bind(this)));
+		if (options.clickEnabled != false) h.push(this.widget.On("Click", this.onClick_Handler.bind(this)));
 		
-		h.push(this.Simulation.On("Move", this.onSimulationMove_Handler.bind(this)));
-		h.push(this.Simulation.On("Jump", this.onSimulationJump_Handler.bind(this)));
+		h.push(this.simulation.On("Move", this.onSimulationMove_Handler.bind(this)));
+		h.push(this.simulation.On("Jump", this.onSimulationJump_Handler.bind(this)));
 		
-		h.push(this.Widget.Styler.On("Change", this.onSimulationPaletteChanged_Handler.bind(this)));
+		h.push(this.widget.styler.On("Change", this.onSimulationPaletteChanged_Handler.bind(this)));
 		
 		options.On("Change", this.OnSettings_Change.bind(this));
 		
@@ -53,17 +53,17 @@ export default Core.Templatable("Auto.Grid", class AutoGrid extends Automator {
 	}
 	
 	Resize() {
-		var n = this.Widget.layers.length;
-		var size = this.options.CanvasSize(this.Simulation, n);
+		var n = this.widget.layers.length;
+		var size = this.options.CanvasSize(this.simulation, n);
 			
-		this.Widget.container.style.width = size.width + "px";
-		this.Widget.container.style.height = size.height + "px";	
+		this.widget.container.style.width = size.width + "px";
+		this.widget.container.style.height = size.height + "px";	
 	}
 	
 	Redraw() {
-		this.Widget.Resize();
+		this.widget.Resize();
 		
-		this.Widget.DrawState(this.Simulation.state, this.Simulation);
+		this.widget.DrawState(this.simulation.state, this.simulation);
 	}
 	
 	OnSettings_Change(ev) {			
@@ -71,31 +71,31 @@ export default Core.Templatable("Auto.Grid", class AutoGrid extends Automator {
 
 		if (check.indexOf(ev.property) == -1) return;
 		
-		this.Widget.Columns = this.options.columns;
-		this.Widget.Spacing = this.options.spacing;
-		this.Widget.Layers = this.options.layers;
-		this.Widget.Styles = this.options.styles;
+		this.widget.columns = this.options.columns;
+		this.widget.spacing = this.options.spacing;
+		this.widget.layers = this.options.layers;
+		this.widget.styles = this.options.styles;
 			
 		this.Resize();
 		this.Redraw();
 	}
 	
 	onSimulationMove_Handler(ev) {		
-		var s = this.Simulation;
+		var s = this.simulation;
 		
-		this.Widget.DrawChanges(ev.frame, s);
+		this.widget.DrawChanges(ev.frame, s);
 	}
 	
 	onSimulationJump_Handler(ev) {
-		var s = this.Simulation;
+		var s = this.simulation;
 		
-		this.Widget.DrawState(s.state, s);
+		this.widget.DrawState(s.state, s);
 	}
 	
 	onSimulationPaletteChanged_Handler(ev) {
-		var s = this.Simulation;
+		var s = this.simulation;
 		
-		this.Widget.DrawState(s.state, s);
+		this.widget.DrawState(s.state, s);
 	}
 	
 	onMouseMove_Handler(ev) {
@@ -119,23 +119,23 @@ export default Core.Templatable("Auto.Grid", class AutoGrid extends Automator {
 	
 	onClick_Handler(ev) {
 		var id = ev.data.x + "-" + ev.data.y + "-" + ev.data.z;
-		var isSelected = this.Simulation.IsSelected(id);		
+		var isSelected = this.simulation.IsSelected(id);		
 		
 		if (!isSelected) {
-			this.Simulation.Select(id);
+			this.simulation.Select(id);
 			
-			var color = this.Simulation.Palette.SelectedColor;
+			var color = this.simulation.Palette.selected_color;
 		} 
 		
 		else {
-			this.Simulation.Deselect(id);
+			this.simulation.Deselect(id);
 
 			var v = this.simulation.state.models[id];
 			
-			var color = this.Simulation.Palette.GetColor(v);
+			var color = this.simulation.Palette.GetColor(v);
 		}
 		
-		this.Widget.DrawCellBorder(ev.data.x, ev.data.y, ev.data.k, color);
+		this.widget.DrawCellBorder(ev.data.x, ev.data.y, ev.data.k, color);
 	}
 	
 	static Nls() {

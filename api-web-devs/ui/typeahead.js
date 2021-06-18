@@ -4,7 +4,6 @@ import Dom from '../tools/dom.js';
 
 export default Core.Templatable("Basic.Components.Typeahead", class Typeahead extends Templated {
 	
-	
     set placeholder(value) { this.Elem('input').setAttribute('placeholder', value); }
 	
 	set title(value) { this.Elem('input').setAttribute('title', value); }

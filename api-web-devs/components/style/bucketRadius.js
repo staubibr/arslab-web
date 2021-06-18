@@ -1,38 +1,40 @@
 
 import Style from "../../tools/style.js";
+import StaticRadius from "./staticRadius.js";
 
 export default class BucketRadius {
 
-	get Length() {
-		return this.classes;
-	}
-	
-	get Classification() {
-		return this.classification;
-	}
+	get length() { return this.classes; }
 
-	constructor(property, classes, radii, type, buckets) {
+	constructor(property, classes, radius, type, buckets, zero) {
 		this.type = type;
 		this.attribute = "radius";
 		this.property = property;
 		this.classes = classes;
-		this.radii = radii;
-		this.buckets = buckets || null
+		this.radius = radius;
+		this.buckets = buckets || null;
+		this.zero = zero || null;
 	}
 	
 	Symbol(value) {
 		var v = value[this.property];
 		
-		for (var i = 0; v > this.buckets[i] && i < this.buckets.length; i++);
+		if (v == 0 && this.zero) return new ol.style.Fill({ color: this.zero });
 		
-		return this.radii[i];
+		for (var i = 0; v > this.buckets[i] && i <= this.buckets.length; i++);
+		
+		return this.radius[i];
 	}
 	
 	static FromJson(json) {
-		if (json.type == "user-defined") var radii = json.radius;
+		if (json.type == "user-defined") var radius = json.radius;
 
-		else var radii = Style.EquivalentBuckets(json.min, json.max, json.classes);
+		else var radius = Style.EquivalentBuckets(json.min, json.max, json.classes);
 		
-		return new BucketRadius(json.property, json.classes, radii, json.type, json.buckets);
+		return new BucketRadius(json.property, json.classes, radius, json.type, json.buckets, json.zero);
+	}
+	
+	static DefaultRadius() {
+		return new StaticRadius(4);
 	}
 }

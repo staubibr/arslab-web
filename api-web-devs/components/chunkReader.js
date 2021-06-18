@@ -57,15 +57,26 @@ export default class ChunkReader extends Evented {
 		
 		if (!file) return d.Resolve(null);
 		
-		this.PromiseRead(file).then(function(result) {			
-			d.Resolve(delegate(result));
+		this.PromiseRead(file).then(function(result) {
+			try {			
+				d.Resolve(delegate(result));
+			}
+			catch(ex) {
+				d.Reject(ex);
+				
+				throw(ex);
+			}
 		}, (error) => { d.Reject(error); });
 
 		return d.promise;
 	}
 	
 	ReadAsJson(file) {
-		return this.Read(file, (json) => JSON.parse(json));
+		return this.Read(file, json => JSON.parse(json));
+	}
+	
+	ReadAsText(file) {
+		return this.Read(file, text => text);
 	}
 	
 	ReadByChunk(file, split, delegate) {
@@ -116,5 +127,17 @@ export default class ChunkReader extends Evented {
 		var reader = new ChunkReader();
 	
 		return reader.ReadByChunk(file, split, delegate);
+	}
+	
+	static ReadAsJson(file) {
+		var reader = new ChunkReader();
+		
+		return reader.ReadAsJson(file);
+	}
+	
+	static ReadAsText(file) {
+		var reader = new ChunkReader();
+		
+		return reader.ReadAsText(file);
 	}
 }

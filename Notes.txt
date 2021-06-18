@@ -1,5 +1,20 @@
 Notes
 
+Contributors:
+
+	Majed Nayef
+	Eli Yammine
+	Jose Franco Jimenez
+	Fernando Loor
+	Hamza Qassoud
+	Prakhar?
+	Jon Menard
+	Jacob Laboissoniere
+	Chang Qiu
+	Paul J. Roode
+	Omar Kawach
+	Shreya Taneja
+
 DEVS Specification
 
 	time;port,value;port,value;port,value;port,value

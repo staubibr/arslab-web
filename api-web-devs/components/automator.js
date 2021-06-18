@@ -7,32 +7,32 @@ import Nls from './nls.js';
 
 export default class Automator extends Evented { 
 	
-	get Simulation() { return this.simulation; }
+	get simulation() { return this._simulation; }
 	
-	get Widget() { return this.widget; }
+	get widget() { return this._widget; }
 
 	constructor(widget, simulation) {
 		super();
 		
 		this.nls = this.constructor.Nls ? new Nls(this.constructor.Nls()) : null;
 		
-		this.simulation = simulation;
-		this.widget = widget;
-		this.handles = [];
+		this._simulation = simulation;
+		this._widget = widget;
+		this._handles = [];
 	}
 
 	Handle(handles) {
-		this.handles = this.handles.concat(handles);
+		this._handles = this._handles.concat(handles);
 	}
 	
 	Destroy() {
-		this.handles.forEach((h) => {
+		this._handles.forEach((h) => {
 			h.target.Off(h.type, h.callback);
 		});
 		
-		this.simulation = null;
-		this.widget = null;
-		this.handles = null;
+		this._simulation = null;
+		this._widget = null;
+		this._handles = null;
 	}
 	
 	Redraw() {

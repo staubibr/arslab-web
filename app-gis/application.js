@@ -58,7 +58,7 @@ export default class Application extends Templated {
     // For downloading transitions 
     this.Node("btnDownload").On("click", this.OnButtonDownload_Click.bind(this));
 
-    this.Widget("playback").Recorder = new Recorder(this.Node("map").Elem("canvas.ol-unselectable"));
+    this.Widget("playback").recorder = new Recorder(this.Node("map").Elem("canvas.ol-unselectable"));
   }
 
   /**
@@ -480,7 +480,7 @@ export default class Application extends Templated {
       this.simulation,
       this.data, 
       this.titleOfCurrentSimulation, 
-      simulationToTransition(this.simulation.Frames),
+      simulationToTransition(this.simulation.frames),
       {
         classNum : this.classNumberOfCurrentSimulation, 
         layerColor: this.currentColor, 

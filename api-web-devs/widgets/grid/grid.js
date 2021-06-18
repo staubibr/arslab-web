@@ -10,50 +10,50 @@ const DEFAULT_COLOR = "#fff";
 
 export default Core.Templatable("Widgets.Grid", class Grid extends Templated { 
 
-	get Canvas() { return this.Elem("canvas"); }
+	get canvas() { return this.Elem("canvas"); }
 	
-	set Dimensions(value) { this.dimensions = value; }
+	set dimensions(value) { this._dimensions = value; }
+	get dimensions() { return this._dimensions; }
 	
-	set Columns(value) { this.columns = value; }
+	set columns(value) { this._columns = value; }
+	get columns() { return this._columns; }
 	
-	set Spacing(value) { this.spacing = value; }
+	set spacing(value) { this._spacing = value; }
+	get spacing() { return this._spacing; }
 	
-	set Layers(value) { 
-		this.layers = value; 
-		this.index = {};
+	set layers(value) { 
+		this._layers = value; 
+		this._index = {};
 		
-		this.layers.forEach((l, i) => {			
-			if (!this.index.hasOwnProperty(l.z)) this.index[l.z] = {};
+		this._layers.forEach((l, i) => {			
+			if (!this._index.hasOwnProperty(l.z)) this._index[l.z] = {};
 				
 			l.ports.forEach(p => {
-				if (!this.index[l.z].hasOwnProperty(p)) this.index[l.z][p] = [];
+				if (!this._index[l.z].hasOwnProperty(p)) this._index[l.z][p] = [];
 				
-				
-				this.index[l.z][p].push(l);
+				this._index[l.z][p].push(l);
 			});
 		});
 	}
 	
-	set Styles(value) { 
-		this.styler = Styler.FromJson(value);
-	}
+	get layers() { return this._layers; }
 	
-	get Styler() { return this.styler; }
+	set styles(value) { this._styler = Styler.FromJson(value); }
+	get styler() { return this._styler; }
 
 	constructor(node) {
 		super(node);
 
-		this.cell = { w:null, h:null };
-		this.dimensions = null;
-		this.columns = null;
-		this.spacing = null;
-		this.size = null;
-		this.styler = null;
-		
-		this.layers = [];
-		this.grids = [];
+		this._cell = { w:null, h:null };
+		this._dimensions = null;
+		this._columns = null;
+		this._spacing = null;
+		this._size = null;
+		this._styler = null;
+		this._layers = [];
+		this._grids = [];
 
-		this.ctx = this.Elem("canvas").getContext("2d");
+		this._ctx = this.Elem("canvas").getContext("2d");
 		
 		this.Node("canvas").On("mousemove", this.onCanvasMouseMove_Handler.bind(this));
 		this.Node("canvas").On("mouseout", this.onCanvasMouseOut_Handler.bind(this));
@@ -67,65 +67,61 @@ export default Core.Templatable("Widgets.Grid", class Grid extends Templated {
 				  "</div>" + 
 			   "</div>";
 	}
-	/*
-	AddLayer(z, port) {
-		this.layers.push({ z:z, port:port });
-	}
-	*/
+
 	GetRows(columns, layers) {
 		return Math.ceil(layers.length / columns) ;
 	}
 	
 	Resize() {
-		this.size = Dom.Geometry(this.Elem("canvas-container"));
+		this._size = Dom.Geometry(this.Elem("canvas-container"));
 		
 		// Number of columns and rows
-		this.layout = {
+		this._layout = {
 			columns : this.columns,
 			rows : this.GetRows(this.columns, this.layers)
 		}
 
 		// Size of one layer drawn, only used to determine cell size, shouldn't be used after
 		var layer = {
-			w : (this.size.w - (this.layout.columns * this.spacing - this.spacing)) / this.layout.columns,
-			h : (this.size.h - (this.layout.rows * this.spacing - this.spacing)) / this.layout.rows
+			w : (this._size.w - (this._layout.columns * this.spacing - this.spacing)) / this._layout.columns,
+			h : (this._size.h - (this._layout.rows * this.spacing - this.spacing)) / this._layout.rows
 		}
 		
 		// Size of a cell
-		this.cell = {
+		this._cell = {
 			w : Math.floor(layer.w / this.dimensions.x),
 			h : Math.floor(layer.h / this.dimensions.y)
 		}
 		
 		// Total effective size of drawing space 
-		this.total = {
-			w : (this.cell.w * this.dimensions.x) * this.layout.columns + this.layout.columns * this.spacing - this.spacing,
-			h : (this.cell.h * this.dimensions.y) * this.layout.rows + this.layout.rows * this.spacing - this.spacing
+		this._total = {
+			w : (this._cell.w * this.dimensions.x) * this._layout.columns + this._layout.columns * this.spacing - this.spacing,
+			h : (this._cell.h * this.dimensions.y) * this._layout.rows + this._layout.rows * this.spacing - this.spacing
 		}
 
 		// Determine offset w, h to center grid as much as possible
-		this.margin = {
-			w : (this.size.w - this.total.w) / 2,
-			h : (this.size.h - this.total.h) / 2
+		this._margin = {
+			w : (this._size.w - this._total.w) / 2,
+			h : (this._size.h - this._total.h) / 2
 		}
 		
-		this.grids = this.layers.map((l, i) => {	
-			var row = Math.floor(i / this.layout.columns);
-			var col = i - (row * this.layout.columns);
+		this._grids = this.layers.map((l, i) => {	
+			var row = Math.floor(i / this._layout.columns);
+			var col = i - (row * this._layout.columns);
 
-			var x1 = col * (this.dimensions.x * this.cell.w + this.spacing);
-			var y1 = row * (this.dimensions.y * this.cell.h + this.spacing);
-			var x2 = x1 + this.cell.w * this.dimensions.x;
-			var y2 = y1 + this.cell.h * this.dimensions.y;
+			var x1 = col * (this.dimensions.x * this._cell.w + this.spacing);
+			var y1 = row * (this.dimensions.y * this._cell.h + this.spacing);
+			var x2 = x1 + this._cell.w * this.dimensions.x;
+			var y2 = y1 + this._cell.h * this.dimensions.y;
 
 			return { x1:x1, y1:y1, x2:x2, y2:y2, z:l.z } 
 		}) 
 		
-		this.Elem("canvas").style.margin = `${this.margin.h}px ${this.margin.w}px`;		
+		this.Elem("canvas").style.margin = `${this._margin.h}px ${this._margin.w}px`;		
 		
 		// Redefine with and height to fit with number of cells and cell size
-		this.Elem("canvas").width = this.total.w;	
-		this.Elem("canvas").height = this.total.h;	
+		this.Elem("canvas").width = this._total.w;	
+		this.Elem("canvas").height = this._total.h;	
 	}
 	
 	// TODO : grid shouldn't use simulation object maybe?
@@ -136,12 +132,12 @@ export default Core.Templatable("Widgets.Grid", class Grid extends Templated {
 	}
 	
 	Clear() {
-		this.ctx.clearRect(0, 0, this.size.w, this.size.h);
+		this._ctx.clearRect(0, 0, this._size.w, this._size.h);
 	}
 	
 	Default(color) {
-		this.ctx.fillStyle = color;
-		this.ctx.fillRect(0, 0, this.size.w, this.size.h);
+		this._ctx.fillStyle = color;
+		this._ctx.fillRect(0, 0, this._size.w, this._size.h);
 	}
 	
 	// TODO : grid shouldn't use simulation object maybe?
@@ -163,7 +159,7 @@ export default Core.Templatable("Widgets.Grid", class Grid extends Templated {
 					
 					var id = x + "-" + y + "-" + l.z; // id of cell to draw
 					
-					if (simulation.IsSelected(id)) this.DrawCellBorder(x, y, i, scale.SelectedColor);
+					if (simulation.IsSelected(id)) this.DrawCellBorder(x, y, i, scale.selected_color);
 				}
 			}
 		}
@@ -171,20 +167,20 @@ export default Core.Templatable("Widgets.Grid", class Grid extends Templated {
 	
 	// TODO : grid shouldn't use simulation object maybe?
 	DrawChanges(frame, simulation) {
-		for (var i = 0; i < frame.StateMessages.length; i++) {
-			var m = frame.StateMessages[i];
+		for (var i = 0; i < frame.state_messages.length; i++) {
+			var m = frame.state_messages[i];
 			
-			for (var f in m.Value) {
-				var layers = this.index[m.Z] && this.index[m.Z][f] || [];
-				var v = m.Value[f];
+			for (var f in m.value) {
+				var layers = this._index[m.z] && this._index[m.z][f] || [];
+				var v = m.value[f];
 				
 				for (var j = 0; j < layers.length; j++) {
 					var l = layers[j];
 					var scale = this.styler.GetScale(l.style);
 			
-					this.DrawCell(m.X, m.Y, l.position, scale.GetColor(v));
+					this.DrawCell(m.x, m.y, l.position, scale.GetColor(v));
 					
-					if (simulation.IsSelected(m.Emitter)) this.DrawCellBorder(m.X, m.Y, i, scale.SelectedColor);
+					if (simulation.IsSelected(m.emitter)) this.DrawCellBorder(m.x, m.y, i, scale.selected_color);
 				}
 			}
 		}
@@ -198,12 +194,12 @@ export default Core.Templatable("Widgets.Grid", class Grid extends Templated {
 		
 		var zero = null;
 		
-		for (var k = 0; k < this.grids.length; k++) {
-			if (x < this.grids[k].x1 || x > this.grids[k].x2) continue;
+		for (var k = 0; k < this._grids.length; k++) {
+			if (x < this._grids[k].x1 || x > this._grids[k].x2) continue;
 			
-			if (y < this.grids[k].y1 || y > this.grids[k].y2) continue;
+			if (y < this._grids[k].y1 || y > this._grids[k].y2) continue;
 			
-			zero = this.grids[k];
+			zero = this._grids[k];
 			
 			break;
 		}
@@ -214,39 +210,39 @@ export default Core.Templatable("Widgets.Grid", class Grid extends Templated {
 		y = y - zero.y1;
 		
 		// Find the new X, Y coordinates of the clicked cell
-		var pX = x - x % this.cell.w;
-		var pY = y - y % this.cell.h;
+		var pX = x - x % this._cell.w;
+		var pY = y - y % this._cell.h;
 		
-		return { x:pX / this.cell.w, y:pY / this.cell.h, z:zero.z, k:k, layer:this.layers[k] };
+		return { x:pX / this._cell.w, y:pY / this._cell.h, z:zero.z, k:k, layer:this.layers[k] };
 	}
 	
 	DrawCell(x, y, k, color) {			
-		var zero = this.grids[k];
+		var zero = this._grids[k];
 			
-		var x = zero.x1 + x * this.cell.w;
-		var y = zero.y1 + y * this.cell.h;
+		var x = zero.x1 + x * this._cell.w;
+		var y = zero.y1 + y * this._cell.h;
 		
-		this.ctx.fillStyle = color;
-		this.ctx.fillRect(x, y, this.cell.w, this.cell.h);
+		this._ctx.fillStyle = color;
+		this._ctx.fillRect(x, y, this._cell.w, this._cell.h);
 	}
 	
 	DrawCellBorder(x, y, k, color) {	
-		var zero = this.grids[k];
+		var zero = this._grids[k];
 		
 		// Find the new X, Y coordinates of the clicked cell
-		var pX = zero.x1 + x * this.cell.w;
-		var pY = zero.y1 + y * this.cell.h;
+		var pX = zero.x1 + x * this._cell.w;
+		var pY = zero.y1 + y * this._cell.h;
 		
 		var dX = pX + (STROKE_WIDTH / 2);
 		var dY = pY + (STROKE_WIDTH / 2);
-				
+		
 		// Define a stroke style and width
-		this.ctx.lineWidth = STROKE_WIDTH;
-		this.ctx.strokeStyle = color;
+		this._ctx.lineWidth = STROKE_WIDTH;
+		this._ctx.strokeStyle = color;
 		
 		// Draw rectangle, add offset to fix anti-aliasing issue. Subtract from height and width 
 		// to draw border internal to the cell
-		this.ctx.strokeRect(dX, dY, this.cell.w - STROKE_WIDTH, this.cell.h - STROKE_WIDTH);
+		this.ctx.strokeRect(dX, dY, this._cell.w - STROKE_WIDTH, this._cell.h - STROKE_WIDTH);
 	}
 	
 	onCanvasClick_Handler(ev) {		

@@ -2,18 +2,14 @@
 import Evented from '../evented.js';
 
 export default class Map extends Evented {
-	get OL() {
-		return this._ol;
-	}
+	get OL() { return this._ol; }
 	
-	get Layers() {
-		return this.layers;
-	}
+	get layers() { return this._layers; }
 		
 	constructor(container, basemaps) {
 		super(); 
 		
-		this.layers = {};
+		this._layers = {};
 		
 		var sl = new ol.control.ScaleLine();
 		var fs = new ol.control.FullScreen();

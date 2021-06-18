@@ -39,7 +39,7 @@ export default class Diagram extends Evented {
 	DiagramSize(simulation) {		
 		return { 
 			width : this.width, 
-			height : this.aspect ? this.width / simulation.Ratio : this.height 
+			height : this.aspect ? this.width / simulation.ratio : this.height 
 		}
 	}
 	

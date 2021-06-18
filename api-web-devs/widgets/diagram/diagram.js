@@ -6,7 +6,7 @@ import Templated from '../../components/templated.js';
 
 export default Core.Templatable("Widgets.Diagram", class Diagram extends Templated { 
 
-	get Canvas() { return this.Elem("canvas"); }
+	get canvas() { return this.Elem("canvas"); }
 
 	constructor(node) {
 		super(node);
@@ -15,17 +15,13 @@ export default Core.Templatable("Widgets.Diagram", class Diagram extends Templat
 	SetDiagram(simulation) {
 		Dom.Empty(this.Elem('diagram'));
 		
-		this.Elem('diagram').appendChild(simulation.Diagram);
+		this.Elem('diagram').appendChild(simulation.diagram);
 		
 		this.Node('diagram').Elem("svg").setAttribute("preserveAspectRatio", "none");
 		
-		var style = "marker.highlighted path {fill: #1e94c3 !important;stroke: #1e94c3 !important;}marker.highlighted.origin path {fill: #b36402 !important;stroke: #b36402 !important;}text.highlighted {fill: #1e94c3 !important;}text.highlighted.origin {fill: #b36402 !important;}path.highlighted {stroke: #1e94c3 !important;}path.highlighted.origin {stroke: #b36402 !important;}.highlighted:not(text):not(path) {stroke: #1e94c3 !important;fill: #d6f2fd !important;}.highlighted.origin:not(text):not(path) {stroke: #b36402 !important;fill: #f9e5c1 !important;}";
+		this.simulation = simulation;
 		
-		Dom.Create("style", { innerHTML:style }, this.Node("diagram").Elem("svg"));
-		
-		this.Simulation = simulation;
-		
-		this.Simulation.models.forEach(model => {
+		this.simulation.models.forEach(model => {
 			model.svg.forEach(n => {	
 				n.addEventListener("mousemove", this.onSvgMouseMove_Handler.bind(this, model));
 				n.addEventListener("click", this.onSvgClick_Handler.bind(this, model));
@@ -101,18 +97,18 @@ export default Core.Templatable("Widgets.Diagram", class Diagram extends Templat
 	}
 	
 	DrawYMessage(message) {  
-		var p = message.Emitter;
-		var m = p && p.Model;
+		var p = message.emitter;
+		var m = p && p.model;
 
-		if (p) this.AddCss(p.SVG, ["origin"]);
+		if (p) this.AddCss(p.svg, ["origin"]);
 			
 		if (m) {
-			this.AddCss(m.OutputPath(p), ["highlighted"]);
-				
-			this.AddCss(m.SVG, ["origin"]);
+			this.AddCss(this.OutputPath(m, p), ["highlighted"]);
+			
+			this.AddCss(m.svg, ["origin"]);
 		}
-					
-		m.PortLinks(p).forEach(l => this.AddCss(l.SVG, ["origin"]));
+		
+		this.simulation.structure.PortLinks(m, p).forEach(l => this.AddCss(l.svg, ["origin"]));
 	}
 
 	AddCss(nodes, css) {		
@@ -131,11 +127,30 @@ export default Core.Templatable("Widgets.Diagram", class Diagram extends Templat
 		// Collect all nodes then clean them
 		var selector = [];
 		
-		this.Simulation.Models.forEach(m => {
+		this.simulation.models.forEach(m => {
 			this.RemoveCss(m.svg, ["highlighted", "origin"]);
-						
+			
 			m.ports.forEach(p => this.RemoveCss(p.svg, ["highlighted", "origin"]));
 			m.links.forEach(l => this.RemoveCss(l.svg, ["highlighted", "origin"]));
 		});
+	}
+	
+	OutputPath(model, port) {
+		var svg = model.svg.concat(port.svg);
+		var links = this.simulation.structure.PortLinks(model, port);
+		
+		for (var i = 0; i < links.length; i++) {
+			var l = links[i];
+			
+			svg = svg.concat(l.svg);
+			svg = svg.concat(l.portB.svg);			
+			svg = svg.concat(l.modelB.svg);
+			
+			if (l.modelB.type == "atomic") continue;
+			
+			links = links.concat(this.simulation.structure.PortLinks(l.modelB, l.portB));
+		}
+		
+		return svg;
 	}
 });

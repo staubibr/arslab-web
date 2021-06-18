@@ -6,9 +6,9 @@ import Templated from '../components/templated.js';
 
 export default Core.Templatable("Widget.Box-Input-Files", class Dropzone extends Templated { 
 
-	set Label(value) { this.Elem("label").innerHTML = value; }
+	set label(value) { this.Elem("label").innerHTML = value; }
 
-	set Icon(value) { Dom.AddCss(this.Elem("icon"), value); }
+	set icon(value) { Dom.AddCss(this.Elem("icon"), value); }
 	
 	constructor(container) {
 		super(container);

@@ -4,18 +4,16 @@ import State from "./state.js";
 
 export default class StateCA extends State { 
 
-	constructor(models, size) {
-		super(models);
+	constructor(model, size) {
+		super([model]);
 		
 		this.size = size;
 	}
 	
 	Clone() {
-		var clone = new StateCA([0, 0, 0], null);
+		var clone = new StateCA(this.models, this.size);
 		
 		clone.i = this.i;
-		clone.size = JSON.parse(JSON.stringify(this.size));
-		clone.models = this.models.map(m => m.Clone());
 		clone.data = JSON.parse(JSON.stringify(this.data));
 		
 		return clone;
@@ -26,7 +24,7 @@ export default class StateCA extends State {
 	}
 
 	ApplyMessage(m) {		
-		for (var f in m.Value) this.data[m.X][m.Y][m.Z][f] = m.Value[f];
+		for (var f in m.value) this.data[m.x][m.y][m.z][f] = m.value[f];
 	}
 		
 	Reset() {
@@ -35,16 +33,16 @@ export default class StateCA extends State {
 		// TODO : Is this always 0?? Is there always only one model in Cell-DEVS?
 		var m = this.models[0];
 		
-		for (var x = 0; x < this.size[0]; x++) {
+		for (var x = 0; x < this.size.x; x++) {
 			this.data[x] = [];
 			
-			for (var y = 0; y < this.size[1]; y++) {
+			for (var y = 0; y < this.size.y; y++) {
 				this.data[x][y] = [];
 				
-				for (var z = 0; z < this.size[2]; z++) {
+				for (var z = 0; z < this.size.z; z++) {
 					var d = {};
 					
-					m.Template.forEach(f => d[f] = 0);
+					m.node_type.template.forEach(f => d[f] = 0);
 					
 					this.data[x][y][z] = d;
 				}

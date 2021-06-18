@@ -9,13 +9,13 @@ export default Core.Templatable("Basic.Components.Picker", class Picker extends 
 		return this.picker.color;
 	}
 	
-	get Color3() {
+	get color3() {
 		var c = this.color.rgb;
 		
 		return [c.r, c.g, c.b];
 	}
 		
-	get Color4() {
+	get color4() {
 		var c = this.color.rgba;
 		
 		return [c.r, c.g, c.b, c.a * 255];

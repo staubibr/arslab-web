@@ -2,17 +2,14 @@
 
 import Dom from '../tools/dom.js';
 import Simulation from './simulation.js';
-import Frame from './frame.js';
-import Message from './message.js';
 import State from './state.js';
-import Model from './model.js';
 
 export default class SimulationDEVS extends Simulation { 
 	
-	get Diagram() { return this.diagram; }
+	get diagram() { return this._diagram; }
 	
-	get Ratio() { 	
-		var vb = this.Diagram.getAttribute("viewBox")
+	get ratio() {
+		var vb = this.diagram.getAttribute("viewBox")
 		
 		if (!vb) throw new Error("The viewBox attribute must be specified on the svg element.");
 
@@ -21,31 +18,32 @@ export default class SimulationDEVS extends Simulation {
 		return split[2] / split[3];
 	}
 	
-	get SVG() { return this.svg; }
-	
-	constructor(structure, messages, diagram) {
-		super(structure, messages);
+	constructor(structure, frames, diagram) {
+		super(structure, frames);
 		
-		if (diagram) this.LoadSVG(diagram);
+		if (diagram) this._diagram = this.LoadSVG(diagram);
 		
-		this.state = new State(this.Models);
+		this.state = new State(this.models);
 	}
 	
 	LoadSVG(svg) {		
 		var root = Dom.Create("div", { innerHTML:svg });
 		
-		this.Models.forEach(model => {			
-			model.SVG = model.SVG.map(s => root.querySelector(s)).filter(s => s != null);		
+		this.models.forEach(model => {		
+			model.svg = model.svg ?? [];
+			model.svg = model.svg.map(s => root.querySelector(s)).filter(s => s != null);		
 			
-			model.Ports.forEach(port => {
-				port.SVG = port.SVG.map(s => root.querySelector(s)).filter(s => s != null);
+			model.ports.forEach(port => {
+				port.svg = port.svg ?? [];
+				port.svg = port.svg.map(s => root.querySelector(s)).filter(s => s != null);
 			});
 			
-			model.Links.forEach(link => {
-				link.SVG = link.SVG.map(s => root.querySelector(s)).filter(s => s != null);
+			model.links.forEach(link => {
+				link.svg = link.svg ?? [];
+				link.svg = link.svg.map(s => root.querySelector(s)).filter(s => s != null);
 			});
 		});
 		
-		this.diagram = root.children[0];
+		return root.children[0];
 	}
 }

@@ -30,7 +30,7 @@ export default Core.Templatable("Application", class Application extends Templat
 			
 			if (!this.view) throw new Error("Unable to create a view widget from simulation object.");
 			
-			this.Widget("playback").Recorder = new Recorder(this.view.Widget.Canvas);
+			this.Widget("playback").recorder = new Recorder(this.view.widget.canvas);
 			this.Widget("playback").Initialize(this.simulation, this.settings.playback);
 		
 			this.view.Resize();
@@ -44,23 +44,23 @@ export default Core.Templatable("Application", class Application extends Templat
 		
 		else this.settings = Configuration.FromSimulation(this.simulation);
 		
-		if (this.simulation.Type == "Cell-DEVS" && style) this.settings.grid.styles = style;
+		if (this.simulation.type == "Cell-DEVS" && style) this.settings.grid.styles = style;
 	}
 	
 	ShowView(container) {
 		var d = Core.Defer();
 		
-		if (this.simulation.Type == "DEVS") {
+		if (this.simulation.type == "DEVS") {
 			d.Resolve(new DiagramAuto(container, this.simulation, this.settings.diagram));
 		}
-		else if (this.simulation.Type === "Cell-DEVS") {
+		else if (this.simulation.type === "Cell-DEVS") {
 			d.Resolve(new GridAuto(container, this.simulation, this.settings.grid));
 		}
-		else if (this.simulation.Type === "GIS-DEVS") {
+		else if (this.simulation.type === "GIS-DEVS") {
 			var geojson = this.files.convert.filter(f => f.name.match(/.geojson/i));
 			var view = new GisAuto(container, this.simulation, this.settings.gis, geojson);
 
-			Dom.Place(this.Elem("playback"), view.Widget.roots[0]);
+			Dom.Place(this.Elem("playback"), view.widget.roots[0]);
 			
 			view.On("ready", ev => d.Resolve(view));
 		}

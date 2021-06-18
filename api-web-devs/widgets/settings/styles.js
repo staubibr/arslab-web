@@ -179,7 +179,7 @@ export default Core.Templatable("Widget.Settings.Styles", class Styles extends T
 	Template() {
 		return	 "<div class='settings-title-container'>" +
 				    "<h3 class='settings-group-label Cell-DEVS'>nls(Settings_Styles)</h3>" +
-				    "<div handle='addStyle' class='style-add' widget='Basic.Components.Select'></div>" +
+				    "<div handle='addStyle' class='style-add' widget='Basic.UI.Select'></div>" +
 					"<button handle='addStyle' class='table-button image-button' title='nls(Settings_Layers_Add_Style_Title)'>" + 
 					   "<img src='./assets/add.png' class='image-icon'/>" +
 					"</button>" +		

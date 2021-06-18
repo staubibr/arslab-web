@@ -1,20 +1,21 @@
 
 import Style from "../../tools/style.js";
 
+import BucketFill from "./bucketFill.js";
+import BucketStroke from "./bucketStroke.js";
+
 export default class Polygon {
 
-	get Fill() {
-		return this.fill;
-	}
+	get fill() { return this._fill; }
 
-	get Stroke() {
-		return this.stroke;
-	}
+	get stroke() { return this._stroke; }
+
+	get type() { return this._type; }
 
 	constructor(fill, stroke) {
-		this.type = "polygon";
-		this.fill = fill;
-		this.stroke = stroke;
+		this._type = "polygon";
+		this._fill = fill;
+		this._stroke = stroke;
 	}
 	
 	Bucketize(stats) {
@@ -30,9 +31,9 @@ export default class Polygon {
 	}
 	
 	static FromJson(json) {		
-		var fill = json.fill ? Style.FillStyleFromJson(json.fill) : Style.DefaultFill();
+		var fill = json.fill ? Style.FillStyleFromJson(json.fill) : BucketFill.DefaultFill();
 		
-		var stroke = json.stroke ? Style.StrokeStyleFromJson(json.stroke) : Style.DefaultStroke();
+		var stroke = json.stroke ? Style.StrokeStyleFromJson(json.stroke) : BucketStroke.DefaultStroke();
 		
 		return new Polygon(fill, stroke);
 	}

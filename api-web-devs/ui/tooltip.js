@@ -5,12 +5,12 @@ import Dom from '../tools/dom.js';
 import Templated from '../components/templated.js';
 
 export default class Tooltip extends Templated  {
-		
-	get BBox() {
+	
+	get bbox() {
 		return this.Elem("root").getBoundingClientRect();
 	}
 	
-	set Content(value) {
+	set content(value) {
 		Dom.Place(value, this.Elem("content"));
 	}
 	
@@ -42,7 +42,7 @@ export default class Tooltip extends Templated  {
 		this.Elem("root").style.left = x + "px";
 		this.Elem("root").style.top = y + "px";
 				
-		if (this.BBox.left + this.BBox.width > window.innerWidth) {
+		if (this.bbox.left + this.bbox.width > window.innerWidth) {
 			this.Elem("root").style.top = y + 30 + "px";
 			this.Elem("root").style.left = -180 + x + "px";
 		}

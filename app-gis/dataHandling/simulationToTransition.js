@@ -1,7 +1,7 @@
 export const simulationToTransition = (data) => { 
     /*
     SimulationDEVS {cache, frames, index, listeners, models, name, selected, simulator, state, transitions, type}
-    - SimulationDEVS.Frames prints [FrameDEVS, FrameDEVS,..., FrameDEVS]
+    - SimulationDEVS.frames prints [FrameDEVS, FrameDEVS,..., FrameDEVS]
       - FrameDEVS prints {time: "x", transitions: Array(y)}
         - transitions: TransitionDEVS prints {model: "x", port: "y", value: z, diff: z}
     */

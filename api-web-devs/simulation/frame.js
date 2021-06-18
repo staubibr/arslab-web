@@ -2,25 +2,25 @@
 
 export default class Frame { 
 
-	get Messages() { return this.messages; }
+	get messages() { return this._messages; }
 
-	get OutputMessages() { return this.Messages.output; }
+	get output_messages() { return this.messages.output; }
 
-	get StateMessages() { return this.Messages.state; }
+	get state_messages() { return this.messages.state; }
 	
-	get Time() { return this.time; }
+	get time() { return this._time; }
 	
 	constructor(time) {
-		this.time = time;
+		this._time = time;
 		
-		this.messages = {
+		this._messages = {
 			output : [],
 			state : []
 		}
 	}
 	
 	AddMessage(m, type) {
-		this.Messages[type].push(m);
+		this.messages[type].push(m);
 	}
 	
 	AddOutputMessage(m) {
@@ -34,8 +34,8 @@ export default class Frame {
 	Reverse () {
 		var reverse = new Frame(this.time);
 		
-		for (var i = 0; i < this.StateMessages.length; i++) {
-			var m = this.StateMessages[i];
+		for (var i = 0; i < this.state_messages.length; i++) {
+			var m = this.state_messages[i];
 			
 			reverse.AddStateMessage(m.Reverse());
 		}
@@ -44,9 +44,9 @@ export default class Frame {
 	}
 	
 	Difference(state) {
-		for (var i = 0; i < this.StateMessages.length; i++) {
-			var m = this.StateMessages[i];			
-			var v = state.GetValue(m.Emitter);
+		for (var i = 0; i < this.state_messages.length; i++) {
+			var m = this.state_messages[i];			
+			var v = state.GetValue(m.emitter);
 			
 			m.Difference(v);
 		}

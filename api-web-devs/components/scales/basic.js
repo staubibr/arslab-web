@@ -7,7 +7,7 @@ const SELECTED_COLOR = "red";
 
 export default class Scale extends Evented { 
 	
-	get SelectedColor() { return SELECTED_COLOR; }
+	get selected_color() { return SELECTED_COLOR; }
 
 	constructor(classes) {
 		super();

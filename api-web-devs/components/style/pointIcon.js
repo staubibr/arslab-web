@@ -1,20 +1,20 @@
 
 import Style from "../../tools/style.js";
 
+import BucketScale from "./bucketScale.js";
+
 export default class PointIcon {
 
-	get Scale() {
-		return this.scale;
-	}
+	get scale() { return this._scale; }
 
-	get Src() {
-		return this.src;
-	}
+	get src() { return this._src; }
+
+	get type() { return this._type; }
 
 	constructor(scale, src) {
-		this.type = "point";
-		this.scale = scale;
-		this.src = src;
+		this._type = "point";
+		this._scale = scale;
+		this._src = src;
 	}
 	
 	Bucketize(stats) {
@@ -40,7 +40,7 @@ export default class PointIcon {
 			throw new Error("Cannot create a default point icon style. It must be created from json.");
 		}
 		
-		var scale = json.scale ? Style.ScaleStyleFromJson(json.scale) : Style.DefaultScale();
+		var scale = json.scale ? Style.ScaleStyleFromJson(json.scale) : BucketScale.DefaultScale();
 		
 		return new PointIcon(scale, json.src);
 	}

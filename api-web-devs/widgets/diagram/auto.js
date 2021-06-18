@@ -15,9 +15,9 @@ export default Core.Templatable("Auto.Diagram", class AutoDiagram extends Automa
 		
 		this.options = options;
 		
-		this.Widget.SetDiagram(this.Simulation);
+		this.widget.SetDiagram(this.simulation);
 		
-		this.Widget.Draw(this.Simulation.CurrentFrame.OutputMessages);
+		this.widget.Draw(this.simulation.current_frame.output_messages);
 		
 		this.selected = [];
 
@@ -31,13 +31,13 @@ export default Core.Templatable("Auto.Diagram", class AutoDiagram extends Automa
 	AttachHandlers(options) {
 		var h = [];
 
-		if (options.hoverEnabled != false) h.push(this.Widget.On("MouseMove", this.onMouseMove_Handler.bind(this)));
-		if (options.hoverEnabled != false) h.push(this.Widget.On("MouseOut", this.onMouseOut_Handler.bind(this)));
-		if (options.clickEnabled != false) h.push(this.Widget.On("Click", this.onClick_Handler.bind(this)));
+		if (options.hoverEnabled != false) h.push(this.widget.On("MouseMove", this.onMouseMove_Handler.bind(this)));
+		if (options.hoverEnabled != false) h.push(this.widget.On("MouseOut", this.onMouseOut_Handler.bind(this)));
+		if (options.clickEnabled != false) h.push(this.widget.On("Click", this.onClick_Handler.bind(this)));
 		
-		h.push(this.Simulation.On("Move", this.onSimulationChange_Handler.bind(this)));
-		h.push(this.Simulation.On("Jump", this.onSimulationChange_Handler.bind(this)));
-		h.push(this.Simulation.On("Selected", this.onSimulationChange_Handler.bind(this)));
+		h.push(this.simulation.On("Move", this.onSimulationChange_Handler.bind(this)));
+		h.push(this.simulation.On("Jump", this.onSimulationChange_Handler.bind(this)));
+		h.push(this.simulation.On("Selected", this.onSimulationChange_Handler.bind(this)));
 		
 		options.On("Change", this.OnSettings_Change.bind(this));
 		
@@ -45,18 +45,18 @@ export default Core.Templatable("Auto.Diagram", class AutoDiagram extends Automa
 	}
 	
 	UpdateSelected() {
-		this.selected = this.Simulation.Selected;
+		this.selected = this.simulation.selected;
 	}
 	
 	Resize() {
 		var size = this.options.DiagramSize(this.simulation);
 		
-		this.Widget.container.style.width = size.width + "px";
-		this.Widget.container.style.height = size.height + "px";	
+		this.widget.container.style.width = size.width + "px";
+		this.widget.container.style.height = size.height + "px";	
 	}
 	
 	Redraw() {
-		this.Widget.Resize();
+		this.widget.Resize();
 	}
 	
 	OnSettings_Change(ev) {
@@ -67,22 +67,23 @@ export default Core.Templatable("Auto.Diagram", class AutoDiagram extends Automa
 	}
 		
 	onSimulationChange_Handler(ev) {		
-		var messages = this.simulation.CurrentFrame.OutputMessages;
+		var messages = this.simulation.current_frame.output_messages;
 		
-		this.Widget.Draw(messages);
+		this.widget.Draw(messages);
 	}
 	
 	onMouseMove_Handler(ev) {
-		var messages = this.Simulation.CurrentFrame.OutputMessages;
+		var messages = this.simulation.current_frame.output_messages;
 		
 		Dom.Empty(this.tooltip.Elem("content"));
 		
-		var tY = messages.filter(t => t.Emitter.Model.Id == ev.model.Id);
+		var tY = messages.filter(t => t.emitter.model.id == ev.model.id);
 		
 		if (tY.length == 0) return;
 		
 		tY.forEach(t => {
-			var subs = [t.Emitter.Model.Id, t.Value.value, t.Emitter.Id];
+			var value = JSON.stringify(t.value);
+			var subs = [t.emitter.model.id, value, t.emitter.name];
 			var html = this.nls.Ressource("Diagram_Tooltip_Y", subs);
 			
 			Dom.Create("div", { className:"tooltip-label", innerHTML:html }, this.tooltip.Elem("content"));
@@ -98,12 +99,12 @@ export default Core.Templatable("Auto.Diagram", class AutoDiagram extends Automa
 		if (idx == -1) {
 			this.selected.push(ev.model);
 			
-			this.Widget.AddModelCss(ev.svg, ["selected"]);
+			this.widget.AddModelCss(ev.svg, ["selected"]);
 		}
 		else {
 			this.selected.splice(idx, 1);
 			
-			this.Widget.RemoveModelCss(ev.svg, ["selected"]);
+			this.widget.RemoveModelCss(ev.svg, ["selected"]);
 		}
 	}
 
@@ -114,7 +115,7 @@ export default Core.Templatable("Auto.Diagram", class AutoDiagram extends Automa
 	static Nls() {
 		return {
 			"Diagram_Tooltip_Y" : {
-				"en" : "<b>{0}</b> emitted an output (<b>{1}</b>) through port <b>{2}</b>"		
+				"en" : "<b>{0}</b> emitted <b>{1}</b> through port <b>{2}</b>"		
 			}
 		}
 	}

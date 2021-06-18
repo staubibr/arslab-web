@@ -4,19 +4,19 @@ import Templated from '../components/templated.js';
 
 export default class Popup extends Templated { 
 	
-	set Title(value) {
+	set title(value) {
 		this.Elem("title").innerHTML = value;
 	}
 	
-	set Content(content) {
+	set content(content) {
 		this.Empty();
 		
-		this.content = content;
+		this._content = content;
 		
-		content.Place(this.Elem("body"));
+		_content.Place(this.Elem("body"));
 	}
 	
-	get Content() { return this.content; }
+	get content() { return this._content; }
 	
 	constructor(container) {	
 		super(container || document.body);
@@ -30,7 +30,7 @@ export default class Popup extends Templated {
 		
 		this.nodes.blocker = Dom.Create("div", { className:"popup-blocker" }, document.body);
 		
-		this.SetStyle(0, "hidden");
+		this.SetStyle(0, "hidden", "none");
 		
 		this.Node("close").On("click", this.onBtnClose_Click.bind(this));
 		this.Node("blocker").On("click", this.onModal_Click.bind(this));
@@ -40,11 +40,13 @@ export default class Popup extends Templated {
 		this.container.addEventListener("mousemove", this.onPopup_MouseMove.bind(this));
 	}
 	
-	SetStyle(opacity, visibility) {
+	SetStyle(opacity, visibility, display) {
 		this.Elem("blocker").style.opacity = opacity;
 		this.Elem("blocker").style.visibility = visibility;
+		this.Elem("blocker").style.display = display;
 		this.Elem("popup").style.opacity = opacity;
 		this.Elem("popup").style.visibility = visibility;
+		this.Elem("popup").style.display = display;
 	}
 	
 	Empty() {
@@ -56,7 +58,7 @@ export default class Popup extends Templated {
 	
 		this.h = document.body.addEventListener("keyup", this.onBody_KeyUp_Bound);
 		
-		this.SetStyle(1, "visible");
+		this.SetStyle(1, "visible", "block");
 		
 		this.Emit("Show", { popup:this });
 		
@@ -68,7 +70,7 @@ export default class Popup extends Templated {
 	Hide() {		
 		document.body.removeEventListener("keyup", this.onBody_KeyUp_Bound);
 		
-		this.SetStyle(0, "hidden");
+		this.SetStyle(0, "hidden", "none");
 		
 		this.Emit("Hide", { popup:this });
 		

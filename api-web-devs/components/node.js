@@ -5,28 +5,28 @@ import Dom from '../tools/dom.js';
 
 export default class Node { 
 
-	get Element() { return this.elem; }
+	get element() { return this._element; }
 
 	constructor(elem) {
-		this.elem = elem;
+		this._element = elem;
 	}
 	
 	On(type, handler) {
-		this.elem.addEventListener(type, handler);
+		this.element.addEventListener(type, handler);
 	}
 	
 	Off(type, handler) {
-		this.elem.removeEventListener(type, handler);
+		this.element.removeEventListener(type, handler);
 	}
 	
 	Elem(selector) {
-		var elem = this.elem.querySelector(selector);
+		var elem = this.element.querySelector(selector);
 		
 		return (!elem) ? null : elem;
 	}
 	
 	Elems(selector) {
-		var elems = this.elem.querySelectorAll(selector);
+		var elems = this.element.querySelectorAll(selector);
 		var out = [];
 		
 		elems.forEach(e => out.push(e));
@@ -35,13 +35,13 @@ export default class Node {
 	}
 	
 	Node(selector) {
-		var elem = this.elem.querySelector(selector);
+		var elem = this.element.querySelector(selector);
 		
 		return (!elem) ? null : new Node(elem);
 	}
 	
 	Nodes(selector) {
-		var elems = this.elem.querySelectorAll(selector);
+		var elems = this.element.querySelectorAll(selector);
 		var out = [];
 		
 		elems.forEach(e => out.push(new Node(e)));

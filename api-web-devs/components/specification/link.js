@@ -1,6 +1,6 @@
 'use strict';
 
-export default class Link { 
+export class Link { 
 	
 	get json() { return this._json; }
 	set json(value) { this._json = value; }
@@ -20,29 +20,17 @@ export default class Link {
 	get svg() {  return this._json.svg; }
 	set svg(value) { this._json.svg = value; }
 	
-	constructor() {
-		this._json = Link.Default();
-	}
-	
-	static Default() {
-		return {
-			modelA : "",
-			portA : "",
-			modelB : "",
-			portB : "",
-			svg : null
+	constructor(modelA, portA, modelB, portB, svg) {
+		this._json = {
+			modelA : modelA ?? null,
+			portA : portA ?? null,
+			modelB : modelB ?? null,
+			portB : portB ?? null,
+			svg : svg ?? null
 		}
 	}
 	
 	static FromJson(json) {
-		var link = new Link();
-		
-		link.modelA = json.modelA;
-		link.portA = json.portA;
-		link.modelB = json.modelB;
-		link.portB = json.portB;
-		link.svg = json.svg;
-		
-		return link;
+		return new Link(json.modelA, json.portA, json.modelB, json.portB, json.svg);
 	}
 }

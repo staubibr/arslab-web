@@ -1,3 +1,7 @@
+.output-message {
+	display:none;
+}
+
 @import url(https://fonts.googleapis.com/css?family=Varela+Round);
 
 html {

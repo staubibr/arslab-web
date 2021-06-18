@@ -48,10 +48,27 @@ export default class Legend extends Templated {
 		Dom.Place(legend.element, this.control.element);
 	}
 	
+	AddZero(rows, buckets, color) {
+		for (var i = 0; buckets.length; i++) {
+			if (buckets[i] > 0) break;
+		}
+		
+		rows.splice(i, 0, {
+			title: "0", 
+			size: 8, 
+			style: Style.PointStyle({
+				radius: 8, 
+				stroke: { color: "#000", width: 1 },
+				fill: { color: color }
+			})
+		});
+	}
+	
+	// TODO: This should be in the style classes directly
 	BuildFill(style) {
 		var prev = null;
 		
-		return style.buckets.map((b, i) => {
+		var rows = style.buckets.map((b, i) => {
 			var curr = b.toFixed(4).toString();
 			var title = (prev) ? `${prev} - ${curr}` : `0 - ${curr}`;
 			
@@ -67,12 +84,16 @@ export default class Legend extends Templated {
 				})
 			}
 		});
+		
+		if (style.zero) this.AddZero(rows, style.buckets, style.zero);
+		
+		return rows;
 	}
 	
 	BuildRadius(style){
 		var prev = null;
 		
-		return style.buckets.map((b, i) => {
+		var rows = style.buckets.map((b, i) => {			
 			var curr = b.toFixed(4).toString();
 			var title = (prev) ? `${prev} - ${curr}` : `0 - ${curr}`;
 
@@ -80,20 +101,24 @@ export default class Legend extends Templated {
 			
 			return {
 				title: title, 
-				size: style.radii[i], 
+				size: style.radius[i], 
 				style: Style.PointStyle({
-					radius: style.radii[i], 
+					radius: style.radius[i], 
 					stroke: { color: "#000", width: 1 } ,
 					fill: { color: "#fff" }
 				})
 			}
 		});
+		
+		if (style.zero) this.AddZero(rows, style.buckets, style.zero);
+		
+		return rows;
 	}
 	
 	BuildScale(style, src){
 		var prev = null;
 		
-		return style.buckets.map((b, i) => {
+		var rows = style.buckets.map((b, i) => {
 			var curr = b.toFixed(4).toString();
 			var title = (prev) ? `${prev} - ${curr}` : `0 - ${curr}`;
 
@@ -108,6 +133,10 @@ export default class Legend extends Templated {
 				})
 			}
 		});
+		
+		if (style.zero) this.AddZero(rows, style.buckets, style.zero);
+		
+		return rows;
 	}
 	
 	Template() {

@@ -354,6 +354,26 @@
 	overflow-y: auto;
 } 
 
+/* Dialogs */
+.popup.dialog {
+    max-width: 400px;
+    max-height: 160px;
+    min-height: 160px;
+}
+
+.popup.dialog .dialog-buttons {
+	text-align : center;
+}
+
+.popup.dialog .dialog-buttons > * {
+	display:inline-block;
+	display:inline-block;
+	margin: 6px;
+    width: 90px;
+    height: 34px;
+    line-height: 34px;
+}
+
 /* Color picker style */
 .color-picker-container {
     position: fixed;
@@ -403,6 +423,36 @@
 .diagram-container .selected:not(text) {
     stroke: red  !important;
 }
+
+
+text.highlighted,
+marker.highlighted path,
+.highlighted:not(text):not(path) {
+	fill: #d6f2fd !important;
+}
+
+path.highlighted,
+marker.highlighted path,
+.highlighted:not(text):not(path),
+div.highlighted {
+	stroke: #1e94c3 !important;
+	color: #1e94c3 !important;
+}
+
+text.highlighted.origin,
+marker.highlighted.origin path,
+.highlighted.origin:not(text):not(path) {
+	fill: #f9e5c1 !important;
+}
+
+path.highlighted.origin,
+marker.highlighted.origin path,
+.highlighted.origin:not(text):not(path),
+div.highlighted.origin {
+	stroke: #b36402 !important;
+	color: #b36402 !important;
+}
+
 
 /* grid widget styling */
 .grid, .grid .grid-canvas-container {
@@ -598,4 +648,60 @@
 .box-input-files .files-container .file span {
     font-size: 14px;
 	margin-left: 4px;
+}
+
+.popup-linker {
+    max-width: 1200px;
+    max-height: 600px;
+}
+
+.popup-linker .dwl-pointer {
+	cursor:pointer
+}
+
+.popup-linker .dwl-highlight-card {
+	border:1px solid tomato
+}
+
+.popup-linker .dwl-card {
+	min-width: 120px;
+    max-width: 240px;
+	padding: 10px;
+	padding-right: 30px;
+}
+
+.popup-linker .dwl-middle {
+	top: 50%;
+	transform: translate(0, -50%);
+}
+
+.popup-linker .dwl-selected {
+	stroke: tomato !important;
+	color: tomato !important;
+}
+
+.popup-linker #svg-content > svg {
+	width:100%;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.popup-linker #svg-content > svg rect,
+.popup-linker #svg-content > svg circle,
+.popup-linker #svg-content > svg ellipse,
+.popup-linker #svg-content > svg polygon {
+	pointer-events:fill;
+}
+
+.popup-linker .warning-icon {
+	height: 20px;
+	width: 20px;
+	margin-right: 4px;
+    stroke: tomato;
+    stroke-width: 0.5px;
+    fill: tomato;
+}
+
+.popup.popup-linker .popup-body button {
+	width:120px;
 }
