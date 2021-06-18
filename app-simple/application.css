@@ -231,6 +231,7 @@ body.Simple main .dropzone-container {
 
 body.Simple main .view {
 	display:inline-block;
+    margin: 20px;
 }
 
 .tooltip .legend, 

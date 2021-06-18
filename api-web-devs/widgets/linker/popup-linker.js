@@ -37,8 +37,9 @@ export default Core.Templatable("Popup.Linker", class PopupLinker extends Popup 
 				diagram: diagram
 			},
 			handlers : {
-				clear: () => linker.clear(),
-				reset: () => linker.reset(),
+				clear: () => this.linker.clear(),
+				reset: () => this.linker.reset(),
+				thicken: () => this.linker.thicken(3),
 			},
 			selector : Linker.SVG_FORMAT.DRAW_IO,
 			configuration: {
@@ -66,7 +67,7 @@ export default Core.Templatable("Popup.Linker", class PopupLinker extends Popup 
 	}
 	
 	onLinker_Complete(structure, ev) {
-		this.linker.clearSvgSelections();
+		this.linker.resetSvg();
 		
 		this.linker.json.models.forEach(m => structure.nodes[m.index].svg = m.svg);
 		this.linker.json.ports.forEach(p => structure.nodes[p.index].svg = p.svg);

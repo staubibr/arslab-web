@@ -126,6 +126,17 @@ export default class Linker {
         }
         this.state.selectedSvgElements = {};
     }
+	
+	resetSvg() {
+		var svg = document.getElementById('svg-content');
+		this.clearSvgSelections();
+		
+		svg.querySelectorAll('path').forEach(n => {
+			var origin = n.getAttribute("stroke-width-original");
+			n.setAttribute("stroke-width", origin);
+			n.removeAttribute("stroke-width-original");
+		});
+	}
 
     getCardContent = (buttonName, item) => {
 		return this.config[buttonName].label(item);
@@ -287,6 +298,23 @@ export default class Linker {
         this.recomputeCardWarnings();
     }
 
+	thicken(mult) {
+		var chk = document.getElementById("dwl-thick-chk");
+		var svg = document.getElementById('svg-content');
+		
+		svg.querySelectorAll('path').forEach(n => {
+			if (!chk.checked) {
+				var old = n.getAttribute("stroke-width-original");
+				n.setAttribute("stroke-width", old);
+			}
+			
+			else {
+				var old = n.getAttribute("stroke-width") ?? 1;
+				n.setAttribute("stroke-width", old * mult);
+			}
+		});
+	}
+
     renderSvg = (svgContainer, svgContent) => {		
         const svg = document.createElement('div');
 		svg.innerHTML = svgContent.trim();
@@ -332,6 +360,11 @@ export default class Linker {
 
 			n.style.cursor = 'pointer';
 			n.style.pointerEvents = 'all';
+		});
+		
+		svg.querySelectorAll('path').forEach(n => {
+			var origin = n.getAttribute("stroke-width") ?? 1;
+			n.setAttribute("stroke-width-original", origin);
 		});
     }
 
@@ -392,6 +425,13 @@ export default class Linker {
         
         const utilityButtons = this.addHTMLTo(svgContainer, '<div class="p-3 end-0"/>');
         
+		this.addHTMLTo(
+            utilityButtons,
+            `<div class="m-1 float-start"><input id="dwl-thick-chk" class="m-1 dwl-pointer" type="checkbox" title="Thicken line strokes for easier interaction."/ ><label class="m-1 dwl-pointer" title="Thicken line strokes for easier interaction." for="dwl-thick-chk">Thicker line strokes</label></div>`
+        );
+        
+		var chk = document.querySelector("#dwl-thick-chk").addEventListener('click', this.props.handlers.thicken, false);
+		
 		this.addHTMLTo(
             utilityButtons,
             `<button type="button" class="btn btn-primary m-1 float-end" data-button-type="reset" title="Reset associations to initial state.">Reset</button>`
