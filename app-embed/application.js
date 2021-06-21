@@ -20,9 +20,8 @@ export default Core.Templatable("Application", class Application extends Templat
 		
 		this.files = files;
 		this.simulation = simulation;
-		
-		this.Configure(config, style);
-		
+		this.settings = config;
+	
 		this.simulation.Initialize(this.settings.playback.cache);
 		
 		this.ShowView(this.Elem("view")).then(view => {
@@ -39,14 +38,6 @@ export default Core.Templatable("Application", class Application extends Templat
 		
 	}
 	
-	Configure(config, style) {
-		if (config) this.settings = Configuration.FromJson(config);
-		
-		else this.settings = Configuration.FromSimulation(this.simulation);
-		
-		if (this.simulation.type == "Cell-DEVS" && style) this.settings.grid.styles = style;
-	}
-	
 	ShowView(container) {
 		var d = Core.Defer();
 		
@@ -57,8 +48,8 @@ export default Core.Templatable("Application", class Application extends Templat
 			d.Resolve(new GridAuto(container, this.simulation, this.settings.grid));
 		}
 		else if (this.simulation.type === "GIS-DEVS") {
-			var geojson = this.files.convert.filter(f => f.name.match(/.geojson/i));
-			var view = new GisAuto(container, this.simulation, this.settings.gis, geojson);
+			// var geojson = this.files.convert.filter(f => f.name.match(/.geojson/i));
+			var view = new GisAuto(container, this.simulation, this.settings.gis, this.files.geojson || []);
 
 			Dom.Place(this.Elem("playback"), view.widget.roots[0]);
 			

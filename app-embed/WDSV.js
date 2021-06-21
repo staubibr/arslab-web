@@ -52,12 +52,12 @@ export default class Main extends Evented {
 			Core.URLs.models = [Core.URLs.models, this.path].join("/");
 			
 			var files = {
-				"visualization.json" : `${Core.URLs.models}/visualization.json`,
-				"structure.json" : `${Core.URLs.models}/structure.json`,
-				"messages.log" : `${Core.URLs.models}/messages.log`
+				visualization : `${Core.URLs.models}/visualization.json`,
+				structure : `${Core.URLs.models}/structure.json`,
+				messages : `${Core.URLs.models}/messages.log`
 			}
 			
-			if (this.diagram) files["diagram.svg"] = `${Core.URLs.models}/diagram.svg`;
+			if (this.diagram) files.diagram = `${Core.URLs.models}/diagram.svg`;
 			
 			this.LoadFiles(files);
 		}
@@ -66,27 +66,34 @@ export default class Main extends Evented {
 	}
 	
 	LoadFiles(files) {	
-		var p1 = Net.File(files["visualization.json"], "visualization.json", true);
-		var p2 = Net.File(files["structure.json"], "structure.json");
-		var p3 = Net.File(files["messages.log"], "messages.log");
+		var p1 = Net.File(files.visualization, "visualization.json", true);
+		var p2 = Net.File(files.structure, "structure.json");
+		var p3 = Net.File(files.messages, "messages.log");
 		
 		var defs = [p1,p2,p3];
 		
-		if (files["diagram.svg"]) defs.push(Net.File(files["diagram.svg"], "diagram.svg", true));
+		if (files.diagram) defs.push(Net.File(files.diagram, "diagram.svg", true));
 		
 		Promise.all(defs).then(this.OnFiles_Ready.bind(this), this.OnWDSV_Failure.bind(this));
 	}
 	
 	OnFiles_Ready(files) {
-		this.loader.Widget("dropzone").files = files.filter(f => f != null);
-		this.loader.Load();
+		this.files = { 
+			structure: files.find(f => f.name == 'structure.json'),
+			messages: files.find(f => f.name == 'messages.log'),
+			diagram: files.find(f => f.name == 'diagram.svg'),
+			visualization: files.find(f => f.name == 'visualization.json'),
+			style: files.find(f => f.name == 'style.json')
+		}
+		
+		this.loader.Load(this.files);
 	}
 
 	OnLoader_Ready(ev) {
 		this.loader.roots.forEach(r => this.node.removeChild(r));
 		this.loader.container.style.display = "block"
 
-		var app = new Application(this.node, ev.simulation, ev.configuration, ev.style, this.loader.Files);
+		var app = new Application(this.node, ev.simulation, ev.configuration, ev.style, this.files);
 
 		this.Emit("Ready", { application:app });
 	}
