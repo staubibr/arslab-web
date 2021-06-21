@@ -27,7 +27,7 @@ export default Core.Templatable("Widgets.Grid", class Grid extends Templated {
 		
 		this._layers.forEach((l, i) => {			
 			if (!this._index.hasOwnProperty(l.z)) this._index[l.z] = {};
-				
+			
 			l.ports.forEach(p => {
 				if (!this._index[l.z].hasOwnProperty(p)) this._index[l.z][p] = [];
 				
@@ -38,7 +38,12 @@ export default Core.Templatable("Widgets.Grid", class Grid extends Templated {
 	
 	get layers() { return this._layers; }
 	
-	set styles(value) { this._styler = Styler.FromJson(value); }
+	set styles(value) { 
+		this._styles = value;
+		this._styler = new Styler(value);
+	}
+	
+	get styles() { return this._styles; }
 	get styler() { return this._styler; }
 
 	constructor(node) {
@@ -49,7 +54,7 @@ export default Core.Templatable("Widgets.Grid", class Grid extends Templated {
 		this._columns = null;
 		this._spacing = null;
 		this._size = null;
-		this._styler = null;
+		this._styles = null;
 		this._layers = [];
 		this._grids = [];
 
@@ -152,14 +157,14 @@ export default Core.Templatable("Widgets.Grid", class Grid extends Templated {
 						var v = state.GetValue([x, y, l.z]); // value of cell to draw
 						var f = l.ports[p]; 
 						
-						var color = scale.GetColor(v[f]) || 'rgb(200, 200, 200)';
+						var color = this.styler.GetColor(scale, v[f]) || 'rgb(200, 200, 200)';
 						
 						this.DrawCell(x, y, i, color);
 					}
 					
 					var id = x + "-" + y + "-" + l.z; // id of cell to draw
 					
-					if (simulation.IsSelected(id)) this.DrawCellBorder(x, y, i, scale.selected_color);
+					if (simulation.IsSelected(id)) this.DrawCellBorder(x, y, i, 'rgb(255,0,0)');
 				}
 			}
 		}
@@ -178,9 +183,9 @@ export default Core.Templatable("Widgets.Grid", class Grid extends Templated {
 					var l = layers[j];
 					var scale = this.styler.GetScale(l.style);
 			
-					this.DrawCell(m.x, m.y, l.position, scale.GetColor(v));
+					this.DrawCell(m.x, m.y, l.position, this.styler.GetColor(scale, v));
 					
-					if (simulation.IsSelected(m.emitter)) this.DrawCellBorder(m.x, m.y, i, scale.selected_color);
+					if (simulation.IsSelected(m.emitter)) this.DrawCellBorder(m.x, m.y, i, 'rgb(255,0,0)');
 				}
 			}
 		}
@@ -242,7 +247,7 @@ export default Core.Templatable("Widgets.Grid", class Grid extends Templated {
 		
 		// Draw rectangle, add offset to fix anti-aliasing issue. Subtract from height and width 
 		// to draw border internal to the cell
-		this.ctx.strokeRect(dX, dY, this._cell.w - STROKE_WIDTH, this._cell.h - STROKE_WIDTH);
+		this._ctx.strokeRect(dX, dY, this._cell.w - STROKE_WIDTH, this._cell.h - STROKE_WIDTH);
 	}
 	
 	onCanvasClick_Handler(ev) {		

@@ -2,6 +2,10 @@
 	display: none !important;
 }
 
+button.inactive {
+	background-color:#51585e;
+}
+
 /* Playback bar styling */
 .playback input[type=range]: disabled: : -webkit-slider-runnable-track {
 	cursor: not-allowed;
@@ -14,7 +18,6 @@
 .playback input[type=range]: disabled::-webkit-slider-thumb{
     visibility: hidden;
 }
-
 
 .playback .controls button {
 	border-radius: 0px;
@@ -60,7 +63,7 @@
 	color: #dd4237;
 }
 
-/* Popups styling (General, Settings, Rise-Loader) */
+/* Popups styling (General, Settings, Server-Loader) */
 .popup-blocker {
 	position: fixed;
 	top: 0px;
@@ -68,20 +71,14 @@
 	right: 0px;
 	left: 0px;
 	z-index: 1000;
-    background: rgba(0, 0, 0, 0.6);
+    background: rgba(0, 0, 0, 0.3);
 }
 
 .popup {
     position: absolute;
-    max-width: 300px;
-    max-height: 375px;
-    min-height: 175px;
-    margin: auto;
-    bottom: 0px;
     top: 0px;
     left: 0px;
-    right: 0px;
-	
+	white-space: nowrap;
     background-color: #fff;
     border-radius: 5px;
     box-shadow: 0px 1px 8px #111;
@@ -90,11 +87,6 @@
 
 .popup .popup-body {
 	overflow-y: auto;
-    top: 25px;
-    bottom: 0px;
-    position: absolute;
-    left: 0px;
-    right: 0px;
     margin: 10px 10px;
 }
 
@@ -117,19 +109,15 @@
     box-shadow: none;
 }
 
-.popup.popup-settings {
-    max-height: 350px;
-    min-width: 480px;
-	white-space: nowrap;
+/* Basic settings popup widget */
+.popup-settings {
+    min-width: 400px;
 }
 
-.popup.popup-settings .styles {
-    margin: 15px 0px;
-}
-
-.popup.popup-layers {
-    max-height: 665px;
-    min-width: 405px;
+.popup-settings .column-50 {
+	width: 50%;
+	display: inline-block;
+	vertical-align: top;
 }
 
 .popup-settings button.image-button {
@@ -137,163 +125,111 @@
     width: 24px;
 }
 
-.popup.popup-settings .settings-group-label {
-    margin: 15px 0px 10px 0px;
-}
-
-.popup.popup-settings .settings-group {
-	margin-left: 15px;
-}
-
-.popup.popup-settings .settings-line {
-	margin-top: 5px;
-}
-
-.popup.popup-settings .settings-value {
-	margin-left: 5px;
-	cursor: pointer;
-}
-
-.popup.popup-settings .settings-button-line {
-	margin-top: 20px;
-}
-
-.popup.popup-settings .settings-title-container > * {
-	vertical-align: middle;
-	display: inline-block;
-	margin: 0px 5px 0px 0px;
-}
-
-.popup.popup-settings button.settings-button {
-	width: 140px;
-}
-
-.popup.popup-settings button.settings-button i {
-	padding-left: 10px;
-}
-
-.popup.popup-settings input[type="number"] {
-	width: 60px;
-}
-
-.popup.popup-settings input[type="checkbox"] {
-    width: 16px;
-    height: 16px;
-    vertical-align: middle;
-}
-
-.popup.popup-settings .settings-line > * {
-	display: inline-block;
-}
-
-.popup.popup-settings label[for] {
-	cursor: pointer;
-}
-
-.popup.popup-settings .settings-group-label {
+.popup-settings .settings-group-label {
     margin: 15px 0px 15px 0px;
 }
 
-.popup.popup-settings .settings-group {
+.popup-settings .settings-group {
 	margin-left: 15px;
 }
 
-.popup.popup-settings .settings-line {
+.popup-settings .settings-line {
 	margin-top: 5px;
 }
 
-.popup.popup-settings .settings-value {
+.popup-settings .settings-line > * {
+	display: inline-block;
+}
+
+.popup-settings .settings-label {
+	width:80px;
+}
+
+.popup-settings .settings-value {
 	margin-left: 5px;
 	cursor: pointer;
 }
 
-.popup.popup-settings .settings-button-line {
-	margin-top: 20px;
-}
-
-.popup.popup-settings button.settings-button {
-	width: 140px;
-}
-
-.popup.popup-settings button.settings-button i {
-	padding-left: 10px;
-}
-
-.popup.popup-settings input[type="number"] {
+.popup-settings input[type="number"] {
 	width: 60px;
 }
 
-.popup.popup-settings input[type="checkbox"] {
+.popup-settings input[type="checkbox"] {
     width: 16px;
     height: 16px;
     vertical-align: middle;
 }
 
-.popup.popup-settings .settings-line > * {
-	display: inline-block;
-}
-
-.popup.popup-settings label[for] {
+.popup-settings label[for] {
 	cursor: pointer;
 }
 
-.popup.popup-settings .column-50 {
-	width: 50%;
-	display: inline-block;
-	vertical-align: top;
+.popup-layers {
+    width: 400px;
 }
 
-.popup.popup-settings table {
+
+
+.popup-layers table {
     width: 100%;
 }
 
-.popup.popup-settings table td {
+.popup-layers table td {
 	text-align: center;
 }
 
-.popup.popup-settings .settings-title-container select,
-.popup.popup-settings table .grid-styles select,
-.popup.popup-settings table .grid-z select {
+.popup-layers .settings-title-container select,
+.popup-layers table .grid-styles select,
+.popup-layers table .grid-z select {
     width: 50px;
 }
 
-.popup.popup-settings .styles-color button,
-.popup.popup-settings button.image-button {
+.popup-layers .settings-title-container > * {
+    vertical-align: middle;
+    display: inline-block;
+}
+
+.popup-layers button.settings-button {
+    width: 140px;
+}
+
+.popup-layers .styles-color button,
+.popup-layers button.image-button {
     padding: 0;
 	background: none;
 	border: none;
 	display: inline-block
 }
 
-.popup.popup-settings button.image-button:not(:disabled):hover {
+.popup-layers button.image-button:not(:disabled):hover {
 	background: none;
 }
 
-.popup.popup-settings button.image-button img {
+.popup-layers button.image-button img {
 	width: 24px;
 	height: 24px;
 	vertical-align: middle;
 }
 
-.popup.popup-settings table tr:only-child button.button-delete {
+.popup-layers table tr:only-child button.button-delete {
 	display: none;
 }
 
-.popup.popup-settings table .select-ports {
+.popup-layers table .select-ports {
     position: relative;	
 }
 
-.popup.popup-settings table .select-ports .select-ports-input {
+.popup-layers table .select-ports .select-ports-input {
     cursor: pointer;
     height: 30px;
     border-radius: 4px 4px 0px 0px;
 }
 
-.popup.popup-settings table .select-ports.collapsed .select-ports-input {
+.popup-layers table .select-ports.collapsed .select-ports-input {
     border-radius: 4px;
 }
 
-.popup.popup-settings table .select-ports .select-ports-dropdown {
+.popup-layers table .select-ports .select-ports-dropdown {
     border: solid thin silver;
     background: white;
 	text-align: left;
@@ -301,7 +237,7 @@
     padding: 0px 6px;
 }
 
-.popup.popup-settings table .select-ports .select-ports-dropdown {
+.popup-layers table .select-ports .select-ports-dropdown {
     position: absolute;
 	list-style-type: none;
     margin: 0;
@@ -312,47 +248,50 @@
     border-top: none;
 }
 
-.popup.popup-settings table .select-ports.collapsed .select-ports-dropdown {
+.popup-layers table .select-ports.collapsed .select-ports-dropdown {
 	display: none;
 }
 
-.popup.popup-settings table .select-ports .select-ports-dropdown .select-ports-dropdown-item {
+.popup-layers table .select-ports .select-ports-dropdown .select-ports-dropdown-item {
 	padding: 3px;
 	cursor: pointer;
 }
 
-.popup.popup-layers .buttons-container {
-	text-align: center;
-}
-
-.popup.popup-layers .buttons-container button {
-	margin: 0px 10px;
-}
-
-.popup.popup-layers table .styles-start input,
-.popup.popup-layers table .styles-end input {
+.popup-layers table .styles-start input,
+.popup-layers table .styles-end input {
     width: 125px;
 }
 
-.popup.popup-layers table .styles-color button {
+.popup-layers table .styles-color button {
 	vertical-align: middle;
 }
 
-.popup.popup-layers .styles,
-.popup.popup-layers .layers {
+.popup-layers .styles,
+.popup-layers .layers {
 	overflow-x: hidden;
 	overflow-y: auto;
 }
 
-.popup.popup-layers .layers {
+.popup-layers .layers {
 	max-height: 150px;
 }
 
-.popup.popup-layers .styles .style {
+.popup-layers .styles .style {
 	max-height: 300px;
 	overflow-x: hidden;
 	overflow-y: auto;
 } 
+
+
+
+
+
+
+
+
+
+
+
 
 /* Dialogs */
 .popup.dialog {
@@ -509,29 +448,29 @@ div.highlighted.origin {
     padding-left: 10px;
 }
 
-/* Rise loader widget styling */
-.rise-loader ul {
+/* Server loader widget styling */
+.server-loader ul {
     padding: 0;
     margin: 0;
     border: dotted thin;
 }
   
-.rise-loader ul li {
+.server-loader ul li {
     padding: 6px;
     list-style-type: none;
     transition: all .2s ease;
 }
 
-.rise-loader ul li {
+.server-loader ul li {
     cursor: pointer;
     font-size: 16px;
 }
 
-.rise-loader ul li:nth-child(even) {
+.server-loader ul li:nth-child(even) {
     background: #eeeeee;
 }
   
-.rise-loader ul li:hover {
+.server-loader ul li:hover {
     background: #ccc;
 }
 
@@ -651,8 +590,8 @@ div.highlighted.origin {
 }
 
 .popup-linker {
-    max-width: 1200px;
-    max-height: 600px;
+    width: 1200px;
+    height: 500px;
 }
 
 .popup-linker .dwl-pointer {
@@ -702,6 +641,6 @@ div.highlighted.origin {
     fill: tomato;
 }
 
-.popup.popup-linker .popup-body button {
+.popup-linker button {
 	width:120px;
 }

@@ -53,7 +53,7 @@ export default Core.Templatable("Auto.GIS", class AutoGIS extends Automator {
 	}
 	
 	onMap_Ready(ev) {		
-		this.config.On("Change", this.OnSettings_Change.bind(this));
+		this.config.On("change", this.OnSettings_Change.bind(this));
 		
 		this.Emit("ready", { view:this });
 	}

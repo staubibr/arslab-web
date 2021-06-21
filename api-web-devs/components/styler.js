@@ -2,7 +2,6 @@
 
 import Core from '../tools/core.js';
 import Evented from '../components/evented.js';
-import Scale from './scales/basic.js';
 
 export default class Styler extends Evented { 
 	
@@ -14,14 +13,6 @@ export default class Styler extends Evented {
 		this.scales = scales || [];
 	}
 	
-	ToJson() {
-		return this.scales.map(s => s.ToJson());
-	}
-	
-	AddScale(scale) {
-		this.scales.push(scale);
-	}
-	
 	GetScale(idx) {
 		var scale = this.scales[idx];
 		
@@ -29,37 +20,12 @@ export default class Styler extends Evented {
 		
 		return scale;
 	}
-	
-	GetColor(idx, value) {				
-		return this.GetScale(idx).GetColor(value);
-	}
-	
-	GetColor3(idx, value) {
-		return this.GetScale(idx).GetColor3(value);
-	}
-	
-	static FromJson(json) {
-		var styler = new Styler();		
 		
-		json.forEach(layer => {
-			var scale = new Scale(layer.buckets);
+	GetColor(scale, value) {		
+		for (var i = 0; i < scale.buckets.length; i++) {
+			var c = scale.buckets[i];
 			
-			styler.AddScale(scale);
-		});
-		
-		return styler;
-	}
-	
-	static Default() {
-		var bucket = { start:-Infinity, end:Infinity, color:[0,0,0] };
-		var scale = new Scale([bucket]);
-		
-		return new Styler([scale]);	
-	}
-	
-	ToJson() {
-		return this.scales.map(s => { 
-			return { buckets:s.ToJson() } 
-		});
+			if (value >= c.start && value < c.end) return `rgb(${c.color.join(",")})`;
+		}
 	}
 }

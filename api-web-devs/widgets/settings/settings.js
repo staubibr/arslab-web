@@ -3,9 +3,7 @@
 import Core from '../../tools/core.js';
 import Dom from '../../tools/dom.js';
 import Templated from '../../components/templated.js';
-import Layers from './layers.js';
 import Popup from '../../ui/popup.js';
-import Styler from '../../components/styler.js';
 
 export default Core.Templatable("Widget.Settings", class Settings extends Popup { 
 	
@@ -15,22 +13,13 @@ export default Core.Templatable("Widget.Settings", class Settings extends Popup 
 
 	constructor(id) {
 		super(id);
-		
-		// TODO : Shouldn'T have a series of nested widgets and a weird workaround to get back to original widget
-		this.AddWidget("layers", new Layers());
-		
-		this.original = this.Node("body").Elems(".column-50");
-		
-		this.Widget("layers").On("close", this.OnLayers_Close.bind(this));
-		this.Widget("layers").On("apply", this.OnLayers_Apply.bind(this));
-		
-		this.Node("btnLayers").On("click", this.onLayers_Click.bind(this));
 	}
 	
 	Initialize(simulation, settings) {
-		// Dom.SetCss(this.Elem("top"), `settings ${simulation.type}`);
-		Dom.SetCss(this.Elem("top"), `settings DEVS Cell-DEVS`);
-		Dom.SetCss(this.Elem("top"), `settings DEVS Cell-DEVS`);
+		Dom.ToggleCss(this.Elem("diagram"), 'hidden', !settings.diagram);
+		// Dom.ToggleCss(this.Elem("gis"), 'hidden', !settings.gis);
+		Dom.ToggleCss(this.Elem("grid"), 'hidden', !settings.grid);
+		Dom.ToggleCss(this.Elem("playback"), 'hidden', !settings.playback);
 		
 		this._simulation = simulation;
 		this._settings = settings;
@@ -56,6 +45,18 @@ export default Core.Templatable("Widget.Settings", class Settings extends Popup 
 		})
 		
 		this.UpdateUI();
+	}
+	
+	SetCss() {
+		var css = ["settings"];
+		
+		if ("diagram" in settings) css.push("diagram");
+		if ("gis" in settings) css.push("gis");
+		if ("grid" in settings) css.push("grid");
+		if ("playback" in settings) css.push("playback");
+
+		Dom.SetCss(this.Elem("top"), `settings ${simulation.type}`);
+		
 	}
 	
 	InitializeDEVS(settings) {
@@ -88,7 +89,7 @@ export default Core.Templatable("Widget.Settings", class Settings extends Popup 
 	}
 	
 	InitializeGisDEVS() {
-		
+		alert("Not implemented yet.");
 	}
 	
 	UpdateUI() {
@@ -99,40 +100,16 @@ export default Core.Templatable("Widget.Settings", class Settings extends Popup 
 		});
 	}
 	
-	onLayers_Click(ev) {
-		this.Widget("layers").Initialize(this._simulation, this.settings);
-		
-		this.Content = this.Widget("layers");
-		this.Title = this.nls.Ressource("Settings_Layers");
-		this.SetCss(`popup popup-settings popup-layers`);
-	}
-	
-	OnLayers_Apply(ev) {
-		this.settings.styler = Styler.FromJson(ev.styles);
-		
-		this.settings.grid.Set("layers", ev.layers);
-	}
-	
-	OnLayers_Close(ev) {		
-		this.Empty();
-		
-		this.original.forEach(c => Dom.Place(c, this.Elem("body")));
-		
-		this.Title = this.nls.Ressource("Popup_Settings_Title");
-		
-		this.SetCss(`popup popup-settings`);
-	}
-	
 	Template() {
-		return "<div handle='popup' class='popup popup-settings'>" +
+		return "<div handle='popup' class='popup'>" +
 				  "<div class='popup-header'>" +
 					  "<h2 class='popup-title' handle='title'>nls(Popup_Settings_Title)</h2>" +
 					  "<button class='close' handle='close' title='nls(Popup_Close)'>×</button>" +
 				  "</div>" +
-				  "<div class='popup-body' handle='body'>" + 
+				  "<div class='popup-body popup-settings' handle='body'>" + 
 				     "<div class='column-50'>" +
-					    "<h3 class='settings-group-label Cell-DEVS'>nls(Settings_Grid_Options)</h3>" +
-						"<div class='settings-group Cell-DEVS'>" + 
+						"<div handle='grid' class='settings-group'>" + 
+						   "<h3 class='settings-group-label Cell-DEVS'>nls(Settings_Grid_Options)</h3>" +
 						   "<div class='settings-line'>" +
 						      "<label class='settings-label'>nls(Settings_Grid_Width)" +
 							     "<input class='settings-value' handle='gridWidth' type='number' min=100></input>" +
@@ -163,51 +140,52 @@ export default Core.Templatable("Widget.Settings", class Settings extends Popup 
 								 "<input class='settings-value' handle='gridShowGrid' type='checkbox' disabled></input>" +
 							  "</label>" + 
 						   "</div>" +
-						   "<div class='settings-button-line Cell-DEVS'>" +
-							  "<button handle='btnLayers' class='settings-button'>nls(Settings_Layers)" +
-							     "<i class='fas fa-layer-group'></i>" + 
-							  "</button>" +
-						   "</div>" + 
+						    // "<div class='settings-button-line Cell-DEVS'>" +
+							//  "<button handle='btnLayers' class='settings-button'>nls(Settings_Layers)" +
+							//     "<i class='fas fa-layer-group'></i>" + 
+							//  "</button>" +
+							// "</div>" + 
 						"</div>" +
+						
+					    "<div handle='diagram' class='settings-group'>" + 
+					       "<h3 class='settings-group-label DEVS'>nls(Settings_Diagram_Options)</h3>" +
+						   "<div class='settings-line'>" +
+							  "<label class='settings-label'>nls(Settings_Diagram_Width)" +
+								 "<input class='settings-value' handle='diagramWidth' type='number' min=300></input>" +
+							  "</label>" +
+						   "</div>" +
+						   "<div class='settings-line'>" +
+							  "<label class='settings-label'>nls(Settings_Diagram_Height)" +
+								 "<input class='settings-value' handle='diagramHeight' type='number' min=300></input>" +
+						 	  "</label>" + 
+						   "</div>" +
+						   "<div class='settings-line'>" +
+							  "<label class='settings-label'>nls(Settings_Diagram_Aspect)" +
+								 "<input class='settings-value' handle='diagramAspect' type='checkbox'></input>" +
+							  "</label>" + 
+						   "</div>" +
+					   "</div>" +
+					   
 					 "</div>" +
+					 
 					 "<div class='column-50'>" +
-					    "<div handle='top' class='settings'>" +
-						   "<h3 class='settings-group-label DEVS'>nls(Settings_Diagram_Options)</h3>" +
-						   "<div class='settings-group DEVS'>" + 
-							  "<div class='settings-line'>" +
-								 "<label class='settings-label'>nls(Settings_Diagram_Width)" +
-								    "<input class='settings-value' handle='diagramWidth' type='number' min=300></input>" +
-								 "</label>" +
-							  "</div>" +
-							  "<div class='settings-line'>" +
-								 "<label class='settings-label'>nls(Settings_Diagram_Height)" +
-									"<input class='settings-value' handle='diagramHeight' type='number' min=300></input>" +
-								 "</label>" + 
-							  "</div>" +
-							  "<div class='settings-line'>" +
-								 "<label class='settings-label'>nls(Settings_Diagram_Aspect)" +
-									"<input class='settings-value' handle='diagramAspect' type='checkbox'></input>" +
-								 "</label>" + 
-							  "</div>" +
+						"<div handle='playback' class='settings-group'>" + 
+						"<h3 class='settings-group-label'>nls(Settings_Playback_Options)</h3>" +
+						   "<div class='settings-line'>" +
+						      "<label class='settings-label'>nls(Settings_Playback_Speed)</label>" +
+							     "<input class='settings-value' handle='playbackSpeed' type='number' min=1 max=50></input>" +
+							  "</label>" + 
 						   "</div>" +
-						   "<h3 class='settings-group-label'>nls(Settings_Playback_Options)</h3>" +
-						   "<div class='settings-group'>" + 
-							  "<div class='settings-line'>" +
-								 "<label class='settings-label'>nls(Settings_Playback_Speed)</label>" +
-								    "<input class='settings-value' handle='playbackSpeed' type='number' min=1 max=50></input>" +
-								 "</label>" + 
-							  "</div>" +
-							  "<div class='settings-line'>" +
-								 "<label class='settings-label'>nls(Settings_Playback_Loop)" +
-									"<input class='settings-value' handle='playbackLoop' type='checkbox'></input>" +
-								 "</label>" + 
-							  "</div>"+
-							  "<div class='settings-line'>" +
-								 "<label class='settings-label'>nls(Settings_Playback_Cache)" +
-									"<input class='settings-value' handle='playbackCache' type='number' min=10 max=1000 disabled></input>" +
-								 "</label>" + 
-							  "</div>"+
-						   "</div>" +
+						   "<div class='settings-line'>" +
+						      "<label class='settings-label'>nls(Settings_Playback_Loop)" +
+							     "<input class='settings-value' handle='playbackLoop' type='checkbox'></input>" +
+							  "</label>" + 
+						   "</div>"+
+						   "<div class='settings-line'>" +
+							  "<label class='settings-label'>nls(Settings_Playback_Cache)" +
+							     "<input class='settings-value' handle='playbackCache' type='number' min=10 max=1000 disabled></input>" +
+							  "</label>" + 
+						   "</div>"+
 						"</div>" +
 				     "</div>" +
 				  "</div>" +

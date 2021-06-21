@@ -1,12 +1,8 @@
 'use strict';
 
-import Evented from '../evented.js';
+import Section from './section.js';
 
-export default class Diagram extends Evented { 
-
-	get json() { return this._json; }
-	
-	set json(value) { this._json = value; }
+export default class Diagram extends Section { 
 	
 	get width() { return this._json.width; }
 	
@@ -24,17 +20,11 @@ export default class Diagram extends Evented {
 	
 	set click(value) { this._json.click = value; }
 	
-	constructor() {
-		super();
+	constructor(json) {
+		super(json);
 		
-		this.json = Diagram.Default();
-	}
-	
-	Set(property, value) {
-		this[property] = value;
-				
-		this.Emit("Change", { property:property, value:value });
-	}
+		this.json = json || Diagram.Default();
+	}	
 	
 	DiagramSize(simulation) {		
 		return { 
@@ -43,13 +33,9 @@ export default class Diagram extends Evented {
 		}
 	}
 	
-	ToJson() {
-		return this.json;
-	}
-	
 	static FromJson(json) {
 		var diagram = new Diagram();
-				
+		
 		if (json.width != undefined) diagram.json.width = json.width;
 		if (json.height != undefined) diagram.json.height = json.height;
 		if (json.aspect != undefined) diagram.json.aspect = json.aspect;

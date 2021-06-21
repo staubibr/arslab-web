@@ -25,8 +25,6 @@ export default class SelectPorts extends Templated {
 		this.onBody_KeyUp_Bound = this.onBody_KeyUp.bind(this);
 		this.onBody_Click_Bound = this.onBody_Click.bind(this);
 		
-		this.items = [];
-		
 		this._available = null;
 		this._value = null;
 		this._previous = null;
@@ -83,6 +81,8 @@ export default class SelectPorts extends Templated {
 		this.Elem('dropdown').removeChild(ev.target);
 		
 		if (this.Elem('dropdown').children.length == 0) this.Close();
+		
+		this.Emit("Change", { value:this.value });
 	}
 	
 	onBody_KeyUp(ev) {

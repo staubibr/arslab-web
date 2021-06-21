@@ -1,68 +1,63 @@
 @import url(https://fonts.googleapis.com/css?family=Varela+Round);
 
-html, 
-body.Simple, 
-body.Simple .popup {
+html, body {
+	width:100%;
+	height:100%;
+	
     font-family: sans-serif;
     font-size: 11pt;
 	background : #f9f9f9;
 }
 
-body.Simple *:focus {
+body *:focus {
 	outline:none;
 }
 
-body.Simple main {
-    margin: 30px auto;
+body main {
 	min-width: 600px;
+	margin: auto;
 }
 
 @media (min-width: 768px) {
-	body.Simple main {
+	body main {
 		width: 750px;
 	}
 }
 
 @media (min-width: 992px) {
-	body.Simple main {
+	body main {
 		width: 970px;
 	}
 }
 
 @media (min-width: 1200px) {
-	body.Simple main {
-		width: 1170px;
+	body main {
+		width: 1200px;
 	}
 }
 
-body.Simple h1, 
-body.Simple h2, 
-body.Simple h3, 
-body.Simple table, 
-body.Simple input, 
-body.Simple select 
-body.Simple .popup .popup-title {
+h1, h2, h3, table, input, select,
+.popup .popup-title {
 	font-family: 'Varela Round', sans-serif;
 }
 
-body.Simple h1, 
-body.Simple h2 {
+h1, h2 {
 	margin: 0px;
 }
 
-body.Simple h1 {
+h1 {
     font-size: 1.5em;
 }
 
-body.Simple h2 {
+h2 {
     font-size: 1.3em;
 }
 
-body.Simple h2 a {
+h2 a {
 	color: #198CFF;
 }
 
-body.Simple h3 {
+h3 {
     font-size: 1.2em;
 }
 
@@ -74,56 +69,62 @@ body.Simple h3 {
 .popup .popup-title,
 .box-input-files i, 
 .box-input-files label, 
-body.Simple a {
+a {
     color: #0051A3;
 }
 
-body.Simple a {
+a {
     text-decoration: none;
 }
 
-body.Simple button {
+select, input, button {
+	cursor: pointer;
     height: 30px;
+    border-radius: 4px;
+}
+
+select, input {
+    border: solid thin silver;
+    font-size: 11pt;
+}
+
+button {
     width: 30px;
 	background-color: #198CFF;
     color: #eee;
     font-size: 15px;
     border: none;
     border-bottom: solid 2px #0051A3;
-	border-radius: 4px;
-	cursor: pointer;
 }
 
-body.Simple button:disabled {
+button:disabled {
     cursor: not-allowed;
 	background-color: #cacaca;
-    color: #7e7e7e;
     border-color: #7e7e7e;
 }
 
-body.Simple :not(.popup) button:not(:disabled):hover {
+button:not(:disabled):hover {
   background: #0a54a2;
   transition: all .2s ease;
 }
 
-body.Simple button.clear:not(:disabled):hover {
+button.clear:not(:disabled):hover {
   background: #980000;
 }
 
-body.Simple .popup button.close:hover {
-   background:none;	
+.popup button:not(:disabled).close:hover {
+	background:none;
 }
 
-body.Simple select, 
-body.Simple input[type=text], 
-body.Simple input[type=number] {
-	cursor: pointer;
-    height: 30px;
-    border-radius: 4px;
-    border: solid thin silver;
-    font-size: 11pt;
+.centered-row {
+	text-align:center;
 }
 
+.centered-row > * {
+	display:inline-block; 
+}
+
+/* Box-input files */
 .box-input-files .box-inner:hover {
   background: #eff7ff;
   border-color: #0051a3;
@@ -144,24 +145,20 @@ body.Simple input[type=number] {
     font-weight: bold;
 }
 
-.centered-row {
-	text-align:center;
+/* Style for application header */
+.application-header {
+	margin-top:30px;
 }
 
-.centered-row > * {
-	display:inline-block; 
-}
-
-/* Style for header */
-.links-container {
+.application-header .links-container {
 	float:right;
 }
 
-.links-container a:hover {
+.application-header .links-container a:hover {
     border-bottom: solid 3px #898989;
 }
 
-.second-row > * {
+.application-header .second-row > * {
 	display: inline-block;
 }
 
@@ -221,7 +218,7 @@ body.Simple input[type=number] {
     max-height: 460px;
 }
 
-.popup.popup-rise {
+.popup .popup-server-loader {
 	max-height : 350px;
 }
 
@@ -229,10 +226,16 @@ body.Simple main .dropzone-container {
 	width : 600px;
 }
 
-body.Simple main .view {
+body.Simple main.view-load .simulation-container, 
+body.Simple main:not(.view-load) .dropzone-container{
+	display:none;
+}
+
+body.Simple main .simulation {
 	display:inline-block;
     margin: 20px;
 }
+
 
 .tooltip .legend, 
 .tooltip .legend rect {

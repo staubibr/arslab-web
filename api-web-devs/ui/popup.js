@@ -21,7 +21,8 @@ export default class Popup extends Templated {
 	constructor(container) {	
 		super(container || document.body);
 		
-		this.position = { initial:{}, current:{}, offset:{ x:0, y:0 } };
+		this.moving = false;
+		this.offset = { x:0, y:0 };
 		this.defer = null;
 		
 		this.onBody_KeyUp_Bound = this.onBody_KeyUp.bind(this);
@@ -53,13 +54,24 @@ export default class Popup extends Templated {
 		Dom.Empty(this.Elem("body"));
 	}
 	
+	GetCenter() {
+		var geo = Dom.Geometry(this.Elem("popup"));
+		
+		return { 
+			x : window.innerWidth / 2 - geo.w / 2,
+			y : window.innerHeight / 2 - geo.h / 2
+		}
+	}
+	
 	Show() {	
 		this.defer = Core.Defer();
-	
-		this.h = document.body.addEventListener("keyup", this.onBody_KeyUp_Bound);
+		this.h = document.body.addEventListener("keyup", this.onBody_KeyUp_Bound);		
 		
 		this.SetStyle(1, "visible", "block");
 		
+		var center = this.GetCenter();
+		
+		this.Move(center.x, center.y);
 		this.Emit("Show", { popup:this });
 		
 		this.Elem("close").focus();
@@ -92,32 +104,32 @@ export default class Popup extends Templated {
 	}
 	
 	onPopup_MouseDown(ev) {
-		this.position.initial.x = ev.clientX - this.position.offset.x;
-		this.position.initial.y = ev.clientY - this.position.offset.y;
+		if (ev.target !== this.Elem("title")) return;
+		
+		var rect = this.Elem("popup").getBoundingClientRect();
+		
+		// offset between clicked point and top left of popup
+		this.offset.x = ev.clientX - rect.x;
+		this.offset.y = ev.clientY - rect.y;
 
-		if (ev.target === this.Elem("title")) this.position.active = true;
+		this.moving = true;
+		
+		this.onPopup_MouseMove(ev);
 	}
 	
 	onPopup_MouseUp(ev) {
-		this.position.initial.x = this.position.current.x;
-		this.position.initial.y = this.position.current.y;
-
-		this.position.active = false;
+		this.moving = false;
 	}
 	
 	onPopup_MouseMove(ev) {
-
-		if (!this.position.active) return;
+		if (!this.moving) return;
       
 		ev.preventDefault();
 
-		this.position.current.x = ev.clientX - this.position.initial.x;
-		this.position.current.y = ev.clientY - this.position.initial.y;
+		var x = ev.pageX - this.offset.x;
+		var y = ev.pageY - this.offset.y;
 
-		this.position.offset.x = this.position.current.x;
-		this.position.offset.y = this.position.current.y;
-
-		this.Move(this.position.current.x, this.position.current.y);
+		this.Move(x, y);
 	}
 	
     Move(x, y) {

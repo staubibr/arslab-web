@@ -6,6 +6,8 @@ export default class Linker {
 
     get svg() { return document.getElementById('svg-container').innerHTML; }
 	
+	get is_dirty() { return this._dirty; }
+	
     constructor(elem, props) {
         this.elem = elem;
         this.props = props || {};
@@ -29,6 +31,8 @@ export default class Linker {
             currentCardId: null,
             svgIdMap: new Set()
         };
+		
+		this._dirty = false;
 		
 		this.render();
     }
@@ -315,7 +319,9 @@ export default class Linker {
 			
 			else self.state.svgIdMap.add(`#${existingId}`);
 			
-			n.addEventListener('click', (ev) => {
+			n.addEventListener('click', (ev) => 
+				self.is_dirty = true;
+			
                 if (!self.state.currentCardId) return; 
                 const id = self.parseId(ev.target.getAttribute('id'));
                 const selections = { ...self.state.selectedSvgElements };
@@ -361,33 +367,6 @@ export default class Linker {
         this.state.buttons = buttons;
     }
 
-    hasCorruptedAssociations = () => {
-        let result = true;
-        const jsonContent = this.state.json.updated;
-		
-        for (const key in jsonContent) {
-            if (!result) return result;
-            if (key in this.config) {
-                const slice = jsonContent[key];
-                if (Array.isArray(slice)) {
-                    slice.forEach((_, index) => {
-                        const jsonElem = jsonContent[key][index];
-                        const svg = jsonElem.svg;
-                        if (Array.isArray(svg)) {
-                            const hasAssociation = svg.every(id => this.state.svgIdMap.has(id)); 
-                            if (!hasAssociation) {
-                                result = false;
-                                return;
-                            }
-                        }
-                    });
-                }
-            }
-        }
-		
-        return result;
-    }
-
     render() {
         this.state.json.updated = this.props.files.json;
         this.state.json.original = this.clone(this.props.files.json);
@@ -414,7 +393,6 @@ export default class Linker {
         this.renderSvg(svgContainer, this.props.files.svg);
         this.state.buttons[0].click();
     }
-
 
 	static DefaultOptions() {
 		return [{

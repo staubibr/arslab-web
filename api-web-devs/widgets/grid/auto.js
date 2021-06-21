@@ -39,9 +39,9 @@ export default Core.Templatable("Auto.Grid", class AutoGrid extends Automator {
 		h.push(this.simulation.On("Move", this.onSimulationMove_Handler.bind(this)));
 		h.push(this.simulation.On("Jump", this.onSimulationJump_Handler.bind(this)));
 		
-		h.push(this.widget.styler.On("Change", this.onSimulationPaletteChanged_Handler.bind(this)));
-		
-		options.On("Change", this.OnSettings_Change.bind(this));
+		options.On("change", this.OnSettings_Change.bind(this));
+		options.On("change:styles", this.OnSettingsStyles_Change.bind(this));
+		options.On("change:layers", this.OnSettingsLayers_Change.bind(this));
 		
 		this.Handle(h);
 	}
@@ -74,9 +74,16 @@ export default Core.Templatable("Auto.Grid", class AutoGrid extends Automator {
 		this.widget.columns = this.options.columns;
 		this.widget.spacing = this.options.spacing;
 		this.widget.layers = this.options.layers;
-		this.widget.styles = this.options.styles;
-			
+		
 		this.Resize();
+		this.Redraw();
+	}
+	
+	OnSettingsStyles_Change(ev) {			
+		this.Redraw();
+	}
+	
+	OnSettingsLayers_Change(ev) {			
 		this.Redraw();
 	}
 	
@@ -118,24 +125,25 @@ export default Core.Templatable("Auto.Grid", class AutoGrid extends Automator {
 	}
 	
 	onClick_Handler(ev) {
-		var id = ev.data.x + "-" + ev.data.y + "-" + ev.data.z;
-		var isSelected = this.simulation.IsSelected(id);		
+		var id = [ev.data.x, ev.data.y, ev.data.z];
 		
-		if (!isSelected) {
-			this.simulation.Select(id);
+		if (this.simulation.IsSelected(id)) {
+			this.simulation.Deselect(id);
 			
-			var color = this.simulation.Palette.selected_color;
+			// TODO: This is nasty. Maybe just store the original color along with the id.
+			var port = ev.data.layer.ports[ev.data.layer.ports.length - 1];
+			var value = this.simulation.state.GetValue(id);
+			var scale = this.widget.styler.GetScale(ev.data.layer.style);
+			var color = this.widget.styler.GetColor(scale, value[port]);
+			
+			this.widget.DrawCellBorder(ev.data.x, ev.data.y, ev.data.k, color);
 		} 
 		
 		else {
-			this.simulation.Deselect(id);
-
-			var v = this.simulation.state.models[id];
+			this.simulation.Select(id);
 			
-			var color = this.simulation.Palette.GetColor(v);
+			this.widget.DrawCellBorder(ev.data.x, ev.data.y, ev.data.k, 'rgb(255,0,0)');
 		}
-		
-		this.widget.DrawCellBorder(ev.data.x, ev.data.y, ev.data.k, color);
 	}
 	
 	static Nls() {

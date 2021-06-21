@@ -9,8 +9,10 @@ import Styler from '../api-web-devs/components/styler.js';
 import Popup from '../api-web-devs/ui/popup.js';
 import Loader from '../api-web-devs/widgets/loader.js';
 import Playback from '../api-web-devs/widgets/playback.js';
-import Rise from '../api-web-devs/widgets/rise-loader.js';
+import ServerLoader from '../api-web-devs/widgets/server-loader.js';
+import PopupPalette from '../api-web-devs/widgets/palette/popup-palette.js';
 import Settings from '../api-web-devs/widgets/settings/settings.js';
+import PopupLinker from '../api-web-devs/widgets/linker/popup-linker.js';
 import DiagramAuto from '../api-web-devs/widgets/diagram/auto.js'
 import GridAuto from '../api-web-devs/widgets/grid/auto.js'
 import Recorder from '../api-web-devs/components/recorder.js';
@@ -22,54 +24,84 @@ export default Core.Templatable("Application", class Application extends Templat
 		super(node);
 		
 		Dom.AddCss(document.body, "Simple");
-		
-		this.simulation = null;
-		this.files = null;
-		
-		this.AddWidget("rise", new Rise());
+	
+		this.AddWidget("server-loader", new ServerLoader());
 		this.AddWidget("settings", new Settings());
+		this.AddWidget("linker", new PopupLinker());
+		this.AddWidget("palette", new PopupPalette());
 		
-		this.Node('btnLoad').On('click', this.OnButtonLoader_Click.bind(this));
-		this.Node('btnViz').On('click', this.OnButtonViz_Click.bind(this));
-		this.Node('btnRise').On('click', this.OnButtonRise_Click.bind(this));
+		this.Node('btnRedo').On('click', this.OnButtonRedo_Click.bind(this));
+		this.Node('btnServer').On('click', this.OnButtonServerLoader_Click.bind(this));
 		this.Node('btnSettings').On('click', this.OnButtonSettings_Click.bind(this));
 		this.Node('btnDownload').On('click', this.OnButtonDownload_Click.bind(this));
+		this.Node('btnLinker').On('click', this.OnButtonLinker_Click.bind(this));
+		this.Node('btnPalette').On('click', this.OnButtonPalette_Click.bind(this));
 		
 		this.Widget('upload').On('ready', this.OnUpload_Ready.bind(this));
 		this.Widget('upload').On('error', this.OnWidget_Error.bind(this));
-		this.Widget("rise").On("filesready", this.OnFiles_Loaded.bind(this));
-		this.Widget("rise").On("error", this.OnWidget_Error.bind(this));
+		this.Widget("server-loader").On("filesready", this.OnFiles_Loaded.bind(this));
+		this.Widget("server-loader").On("error", this.OnWidget_Error.bind(this));
+		
+		this.Clear();
+		this.ShowView("load");
+	}
+	
+	ShowView(view) {
+		this.Elem("btnSettings").disabled = view == "load";
+		this.Elem("btnDownload").disabled = view == "load";
+		this.Elem("btnLinker").disabled = view != "DEVS";
+		this.Elem("btnPalette").disabled = view != "Cell-DEVS";
+		
+		Dom.SetCss(this.Elem("main"), `view-${view}`);
+		
+		if (view === "load") return;
+		
+		else if (view == "DEVS") {			
+			this.view = new DiagramAuto(this.Elem("view"), this.simulation, this.configuration.diagram);
+		}
+		else if (view === "Cell-DEVS") {
+			this.view = new GridAuto(this.Elem("view"), this.simulation, this.configuration.grid);
+		}
+		else {
+			this.OnWidget_Error(new Error("The base DEVS viewer does not support simulations of type " + view));
+		}
+		
+		this.view.Resize();
+		this.view.Redraw();
+	}
+	
+	Clear() {
+		if (this.view) this.view.Destroy();
+		
+		this.configuration = null;
+		this.simulation = null;
+		this.view = null;
 	}
 	
 	OnUpload_Ready(ev) {
+		this.Clear();
+		
+		this.configuration = ev.configuration;
 		this.simulation = ev.simulation;
 		this.files = ev.files;
-		this.settings = ev.configuration;
 		
-		this.Elem("btnViz").disabled = false;
-		this.Elem("btnSettings").disabled = false;
-		this.Elem("btnDownload").disabled = false;
+		this.simulation.Initialize(this.configuration.playback.cache);
 		
-		this.simulation.Initialize(this.settings.playback.cache);
-		
-		this.ShowDropzone(false);
-		this.ShowView(this.Elem("view"));
+		this.ShowView(ev.simulation.type);
 		
 		this.Widget("playback").recorder = new Recorder(this.view.widget.canvas);
-		this.Widget("playback").Initialize(this.simulation, this.settings.playback);
-		this.Widget('settings').Initialize(this.simulation, this.settings);	
+		this.Widget("playback").Initialize(this.simulation, this.configuration.playback);
+		this.Widget('settings').Initialize(this.simulation, this.configuration);	
+		this.Widget('palette').Initialize(this.simulation, this.configuration);	
 	}
 	
-	OnButtonRise_Click(ev) {
-		this.Widget("rise").Show();
+	OnButtonServerLoader_Click(ev) {
+		this.Widget("server-loader").Show();
 	}
 	
-	OnButtonLoader_Click(ev) {				
-		this.ShowDropzone(true);
-	}
-	
-	OnButtonViz_Click(ev) {				
-		this.ShowDropzone(false);		
+	OnButtonRedo_Click(ev) {	
+		this.Clear();			
+		this.ShowView("load");
 	}
 	
 	OnButtonSettings_Click(ev) {
@@ -77,76 +109,61 @@ export default Core.Templatable("Application", class Application extends Templat
 		this.Widget("settings").Show();
 	}
 	
+	OnButtonPalette_Click(ev) {
+		this.Widget("palette").Show();
+	}
+	
 	OnButtonDownload_Click(ev) {		
-		var files = [this.files.structure, this.files.messages, this.settings.ToFile()];
+		var files = [this.files.structure, this.files.messages, this.configuration.ToFile()];
 		
 		if (this.files.diagram) files.push(this.files.diagram);
 		
 		Zip.SaveZipStream(this.simulation.name, files);
 	}
+	
+	async OnButtonLinker_Click(ev) {
+		await this.Widget("linker").Show(this.files.structure, this.files.diagram);
+		
+		this.files.structure = this.Widget("linker").structure_file;
+		this.files.diagram = this.Widget("linker").diagram_file;
+		
+		if (!this.Widget("linker").is_dirty) return;
+		
+		this.Widget("upload").Load(this.files);
+	}
 		
 	OnFiles_Loaded(ev) {
-		this.Widget("rise").Hide();
+		this.Widget("server-loader").Hide();
 
-		this.Widget("upload").Widget("dropzone").files = ev.files;
-		this.Widget("upload").Load();
+		this.Widget("upload").Load(ev.files);
 	}
 	
 	OnWidget_Error(ev) {
 		alert (ev.error);
 	}
-	
-	ShowDropzone(visible) {
-		Dom.ToggleCss(this.Elem("dropzone"), "hidden", !visible);
-		Dom.ToggleCss(this.Elem("views"), "hidden", visible);
-	}
-	
-	ShowView(container) {
-		this.Clear();
-		
-		if (this.simulation.type == "DEVS") {			
-			this.view = new DiagramAuto(container, this.simulation, this.settings.diagram);
-		}
-		else if (this.simulation.type === "Cell-DEVS") {
-			this.view = new GridAuto(container, this.simulation, this.settings.grid);
-		}
-		
-		if (!this.view) throw new Error("Unable to create a view widget from simulation object.");
-		
-		this.view.Resize();
-		this.view.Redraw();
-	}
-	
-	Clear() {
-		if (!this.view) return;		
-		
-		Dom.Empty(this.Elem("view"));
-		
-		this.view.Destroy();
-		this.view = null;
-	}
 		
 	Template() {
-		return	"<main handle='main' class='dropzone-visible'>" +
-					"<div handle='header' widget='Widget.Header'></div>" +
+		return	"<main handle='main'>" +
+					"<div handle='header' class='application-header' widget='Widget.Header'></div>" +
 				    "<div class='centered-row'>" + 
 						"<div class='button-column'>" + 
-						   "<button handle='btnLoad' title='nls(Dropzone_Load)' class='fas fa-file-upload'></button>" +
-						   "<button handle='btnViz' title='nls(Dropzone_Viz)' class='fas fa-eye' disabled></button>" +
+						   "<button handle='btnRedo' title='nls(Application_Redo)' class='fas fa-redo'></button>" +
+						   "<button handle='btnServer' title='nls(Application_Server)' class='fas fa-cloud-download-alt'></button>" +
 						"</div>" +
 						"<div class='body'>" + 
 						   "<div handle='dropzone' class='dropzone-container'>" + 
 							   "<div handle='upload' widget='Widget.Loader'></div>" +
 						   "</div>" +
-						   "<div handle='views' class='hidden'>" +
-							   "<div handle='view' class='view'></div>" +
+						   "<div handle='views' class='simulation-container'>" +
+							   "<div handle='view' class='simulation'></div>" +
 							   "<div handle='playback' widget='Widget.Playback'></div>" +
 						   "</div>" +
 						"</div>" +
 						"<div class='button-column'>" + 
-						   "<button handle='btnRise' title='nls(Dropzone_Rise)' class='fas fa-cloud-download-alt'></button>" +
-						   "<button handle='btnSettings' title='nls(Playback_Settings)' class='fas fa-tools' disabled></button>" +
-						   "<button handle='btnDownload' title='nls(Download_Files)' class='fas fa-download' disabled></button>" +
+						   "<button handle='btnSettings' title='nls(Application_Settings)' class='fas fa-tools' disabled></button>" +
+						   "<button handle='btnDownload' title='nls(Application_Download)' class='fas fa-download' disabled></button>" +
+						   "<button handle='btnPalette' title='nls(Application_Palette)' class='fas fa-palette' disabled></button>" +
+						   "<button handle='btnLinker' title='nls(Application_Linker)' class='fas fa-link' disabled></button>" +
 						"</div>" +
 					"</div>" +
 				"</main>";
@@ -154,23 +171,23 @@ export default Core.Templatable("Application", class Application extends Templat
 	
 	static Nls() {
 		return {
-			"Popup_Rise_Title" : {
-				"en":"Load from RISE"
+			"Application_Redo" : {
+				"en":"Load new simulation results"
 			},
-			"Dropzone_Load" : {
-				"en":"Load simulation"
+			"Application_Server" : {
+				"en":"Load simulation results from server"
 			},
-			"Dropzone_Viz" : {
-				"en":"Visualize simulation"
-			},
-			"Dropzone_Rise" : {
-				"en":"Load from RISE"
-			},
-			"Playback_Settings" : {
+			"Application_Settings" : {
 				"en" : "Modify simulation playback settings"
 			},
-			"Download_Files" : {
+			"Application_Download" : {
 				"en" : "Download normalized simulation files"
+			},
+			"Application_Palette" : {
+				"en" : "Modify grid palette"
+			},
+			"Application_Linker" : {
+				"en" : "Review links between diagram and simulation structure"
 			}
 		}
 		

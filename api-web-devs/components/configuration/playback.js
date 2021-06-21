@@ -1,12 +1,8 @@
 'use strict';
 
-import Evented from '../evented.js';
+import Section from './section.js';
 
-export default class Playback extends Evented { 
-
-	get json() { return this._json; }
-	
-	set json(value) { this._json = value; }
+export default class Playback extends Section { 
 	
 	get speed() { return this._json.speed; }
 	
@@ -20,20 +16,10 @@ export default class Playback extends Evented {
 	
 	set cache(value) { this._json.cache = value; }
 	
-	constructor() {		
-		super();
+	constructor(json) {		
+		super(json);
 		
-		this.json = Playback.Default();
-	}
-	
-	Set(property, value) {
-		this[property] = value;
-				
-		this.Emit("Change", { property:property, value:value });
-	}
-	
-	ToJson() {
-		return this.json;
+		this.json = json || Playback.Default();
 	}
 	
 	static FromJson(json) {

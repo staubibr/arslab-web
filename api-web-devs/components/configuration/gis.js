@@ -1,10 +1,8 @@
 'use strict';
 
-import Evented from '../evented.js';
+import Section from './section.js';
 
-export default class GIS extends Evented { 
-
-	get json() { return this._json; }
+export default class GIS extends Section { 
 	
 	set json(value) { 
 		this._json = value; 
@@ -22,33 +20,13 @@ export default class GIS extends Evented {
 	
 	get styles() { return this._json.styles; }
 	
-	constructor() {		
-		super();
+	constructor(json) {		
+		super(json);
 		
-		this.json = GIS.Default();
-	}
-	
-	Set(property, value) {
-		this[property] = value;
-		
-		this.Emit("Change", { property:property, value:value });
-	}
-	
-	ToJson() {
-		return this.json;
+		this.json = json || GIS.Default();
 	}
 		
 	static FromJson(json) {
-		var gis = new GIS();
-		
-		gis.json = json;
-		
-		return gis;
-	}
-	
-	static Default() {
-		return {
-
-		}
+		return new GIS(json);
 	}
 }

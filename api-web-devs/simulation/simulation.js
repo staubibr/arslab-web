@@ -121,15 +121,23 @@ export default class Simulation extends Evented {
 		this.Emit("Move", { frame : frame, direction:"previous"});
 	}
 	
+	GetSelected(model) {
+		return this.selected.find(s => s == model);
+	}
+	
+	GetSelectedIndex(model) {
+		return this.selected.indexOf(this.GetSelected(model));
+	}
+	
 	IsSelected(model) {
-		return this.selected.indexOf(model) > -1;
+		return !!this.GetSelected(model);
 	}
 	
 	Select(model) {
-		var idx = this.selected.indexOf(model);
+		var item = this.GetSelected(model);
 		
 		// Already selected
-		if (idx != -1) return;
+		if (item) return;
 		
 		this.selected.push(model);
 		
@@ -137,9 +145,9 @@ export default class Simulation extends Evented {
 	}
 	
 	Deselect(model) {
-		var idx = this.selected.indexOf(model);
+		var idx = this.GetSelectedIndex(model);
 		
-		// Not in current selection
+		// Already not selected
 		if (idx == -1) return;
 		
 		this.selected.splice(idx, 1);

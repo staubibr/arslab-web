@@ -39,7 +39,7 @@ export default Core.Templatable("Auto.Diagram", class AutoDiagram extends Automa
 		h.push(this.simulation.On("Jump", this.onSimulationChange_Handler.bind(this)));
 		h.push(this.simulation.On("Selected", this.onSimulationChange_Handler.bind(this)));
 		
-		options.On("Change", this.OnSettings_Change.bind(this));
+		options.On("change", this.OnSettings_Change.bind(this));
 		
 		this.Handle(h);
 	}

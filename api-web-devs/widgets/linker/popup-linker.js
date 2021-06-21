@@ -21,6 +21,10 @@ export default Core.Templatable("Popup.Linker", class PopupLinker extends Popup 
 		return new File(content, "diagram.svg", { type:"image/svg+xml", endings:'native' });
 	}
 	
+	get is_dirty() {
+		return this.linker.is_dirty;
+	}
+	
 	constructor(id) {
 		super(id);
 	}
@@ -121,12 +125,12 @@ export default Core.Templatable("Popup.Linker", class PopupLinker extends Popup 
 	}
 	
 	Template() {
-		return "<div handle='popup' class='popup popup-linker'>" +
+		return "<div handle='popup' class='popup'>" +
 				  "<div class='popup-header'>" +
 					  "<h2 class='popup-title' handle='title'>nls(Popup_Linker_Title)</h2>" +
 					  "<button class='close' handle='close' title='nls(Popup_Close)'>×</button>" +
 				  "</div>" +
-				  "<div class='popup-body' handle='body'>" + 
+				  "<div class='popup-body popup-linker' handle='body'>" + 
 
 				  "</div>" +
 			   "</div>";

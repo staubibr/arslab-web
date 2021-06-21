@@ -1,12 +1,8 @@
 'use strict';
 
-import Evented from '../evented.js';
+import Section from './section.js';
 
-export default class Grid extends Evented { 
-
-	get json() { return this._json; }
-	
-	set json(value) { this._json = value; }
+export default class Grid extends Section { 
 	
 	get columns() { return this._json.columns; }
 	
@@ -37,19 +33,47 @@ export default class Grid extends Evented {
 	set aspect(value) { this._json.aspect = value; }
 	
 	set layers(value) { this._json.layers = value; }
-		
+	
 	set styles(value) { this._json.styles = value; }
 	
-	constructor() {
-		super();
+	constructor(json) {
+		super(json);
 		
-		this.json = Grid.Default();
+		this.json = json || Grid.Default();
 	}	
 	
-	Set(property, value) {
-		this[property] = value;
+	AddStyle(buckets) {
+		var style = { buckets:buckets };
 		
-		this.Emit("Change", { property:property, value:value });
+		this.styles.push(style);
+		
+		return style;
+	}
+	
+	RemoveStyle(style) {
+		var i = this.styles.indexOf(style);
+		
+		this.styles.splice(i, 1);
+		
+		this.layers.forEach(l => {
+			if (l.style == i) l.style = 0;
+		});
+	}
+	
+	AddLayer(z, ports, style) {
+		var layer = { z:z, ports:ports, style:style, position:this.layers.length }
+		
+		this.layers.push(layer);
+		
+		return layer;
+	}
+	
+	RemoveLayer(layer) {
+		var i = this.layers.indexOf(layer);
+		
+		this.layers.splice(i, 1);
+		
+		for (var i = 0; i < this.layers.length; i++) this.layers[i].position = i;
 	}
 	
 	CanvasSize(simulation, nGrids) {
@@ -68,10 +92,6 @@ export default class Grid extends Evented {
 		height = (rows * height + rows * space - space);
 		
 		return { width : width, height : height }
-	}
-	
-	ToJson() {
-		return this.json;
 	}
 	
 	static FromSimulation(simulation) {

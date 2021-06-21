@@ -5,6 +5,8 @@ export default class Linker {
     get json() { return this.state.json.updated; }
 
     get svg() { return document.getElementById('svg-content').innerHTML; }
+	
+	get is_dirty() { return this._dirty; }
 
     constructor(elem, props) {
         this.elem = elem;
@@ -28,6 +30,8 @@ export default class Linker {
             currentCardId: null,
             svgIdMap: new Set()
         };
+		
+		this._dirty = false;
 		
 		this.render();
     }
@@ -119,10 +123,10 @@ export default class Linker {
     }
 
     clearSvgSelections = () => {
-        const self = this;
-        const ids = Object.keys(self.state.selectedSvgElements);
+        const ids = Object.keys(this.state.selectedSvgElements);
+		var svg = document.getElementById('svg-content');
         for (const id of ids) {			
-			document.querySelector(id).classList.remove('dwl-selected');
+			svg.querySelector(id).classList.remove('dwl-selected');
         }
         this.state.selectedSvgElements = {};
     }
@@ -144,6 +148,7 @@ export default class Linker {
 
     onCardClick = (selectedCard) => {
         this.clearSvgSelections();
+		var svg = document.getElementById('svg-content');
         var cards = document.getElementById('cards').querySelectorAll('div');
         for (const card of cards) {
             const id = selectedCard.getAttribute('id');
@@ -157,7 +162,7 @@ export default class Linker {
                     const jsonContent = this.getJsonContent(id);
                     if (Array.isArray(jsonContent.svg)) {
                         jsonContent.svg.forEach(id => {
-							const elem = document.querySelector(id);
+							const elem = svg.querySelector(id);
                             if (elem) {
                                 const selections = { ...this.state.selectedSvgElements };
                                 selections[id] = { id };
@@ -257,11 +262,9 @@ export default class Linker {
             }
             for (const button of buttons) {
                 const buttonName = button.getAttribute('data-button-type');
-                button.classList.remove('btn-secondary');
-                if (buttonName === key) {
-                    button.classList.add('btn-primary');
-                } else {
-                    button.classList.add('btn-secondary');
+                button.classList.remove('inactive');
+                if (buttonName !== key) {
+                    button.classList.add('inactive');
                 }
             }
         }
@@ -338,6 +341,8 @@ export default class Linker {
 			else self.state.svgIdMap.add(`#${existingId}`);
 			
 			n.addEventListener('click', (ev) => {
+				self._dirty = true;
+				
                 if (!self.state.currentCardId) return; 
                 const id = self.parseId(ev.target.getAttribute('id'));
                 const selections = { ...self.state.selectedSvgElements };
@@ -377,7 +382,7 @@ export default class Linker {
             const caption = this.config[buttonName].caption;
             const button = this.addHTMLTo(
                 buttonContainer,
-                `<button type="button" class="btn btn-secondary m-1" data-button-type="${buttonName}">${caption}</button>`
+                `<button type="button" class="m-1" data-button-type="${buttonName}">${caption}</button>`
             );
             buttons.push(button);
             button.addEventListener('click', () => {
@@ -385,32 +390,6 @@ export default class Linker {
             }, false);
         });
         this.state.buttons = buttons;
-    }
-
-    hasCorruptedAssociations = () => {
-        let result = true;
-        const jsonContent = this.state.json.updated;
-        for (const key in jsonContent) {
-            if (!result) return result;
-            if (key in this.config) {
-                const slice = jsonContent[key];
-                if (Array.isArray(slice)) {
-                    slice.forEach((_, index) => {
-                        const jsonElem = jsonContent[key][index];
-                        const svg = jsonElem.svg;
-                        if (Array.isArray(svg)) {
-                            const hasAssociation = svg.every(id => this.state.svgIdMap.has(id)); 
-                            if (!hasAssociation) {
-                                result = false;
-                                return;
-                            }
-                        }
-                    });
-                }
-            }
-        }
-		
-        return result;
     }
 
     render = () => {
@@ -430,16 +409,16 @@ export default class Linker {
             `<div class="m-1 float-start"><input id="dwl-thick-chk" class="m-1 dwl-pointer" type="checkbox" title="Thicken line strokes for easier interaction."/ ><label class="m-1 dwl-pointer" title="Thicken line strokes for easier interaction." for="dwl-thick-chk">Thicker line strokes</label></div>`
         );
         
-		var chk = document.querySelector("#dwl-thick-chk").addEventListener('click', this.props.handlers.thicken, false);
+		var chk = svgContainer.querySelector("#dwl-thick-chk").addEventListener('click', this.props.handlers.thicken, false);
 		
 		this.addHTMLTo(
             utilityButtons,
-            `<button type="button" class="btn btn-primary m-1 float-end" data-button-type="reset" title="Reset associations to initial state.">Reset</button>`
+            `<button type="button" class="m-1 float-end" data-button-type="reset" title="Reset associations to initial state.">Reset</button>`
         ).addEventListener('click', this.props.handlers.reset, false);
         
 		this.addHTMLTo(
             utilityButtons,
-            `<button type="button" class="btn btn-primary m-1 float-end" data-button-type="clear" title="Remove all associations.">Clear</button>`
+            `<button type="button" class="m-1 float-end" data-button-type="clear" title="Remove all associations.">Clear</button>`
         ).addEventListener('click', this.props.handlers.clear, false);
 
         this.renderJson(jsonContainer, this.props.files.json);

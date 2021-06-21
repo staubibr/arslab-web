@@ -26,6 +26,8 @@ export default class Automator extends Evented {
 	}
 	
 	Destroy() {
+		this.widget.roots.forEach(r => r.remove());
+		
 		this._handles.forEach((h) => {
 			h.target.Off(h.type, h.callback);
 		});

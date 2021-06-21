@@ -28,6 +28,10 @@ export default class SimulationCA extends Simulation {
 		return layers;
 	}
 	
+	GetSelected(id) {
+		return this.selected.find(s => s[0] == id[0] && s[1] == id[1] && s[2] == id[2]);
+	}
+		
 	constructor(structure, frames) {
 		super(structure, frames);
 		
