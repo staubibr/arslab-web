@@ -42,7 +42,7 @@ export default Core.Templatable("Widget.Settings.Styles", class Styles extends T
 		this.tooltip.addEventListener("mouseleave", (ev) => {
 			Dom.AddCss(this.tooltip, "hidden");
 		
-			this.bIdx = null;
+			// this.bIdx = null;
 		});
 	}
 	

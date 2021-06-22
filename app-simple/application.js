@@ -37,8 +37,8 @@ export default Core.Templatable("Application", class Application extends Templat
 		this.Node('btnLinker').On('click', this.OnButtonLinker_Click.bind(this));
 		this.Node('btnPalette').On('click', this.OnButtonPalette_Click.bind(this));
 		
-		this.Widget('upload').On('ready', this.OnUpload_Ready.bind(this));
-		this.Widget('upload').On('error', this.OnWidget_Error.bind(this));
+		this.Widget('loader').On('ready', this.OnUpload_Ready.bind(this));
+		this.Widget('loader').On('error', this.OnWidget_Error.bind(this));
 		this.Widget("server-loader").On("filesready", this.OnFiles_Loaded.bind(this));
 		this.Widget("server-loader").On("error", this.OnWidget_Error.bind(this));
 		
@@ -129,13 +129,12 @@ export default Core.Templatable("Application", class Application extends Templat
 		
 		if (!this.Widget("linker").is_dirty) return;
 		
-		this.Widget("upload").Load(this.files);
+		this.Widget("loader").Load(this.files);
 	}
 		
 	OnFiles_Loaded(ev) {
 		this.Widget("server-loader").Hide();
-
-		this.Widget("upload").Load(ev.files);
+		this.Widget("loader").Load(ev.files);
 	}
 	
 	OnWidget_Error(ev) {
@@ -152,7 +151,7 @@ export default Core.Templatable("Application", class Application extends Templat
 						"</div>" +
 						"<div class='body'>" + 
 						   "<div handle='dropzone' class='dropzone-container'>" + 
-							   "<div handle='upload' widget='Widget.Loader'></div>" +
+							   "<div handle='loader' widget='Widget.Loader'></div>" +
 						   "</div>" +
 						   "<div handle='views' class='simulation-container'>" +
 							   "<div handle='view' class='simulation'></div>" +

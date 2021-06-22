@@ -25,7 +25,7 @@ export default class Styler extends Evented {
 		for (var i = 0; i < scale.buckets.length; i++) {
 			var c = scale.buckets[i];
 			
-			if (value >= c.start && value < c.end) return `rgb(${c.color.join(",")})`;
+			if (value >= c.start && value <= c.end) return `rgb(${c.color.join(",")})`;
 		}
 	}
 }

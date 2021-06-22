@@ -21,10 +21,8 @@ export default Core.Templatable("Widget.Loader", class Loader extends Templated 
 		}
 	}
 	
-	// get files() {
-	//	return this._files;
-	// }
-	
+	get files() { return this._files; }
+		
 	constructor(node) {		
 		super(node);
 		
@@ -93,7 +91,9 @@ export default Core.Templatable("Widget.Loader", class Loader extends Templated 
 	onParseButton_Click(ev) {
 		Dom.RemoveCss(this.Elem("wait"), "hidden");
 		
-		this.Load(this.Widget("dropzone").files);
+		this.files = this.Widget("dropzone").files;
+		
+		this.Load(this.files);
 	}
 	
 	onClearButton_Click(ev) {
