@@ -92,6 +92,9 @@ export default Core.Templatable("Application", class Application extends Templat
 		this.Widget("playback").recorder = new Recorder(this.view.widget.canvas);
 		this.Widget("playback").Initialize(this.simulation, this.configuration.playback);
 		this.Widget('settings').Initialize(this.simulation, this.configuration);	
+		
+		if (this.simulation.type != "Cell-DEVS") return;
+		
 		this.Widget('palette').Initialize(this.simulation, this.configuration);	
 	}
 	

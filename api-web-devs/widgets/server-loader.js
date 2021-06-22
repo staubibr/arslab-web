@@ -72,6 +72,10 @@ export default Core.Templatable("Widget.ServerLoader", class ServerLoader extend
 				"type" : "Cell-DEVS",
 				"url": path + "/Ranch/hot/"
 			}, {
+				"name": "Sandpile",
+				"type" : "Cell-DEVS",
+				"url": path + "/Sandpile/"
+			}, {
 				"name": "Settlement Growth",
 				"type" : "Cell-DEVS",
 				"url": path + "/Settlement Growth/"
