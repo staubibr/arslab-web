@@ -8,6 +8,12 @@ export default class SimulationDEVS extends Simulation {
 	
 	get diagram() { return this._diagram; }
 	
+	set diagram (value) {  
+		this._diagram = value;
+	
+		this.Emit("NewDiagram", { diagram:this.diagram });
+	}
+	
 	get ratio() {
 		var vb = this.diagram.getAttribute("viewBox")
 		
@@ -28,21 +34,6 @@ export default class SimulationDEVS extends Simulation {
 	
 	LoadSVG(svg) {		
 		var root = Dom.Create("div", { innerHTML:svg });
-		
-		this.models.forEach(model => {		
-			model.svg = model.svg ?? [];
-			model.svg = model.svg.map(s => root.querySelector(s)).filter(s => s != null);		
-			
-			model.ports.forEach(port => {
-				port.svg = port.svg ?? [];
-				port.svg = port.svg.map(s => root.querySelector(s)).filter(s => s != null);
-			});
-			
-			model.links.forEach(link => {
-				link.svg = link.svg ?? [];
-				link.svg = link.svg.map(s => root.querySelector(s)).filter(s => s != null);
-			});
-		});
 		
 		return root.children[0];
 	}

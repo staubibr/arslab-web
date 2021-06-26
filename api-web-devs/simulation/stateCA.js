@@ -19,8 +19,8 @@ export default class StateCA extends State {
 		return clone;
 	}
 	
-	GetValue(emitter) {
-		return this.data[emitter[0]][emitter[1]][emitter[2]];
+	GetValue(coord) {
+		return this.data[coord[0]][coord[1]][coord[2]];
 	}
 
 	ApplyMessage(m) {		
@@ -40,11 +40,7 @@ export default class StateCA extends State {
 				this.data[x][y] = [];
 				
 				for (var z = 0; z < this.size.z; z++) {
-					var d = {};
-					
-					m.node_type.template.forEach(f => d[f] = 0);
-					
-					this.data[x][y][z] = d;
+					this.data[x][y][z] = m.node_type.Template0();
 				}
 			}
 		}

@@ -13,6 +13,8 @@ export default class Simulation extends Evented {
 	
 	get models() { return this.structure.models; }
 	
+	get links() { return this.structure.links; }
+	
 	get timestep() { return this.state.i; }
 	
 	get state() { return this._state; }

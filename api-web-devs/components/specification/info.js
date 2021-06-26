@@ -21,8 +21,4 @@ export default class Info {
 			type : type ?? null
 		}
 	}
-	
-	static FromJson(json) {
-		return new Info(json.name, json.simulator, json.type);
-	}
 }

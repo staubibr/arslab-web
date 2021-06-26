@@ -17,7 +17,7 @@ export default class SimulationCA extends Simulation {
 	
 	get ports() {
 		// TODO : Is this always 1?? Is there always only one model in Cell-DEVS?
-		return this.structure.models[1].ports.map(p => p.name);
+		return this.structure.models[1].ports.filter(p => p.type == "output").map(p => p.name);
 	}
 	
 	get layers() {

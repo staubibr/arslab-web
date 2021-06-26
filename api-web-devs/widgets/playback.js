@@ -89,28 +89,28 @@ export default Core.Templatable("Widget.Playback", class Playback extends Templa
 		return d;
 	}
 	
-	Play(loop, interval) {		
+	Play(interval) {		
 		this.direction = "play";
 		
-		this._interval = setInterval(function(){ 
+		this._interval = setInterval(() => { 
 			if (this.current < this.max) this.GoToNext();
 		
-			else if (loop) this.GoTo(this.min);
+			else if (this.is_looping) this.GoTo(this.min);
 			
 			else this.Stop();
-		}.bind(this), interval);
+		}, interval);
 	}
 	
-	Rewind(loop, interval) {
+	Rewind(interval) {
 		this.direction = "rewind";
 		
-		this._interval = setInterval(function(){ 
+		this._interval = setInterval(() => { 
 			if (this.current > this.min) this.GoToPrevious();
 		
-			else if (loop) this.GoTo(this.max);
+			else if (this.is_looping) this.GoTo(this.max);
 			
 			else this.Stop();
-		}.bind(this), interval);
+		}, interval);
 	}
 	
 	GoToPrevious() {
@@ -150,7 +150,7 @@ export default Core.Templatable("Widget.Playback", class Playback extends Templa
 		
 		Dom.SetCss(this.Elem("rewind"), "fas fa-pause");
 		
-		this.Rewind(this.is_looping, this.interval);
+		this.Rewind(this.interval);
 	}
 	
 	onPlayClick_Handler(ev) {
@@ -158,7 +158,7 @@ export default Core.Templatable("Widget.Playback", class Playback extends Templa
 		
 		Dom.SetCss(this.Elem("play"), "fas fa-pause");
 		
-		this.Play(this.is_looping, this.interval);
+		this.Play(this.interval);
 	}
 	
 	onStepForwardClick_Handler(ev) {

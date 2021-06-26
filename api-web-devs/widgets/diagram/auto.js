@@ -26,6 +26,8 @@ export default Core.Templatable("Auto.Diagram", class AutoDiagram extends Automa
 		this.UpdateSelected();
 
 		this.tooltip = new Tooltip();
+		
+		this.simulation.On("NewDiagram", this.OnSimulation_NewDiagram.bind(this));
 	}
 	
 	AttachHandlers(options) {
@@ -59,6 +61,12 @@ export default Core.Templatable("Auto.Diagram", class AutoDiagram extends Automa
 		this.widget.Resize();
 	}
 	
+	OnSimulation_NewDiagram(ev) {
+		this.widget.SetDiagram(this.simulation);
+		
+		this.widget.Draw(this.simulation.current_frame.output_messages);
+	}
+	
 	OnSettings_Change(ev) {
 		if (["height", "width", "aspect"].indexOf(ev.property) == -1) return;
 
@@ -77,13 +85,13 @@ export default Core.Templatable("Auto.Diagram", class AutoDiagram extends Automa
 		
 		Dom.Empty(this.tooltip.Elem("content"));
 		
-		var tY = messages.filter(t => t.emitter.model.id == ev.model.id);
+		var tY = messages.filter(t => t.model.id == ev.model.id);
 		
 		if (tY.length == 0) return;
 		
 		tY.forEach(t => {
 			var value = JSON.stringify(t.value);
-			var subs = [t.emitter.model.id, value, t.emitter.name];
+			var subs = [t.model.id, value, t.port.name];
 			var html = this.nls.Ressource("Diagram_Tooltip_Y", subs);
 			
 			Dom.Create("div", { className:"tooltip-label", innerHTML:html }, this.tooltip.Elem("content"));
@@ -99,12 +107,12 @@ export default Core.Templatable("Auto.Diagram", class AutoDiagram extends Automa
 		if (idx == -1) {
 			this.selected.push(ev.model);
 			
-			this.widget.AddModelCss(ev.svg, ["selected"]);
+			ev.svg.classList.add("selected");
 		}
 		else {
 			this.selected.splice(idx, 1);
 			
-			this.widget.RemoveModelCss(ev.svg, ["selected"]);
+			ev.svg.classList.remove("selected");
 		}
 	}
 

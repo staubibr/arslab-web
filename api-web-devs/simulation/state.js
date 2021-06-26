@@ -18,10 +18,10 @@ export default class State {
 		return clone;
 	}
 	
-	GetValue(emitter) {
-		if (!this.data.hasOwnProperty(emitter.id)) return null;
+	GetValue(model) {
+		// if (!this.data.hasOwnProperty(model.id)) return null;
 		
-		return this.data[emitter.id] || null;
+		return this.data[model.id] || null;
 	}
 	
 	ApplyMessages(frame) {
@@ -31,9 +31,9 @@ export default class State {
 	}
 
 	ApplyMessage(m) {
-		if (!this.data.hasOwnProperty(m.emitter.id)) return;
+		// if (!this.data.hasOwnProperty(m.model.id)) return;
 		
-		for (var f in m.value) this.data[m.emitter.id][f] = m.value[f];
+		for (var f in m.value) this.data[m.model.id][f] = m.value[f];
 	}
 	
 	Forward(frame) {
@@ -51,12 +51,8 @@ export default class State {
 	Reset() {
 		this.data = {};
 		
-		this.models.forEach((m) => {			
-			var d = {};
-			
-			m.node_type.template.forEach(f => d[f] = 0);
-			
-			this.data[m.id] = d;
+		this.models.forEach((m) => {
+			this.data[m.id] = m.node_type.Template0();
 		});
 	}
 }

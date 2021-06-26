@@ -185,7 +185,7 @@ export default Core.Templatable("Widgets.Grid", class Grid extends Templated {
 			
 					this.DrawCell(m.x, m.y, l.position, this.styler.GetColor(scale, v));
 					
-					if (simulation.IsSelected(m.emitter)) this.DrawCellBorder(m.x, m.y, i, 'rgb(255,0,0)');
+					if (simulation.IsSelected(m.coord)) this.DrawCellBorder(m.x, m.y, i, 'rgb(255,0,0)');
 				}
 			}
 		}

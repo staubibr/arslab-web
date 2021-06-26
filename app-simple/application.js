@@ -92,6 +92,7 @@ export default Core.Templatable("Application", class Application extends Templat
 		this.Widget("playback").recorder = new Recorder(this.view.widget.canvas);
 		this.Widget("playback").Initialize(this.simulation, this.configuration.playback);
 		this.Widget('settings').Initialize(this.simulation, this.configuration);	
+		this.Widget('linker').Initialize(this.simulation, this.files.diagram);	
 		
 		if (this.simulation.type != "Cell-DEVS") return;
 		
@@ -125,14 +126,9 @@ export default Core.Templatable("Application", class Application extends Templat
 	}
 	
 	async OnButtonLinker_Click(ev) {
-		await this.Widget("linker").Show(this.files.structure, this.files.diagram);
+		await this.Widget("linker").Show(this.simulation, this.files.diagram);
 		
-		this.files.structure = this.Widget("linker").structure_file;
-		this.files.diagram = this.Widget("linker").diagram_file;
-		
-		if (!this.Widget("linker").is_dirty) return;
-		
-		this.Widget("loader").Load(this.files);
+		this.files.diagram = this.Widget("linker").svg_file;
 	}
 		
 	OnFiles_Loaded(ev) {
@@ -163,9 +159,9 @@ export default Core.Templatable("Application", class Application extends Templat
 						"</div>" +
 						"<div class='button-column'>" + 
 						   "<button handle='btnSettings' title='nls(Application_Settings)' class='fas fa-tools' disabled></button>" +
-						   "<button handle='btnDownload' title='nls(Application_Download)' class='fas fa-download' disabled></button>" +
 						   "<button handle='btnPalette' title='nls(Application_Palette)' class='fas fa-palette' disabled></button>" +
 						   "<button handle='btnLinker' title='nls(Application_Linker)' class='fas fa-link' disabled></button>" +
+						   "<button handle='btnDownload' title='nls(Application_Download)' class='fas fa-download' disabled></button>" +
 						"</div>" +
 					"</div>" +
 				"</main>";

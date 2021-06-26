@@ -2,6 +2,8 @@
 
 export default class Cache { 
 
+	get length() { return this.states.length; }
+
 	constructor() {
 		this.n = 0;
 		this.states = [];
@@ -40,6 +42,6 @@ export default class Cache {
 	}
 	
 	Last() {
-		return this.GetState(this.Length - 1);
+		return this.GetState(this.length - 1);
 	}
 }

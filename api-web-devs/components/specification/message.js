@@ -2,19 +2,13 @@
 
 export class Message { 
 	
-	get emitter() { return this._raw.emitter; }
-
-	get value() { return this._raw.value; }
+	get value() { return this._value; }
 	
 	get diff() { return this._diff; }
 	set diff(value) { this._diff = value; }
 	
-	constructor(emitter, value) {
-		this._raw = {
-			emitter: emitter,
-			value: value
-		}
-
+	constructor(value) {
+		this._value = value;
 		this._diff = null;
 	}
 	
@@ -35,27 +29,64 @@ export class Message {
 	}
 	
 	Reverse() {		
-		// TODO: Only place where we use GetDiff I think.		
-		return new Message(this.emitter, this.GetDiff());
+		throw new Error("Reverse must be implemented by child class.");
 	}
 }
 
-export class MessageCA extends Message {
+export class StateMessage extends Message { 
 	
-	get id() { return this.emitter.join("-"); }
+	get model() { return this._model; }
 	
-	get x() { return this.emitter[0]; }
-
-	get y() { return this.emitter[1]; }
-	
-	get z() { return this.emitter[2]; }
-	
-	constructor(emitter, value) {
-		super(emitter, value);
+	constructor(model, value) {
+		super(value);
+		
+		this._model = model;
 	}
 	
 	Reverse() {		
 		// TODO: Only place where we use GetDiff I think.		
-		return new MessageCA(this.emitter, this.GetDiff());
+		return new StateMessage(this.model, this.GetDiff());
+	}
+}
+
+export class StateMessageCA extends Message {
+	
+	get model() { return this.coord; }
+	
+	get coord() { return this._coord; }
+	
+	get id() { return this.coord.join("-"); }
+	
+	get x() { return this.coord[0]; }
+
+	get y() { return this.coord[1]; }
+	
+	get z() { return this.coord[2]; }
+	
+	constructor(coord, value) {
+		super(value);
+		
+		this._coord = coord;
+	}
+	
+	Reverse() {		
+		// TODO: Only place where we use GetDiff I think.		
+		return new StateMessageCA(this.coord, this.GetDiff());
+	}
+}
+
+export class OutputMessage extends StateMessage { 
+	
+	get port() { return this._port; }
+	
+	constructor(model, port, value) {
+		super(model, value);
+		
+		this._port = port;
+	}
+	
+	Reverse() {		
+		// TODO: Only place where we use GetDiff I think.		
+		return new OutputMessage(this.model, this.port, this.GetDiff());
 	}
 }

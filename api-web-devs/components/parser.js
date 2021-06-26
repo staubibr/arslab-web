@@ -9,7 +9,7 @@ import SimulationDEVS from "../simulation/simulationDEVS.js";
 import SimulationCA from "../simulation/simulationCA.js";
 import Frame from "../simulation/frame.js";
 
-import { Message, MessageCA } from "./specification/message.js"
+import { StateMessage, OutputMessage, StateMessageCA } from "./specification/message.js"
 
 export default class Parser extends Evented { 
 	
@@ -49,7 +49,7 @@ export default class Parser extends Evented {
 			var lines = chunk.split("\n");
 		
 			for (var i = 0; i < lines.length; i++) {
-				var data = lines[i].trim().split(",");
+				var data = lines[i].trim().split(";");
 			
 				if (data.length == 1) {
 					this.frame = new Frame(data[0]);
@@ -57,7 +57,11 @@ export default class Parser extends Evented {
 					parsed.push(this.frame);
 				}
 				
-				else parseFn(this.frame, structure, data);
+				else {					
+					data = data.map(d => d.split(","));
+				
+					parseFn(this.frame, structure, data[0], data[1]);
+				}
 			}
 			
 			this.Emit("Progress", { progress: progress });
@@ -66,24 +70,19 @@ export default class Parser extends Evented {
 		});
 	}
 	
-	ParseLine(frame, structure, data) {
-		var node = structure.nodes[data[0]];
-		var values = node.node_type.Template(data.slice(1));
-		
-		// Note: checking for property in an object is faster than instanceof.
-		// If there are large numbers of models and ports (100,000s) then this
-		// may become a problem. So we check for "id" in n, model nodes have
-		// ids, port nodes do not. Probably premature optimization.
-		if ("id" in node) frame.AddStateMessage(new Message(node, values));
-		
-		else frame.AddOutputMessage(new Message(node, values));
+	ParseLine(frame, structure, emitter, values) {
+		var model = structure.nodes[emitter[0]];
+		var port = emitter.length == 2 ? model.ports[emitter[1]]: null ; 
+
+		if (port) frame.AddOutputMessage(new OutputMessage(model, port, values));
+
+		else frame.AddStateMessage(new StateMessage(model, values));		
 	}
 	
-	ParseLineCA(frame, structure, data) {
-		var coord = [data[0], data[1], data[2]];		
-		var values = structure.model_types[1].Template(data.slice(3));
+	ParseLineCA(frame, structure, coord, values) {
+		var values = structure.model_types[1].Template(values);
 
-		frame.AddStateMessage(new MessageCA(coord, values));
+		frame.AddStateMessage(new StateMessageCA(coord, values));
 	}
 	
 	ReadByChunk(file, delegate) {		

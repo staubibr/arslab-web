@@ -29,8 +29,4 @@ export class Link {
 			svg : svg ?? null
 		}
 	}
-	
-	static FromJson(json) {
-		return new Link(json.modelA, json.portA, json.modelB, json.portB, json.svg);
-	}
 }

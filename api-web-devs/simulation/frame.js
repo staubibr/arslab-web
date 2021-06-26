@@ -46,7 +46,7 @@ export default class Frame {
 	Difference(state) {
 		for (var i = 0; i < this.state_messages.length; i++) {
 			var m = this.state_messages[i];			
-			var v = state.GetValue(m.emitter);
+			var v = state.GetValue(m.model);
 			
 			m.Difference(v);
 		}

@@ -177,8 +177,8 @@ export default Core.Templatable("Widgets.GIS", class GIS extends Templated {
 			// state messages
 			var props = s.feature.getProperties();
 			var id = props[variable.layer.join];
-			var emitter = this.simulation.Model(id);
-			var data = this.simulation.state.GetValue(emitter);
+			var model = this.simulation.Model(id);
+			var data = this.simulation.state.GetValue(model);
 			
 			var line = `<div class='title'>${variable.layer.label}</div>`;
 			
@@ -194,7 +194,7 @@ export default Core.Templatable("Widgets.GIS", class GIS extends Templated {
 			line += `</ul>`;
 			
 			// output messages
-			var tY = messages.filter(t => t.emitter.model.id == id);
+			var tY = messages.filter(t => t.model.id == id);
 			
 			tY.forEach(t => {
 				line += `<ul class='output-message'><li>Output</li>`;
@@ -219,8 +219,8 @@ export default Core.Templatable("Widgets.GIS", class GIS extends Templated {
 			if (!variable) return;
 			
 			var id = s.feature.getProperties()[variable.layer.join];
-			var emitter = this.simulation.Model(id);
-			var data = this.simulation.state.GetValue(emitter);
+			var model = this.simulation.Model(id);
+			var data = this.simulation.state.GetValue(model);
 			var style = variable.style.Symbol(data);
 			
 			s.feature.setStyle(style);

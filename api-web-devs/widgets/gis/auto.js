@@ -73,7 +73,7 @@ export default Core.Templatable("Auto.GIS", class AutoGIS extends Automator {
 	onSimulation_Move(ev) {
 		var data = {};
 		
-		ev.frame.state_messages.forEach(t => data[t.emitter.id] = t.value);
+		ev.frame.state_messages.forEach(t => data[t.model.id] = t.value);
 		
 		this.widget.Draw(data);
 	}

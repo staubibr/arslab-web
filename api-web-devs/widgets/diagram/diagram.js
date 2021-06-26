@@ -8,56 +8,131 @@ export default Core.Templatable("Widgets.Diagram", class Diagram extends Templat
 
 	get canvas() { return this.Elem("canvas"); }
 
+	get svg() { return this.simulation.diagram; }
+
 	constructor(node) {
 		super(node);
 	}
 
 	SetDiagram(simulation) {
-		Dom.Empty(this.Elem('diagram'));
-		
-		this.Elem('diagram').appendChild(simulation.diagram);
-		
-		this.Node('diagram').Elem("svg").setAttribute("preserveAspectRatio", "none");
-		
 		this.simulation = simulation;
 		
-		this.simulation.models.forEach(model => {
-			model.svg.forEach(n => {	
-				n.addEventListener("mousemove", this.onSvgMouseMove_Handler.bind(this, model));
-				n.addEventListener("click", this.onSvgClick_Handler.bind(this, model));
-				n.addEventListener("mouseout", this.onSvgMouseOut_Handler.bind(this, model));
+		this._svg = { dests: {}, origins: {} };
+		
+		this.LoadOriginSVGNodes();
+		this.LoadDestinationSVGs();
+		
+		Dom.Empty(this.Elem('diagram'));
+		
+		this.Elem('diagram').appendChild(this.svg);
+		
+		this.svg.setAttribute("preserveAspectRatio", "none");
+
+		this.SetPointerEvents();
+	}
+	
+	SetPointerEvents() {		
+		this.svg.querySelectorAll("*").forEach(n => {			
+			n.style.cursor = "none";
+			n.style.pointerEvents = "none";
+		});
+		
+		this.svg.querySelectorAll("[devs-model-id]").forEach(n => {
+			n.style.cursor = "pointer";
+			n.style.pointerEvents = "all"
+			
+			n.addEventListener("mousemove", this.onSvgMouseMove_Handler.bind(this, n));
+			n.addEventListener("click", this.onSvgClick_Handler.bind(this, n));
+			n.addEventListener("mouseout", this.onSvgMouseOut_Handler.bind(this, n));
+		});
+	}
+	
+	GetLinkSVGNodes(l) {
+		var selector = `[devs-link-mA=${l.modelA.id}][devs-link-pA=${l.portA.name}]`;
+		
+		return Array.from(this.svg.querySelectorAll(selector));
+	}
+	
+	GetPortSVGNodes(m, p) {
+		var selector = `[devs-model-id=${m.id}],[devs-port-model=${m.id}][devs-port-name=${p.name}]`;
+		
+		return Array.from(this.svg.querySelectorAll(selector));
+	}
+	
+	LoadOriginSVGNodes() {
+		this.simulation.models.forEach(m => {
+			m.ports.forEach(p => {
+				if (!this._svg.origins[m.id]) this._svg.origins[m.id] = {};
+
+				var nodes = this.GetPortSVGNodes(m, p);
+				
+				m.PortLinks(p).forEach(l => nodes = nodes.concat(this.GetLinkSVGNodes(l)));
+				
+				this._svg.origins[m.id][p.name] = nodes;
 			});
 		});
 	}
 	
-	onSvgMouseMove_Handler(model, ev) {
-		this.Emit("MouseMove", { x:ev.pageX, y:ev.pageY , model:model, svg:ev.target });
-	}
-		
-	onSvgMouseOut_Handler(model, ev) {
-		this.Emit("MouseOut", { x:ev.pageX, y:ev.pageY, model:model, svg:ev.target });
+	LoadDestinationSVGs() {
+		this.simulation.models.forEach(m => {
+			m.ports.forEach(p => {
+				if (!this._svg.dests[m.id]) this._svg.dests[m.id] = {};
+				
+				var links = m.PortLinks(p);
+				
+				for (var i = 0; i < m.PortLinks(p).length; i++) {
+					var mB = links[i].modelB;
+					var pB = links[i].portB;
+					
+					if (mB.type == "atomic") continue;
+					
+					links = links.concat(mB.PortLinks(pB));
+				}
+				
+				var svg = [];
+				
+				links.forEach(l => {
+					svg = svg.concat(this.GetLinkSVGNodes(l));
+					svg = svg.concat(this.GetPortSVGNodes(l.modelB, l.portB));
+				});
+				
+				this._svg.dests[m.id][p.name] = Array.from(svg);
+			});
+		});
 	}
 	
-	onSvgClick_Handler(model, ev) {				
-		this.Emit("Click", { x:ev.pageX, y:ev.pageY , model:model, svg:ev.target });
+	GetDestination(model, port) {
+		return this._svg.dests[model.id][port.name];
+	}
+	
+	GetOrigin(model, port) {
+		return this._svg.origins[model.id][port.name];
+	}
+	
+	onSvgMouseMove_Handler(node, ev) {
+		var id = node.getAttribute("devs-model-id");
+		
+		this.Emit("MouseMove", { x:ev.pageX, y:ev.pageY, model:this.simulation.Model(id), svg:ev.target });
 	}
 		
-	Template() {
-		return "<div>" +
-				   "<div handle='diagram' class='diagram-container'></div>" +
-				   "<canvas handle='canvas' class='diagram-canvas hidden'></canvas>" +
-			   "</div>";
+	onSvgMouseOut_Handler(node, ev) {
+		var id = node.getAttribute("devs-model-id");
+		
+		this.Emit("MouseOut", { x:ev.pageX, y:ev.pageY, model:this.simulation.Model(id), svg:ev.target });
+	}
+	
+	onSvgClick_Handler(node, ev) {	
+		var id = node.getAttribute("devs-model-id");
+		
+		this.Emit("Click", { x:ev.pageX, y:ev.pageY, model:this.simulation.Model(id), svg:ev.target });
 	}
 
-	Resize() {
+	Resize() {		
 		this.size = Dom.Geometry(this.Elem("diagram"));
 		
 		var pH = 30;
 		var pV = 30;
-		
-		// this.Elem("diagram").style.margin = `${pV}px ${pH}px`;
-		// this.Elem("diagram").style.width = `${(this.size.w - (30))}px`;	
-		// this.Elem("diagram").style.height = `${(this.size.h - (30))}px`;
+
 		this.Elem("canvas").setAttribute('width', this.size.w);	
 		this.Elem("canvas").setAttribute('height', this.size.h);
 	}
@@ -86,29 +161,21 @@ export default Core.Templatable("Widgets.Diagram", class Diagram extends Templat
 		img.src = url;
 	}
 	
-	Draw(messages) {
+	Draw(messages) {		
 		this.Reset();
 		
-		messages.forEach((m) => {
-			this.DrawYMessage(m);
-		});
+		messages.forEach((m) => this.DrawYMessage(m));
 		
-		this.DrawToCanvas(this.Node('diagram').Elem("svg"));
+		this.DrawToCanvas(this.svg);
 	}
 	
-	DrawYMessage(message) {  
-		var p = message.emitter;
-		var m = p && p.model;
+	DrawYMessage(message) {
+		var p = message.port;
+		var m = message.model;
 
-		if (p) this.AddCss(p.svg, ["origin"]);
-			
-		if (m) {
-			this.AddCss(this.OutputPath(m, p), ["highlighted"]);
-			
-			this.AddCss(m.svg, ["origin"]);
-		}
+		this.AddCss(this.GetOrigin(m, p), ["highlighted", "origin"]);
 		
-		this.simulation.structure.PortLinks(m, p).forEach(l => this.AddCss(l.svg, ["origin"]));
+		this.AddCss(this.GetDestination(m, p), ["highlighted"]);		
 	}
 
 	AddCss(nodes, css) {		
@@ -123,34 +190,24 @@ export default Core.Templatable("Widgets.Diagram", class Diagram extends Templat
 		});
 	}
 	
-	Reset() {
-		// Collect all nodes then clean them
-		var selector = [];
-		
-		this.simulation.models.forEach(m => {
-			this.RemoveCss(m.svg, ["highlighted", "origin"]);
-			
-			m.ports.forEach(p => this.RemoveCss(p.svg, ["highlighted", "origin"]));
-			m.links.forEach(l => this.RemoveCss(l.svg, ["highlighted", "origin"]));
-		});
-	}
-	
-	OutputPath(model, port) {
-		var svg = model.svg.concat(port.svg);
-		var links = this.simulation.structure.PortLinks(model, port);
-		
-		for (var i = 0; i < links.length; i++) {
-			var l = links[i];
-			
-			svg = svg.concat(l.svg);
-			svg = svg.concat(l.portB.svg);			
-			svg = svg.concat(l.modelB.svg);
-			
-			if (l.modelB.type == "atomic") continue;
-			
-			links = links.concat(this.simulation.structure.PortLinks(l.modelB, l.portB));
+	Reset() {		
+		for (var m in this._svg.dests) {
+			for (var p in this._svg.dests[m]) {
+				this.RemoveCss(this._svg.dests[m][p], ["highlighted", "origin"]);
+			}
 		}
 		
-		return svg;
+		for (var m in this._svg.origins) {
+			for (var p in this._svg.origins[m]) {
+				this.RemoveCss(this._svg.origins[m][p], ["highlighted", "origin"]);
+			}
+		}
+	}
+		
+	Template() {
+		return "<div>" +
+				   "<div handle='diagram' class='diagram-container'></div>" +
+				   "<canvas handle='canvas' class='diagram-canvas hidden'></canvas>" +
+			   "</div>";
 	}
 });

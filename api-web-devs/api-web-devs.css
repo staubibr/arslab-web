@@ -43,6 +43,7 @@ button.inactive {
 .playback label {
 	font-weight: bold;
     color: #0051A3;
+    min-width: 90px;
 }
 
 .playback > * {
@@ -359,11 +360,6 @@ button.inactive {
 	pointer-events:none;
 }
 
-.diagram-container .selected:not(text) {
-    stroke: red  !important;
-}
-
-
 text.highlighted,
 marker.highlighted path,
 .highlighted:not(text):not(path) {
@@ -392,6 +388,11 @@ div.highlighted.origin {
 	color: #b36402 !important;
 }
 
+.selected:not(text):not(path),
+.highlighted.selected:not(text):not(path),
+.highlighted.origin.selected:not(text):not(path) {
+    stroke: red  !important;
+}
 
 /* grid widget styling */
 .grid, .grid .grid-canvas-container {
@@ -619,6 +620,10 @@ div.highlighted.origin {
 	color: tomato !important;
 }
 
+.popup-linker .dwl-thick path {
+	stroke-width: 3px;
+}
+
 .popup-linker #svg-content > svg {
 	width:100%;
     padding-left: 10px;
@@ -633,12 +638,16 @@ div.highlighted.origin {
 }
 
 .popup-linker .warning-icon {
-	height: 20px;
-	width: 20px;
-	margin-right: 4px;
-    stroke: tomato;
-    stroke-width: 0.5px;
-    fill: tomato;
+    font-size: 1.1em;
+    color: tomato;
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translate(0,-50%);
+}
+
+.popup-linker .hide-warning i.warning-icon {
+	display:none;
 }
 
 .popup-linker button {
